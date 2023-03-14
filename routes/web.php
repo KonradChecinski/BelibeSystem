@@ -16,23 +16,22 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->middleware(['auth']);
+/*
+|--------------------------------------------------------------------------
+| System Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::domain("system.belibe.test")->group(function () {
+    require __DIR__ . "/system.php";
 });
 
-require __DIR__.'/auth.php';
+/*
+|--------------------------------------------------------------------------
+| B2b Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::domain("b2b.belibe.test")->group(function () {
+    require __DIR__ . "/b2b.php";
+});
