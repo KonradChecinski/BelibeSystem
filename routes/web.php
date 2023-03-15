@@ -22,8 +22,8 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::domain("system.belibe.test")->group(function () {
-    require __DIR__ . "/system.php";
+Route::domain("system." . config('app.domain'))->group(function () {
+    require __DIR__ . "/system/system.php";
 });
 
 /*
@@ -32,6 +32,6 @@ Route::domain("system.belibe.test")->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::domain("b2b.belibe.test")->group(function () {
-    require __DIR__ . "/b2b.php";
+Route::domain("b2b." . config('app.domain'))->group(function () {
+    require __DIR__ . "/b2b/b2b.php";
 });
