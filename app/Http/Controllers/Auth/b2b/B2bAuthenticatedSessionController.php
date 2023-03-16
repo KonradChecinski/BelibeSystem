@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\b2b;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AuthenticatedSessionController extends Controller
+class B2bAuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
@@ -20,8 +20,13 @@ class AuthenticatedSessionController extends Controller
     public function create(): Response
     {
         return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
+            'canResetPassword' => Route::has('b2b.password.request'),
+            'canRegister' => Route::has('b2b.register'),
             'status' => session('status'),
+
+            'routeLogin' => "b2b.login",
+            'routePasswordRequest' => 'b2b.password.request',
+            'routeRegister' => 'b2b.register',
         ]);
     }
 
@@ -30,7 +35,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $request->authenticate("b2b");
 
         $request->session()->regenerate();
 
@@ -42,7 +47,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('client')->logout();
 
         $request->session()->invalidate();
 

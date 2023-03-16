@@ -40,7 +40,6 @@ return [
             "provider" => "users",
         ],
         "client" => [
-            //            "redirectTo" => "employee.home",
             "driver" => "session",
             "provider" => "client",
         ],

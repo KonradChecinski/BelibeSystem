@@ -12,7 +12,7 @@ import {FormControl, IconButton, Input, InputAdornment, OutlinedInput, TextField
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status, canResetPassword, canRegister, routeLogin, routePasswordRequest, routeRegister }) {
     const { t } = useLaravelReactI18n()
 
 
@@ -35,7 +35,7 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'));
+        post(route(routeLogin));
     };
 
 
@@ -115,7 +115,7 @@ export default function Login({ status, canResetPassword }) {
 
                     {canResetPassword && (
                         <Link
-                            href={route('password.request')}
+                            href={route(routePasswordRequest)}
                             className="underline text-sm text-white dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                         >
                             { t("Forgot your password?") }
@@ -130,9 +130,10 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="flex items-center justify-center mt-4">
-                    {canResetPassword && (
+                    {canRegister && (
                         <Link
-                            href={route('register')}
+                            href={route(routeRegister)}
+                            // href=""
                             className="underline text-sm text-white dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                         >
                             { t("Register") }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\b2b;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -8,7 +8,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
-class VerifyEmailController extends Controller
+class B2bVerifyEmailController extends Controller
 {
     /**
      * Mark the authenticated user's email address as verified.

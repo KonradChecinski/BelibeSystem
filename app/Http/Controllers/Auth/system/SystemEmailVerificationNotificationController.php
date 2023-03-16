@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\system;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class EmailVerificationNotificationController extends Controller
+class SystemEmailVerificationNotificationController extends Controller
 {
     /**
      * Send a new email verification notification.

@@ -1,59 +1,59 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\b2b\B2bAuthenticatedSessionController;
+use App\Http\Controllers\Auth\b2b\B2bConfirmablePasswordController;
+use App\Http\Controllers\Auth\b2b\B2bEmailVerificationNotificationController;
+use App\Http\Controllers\Auth\b2b\B2bEmailVerificationPromptController;
+use App\Http\Controllers\Auth\b2b\B2bNewPasswordController;
+use App\Http\Controllers\Auth\b2b\B2bPasswordController;
+use App\Http\Controllers\Auth\b2b\B2bPasswordResetLinkController;
+use App\Http\Controllers\Auth\b2b\B2bRegisteredUserController;
+use App\Http\Controllers\Auth\b2b\B2bVerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
+    Route::get('register', [B2bRegisteredUserController::class, 'create'])
+                ->name('b2b.register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [B2bRegisteredUserController::class, 'store']);
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
+    Route::get('login', [B2bAuthenticatedSessionController::class, 'create'])
+                ->name('b2b.login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [B2bAuthenticatedSessionController::class, 'store']);
 
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->name('password.request');
+    Route::get('forgot-password', [B2bPasswordResetLinkController::class, 'create'])
+                ->name('b2b.password.request');
 
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->name('password.email');
+    Route::post('forgot-password', [B2bPasswordResetLinkController::class, 'store'])
+                ->name('b2b.password.email');
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->name('password.reset');
+    Route::get('reset-password/{token}', [B2bNewPasswordController::class, 'create'])
+                ->name('b2b.password.reset');
 
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-                ->name('password.store');
+    Route::post('reset-password', [B2bNewPasswordController::class, 'store'])
+                ->name('b2b.password.store');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-                ->name('verification.notice');
+    Route::get('verify-email', B2bEmailVerificationPromptController::class)
+                ->name('b2b.verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('verify-email/{id}/{hash}', B2bVerifyEmailController::class)
                 ->middleware(['signed', 'throttle:6,1'])
-                ->name('verification.verify');
+                ->name('b2b.verification.verify');
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    Route::post('email/verification-notification', [B2bEmailVerificationNotificationController::class, 'store'])
                 ->middleware('throttle:6,1')
-                ->name('verification.send');
+                ->name('b2b.verification.send');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-                ->name('password.confirm');
+    Route::get('confirm-password', [B2bConfirmablePasswordController::class, 'show'])
+                ->name('b2b.password.confirm');
 
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::post('confirm-password', [B2bConfirmablePasswordController::class, 'store']);
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::put('password', [B2bPasswordController::class, 'update'])->name('b2b.password.update');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
+    Route::post('logout', [B2bAuthenticatedSessionController::class, 'destroy'])
+                ->name('b2b.logout');
 });

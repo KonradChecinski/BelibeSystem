@@ -10,7 +10,7 @@ import {FormControl, IconButton, Input, InputAdornment} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 
-export default function Register() {
+export default function Register({routeLogin, routeRegister}) {
     const { t } = useLaravelReactI18n()
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -33,7 +33,7 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register'));
+        post(route(routeRegister));
     };
 
 
@@ -56,7 +56,7 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title={ t("Register") } />
 
             <form onSubmit={submit} className="guest">
                 <div>
@@ -211,8 +211,9 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-center justify-center mt-4">
+
                     <Link
-                        href={route('login')}
+                        href={route(routeLogin)}
                         className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
                         { t("Already registered?") }

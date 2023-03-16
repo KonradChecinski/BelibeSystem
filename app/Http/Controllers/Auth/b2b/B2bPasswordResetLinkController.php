@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\b2b;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class PasswordResetLinkController extends Controller
+class B2bPasswordResetLinkController extends Controller
 {
     /**
      * Display the password reset link request view.
