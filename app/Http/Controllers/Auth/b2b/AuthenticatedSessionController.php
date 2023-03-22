@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth\b2b;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class B2bAuthenticatedSessionController extends Controller
+class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
@@ -35,7 +36,8 @@ class B2bAuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate("b2b");
+
+        $request->authenticate(Helper::getGuardFromDomain($request));
 
         $request->session()->regenerate();
 
@@ -47,7 +49,7 @@ class B2bAuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('client')->logout();
+        Auth::guard(Helper::getGuardFromDomain($request))->logout();
 
         $request->session()->invalidate();
 

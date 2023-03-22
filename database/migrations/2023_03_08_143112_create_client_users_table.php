@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('client_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("client_id")->references("id")->on("clients")->restrictOnDelete();
+            $table->foreignId("client_id")->nullable()->references("id")->on("clients")->restrictOnDelete();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

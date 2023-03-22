@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth\b2b;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\ClientUser;
 use App\Models\User;
@@ -49,7 +50,7 @@ class B2bRegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::guard('web')->login($user);
+        Auth::guard(Helper::getGuardFromDomain($request))->login($user);
 
         return redirect(RouteServiceProvider::HOME);
     }

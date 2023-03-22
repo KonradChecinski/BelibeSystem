@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\b2b;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class B2bNewPasswordController extends Controller
+class NewPasswordController extends Controller
 {
     /**
      * Display the password reset view.

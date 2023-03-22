@@ -35,3 +35,9 @@ Route::domain("system." . config('app.domain'))->group(function () {
 Route::domain("b2b." . config('app.domain'))->group(function () {
     require __DIR__ . "/b2b/b2b.php";
 });
+
+
+
+
+
+require __DIR__ . "/auth.php";

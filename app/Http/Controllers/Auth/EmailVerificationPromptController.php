@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\system;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SystemEmailVerificationPromptController extends Controller
+class EmailVerificationPromptController extends Controller
 {
     /**
      * Display the email verification prompt.

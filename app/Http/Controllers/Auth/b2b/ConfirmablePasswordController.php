@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth\system;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SystemConfirmablePasswordController extends Controller
+class ConfirmablePasswordController extends Controller
 {
     /**
      * Show the confirm password view.
@@ -26,7 +27,7 @@ class SystemConfirmablePasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (! Auth::guard('web')->validate([
+        if (! Auth::guard(Helper::getGuardFromDomain($request))->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
         ])) {
