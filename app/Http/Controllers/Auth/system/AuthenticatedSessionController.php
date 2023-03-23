@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\b2b;
+namespace App\Http\Controllers\Auth\system;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -22,12 +22,12 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'canRegister' => Route::has('b2b.register'),
+            'canRegister' => Route::has('system.register'),
             'status' => session('status'),
 
-            'routeLogin' => "b2b.login",
+            'routeLogin' => "system.login",
             'routePasswordRequest' => 'password.request',
-            'routeRegister' => 'b2b.register',
+            'routeRegister' => 'system.register',
         ]);
     }
 }

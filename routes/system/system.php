@@ -16,7 +16,7 @@ Route::get("/", function () {
         'routeRegister' => 'system.register',
         'routeDashboard' => 'system.dashboard',
     ]);
-})->middleware(["auth:user"]);
+})->middleware(["auth:user", "verified"]);
 
 Route::get("/dashboard", function () {
     return Inertia::render("Dashboard");

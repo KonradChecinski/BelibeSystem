@@ -11,9 +11,6 @@
 
 
 
-
-
-
 {{--        <meta name="description" content="Page description">--}}
 {{--        <meta property="og:title" content="Unique page title - My Site">--}}
 {{--        <meta property="og:description" content="Page description">--}}

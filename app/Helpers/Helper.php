@@ -13,4 +13,10 @@ class Helper
         return null;
     }
 
+    public static function getSystemNameFromDomain(Request $request): string
+    {
+        // b2b or system
+        return explode(".", $request->host())[0];
+    }
+
 }

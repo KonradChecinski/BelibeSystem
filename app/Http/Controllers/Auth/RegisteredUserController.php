@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth\system;
+namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\ClientUser;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -14,18 +16,8 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SystemRegisteredUserController extends Controller
+class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): Response
-    {
-        return Inertia::render('Auth/Register', [
-            'routeLogin' => 'system.login',
-            'routeRegister' => 'system.register',
-        ]);
-    }
 
     /**
      * Handle an incoming registration request.
@@ -36,11 +28,11 @@ class SystemRegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
+            'email' => 'required|string|email|max:255|unique:'.ClientUser::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user = ClientUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -48,7 +40,7 @@ class SystemRegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::guard('user')->login($user);
+        Auth::guard(Helper::getGuardFromDomain($request))->login($user);
 
         return redirect(RouteServiceProvider::HOME);
     }

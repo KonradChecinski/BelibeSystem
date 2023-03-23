@@ -16,7 +16,7 @@ Route::get("/", function () {
         'routeRegister' => 'b2b.register',
         'routeDashboard' => 'b2b.dashboard',
     ]);
-});
+})->middleware(["auth:client", "verified"]);
 
 Route::get("/dashboard", function () {
     return Inertia::render("Dashboard");
