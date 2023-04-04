@@ -8,15 +8,24 @@ class Helper
 {
     public static function getGuardFromDomain(Request $request): ?string
     {
-        if(explode(".", $request->host())[0] == 'b2b') return 'client';
-        if(explode(".", $request->host())[0] == 'system') return 'user';
+        if (explode(".", $request->host())[0] == "b2b") {
+            return "client";
+        }
+        if (explode(".", $request->host())[0] == "system") {
+            return "user";
+        }
         return null;
     }
 
-    public static function getSystemNameFromDomain(Request $request): string
+    public static function getSystemNameFromDomain(Request $request): SystemName
     {
         // b2b or system
-        return explode(".", $request->host())[0];
+        if (explode(".", $request->host())[0] == "b2b") {
+            return SystemName::B2B;
+        }
+        if (explode(".", $request->host())[0] == "system") {
+            return SystemName::SYSTEM;
+        }
+        return SystemName::OTHER;
     }
-
 }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/*body{*/
+/*    background: #121212;*/
+/*}*/
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

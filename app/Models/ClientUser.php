@@ -11,7 +11,6 @@ use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-
 class ClientUser extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, Impersonate, HasRoles;
@@ -21,21 +20,14 @@ class ClientUser extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ["name", "email", "password"];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ["password", "remember_token"];
 
     /**
      * The attributes that should be cast.
@@ -43,22 +35,28 @@ class ClientUser extends Authenticatable implements MustVerifyEmail
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        "email_verified_at" => "datetime",
     ];
-
 
     public function canImpersonate(): bool
     {
-        // For example
-//        return $this->is_admin == 1;
         return false;
     }
 
-
     public function canBeImpersonated(): bool
     {
-        // For example
-//        return $this->can_be_impersonated == 1;
+        if (
+            auth()
+                ->guard("user")
+                ->user() ==
+            User::find(
+                auth()
+                    ->guard("user")
+                    ->user()->id
+            )
+        ) {
+            return true;
+        }
         return false;
     }
 }

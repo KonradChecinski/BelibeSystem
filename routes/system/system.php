@@ -12,9 +12,9 @@ Route::get("/", function () {
         "laravelVersion" => Application::VERSION,
         "phpVersion" => PHP_VERSION,
 
-        'routeLogin' => 'system.login',
-        'routeRegister' => 'system.register',
-        'routeDashboard' => 'system.dashboard',
+        "routeLogin" => "system.login",
+        "routeRegister" => "system.register",
+        "routeDashboard" => "system.dashboard",
     ]);
 })->middleware(["auth:user", "verified"]);
 
@@ -23,6 +23,12 @@ Route::get("/dashboard", function () {
 })
     ->middleware(["auth:user", "verified"])
     ->name("system.dashboard");
+
+Route::get("/dashboard2", function () {
+    return Inertia::render("Dashboard2");
+})
+    ->middleware(["auth:user", "verified"])
+    ->name("system.dashboard2");
 
 Route::middleware("auth:user")->group(function () {
     Route::get("/profile", [ProfileController::class, "edit"])->name(

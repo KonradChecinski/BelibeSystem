@@ -12,9 +12,9 @@ Route::get("/", function () {
         "laravelVersion" => Application::VERSION,
         "phpVersion" => PHP_VERSION,
 
-        'routeLogin' => 'b2b.login',
-        'routeRegister' => 'b2b.register',
-        'routeDashboard' => 'b2b.dashboard',
+        "routeLogin" => "b2b.login",
+        "routeRegister" => "b2b.register",
+        "routeDashboard" => "b2b.dashboard",
     ]);
 })->middleware(["auth:client", "verified"]);
 
