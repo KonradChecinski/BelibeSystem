@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /*body{*/
 /*    background: #121212;*/
 /*}*/
@@ -24,29 +23,31 @@ select:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
     color: white;
 }
-input:focus{
+
+input:focus {
     box-shadow: none !important;
 }
 
-    .guest .MuiInputBase-root:before{
-        /*border-bottom-color: white;*/
-        border-bottom: 1px solid rgba(156, 163, 175, 0.52);
-    }
-    .guest .MuiInputBase-root:hover:before{
-        border-bottom-color: white;
-        border-bottom: 1px solid rgba(243, 244, 246, 1) !important;
-    }
+.guest .MuiInputBase-root:before {
+    /*border-bottom-color: white;*/
+    border-bottom: 1px solid rgba(156, 163, 175, 0.52);
+}
 
-    .guest .MuiInputBase-root svg{
-        fill: rgb(156, 163, 175);
-    }
-    .guest .MuiInputBase-root svg:hover{
-        fill: rgb(243, 244, 246);
-    }
+.guest .MuiInputBase-root:hover:before {
+    border-bottom-color: white;
+    border-bottom: 1px solid rgba(243, 244, 246, 1) !important;
+}
+
+.guest .MuiInputBase-root svg {
+    fill: rgb(156, 163, 175);
+}
+
+.guest .MuiInputBase-root svg:hover {
+    fill: rgb(243, 244, 246);
+}
 
 
-
-.guest-background{
+.guest-background {
     background-image: url("/storage/backgrounds/background.jpg");
     background-position: center;
     background-repeat: no-repeat;
