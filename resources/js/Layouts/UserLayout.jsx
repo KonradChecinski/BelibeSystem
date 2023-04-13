@@ -14,6 +14,7 @@ import {
     Tooltip,
     IconButton,
     Badge,
+    Divider,
 } from "@mui/material";
 import Theme from "@/Theme/Theme";
 
@@ -24,77 +25,120 @@ export default function UserLayout({ auth, header, children }) {
     return (
         <>
             <Theme>
-                <Box className="h-screen p-2" bgcolor={"background.background"}>
-                    <Grid container spacing={2} className="h-full">
-                        <Grid item xs={2} className="h-full">
-                            <Card className="h-full p-2">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-12 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                </Link>
-                            </Card>
-                        </Grid>
-                        <Grid item xs={10}>
-                            <Grid container spacing={2} columns>
-                                <Grid item xs={2}>
-                                    <Card className="p-2">
-                                        <Grid
-                                            container
-                                            spacing={1}
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                        >
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    id="outlined-basic1"
-                                                    label="Produkty"
-                                                    variant="outlined"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    id="outlined-basic2"
-                                                    label="Outlined"
-                                                    variant="outlined"
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={8}
-                                                justifyContent="flex-end"
-                                                alignItems="flex-end"
-                                            >
-                                                <Grid
-                                                    container
-                                                    spacing={1}
-                                                    justifyContent="flex-end"
-                                                    alignItems="flex-end"
+                <Box
+                    sx={{
+                        position: "fixed",
+                        top: "1%",
+                        left: ".5%",
+                        zIndex: 1000,
+                        height: "98vh",
+                        width: "16%",
+                    }}
+                >
+                    <Card sx={{ height: 1, py: 1 }}>
+                        <Link href="/">
+                            <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200" />
+                        </Link>
+                        <Divider
+                            sx={{
+                                background: "red",
+                                width: "80%",
+                                mx: "auto",
+                                my: 1,
+                            }}
+                        />
+                    </Card>
+                </Box>
+                <Box>
+                    <Card
+                        className="p-2"
+                        sx={{
+                            position: "fixed",
+                            top: "1%",
+                            right: ".5%",
+                            zIndex: 1000,
+                            height: "72px",
+                            width: "82.5%",
+                        }}
+                    >
+                        <Grid
+                            container
+                            spacing={1}
+                            justifyContent="flex-start"
+                            alignItems="center"
+                        >
+                            <Grid item xs={2}>
+                                <TextField
+                                    id="outlined-basic1"
+                                    label="Produkty"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <TextField
+                                    id="outlined-basic2"
+                                    label="Outlined"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={8}
+                                justifyContent="flex-end"
+                                alignItems="flex-end"
+                            >
+                                <Grid
+                                    container
+                                    spacing={1}
+                                    justifyContent="flex-end"
+                                    alignItems="flex-end"
+                                >
+                                    <Grid item xs={1}>
+                                        <Tooltip title="Delete">
+                                            <IconButton>
+                                                <Badge
+                                                    badgeContent={4}
+                                                    color="primary"
                                                 >
-                                                    <Grid item xs={1}>
-                                                        <Tooltip title="Delete">
-                                                            <IconButton>
-                                                                <Badge
-                                                                    badgeContent={
-                                                                        4
-                                                                    }
-                                                                    color="primary"
-                                                                >
-                                                                    <Delete />
-                                                                </Badge>
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={10}>
-                                    {children}
+                                                    <Delete />
+                                                </Badge>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </Card>
                 </Box>
+                <Box
+                    sx={{
+                        marginLeft: "17%",
+                        marginTop: "90px",
+                    }}
+                >
+                    {children}
+                </Box>
+                {/*<Grid item xs={10}>*/}
+                {/*    {children}*/}
+                {/*</Grid>*/}
+
+                {/*<Grid container spacing={2}>*/}
+                {/*    <Grid item xs={10}>*/}
+                {/*        */}
+                {/*    </Grid>*/}
+                {/*</Grid>*/}
+                {/*    <Grid container spacing={2} className="min-h-full">*/}
+                {/*        <Grid item xs={2}></Grid>*/}
+                {/*        <Grid item xs={10}>*/}
+                {/*            <Grid container spacing={2} columns>*/}
+                {/*                <Grid item xs={2}></Grid>*/}
+                {/*                <Grid item xs={10}>*/}
+                {/*                    {children}*/}
+                {/*                </Grid>*/}
+                {/*            </Grid>*/}
+                {/*        </Grid>*/}
+                {/*    </Grid>*/}
+
                 {/*<div className="min-h-screen bg-gray-100 dark:bg-gray-900 ">*/}
                 {/*    <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">*/}
                 {/*        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">*/}
