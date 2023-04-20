@@ -15,8 +15,11 @@ import {
     IconButton,
     Badge,
     Divider,
+    Typography,
 } from "@mui/material";
 import Theme from "@/Theme/Theme";
+import Menu from "@/Components/Menu";
+import Navbar from "@/Components/NavBar";
 
 export default function UserLayout({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -35,80 +38,11 @@ export default function UserLayout({ auth, header, children }) {
                         width: "16%",
                     }}
                 >
-                    <Card sx={{ height: 1, py: 1 }}>
-                        <Link href="/">
-                            <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200" />
-                        </Link>
-                        <Divider
-                            sx={{
-                                background: "red",
-                                width: "80%",
-                                mx: "auto",
-                                my: 1,
-                            }}
-                        />
-                    </Card>
+                    <Menu />
                 </Box>
+
                 <Box>
-                    <Card
-                        className="p-2"
-                        sx={{
-                            position: "fixed",
-                            top: "1%",
-                            right: ".5%",
-                            zIndex: 1000,
-                            height: "72px",
-                            width: "82.5%",
-                        }}
-                    >
-                        <Grid
-                            container
-                            spacing={1}
-                            justifyContent="flex-start"
-                            alignItems="center"
-                        >
-                            <Grid item xs={2}>
-                                <TextField
-                                    id="outlined-basic1"
-                                    label="Produkty"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <TextField
-                                    id="outlined-basic2"
-                                    label="Outlined"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={8}
-                                justifyContent="flex-end"
-                                alignItems="flex-end"
-                            >
-                                <Grid
-                                    container
-                                    spacing={1}
-                                    justifyContent="flex-end"
-                                    alignItems="flex-end"
-                                >
-                                    <Grid item xs={1}>
-                                        <Tooltip title="Delete">
-                                            <IconButton>
-                                                <Badge
-                                                    badgeContent={4}
-                                                    color="primary"
-                                                >
-                                                    <Delete />
-                                                </Badge>
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Card>
+                    <Navbar />
                 </Box>
                 <Box
                     sx={{
@@ -116,6 +50,8 @@ export default function UserLayout({ auth, header, children }) {
                         marginTop: "90px",
                     }}
                 >
+                    <Typography variant="h4">{header}</Typography>
+
                     {children}
                 </Box>
                 {/*<Grid item xs={10}>*/}

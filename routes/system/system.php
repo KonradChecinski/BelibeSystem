@@ -30,6 +30,12 @@ Route::get("/dashboard2", function () {
     ->middleware(["auth:user", "verified"])
     ->name("system.dashboard2");
 
+Route::get("/dashboard3", function () {
+    return Inertia::render("Dashboard3");
+})
+    ->middleware(["auth:user", "verified"])
+    ->name("system.dashboard3");
+
 Route::middleware("auth:user")->group(function () {
     Route::get("/profile", [ProfileController::class, "edit"])->name(
         "profile.edit"

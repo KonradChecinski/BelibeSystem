@@ -42,6 +42,9 @@ export default function Theme({ children }) {
                     mode: prefersDarkMode ? "dark" : "light",
                     ...(prefersDarkMode ? { ...darkTheme } : { ...lightTheme }),
                 },
+                typography: {
+                    fontSize: 11,
+                },
                 shape: {
                     borderRadius: 16,
                 },

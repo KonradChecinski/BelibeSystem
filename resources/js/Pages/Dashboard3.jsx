@@ -11,7 +11,7 @@ export default function Dashboard2(props) {
                 // <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 //     Dashboard
                 // </h2>
-                "Dashboard2"
+                "Dashboard3"
             }
         >
             <Head title="Dashboard" />
