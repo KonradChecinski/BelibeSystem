@@ -5,6 +5,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import React from "react";
 import NavLink from "@/Components/NavLink";
 import MenuMainLink from "@/Components/Menu/MenuMainLink";
+import SubMenuLink from "@/Components/Menu/SubMenuLink";
 
 export default function Menu({ menu }) {
     return (
@@ -36,7 +37,42 @@ export default function Menu({ menu }) {
                 href={route("system.dashboard2")}
                 active={route().current("system.dashboard2")}
                 text={"Dashboard2"}
-            />
+            >
+                <SubMenuLink
+                    href={route("system.dashboard3")}
+                    active={route().current("system.dashboard3")}
+                    text={"Dashboard3"}
+                >
+                    <SubMenuLink
+                        href={route("system.dashboard3")}
+                        active={route().current("system.dashboard3")}
+                        text={"Dashboard3"}
+                    >
+                        <SubMenuLink
+                            href={route("system.dashboard3")}
+                            active={route().current("system.dashboard3")}
+                            text={"Dashboard3"}
+                        >
+                            <SubMenuLink
+                                href={route("system.dashboard3")}
+                                active={route().current("system.dashboard3")}
+                                text={"Dashboard3"}
+                            ></SubMenuLink>
+                        </SubMenuLink>
+                        <SubMenuLink
+                            href={route("system.dashboard3")}
+                            active={route().current("system.dashboard3")}
+                            text={"Dashboard3"}
+                        >
+                            <SubMenuLink
+                                href={route("system.dashboard3")}
+                                active={route().current("system.dashboard3")}
+                                text={"Dashboard3"}
+                            ></SubMenuLink>
+                        </SubMenuLink>
+                    </SubMenuLink>
+                </SubMenuLink>
+            </MenuMainLink>
             <MenuMainLink
                 href={route("system.dashboard3")}
                 active={route().current("system.dashboard3")}
@@ -62,46 +98,46 @@ export default function Menu({ menu }) {
             // href={route("system.dashboard3")}
             // active={route().current("system.dashboard3")}
             />
-            <Box
-                sx={{
-                    my: 2,
-                    width: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                }}
-            >
-                <Link
-                    href={route("system.dashboard2")}
-                    active={route().current("system.dashboard2")}
-                >
-                    <Typography
-                        align="center"
-                        variant="h5"
-                        sx={{
-                            width: "fit-content",
-                            position: "relative",
-                            "&::after": {
-                                content: "''",
-                                position: "absolute",
-                                width: 1,
-                                transform: "scaleX(0)",
-                                height: "2px",
-                                bottom: 0,
-                                left: 0,
-                                background: "#0087ca",
-                                transformOrigin: "bottom right",
-                                transition: "transform 0.25s ease-out",
-                            },
-                            "&:hover::after": {
-                                transform: "scaleX(1)",
-                                transformOrigin: "bottom left",
-                            },
-                        }}
-                    >
-                        Dashboard2
-                    </Typography>
-                </Link>
-            </Box>
+            {/*<Box*/}
+            {/*    sx={{*/}
+            {/*        my: 2,*/}
+            {/*        width: 1,*/}
+            {/*        display: "flex",*/}
+            {/*        justifyContent: "center",*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    <Link*/}
+            {/*        href={route("system.dashboard2")}*/}
+            {/*        active={route().current("system.dashboard2")}*/}
+            {/*    >*/}
+            {/*        <Typography*/}
+            {/*            align="center"*/}
+            {/*            variant="h5"*/}
+            {/*            sx={{*/}
+            {/*                width: "fit-content",*/}
+            {/*                position: "relative",*/}
+            {/*                "&::after": {*/}
+            {/*                    content: "''",*/}
+            {/*                    position: "absolute",*/}
+            {/*                    width: 1,*/}
+            {/*                    transform: "scaleX(0)",*/}
+            {/*                    height: "2px",*/}
+            {/*                    bottom: 0,*/}
+            {/*                    left: 0,*/}
+            {/*                    background: "#0087ca",*/}
+            {/*                    transformOrigin: "bottom right",*/}
+            {/*                    transition: "transform 0.25s ease-out",*/}
+            {/*                },*/}
+            {/*                "&:hover::after": {*/}
+            {/*                    transform: "scaleX(1)",*/}
+            {/*                    transformOrigin: "bottom left",*/}
+            {/*                },*/}
+            {/*            }}*/}
+            {/*        >*/}
+            {/*            Dashboard2*/}
+            {/*        </Typography>*/}
+            {/*    </Link>*/}
+            {/*</Box>*/}
 
             {/*<NavLink*/}
             {/*    href={route("system.dashboard2")}*/}

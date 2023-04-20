@@ -8,9 +8,13 @@ import {
     IconButton,
     TextField,
     Tooltip,
+    InputAdornment,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
 } from "@mui/material";
 import React from "react";
-import { Delete } from "@mui/icons-material";
+import { Delete, Search } from "@mui/icons-material";
 
 export default function Navbar({ navbar }) {
     return (
@@ -32,18 +36,72 @@ export default function Navbar({ navbar }) {
                 alignItems="center"
             >
                 <Grid item xs={2}>
-                    <TextField
-                        id="outlined-basic1"
-                        label="Produkty"
+                    <FormControl
+                        sx={{ ml: 1, width: "100%" }}
                         variant="outlined"
-                    />
+                    >
+                        <InputLabel htmlFor="outlined-adornment-password">
+                            Produkty
+                        </InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type="text"
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    // aria-label="toggle password visibility"
+                                    // onClick={handleClickShowPassword}
+                                    // onMouseDown={handleMouseDownPassword}
+                                    >
+                                        <Search />
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                        />
+                    </FormControl>
+                    {/*<TextField*/}
+                    {/*    id="outlined-basic1"*/}
+                    {/*    label=""*/}
+                    {/*    variant="outlined"*/}
+                    {/*    endAdornment={*/}
+                    {/*        <InputAdornment position="end">*/}
+                    {/*            <IconButton*/}
+                    {/*                aria-label="toggle password visibility"*/}
+                    {/*                // onClick={handleClickShowPassword}*/}
+                    {/*                // onMouseDown={handleMouseDownPassword}*/}
+                    {/*            >*/}
+                    {/*                <Search />*/}
+                    {/*            </IconButton>*/}
+                    {/*        </InputAdornment>*/}
+                    {/*    }*/}
+                    {/*/>*/}
                 </Grid>
                 <Grid item xs={2}>
-                    <TextField
-                        id="outlined-basic2"
-                        label="Outlined"
+                    <FormControl
+                        sx={{ ml: 1, width: "100%" }}
                         variant="outlined"
-                    />
+                    >
+                        <InputLabel htmlFor="outlined-adornment-password">
+                            Produkty
+                        </InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type="text"
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    // aria-label="toggle password visibility"
+                                    // onClick={handleClickShowPassword}
+                                    // onMouseDown={handleMouseDownPassword}
+                                    >
+                                        <Search />
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                        />
+                    </FormControl>
                 </Grid>
                 <Grid
                     item
