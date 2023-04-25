@@ -12,11 +12,23 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
+    Avatar,
+    Menu,
+    MenuItem,
 } from "@mui/material";
 import React from "react";
 import { Delete, Search } from "@mui/icons-material";
 
 export default function Navbar({ navbar }) {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <Card
             className="p-2"
@@ -27,6 +39,7 @@ export default function Navbar({ navbar }) {
                 zIndex: 1000,
                 height: "72px",
                 width: "82.5%",
+                display: "flex",
             }}
         >
             <Grid
@@ -60,22 +73,6 @@ export default function Navbar({ navbar }) {
                             label="Password"
                         />
                     </FormControl>
-                    {/*<TextField*/}
-                    {/*    id="outlined-basic1"*/}
-                    {/*    label=""*/}
-                    {/*    variant="outlined"*/}
-                    {/*    endAdornment={*/}
-                    {/*        <InputAdornment position="end">*/}
-                    {/*            <IconButton*/}
-                    {/*                aria-label="toggle password visibility"*/}
-                    {/*                // onClick={handleClickShowPassword}*/}
-                    {/*                // onMouseDown={handleMouseDownPassword}*/}
-                    {/*            >*/}
-                    {/*                <Search />*/}
-                    {/*            </IconButton>*/}
-                    {/*        </InputAdornment>*/}
-                    {/*    }*/}
-                    {/*/>*/}
                 </Grid>
                 <Grid item xs={2}>
                     <FormControl
@@ -123,6 +120,37 @@ export default function Navbar({ navbar }) {
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Avatar
+                                alt="Remy Sharp"
+                                src="/storage/favicons/B.png"
+                                aria-controls={open ? "basic-menu" : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                                onClick={handleClick}
+                            >
+                                NS
+                            </Avatar>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    "aria-labelledby": "basic-button",
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}>
+                                    <Link
+                                        href={route("logout")}
+                                        method="post"
+                                        as="button"
+                                    >
+                                        Logout
+                                    </Link>
+                                </MenuItem>
+                            </Menu>
                         </Grid>
                     </Grid>
                 </Grid>

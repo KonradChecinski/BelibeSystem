@@ -39,37 +39,37 @@ export default function Menu({ menu }) {
                 text={"Dashboard2"}
             >
                 <SubMenuLink
-                    href={route("system.dashboard3")}
-                    active={route().current("system.dashboard3")}
-                    text={"Dashboard3"}
+                    href={route("system.dashboard2")}
+                    active={route().current("system.dashboard2")}
+                    text={"dashboard2"}
                 >
                     <SubMenuLink
-                        href={route("system.dashboard3")}
-                        active={route().current("system.dashboard3")}
-                        text={"Dashboard3"}
+                        href={route("system.dashboard2")}
+                        active={route().current("system.dashboard2")}
+                        text={"dashboard2"}
                     >
                         <SubMenuLink
                             href={route("system.dashboard3")}
                             active={route().current("system.dashboard3")}
-                            text={"Dashboard3"}
-                        >
-                            <SubMenuLink
-                                href={route("system.dashboard3")}
-                                active={route().current("system.dashboard3")}
-                                text={"Dashboard3"}
-                            ></SubMenuLink>
-                        </SubMenuLink>
+                            text={"dashboard3"}
+                        ></SubMenuLink>
+                    </SubMenuLink>
+                </SubMenuLink>
+                <SubMenuLink
+                    href={route("system.dashboard2")}
+                    active={route().current("system.dashboard2")}
+                    text={"dashboard2"}
+                >
+                    <SubMenuLink
+                        href={route("system.dashboard")}
+                        active={route().current("system.dashboard")}
+                        text={"dashboard"}
+                    >
                         <SubMenuLink
-                            href={route("system.dashboard3")}
-                            active={route().current("system.dashboard3")}
-                            text={"Dashboard3"}
-                        >
-                            <SubMenuLink
-                                href={route("system.dashboard3")}
-                                active={route().current("system.dashboard3")}
-                                text={"Dashboard3"}
-                            ></SubMenuLink>
-                        </SubMenuLink>
+                            href={route("system.dashboard")}
+                            active={route().current("system.dashboard")}
+                            text={"dashboard"}
+                        ></SubMenuLink>
                     </SubMenuLink>
                 </SubMenuLink>
             </MenuMainLink>

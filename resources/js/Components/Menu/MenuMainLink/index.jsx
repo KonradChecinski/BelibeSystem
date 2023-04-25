@@ -1,9 +1,21 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Link } from "@inertiajs/react";
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Box, Collapse, IconButton, Typography } from "@mui/material";
+import { useState } from "react";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import isChildActive from "@/Components/Menu/Functions/isChildActive";
 
-export default function MenuMainLink({ href, active, text, children }) {
+export default function MenuMainLink({
+    href,
+    active,
+    dropDown,
+    text,
+    children,
+}) {
+    const [showChildren, setShowChildren] = useState(
+        isChildActive(children) || active
+    );
+
     return (
         <Box
             sx={{
@@ -13,6 +25,7 @@ export default function MenuMainLink({ href, active, text, children }) {
                 my: 1,
                 background: "#0073BB",
                 borderRadius: 1,
+                position: "relative",
             }}
         >
             <Link href={href}>
@@ -33,11 +46,11 @@ export default function MenuMainLink({ href, active, text, children }) {
                         },
                     }}
                 >
-                    <DashboardIcon sx={{ marginRight: 2, fontSize: "2rem" }} />
+                    <DashboardIcon sx={{ marginRight: 1, fontSize: "1rem" }} />
 
                     <Typography
                         align="center"
-                        variant="h5"
+                        variant="h6"
                         sx={{
                             width: "fit-content",
                             position: "relative",
@@ -47,41 +60,20 @@ export default function MenuMainLink({ href, active, text, children }) {
                     </Typography>
                 </Box>
             </Link>
-            {children}
+            {children !== undefined ? (
+                <IconButton
+                    sx={{ position: "absolute", top: "3px", right: "5px" }}
+                    aria-label="down"
+                    onClick={() => {
+                        setShowChildren(!showChildren);
+                    }}
+                >
+                    {showChildren ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
+                </IconButton>
+            ) : (
+                ""
+            )}
+            <Collapse in={showChildren}>{children}</Collapse>
         </Box>
     );
-}
-
-{
-    /*<Divider*/
-}
-{
-    /*    sx={{*/
-}
-{
-    /*        display: "block",*/
-}
-{
-    /*        background:*/
-}
-{
-    /*            "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",*/
-}
-{
-    /*        height: "2px",*/
-}
-{
-    /*        width: "80%",*/
-}
-{
-    /*        mx: "auto",*/
-}
-{
-    /*        my: 1,*/
-}
-{
-    /*    }}*/
-}
-{
-    /*/>*/
 }
