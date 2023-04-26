@@ -12,11 +12,11 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    Avatar,
     Menu,
     MenuItem,
     Chip,
     ListItemIcon,
+    Avatar,
 } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
 import { useState } from "react";
@@ -28,18 +28,16 @@ import {
     Settings,
     Logout,
 } from "@mui/icons-material";
-import stringAvatar from "@/Functions/stringAvatar";
+import UserAvatar from "@/Components/UserAvatar";
 
 export default function Navbar({ auth }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        console.log("handleClick");
     };
     const handleClose = () => {
         setAnchorEl(null);
-        console.log("handleClose");
     };
 
     return (
@@ -149,87 +147,86 @@ export default function Navbar({ auth }) {
                                     aria-haspopup="true"
                                     aria-expanded={open ? "true" : undefined}
                                 >
-                                    <Avatar
-                                        src={""}
-                                        {...stringAvatar(auth.user.name)}
-                                    />
+                                    <UserAvatar auth={auth} />
                                 </IconButton>
                             </Tooltip>
 
-                            <ClickAwayListener
-                                mouseEvent="onMouseDown"
-                                touchEvent="onTouchStart"
-                                onClickAway={handleClose}
-                            >
-                                <Menu
-                                    anchorEl={anchorEl}
-                                    id="account-menu"
-                                    open={open}
-                                    onClose={handleClose}
-                                    onClick={handleClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: "visible",
-                                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                                            mt: 1.5,
-                                            "& .MuiAvatar-root": {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
-                                            },
-                                            "&:before": {
-                                                content: '""',
-                                                display: "block",
-                                                position: "absolute",
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: "background.paper",
-                                                transform:
-                                                    "translateY(-50%) rotate(45deg)",
-                                                zIndex: 0,
-                                            },
+                            {/*<ClickAwayListener*/}
+                            {/*    mouseEvent="onMouseDown"*/}
+                            {/*    touchEvent="onTouchStart"*/}
+                            {/*    onClickAway={handleClose}*/}
+                            {/*>*/}
+                            <Menu
+                                anchorEl={anchorEl}
+                                id="account-menu"
+                                open={open}
+                                onClose={handleClose}
+                                onClick={handleClose}
+                                hideBackdrop={true}
+                                disableScrollLock
+                                PaperProps={{
+                                    elevation: 0,
+                                    sx: {
+                                        overflow: "visible",
+                                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                                        mt: 1.5,
+                                        "& .MuiAvatar-root": {
+                                            width: 32,
+                                            height: 32,
+                                            ml: -0.5,
+                                            mr: 1,
                                         },
-                                    }}
-                                    transformOrigin={{
-                                        horizontal: "right",
-                                        vertical: "top",
-                                    }}
-                                    anchorOrigin={{
-                                        horizontal: "right",
-                                        vertical: "bottom",
-                                    }}
-                                >
-                                    <Link href={route("profile.edit")}>
-                                        <MenuItem onClick={handleClose}>
-                                            <Avatar /> Profile
-                                        </MenuItem>
-                                    </Link>
+                                        "&:before": {
+                                            content: '""',
+                                            display: "block",
+                                            position: "absolute",
+                                            top: 0,
+                                            right: 14,
+                                            width: 10,
+                                            height: 10,
+                                            bgcolor: "background.paper",
+                                            transform:
+                                                "translateY(-50%) rotate(45deg)",
+                                            zIndex: 0,
+                                        },
+                                    },
+                                }}
+                                transformOrigin={{
+                                    horizontal: "right",
+                                    vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                    horizontal: "right",
+                                    vertical: "bottom",
+                                }}
+                            >
+                                <Link href={route("profile.edit")}>
+                                    <MenuItem onClick={handleClose}>
+                                        <Avatar /> Profile
+                                    </MenuItem>
+                                </Link>
 
-                                    <Divider />
-                                    <MenuItem onClick={handleClose}>
+                                <Divider />
+                                <MenuItem onClick={handleClose}>
+                                    <ListItemIcon>
+                                        <Settings fontSize="small" />
+                                    </ListItemIcon>
+                                    Settings
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link
+                                        href={route("logout")}
+                                        method="post"
+                                        as="button"
+                                    >
                                         <ListItemIcon>
-                                            <Settings fontSize="small" />
+                                            <Logout fontSize="small" />
                                         </ListItemIcon>
-                                        Settings
-                                    </MenuItem>
-                                    <MenuItem onClick={handleClose}>
-                                        <Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            <ListItemIcon>
-                                                <Logout fontSize="small" />
-                                            </ListItemIcon>
-                                            Logout
-                                        </Link>
-                                    </MenuItem>
-                                </Menu>
-                            </ClickAwayListener>
+                                        Logout
+                                    </Link>
+                                </MenuItem>
+                            </Menu>
+                            {/*</ClickAwayListener>*/}
                         </Grid>
                     </Grid>
                 </Grid>
