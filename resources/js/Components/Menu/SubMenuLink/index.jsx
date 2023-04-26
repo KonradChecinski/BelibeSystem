@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 import { Box, IconButton, Typography, Collapse } from "@mui/material";
 import { useState } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import isChildActive from "@/Components/Menu/Functions/isChildActive";
+import isChildActive from "@/Functions/isChildActive";
 
 export default function SubMainLink({
     href,

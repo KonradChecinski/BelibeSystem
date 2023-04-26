@@ -15,30 +15,37 @@ import {
     Avatar,
     Menu,
     MenuItem,
+    Chip,
+    ListItemIcon,
 } from "@mui/material";
-import React from "react";
-import { Delete, Search } from "@mui/icons-material";
+import { ClickAwayListener } from "@mui/base";
+import { useState } from "react";
+import {
+    Delete,
+    Search,
+    ArrowDropDown,
+    PersonAdd,
+    Settings,
+    Logout,
+} from "@mui/icons-material";
+import stringAvatar from "@/Functions/stringAvatar";
 
-export default function Navbar({ navbar }) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+export default function Navbar({ auth }) {
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        console.log("handleClick");
     };
     const handleClose = () => {
         setAnchorEl(null);
+        console.log("handleClose");
     };
 
     return (
         <Card
             className="p-2"
             sx={{
-                position: "fixed",
-                top: "1%",
-                right: ".5%",
-                zIndex: 1000,
-                height: "72px",
-                width: "82.5%",
                 display: "flex",
             }}
         >
@@ -121,36 +128,108 @@ export default function Navbar({ navbar }) {
                                 </IconButton>
                             </Tooltip>
                         </Grid>
-                        <Grid item xs={1}>
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/storage/favicons/B.png"
-                                aria-controls={open ? "basic-menu" : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? "true" : undefined}
-                                onClick={handleClick}
+
+                        <Grid
+                            item
+                            xs={1}
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                position: "relative",
+                            }}
+                        >
+                            <Tooltip title="Account settings">
+                                <IconButton
+                                    onClick={handleClick}
+                                    sx={{ ml: 2 }}
+                                    aria-controls={
+                                        open ? "account-menu" : undefined
+                                    }
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? "true" : undefined}
+                                >
+                                    <Avatar
+                                        src={""}
+                                        {...stringAvatar(auth.user.name)}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+
+                            <ClickAwayListener
+                                mouseEvent="onMouseDown"
+                                touchEvent="onTouchStart"
+                                onClickAway={handleClose}
                             >
-                                NS
-                            </Avatar>
-                            <Menu
-                                id="basic-menu"
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                                MenuListProps={{
-                                    "aria-labelledby": "basic-button",
-                                }}
-                            >
-                                <MenuItem onClick={handleClose}>
-                                    <Link
-                                        href={route("logout")}
-                                        method="post"
-                                        as="button"
-                                    >
-                                        Logout
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    id="account-menu"
+                                    open={open}
+                                    onClose={handleClose}
+                                    onClick={handleClose}
+                                    PaperProps={{
+                                        elevation: 0,
+                                        sx: {
+                                            overflow: "visible",
+                                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                                            mt: 1.5,
+                                            "& .MuiAvatar-root": {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mr: 1,
+                                            },
+                                            "&:before": {
+                                                content: '""',
+                                                display: "block",
+                                                position: "absolute",
+                                                top: 0,
+                                                right: 14,
+                                                width: 10,
+                                                height: 10,
+                                                bgcolor: "background.paper",
+                                                transform:
+                                                    "translateY(-50%) rotate(45deg)",
+                                                zIndex: 0,
+                                            },
+                                        },
+                                    }}
+                                    transformOrigin={{
+                                        horizontal: "right",
+                                        vertical: "top",
+                                    }}
+                                    anchorOrigin={{
+                                        horizontal: "right",
+                                        vertical: "bottom",
+                                    }}
+                                >
+                                    <Link href={route("profile.edit")}>
+                                        <MenuItem onClick={handleClose}>
+                                            <Avatar /> Profile
+                                        </MenuItem>
                                     </Link>
-                                </MenuItem>
-                            </Menu>
+
+                                    <Divider />
+                                    <MenuItem onClick={handleClose}>
+                                        <ListItemIcon>
+                                            <Settings fontSize="small" />
+                                        </ListItemIcon>
+                                        Settings
+                                    </MenuItem>
+                                    <MenuItem onClick={handleClose}>
+                                        <Link
+                                            href={route("logout")}
+                                            method="post"
+                                            as="button"
+                                        >
+                                            <ListItemIcon>
+                                                <Logout fontSize="small" />
+                                            </ListItemIcon>
+                                            Logout
+                                        </Link>
+                                    </MenuItem>
+                                </Menu>
+                            </ClickAwayListener>
                         </Grid>
                     </Grid>
                 </Grid>

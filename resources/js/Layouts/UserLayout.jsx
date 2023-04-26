@@ -36,17 +36,28 @@ export default function UserLayout({ auth, header, children }) {
                         zIndex: 1000,
                         height: "98vh",
                         width: "16%",
+                        minWidth: "200px",
                     }}
                 >
                     <Menu />
                 </Box>
 
-                <Box>
-                    <Navbar />
+                <Box
+                    sx={{
+                        position: "fixed",
+                        top: "1%",
+                        right: ".5%",
+                        zIndex: 1000,
+                        height: "72px",
+                        width: "82.5%",
+                        maxWidth: "calc(100%-200px)",
+                    }}
+                >
+                    <Navbar auth={auth} />
                 </Box>
                 <Box
                     sx={{
-                        marginLeft: "17%",
+                        marginLeft: "max(17%,210px)",
                         marginTop: "90px",
                     }}
                 >
