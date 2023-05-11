@@ -51,4 +51,10 @@ Route::domain("b2b." . config("app.domain"))->group(function () {
     require __DIR__ . "/b2b/b2b.php";
 });
 
+
+
+
+Route::get('assets/{path}', function ($path) {
+    return response()->file(public_path("assets/$path"));
+});
 require __DIR__ . "/auth.php";

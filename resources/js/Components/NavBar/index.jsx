@@ -51,13 +51,13 @@ export default function Navbar({ auth }) {
                     justifyContent="flex-start"
                     alignItems="center"
                 >
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                         <FormControl
                             sx={{ ml: 1, width: "100%" }}
                             variant="outlined"
                         >
                             <InputLabel htmlFor="outlined-adornment-password">
-                                Produkty
+                                Produkt
                             </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password"
@@ -77,13 +77,13 @@ export default function Navbar({ auth }) {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                         <FormControl
                             sx={{ ml: 1, width: "100%" }}
                             variant="outlined"
                         >
                             <InputLabel htmlFor="outlined-adornment-password">
-                                Produkty
+                                Firma
                             </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password"
@@ -105,7 +105,8 @@ export default function Navbar({ auth }) {
                     </Grid>
                     <Grid
                         item
-                        xs={8}
+                        xs={4}
+                        md={8}
                         justifyContent="flex-end"
                         alignItems="flex-end"
                     >
@@ -115,26 +116,39 @@ export default function Navbar({ auth }) {
                             justifyContent="flex-end"
                             alignItems="flex-end"
                         >
-                            <Grid item xs={1}>
-                                <Tooltip title="Delete">
-                                    <IconButton onClick={handleClick}>
-                                        <Badge badgeContent={4} color="primary">
-                                            <Delete />
-                                        </Badge>
-                                    </IconButton>
-                                </Tooltip>
-                            </Grid>
-
                             <Grid
                                 item
-                                xs={1}
                                 sx={{
                                     display: "flex",
-                                    justifyContent: "center",
+                                    justifyContent: "flex-end",
                                     alignItems: "center",
                                     position: "relative",
                                 }}
                             >
+                                <Tooltip title="Delete">
+                                    <IconButton>
+                                        <Badge badgeContent={4} color="primary">
+                                            <Delete sx={{ fontSize: 30 }} />
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Tooltip title="Delete">
+                                    <IconButton>
+                                        <Badge badgeContent={4} color="primary">
+                                            <Delete sx={{ fontSize: 30 }} />
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Tooltip title="Delete">
+                                    <IconButton>
+                                        <Badge badgeContent={4} color="primary">
+                                            <Delete sx={{ fontSize: 30 }} />
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
+
                                 <Tooltip title="Account settings">
                                     <IconButton
                                         onClick={handleClick}

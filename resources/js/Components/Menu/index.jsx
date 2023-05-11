@@ -6,8 +6,13 @@ import React from "react";
 import NavLink from "@/Components/NavLink";
 import MenuMainLink from "@/Components/Menu/MenuMainLink";
 import SubMenuLink from "@/Components/Menu/SubMenuLink";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { TransitionGroup } from "react-transition-group";
 
-export default function Menu({ menu }) {
+export default function Menu({ menu, showContent }) {
+    const theme = useTheme();
+    const smBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     return (
         <Card
             sx={{
@@ -25,23 +30,28 @@ export default function Menu({ menu }) {
             <Divider
                 component="div"
                 sx={{
-                    background:
-                        "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
+                    // background:
+                    //     "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
+                    background: theme.palette.gradient.divider,
                     height: "2px",
                     width: "80%",
                     mx: "auto",
                     my: 1,
                 }}
             />
-            <MenuMainLink
-                href={route("system.dashboard2")}
-                active={route().current("system.dashboard2")}
-                text={"Dashboard2"}
+            <Box
+                sx={{
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    height: 1,
+                    width: "80%",
+                }}
             >
-                <SubMenuLink
+                <MenuMainLink
                     href={route("system.dashboard2")}
                     active={route().current("system.dashboard2")}
-                    text={"dashboard2"}
+                    showContent={smBreakpointUp || showContent}
+                    text={"Dashboard2"}
                 >
                     <SubMenuLink
                         href={route("system.dashboard2")}
@@ -49,116 +59,82 @@ export default function Menu({ menu }) {
                         text={"dashboard2"}
                     >
                         <SubMenuLink
-                            href={route("system.dashboard3")}
-                            active={route().current("system.dashboard3")}
-                            text={"dashboard3"}
-                        ></SubMenuLink>
+                            href={route("system.dashboard2")}
+                            active={route().current("system.dashboard2")}
+                            text={"dashboard2"}
+                        >
+                            <SubMenuLink
+                                href={route("system.dashboard3")}
+                                active={route().current("system.dashboard3")}
+                                text={"dashboard3"}
+                            ></SubMenuLink>
+                        </SubMenuLink>
                     </SubMenuLink>
-                </SubMenuLink>
-                <SubMenuLink
-                    href={route("system.dashboard2")}
-                    active={route().current("system.dashboard2")}
-                    text={"dashboard2"}
-                >
                     <SubMenuLink
-                        href={route("system.dashboard")}
-                        active={route().current("system.dashboard")}
-                        text={"dashboard"}
+                        href={route("system.dashboard2")}
+                        active={route().current("system.dashboard2")}
+                        text={"dashboard2"}
                     >
                         <SubMenuLink
                             href={route("system.dashboard")}
                             active={route().current("system.dashboard")}
                             text={"dashboard"}
-                        ></SubMenuLink>
+                        >
+                            <SubMenuLink
+                                href={route("system.dashboard")}
+                                active={route().current("system.dashboard")}
+                                text={"dashboard"}
+                            ></SubMenuLink>
+                        </SubMenuLink>
                     </SubMenuLink>
-                </SubMenuLink>
-            </MenuMainLink>
-            <MenuMainLink
-                href={route("system.dashboard3")}
-                active={route().current("system.dashboard3")}
-                text={"Dashboard3"}
-            />
-            <MenuMainLink
-            // href={route("system.dashboard3")}
-            // active={route().current("system.dashboard3")}
-            />
-            <MenuMainLink
-            // href={route("system.dashboard3")}
-            // active={route().current("system.dashboard3")}
-            />
-            <MenuMainLink
-            // href={route("system.dashboard3")}
-            // active={route().current("system.dashboard3")}
-            />
-            <MenuMainLink
-            // href={route("system.dashboard3")}
-            // active={route().current("system.dashboard3")}
-            />
-            <MenuMainLink
-            // href={route("system.dashboard3")}
-            // active={route().current("system.dashboard3")}
-            />
-            {/*<Box*/}
-            {/*    sx={{*/}
-            {/*        my: 2,*/}
-            {/*        width: 1,*/}
-            {/*        display: "flex",*/}
-            {/*        justifyContent: "center",*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    <Link*/}
-            {/*        href={route("system.dashboard2")}*/}
-            {/*        active={route().current("system.dashboard2")}*/}
-            {/*    >*/}
-            {/*        <Typography*/}
-            {/*            align="center"*/}
-            {/*            variant="h5"*/}
-            {/*            sx={{*/}
-            {/*                width: "fit-content",*/}
-            {/*                position: "relative",*/}
-            {/*                "&::after": {*/}
-            {/*                    content: "''",*/}
-            {/*                    position: "absolute",*/}
-            {/*                    width: 1,*/}
-            {/*                    transform: "scaleX(0)",*/}
-            {/*                    height: "2px",*/}
-            {/*                    bottom: 0,*/}
-            {/*                    left: 0,*/}
-            {/*                    background: "#0087ca",*/}
-            {/*                    transformOrigin: "bottom right",*/}
-            {/*                    transition: "transform 0.25s ease-out",*/}
-            {/*                },*/}
-            {/*                "&:hover::after": {*/}
-            {/*                    transform: "scaleX(1)",*/}
-            {/*                    transformOrigin: "bottom left",*/}
-            {/*                },*/}
-            {/*            }}*/}
-            {/*        >*/}
-            {/*            Dashboard2*/}
-            {/*        </Typography>*/}
-            {/*    </Link>*/}
-            {/*</Box>*/}
-
-            {/*<NavLink*/}
-            {/*    href={route("system.dashboard2")}*/}
-            {/*    active={route().current("system.dashboard2")}*/}
-            {/*>*/}
-            {/*    /!*{...props}*!/*/}
-            {/*    /!*    className={*!/*/}
-            {/*    /!*    'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +*!/*/}
-            {/*    /!*    (active*!/*/}
-            {/*    /!*        ? 'border-indigo-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100 focus:border-indigo-700 '*!/*/}
-            {/*    /!*        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 ') +*!/*/}
-            {/*    /!*    className*!/*/}
-            {/*    /!*}*!/*/}
-            {/*    Dashboard2*/}
-            {/*</NavLink>*/}
-            {/*<NavLink*/}
-            {/*    href={route("system.dashboard3")}*/}
-            {/*    active={route().current("system.dashboard3")}*/}
-            {/*>*/}
-            {/*    Dashboard3*/}
-            {/*</NavLink>*/}
+                </MenuMainLink>
+                <MenuMainLink
+                    href={route("system.dashboard3")}
+                    active={route().current("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    text={"Dashboard3"}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+                <MenuMainLink
+                    // href={route("system.dashboard3")}
+                    showContent={smBreakpointUp || showContent}
+                    // active={route().current("system.dashboard3")}
+                />
+            </Box>
         </Card>
     );
 }

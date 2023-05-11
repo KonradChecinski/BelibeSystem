@@ -11,7 +11,8 @@ export default function Theme({ children }) {
 
     let lightTheme = {
         primary: {
-            main: "#1A2035",
+            // main: "#1A2035",
+            main: "#2a54d9",
         },
         // secondary: {},
         background: {
@@ -19,6 +20,11 @@ export default function Theme({ children }) {
             default: "#f3f4f6",
             paper: "#ffffff",
             card: "#ffffff",
+            toolbar: "#ffffff",
+        },
+        gradient: {
+            divider:
+                "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)",
         },
     };
 
@@ -32,6 +38,11 @@ export default function Theme({ children }) {
             default: "#111827",
             paper: "#1f2937",
             card: "#1f2937",
+            toolbar: "#1f2937",
+        },
+        gradient: {
+            divider:
+                "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
         },
     };
 

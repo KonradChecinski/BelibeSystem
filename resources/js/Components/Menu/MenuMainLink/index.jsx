@@ -4,10 +4,13 @@ import { Box, Collapse, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function MenuMainLink({
     href,
     active,
+    showContent,
     dropDown,
     text,
     children,
@@ -19,19 +22,21 @@ export default function MenuMainLink({
     return (
         <Box
             sx={{
-                width: "80%",
-                height: "fit-content",
-                mx: 1,
+                width: "100%",
+                minHeight: "40px",
+                // mx: 1,
                 my: 1,
                 background: "#0073BB",
                 borderRadius: 1,
                 position: "relative",
             }}
         >
-            <Link href={href}>
+            <Link href={href} className={"h-full min-h-[40px]"}>
                 <Box
                     sx={{
                         width: 1,
+                        height: 1,
+                        minHeight: "40px",
                         display: "flex",
                         justifyContent: "flex-start",
                         alignItems: "center",
@@ -46,34 +51,55 @@ export default function MenuMainLink({
                         },
                     }}
                 >
-                    <DashboardIcon sx={{ marginRight: 1, fontSize: "1rem" }} />
-
-                    <Typography
-                        align="center"
-                        variant="h6"
+                    <DashboardIcon
                         sx={{
-                            width: "fit-content",
-                            position: "relative",
+                            mr: showContent ? 1 : "auto",
+                            ml: showContent ? "" : "auto",
+                            fontSize: "1rem",
                         }}
-                    >
-                        {text}
-                    </Typography>
+                    />
+                    {showContent ? (
+                        <Typography
+                            align="center"
+                            variant="h6"
+                            sx={{
+                                width: "fit-content",
+                                position: "relative",
+                            }}
+                        >
+                            {text}
+                        </Typography>
+                    ) : (
+                        ""
+                    )}
                 </Box>
             </Link>
-            {children !== undefined ? (
-                <IconButton
-                    sx={{ position: "absolute", top: "3px", right: "5px" }}
-                    aria-label="down"
-                    onClick={() => {
-                        setShowChildren(!showChildren);
-                    }}
-                >
-                    {showChildren ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
-                </IconButton>
+            {showContent ? (
+                children !== undefined ? (
+                    <IconButton
+                        sx={{ position: "absolute", top: "3px", right: "5px" }}
+                        aria-label="down"
+                        onClick={() => {
+                            setShowChildren(!showChildren);
+                        }}
+                    >
+                        {showChildren ? (
+                            <KeyboardArrowDown />
+                        ) : (
+                            <KeyboardArrowUp />
+                        )}
+                    </IconButton>
+                ) : (
+                    ""
+                )
             ) : (
                 ""
             )}
-            <Collapse in={showChildren}>{children}</Collapse>
+            {showContent ? (
+                <Collapse in={showChildren}>{children}</Collapse>
+            ) : (
+                ""
+            )}
         </Box>
     );
 }

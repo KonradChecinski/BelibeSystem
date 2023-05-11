@@ -1,8 +1,11 @@
 import { Head } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import NavLink from "@/Components/NavLink";
+import { Button } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 export default function Dashboard2(props) {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     return (
         <UserLayout
             auth={props.auth}
@@ -22,6 +25,15 @@ export default function Dashboard2(props) {
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             You're logged in!
                         </div>
+                        <Button
+                            onClick={() =>
+                                enqueueSnackbar("Błąd", {
+                                    variant: "error",
+                                })
+                            }
+                        >
+                            Zrób cos
+                        </Button>
                     </div>
                 </div>
             </div>

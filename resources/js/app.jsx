@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { LaravelReactI18nProvider } from "laravel-react-i18n";
+import { SnackbarProvider } from "notistack";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -37,7 +38,17 @@ createInertiaApp({
                     // }
                 }}
             >
-                <App {...props} />
+                <SnackbarProvider
+                    // dense
+                    maxSnack={7}
+                    autoHideDuration={3000}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                    }}
+                >
+                    <App {...props} />
+                </SnackbarProvider>
             </LaravelReactI18nProvider>
         );
     },
