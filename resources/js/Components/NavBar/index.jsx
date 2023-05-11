@@ -126,9 +126,9 @@ export default function Navbar({ auth }) {
                                 }}
                             >
                                 <Tooltip title="Delete">
-                                    <IconButton>
+                                    <IconButton size={"large"}>
                                         <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 30 }} />
+                                            <Delete sx={{ fontSize: 25 }} />
                                         </Badge>
                                     </IconButton>
                                 </Tooltip>
@@ -136,7 +136,7 @@ export default function Navbar({ auth }) {
                                 <Tooltip title="Delete">
                                     <IconButton>
                                         <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 30 }} />
+                                            <Delete sx={{ fontSize: 25 }} />
                                         </Badge>
                                     </IconButton>
                                 </Tooltip>
@@ -144,7 +144,7 @@ export default function Navbar({ auth }) {
                                 <Tooltip title="Delete">
                                     <IconButton>
                                         <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 30 }} />
+                                            <Delete sx={{ fontSize: 25 }} />
                                         </Badge>
                                     </IconButton>
                                 </Tooltip>

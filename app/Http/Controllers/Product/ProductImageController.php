@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
-use App\Models\ProductExtraBarcode;
-use App\Http\Requests\StoreProductExtraBarcodeRequest;
-use App\Http\Requests\UpdateProductExtraBarcodeRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductImageRequest;
+use App\Http\Requests\UpdateProductImageRequest;
+use App\Models\ProductImage;
 
-class ProductExtraBarcodeController extends Controller
+class ProductImageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class ProductExtraBarcodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductExtraBarcodeRequest $request)
+    public function store(StoreProductImageRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProductExtraBarcodeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductExtraBarcode $productExtraBarcode)
+    public function show(ProductImage $productImage)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProductExtraBarcodeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductExtraBarcode $productExtraBarcode)
+    public function edit(ProductImage $productImage)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProductExtraBarcodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductExtraBarcodeRequest $request, ProductExtraBarcode $productExtraBarcode)
+    public function update(UpdateProductImageRequest $request, ProductImage $productImage)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProductExtraBarcodeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductExtraBarcode $productExtraBarcode)
+    public function destroy(ProductImage $productImage)
     {
         //
     }

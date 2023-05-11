@@ -37,9 +37,9 @@ export default function UserLayout({ auth, header, children }) {
                                     minWidth: "80px",
                                     "&: hover": {
                                         width: "16%",
-                                        minWidth: "200px",
-                                    },
-                                },
+                                        minWidth: "200px"
+                                    }
+                                }
                             }}
                         >
                             <Menu showContent={showMenu} />
@@ -55,8 +55,8 @@ export default function UserLayout({ auth, header, children }) {
                                 width: "min(82.5%, calc(100% - 215px))",
                                 transition: "all .5s ease-in-out;",
                                 [theme.breakpoints.down("md")]: {
-                                    width: "calc(100% - 95px)",
-                                },
+                                    width: "calc(100% - 95px)"
+                                }
                             }}
                         >
                             <Navbar auth={auth} />
@@ -74,19 +74,21 @@ export default function UserLayout({ auth, header, children }) {
                 <Box
                     sx={{
                         [theme.breakpoints.down("sm")]: {
-                            m: 1,
+                            m: 1
                         },
                         [theme.breakpoints.up("sm")]: {
                             marginLeft: "100px",
-                            marginTop: "90px",
+                            marginTop: "90px"
                         },
                         [theme.breakpoints.up("md")]: {
                             marginLeft: "max(17%,220px)",
+                            marginRight: "10px",
                             marginTop: "90px",
-                        },
+                            marginBottom: "10px"
+                        }
                     }}
                 >
-                    <Typography variant="h4">{header}</Typography>
+                    <Typography variant="h4" sx={{ my: 2, mx: 1, pt: 1 }}>{header}</Typography>
 
                     {children}
                 </Box>

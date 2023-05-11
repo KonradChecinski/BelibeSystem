@@ -1,19 +1,37 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\DataProductModelRequest;
 use App\Http\Requests\StoreProductModelRequest;
 use App\Http\Requests\UpdateProductModelRequest;
 use App\Models\ProductModel;
+use Inertia\Inertia;
 
 class ProductModelController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Inertia\Response
     {
-        //
+
+        return Inertia::render("Products/ModelList");
+    }
+
+    public function data(DataProductModelRequest $request)
+    {
+        $models = ProductModel::orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
+        if ($request->search) {
+            foreach (json_decode($request->search) as $word) {
+                $models->orWhere('id', 'LIKE', '%' . $word . '%');
+                $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
+                $models->orWhere('name', 'LIKE', '%' . $word . '%');
+            }
+        }
+        $models = $models->paginate($request->limit);
+        return response()->json([$models]);
     }
 
     /**

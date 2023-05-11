@@ -53,86 +53,23 @@ export default function Menu({ menu, showContent }) {
                     showContent={smBreakpointUp || showContent}
                     text={"Dashboard2"}
                 >
-                    <SubMenuLink
-                        href={route("system.dashboard2")}
-                        active={route().current("system.dashboard2")}
-                        text={"dashboard2"}
-                    >
-                        <SubMenuLink
-                            href={route("system.dashboard2")}
-                            active={route().current("system.dashboard2")}
-                            text={"dashboard2"}
-                        >
-                            <SubMenuLink
-                                href={route("system.dashboard3")}
-                                active={route().current("system.dashboard3")}
-                                text={"dashboard3"}
-                            ></SubMenuLink>
-                        </SubMenuLink>
-                    </SubMenuLink>
-                    <SubMenuLink
-                        href={route("system.dashboard2")}
-                        active={route().current("system.dashboard2")}
-                        text={"dashboard2"}
-                    >
-                        <SubMenuLink
-                            href={route("system.dashboard")}
-                            active={route().current("system.dashboard")}
-                            text={"dashboard"}
-                        >
-                            <SubMenuLink
-                                href={route("system.dashboard")}
-                                active={route().current("system.dashboard")}
-                                text={"dashboard"}
-                            ></SubMenuLink>
-                        </SubMenuLink>
-                    </SubMenuLink>
+                    {/*<SubMenuLink*/}
+                    {/*    href={route("system.dashboard2")}*/}
+                    {/*    active={route().current("system.dashboard2")}*/}
+                    {/*    text={"dashboard2"}*/}
+                    {/*></SubMenuLink>*/}
                 </MenuMainLink>
+                <MenuMainLink
+                    href={route("system.products.models")}
+                    active={route().current("system.products.models")}
+                    showContent={smBreakpointUp || showContent}
+                    text={"Produkty"}
+                />
                 <MenuMainLink
                     href={route("system.dashboard3")}
                     active={route().current("system.dashboard3")}
                     showContent={smBreakpointUp || showContent}
-                    text={"Dashboard3"}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
-                />
-                <MenuMainLink
-                    // href={route("system.dashboard3")}
-                    showContent={smBreakpointUp || showContent}
-                    // active={route().current("system.dashboard3")}
+                    text={"Ustawienia"}
                 />
             </Box>
         </Card>

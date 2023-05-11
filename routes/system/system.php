@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::get("/dashboard3", function () {
     ->name("system.dashboard3");
 
 Route::middleware("auth:user")->group(function () {
+    Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
+    Route::get("/models/data", [ProductModelController::class, 'data']);
     Route::get("/profile", [ProfileController::class, "edit"])->name(
         "profile.edit"
     );
@@ -46,6 +49,7 @@ Route::middleware("auth:user")->group(function () {
     Route::delete("/profile", [ProfileController::class, "destroy"])->name(
         "profile.destroy"
     );
+
 });
 
 require __DIR__ . "/auth.php";

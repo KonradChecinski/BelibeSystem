@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
-use App\Models\ProductGroup;
-use App\Http\Requests\StoreProductGroupRequest;
-use App\Http\Requests\UpdateProductGroupRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductModelColorRequest;
+use App\Http\Requests\UpdateProductModelColorRequest;
+use App\Models\ProductModelColor;
 
-class ProductGroupController extends Controller
+class ProductModelColorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class ProductGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductGroupRequest $request)
+    public function store(StoreProductModelColorRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProductGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductGroup $productGroup)
+    public function show(ProductModelColor $productModelColor)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProductGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductGroup $productGroup)
+    public function edit(ProductModelColor $productModelColor)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProductGroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductGroupRequest $request, ProductGroup $productGroup)
+    public function update(UpdateProductModelColorRequest $request, ProductModelColor $productModelColor)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProductGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductGroup $productGroup)
+    public function destroy(ProductModelColor $productModelColor)
     {
         //
     }

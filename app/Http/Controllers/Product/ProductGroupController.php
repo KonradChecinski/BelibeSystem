@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
-use App\Models\ProductModelColor;
-use App\Http\Requests\StoreProductModelColorRequest;
-use App\Http\Requests\UpdateProductModelColorRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductGroupRequest;
+use App\Http\Requests\UpdateProductGroupRequest;
+use App\Models\ProductGroup;
 
-class ProductModelColorController extends Controller
+class ProductGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class ProductModelColorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductModelColorRequest $request)
+    public function store(StoreProductGroupRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProductModelColorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductModelColor $productModelColor)
+    public function show(ProductGroup $productGroup)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProductModelColorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductModelColor $productModelColor)
+    public function edit(ProductGroup $productGroup)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProductModelColorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductModelColorRequest $request, ProductModelColor $productModelColor)
+    public function update(UpdateProductGroupRequest $request, ProductGroup $productGroup)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProductModelColorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductModelColor $productModelColor)
+    public function destroy(ProductGroup $productGroup)
     {
         //
     }
