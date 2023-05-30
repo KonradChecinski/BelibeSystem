@@ -22,7 +22,9 @@ class ProductModelController extends Controller
 
     public function data(DataProductModelRequest $request)
     {
-        $models = ProductModel::orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
+        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products"])->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
+        //dd($models->get()->toArray());
+        //
         if ($request->search) {
             foreach (json_decode($request->search) as $word) {
                 $models->orWhere('id', 'LIKE', '%' . $word . '%');
@@ -30,7 +32,7 @@ class ProductModelController extends Controller
                 $models->orWhere('name', 'LIKE', '%' . $word . '%');
             }
         }
-        $models = $models->paginate($request->limit);
+        $models = $models->paginate($request->limit, ['id', 'symbol', 'name']);
         return response()->json([$models]);
     }
 
@@ -53,9 +55,10 @@ class ProductModelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductModel $productModel)
+    public function show(int $id)
     {
-        //
+        $productModel = ProductModel::with(["colors", "products"])->find($id);
+        return Inertia::render("Products/Model", ["productModel" => $productModel]);
     }
 
     /**

@@ -21,7 +21,7 @@ export default function Menu({ menu, showContent }) {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "flex-start",
-                alignItems: "center",
+                alignItems: "center"
             }}
         >
             <Link href="/">
@@ -36,7 +36,7 @@ export default function Menu({ menu, showContent }) {
                     height: "2px",
                     width: "80%",
                     mx: "auto",
-                    my: 1,
+                    my: 1
                 }}
             />
             <Box
@@ -44,21 +44,15 @@ export default function Menu({ menu, showContent }) {
                     overflowY: "auto",
                     overflowX: "hidden",
                     height: 1,
-                    width: "80%",
+                    width: "80%"
                 }}
             >
                 <MenuMainLink
-                    href={route("system.dashboard2")}
-                    active={route().current("system.dashboard2")}
+                    href={route("system.dashboard")}
+                    active={route().current("system.dashboard")}
                     showContent={smBreakpointUp || showContent}
-                    text={"Dashboard2"}
-                >
-                    {/*<SubMenuLink*/}
-                    {/*    href={route("system.dashboard2")}*/}
-                    {/*    active={route().current("system.dashboard2")}*/}
-                    {/*    text={"dashboard2"}*/}
-                    {/*></SubMenuLink>*/}
-                </MenuMainLink>
+                    text={"Dashboard"}
+                />
                 <MenuMainLink
                     href={route("system.products.models")}
                     active={route().current("system.products.models")}
@@ -66,11 +60,22 @@ export default function Menu({ menu, showContent }) {
                     text={"Produkty"}
                 />
                 <MenuMainLink
-                    href={route("system.dashboard3")}
-                    active={route().current("system.dashboard3")}
+                    href={route("system.settings")}
+                    active={route().current("system.settings")}
                     showContent={smBreakpointUp || showContent}
                     text={"Ustawienia"}
-                />
+                >
+                    <SubMenuLink
+                        href={route("system.settings.main")}
+                        active={route().current("system.settings.main")}
+                        text={"Główne"}
+                    />
+                    <SubMenuLink
+                        href={route("system.settings.users")}
+                        active={route().current("system.settings.users")}
+                        text={"Użytkownicy"}
+                    />
+                </MenuMainLink>
             </Box>
         </Card>
     );

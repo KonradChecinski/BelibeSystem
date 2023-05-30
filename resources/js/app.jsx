@@ -7,6 +7,9 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { LaravelReactI18nProvider } from "laravel-react-i18n";
 import { SnackbarProvider } from "notistack";
 
+import { DevSupport } from "@react-buddy/ide-toolbox";
+import { ComponentPreviews, useInitial } from "../../dev";
+
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
 
@@ -44,7 +47,7 @@ createInertiaApp({
                     autoHideDuration={3000}
                     anchorOrigin={{
                         vertical: "bottom",
-                        horizontal: "right",
+                        horizontal: "right"
                     }}
                 >
                     <App {...props} />
@@ -53,6 +56,6 @@ createInertiaApp({
         );
     },
     progress: {
-        color: "#4B5563",
-    },
+        color: "#4B5563"
+    }
 });

@@ -23,10 +23,10 @@ export default function UserAvatarMenu(props) {
                         width: 32,
                         height: 32,
                         ml: -0.5,
-                        mr: 1,
+                        mr: 1
                     },
                     "&:before": {
-                        content: '""',
+                        content: "\"\"",
                         display: "block",
                         position: "absolute",
                         top: 0,
@@ -35,17 +35,17 @@ export default function UserAvatarMenu(props) {
                         height: 10,
                         bgcolor: "background.paper",
                         transform: "translateY(-50%) rotate(45deg)",
-                        zIndex: 0,
-                    },
-                },
+                        zIndex: 0
+                    }
+                }
             }}
             transformOrigin={{
                 horizontal: "right",
-                vertical: "top",
+                vertical: "top"
             }}
             anchorOrigin={{
                 horizontal: "right",
-                vertical: "bottom",
+                vertical: "bottom"
             }}
         >
             <Link href={route("profile.edit")}>
@@ -56,10 +56,12 @@ export default function UserAvatarMenu(props) {
 
             <Divider />
             <MenuItem onClick={props.onClose}>
-                <ListItemIcon>
-                    <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
+                <Link href={route("system.settings.main")} as="button">
+                    <ListItemIcon>
+                        <Settings fontSize="small" />
+                    </ListItemIcon>
+                    Settings
+                </Link>
             </MenuItem>
             <MenuItem onClick={props.onClose}>
                 <Link href={route("logout")} method="post" as="button">
@@ -76,5 +78,5 @@ export default function UserAvatarMenu(props) {
 UserAvatarMenu.propTypes = {
     anchorEl: PropTypes.any,
     open: PropTypes.bool,
-    onClose: PropTypes.func,
+    onClose: PropTypes.func
 };

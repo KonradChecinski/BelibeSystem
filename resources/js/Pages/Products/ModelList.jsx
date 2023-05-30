@@ -1,9 +1,9 @@
 import { Head } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import NavLink from "@/Components/NavLink";
-import { Button, Paper } from "@mui/material";
+import { Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import Table from "@/Components/Table";
+import ModelsTable from "@/Components/Table/ModelsTable";
 
 export default function ModelList(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -12,21 +12,7 @@ export default function ModelList(props) {
             <Head title="Dashboard" />
 
             <Paper>
-                <Table
-                    url={route(route().current()) + "/data"}
-                    column={[
-                        { field: "id", headerName: "Id" },
-                        { field: "symbol", headerName: "Symbol" },
-                        {
-                            field: "name",
-                            headerName: "Name",
-                            flex: 1,
-                        },
-                    ]}
-                    columnVisibility={{
-                        id: false,
-                    }}
-                />
+                <ModelsTable {...props} />
             </Paper>
         </UserLayout>
     );

@@ -1,15 +1,17 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import UserLayout from "@/Layouts/UserLayout";
 
 export default function Dashboard(props) {
     return (
-        <AuthenticatedLayout
+        <UserLayout
             auth={props.auth}
             errors={props.errors}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Dashboard
-                </h2>
+                // <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                //     Dashboard
+                // </h2>
+                "Dashboard2"
             }
         >
             <Head title="Dashboard" />
@@ -20,12 +22,9 @@ export default function Dashboard(props) {
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             You're logged in!
                         </div>
-                        <Link href={route("system.dashboard2")} as="button">
-                            Dashboard2
-                        </Link>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </UserLayout>
     );
 }

@@ -1,9 +1,71 @@
 import { DataGrid, GridToolbar, plPL, enUS } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
+import { router } from "@inertiajs/react";
 import { Button, IconButton } from "@mui/material";
 import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
+import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 
-export default function Table({ url, column, columnVisibility }) {
+export default function ModelsTable(props) {
+    const url = route(route().current()) + "/data";
+    const column = [
+        { field: "id", headerName: "Id" },
+        { field: "symbol", headerName: "Symbol" },
+
+        {
+            field: "name",
+            headerName: "Name",
+            width: 400
+        },
+        {
+            field: "colors", headerName: "Kolory",
+            renderCell: (params) => {
+                return (
+                    <ColorsCell key={params.row.id} {...params} />
+                );
+            },
+            flex: 1
+        },
+        {
+            field: "action",
+            headerName: "Akcje",
+            width: 120,
+            sortable: false,
+            renderCell: (params) => {
+                const onShowClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    router.get(route("system.products.model", { id: params.row.id }));
+                };
+                const onEditClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+
+                    return alert(JSON.stringify(params.row, null, 4));
+                };
+
+                return (
+                    <>
+
+                        <IconButton aria-label="preview" onClick={onShowClick}>
+                            {/*<Preview />*/}
+                            <Visibility />
+                        </IconButton>
+                        <IconButton aria-label="edit" onClick={onEditClick}>
+                            <Edit />
+                        </IconButton>
+                        <IconButton aria-label="delete">
+                            <Delete />
+                        </IconButton>
+
+                    </>
+
+                );
+
+            }
+        }
+
+    ];
+    const columnVisibility = {
+        id: false
+    };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 100,
@@ -17,42 +79,6 @@ export default function Table({ url, column, columnVisibility }) {
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
         ...columnVisibility
     });
-
-    const columnWithAction = [
-        ...column,
-        {
-            field: "action",
-            headerName: "Akcje",
-            width: 120,
-            sortable: false,
-            renderCell: (params) => {
-                const onClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    return alert(JSON.stringify(params.row, null, 4));
-                };
-
-                return (
-                    <>
-
-                        <IconButton aria-label="preview">
-                            {/*<Preview />*/}
-                            <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={onClick}>
-                            <Edit />
-                        </IconButton>
-                        <IconButton aria-label="delete">
-                            <Delete />
-                        </IconButton>
-
-                    </>
-
-                );
-
-            }
-        }
-    ];
 
     const handleSortModelChange = useCallback((sortModel) => {
         setPaginationModel({
@@ -103,20 +129,7 @@ export default function Table({ url, column, columnVisibility }) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
-            console.log(json[0].data);
-            let data = [];
-            json[0].data.map((value) => {
-                let rowData = value;
-                let colors = "";
-                value.colors.map((value) => {
-                    colors += `${value.shortcut} - ${value.name} `;
-                });
-                rowData.colors = colors;
-                // console.log(rowData);
-                data.push(rowData);
-            });
-            console.log(data);
-            setPageData(data);
+            setPageData(json[0].data);
             setIsLoading(false);
         };
         fetchData();
@@ -125,7 +138,7 @@ export default function Table({ url, column, columnVisibility }) {
     return (
         <DataGrid
             rows={pageData}
-            columns={columnWithAction}
+            columns={column}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={(newModel) =>
                 setColumnVisibilityModel(newModel)

@@ -31,6 +31,8 @@
         "laravel-react-i18n": "^1.0.4",
         "notistack": "^3.0.1",
         "prop-types": "^15.8.1",
-        "react-transition-group": "^4.4.5"
+        "react-transition-group": "^4.4.5",
+      "@react-buddy/ide-toolbox": "^2.3.1",
+      "@react-buddy/palette-mui": "^5.0.1"
     }
 }
