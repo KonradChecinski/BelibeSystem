@@ -9,22 +9,25 @@ export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
         { field: "id", headerName: "Id" },
+        { field: "img", headerName: "Zdjęcie", sortable: false },
         { field: "symbol", headerName: "Symbol" },
 
         {
             field: "name",
             headerName: "Name",
-            width: 400
+            width: 400,
         },
+        { field: "group", headerName: "Grupa" },
         {
-            field: "colors", headerName: "Kolory",
+            field: "colors",
+            headerName: "Kolory",
+            sortable: false,
             renderCell: (params) => {
-                return (
-                    <ColorsCell key={params.row.id} {...params} />
-                );
+                return <ColorsCell key={params.row.id} {...params} />;
             },
-            flex: 1
+            flex: 1,
         },
+        { field: "quantity", headerName: "Stan" },
         {
             field: "action",
             headerName: "Akcje",
@@ -33,7 +36,9 @@ export default function ModelsTable(props) {
             renderCell: (params) => {
                 const onShowClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-                    router.get(route("system.products.model", { id: params.row.id }));
+                    router.get(
+                        route("system.products.model", { id: params.row.id })
+                    );
                 };
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -43,7 +48,6 @@ export default function ModelsTable(props) {
 
                 return (
                     <>
-
                         <IconButton aria-label="preview" onClick={onShowClick}>
                             {/*<Preview />*/}
                             <Visibility />
@@ -54,30 +58,26 @@ export default function ModelsTable(props) {
                         <IconButton aria-label="delete">
                             <Delete />
                         </IconButton>
-
                     </>
-
                 );
-
-            }
-        }
-
+            },
+        },
     ];
     const columnVisibility = {
-        id: false
+        id: false,
     };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 100,
         orderBy: null,
         order: null,
-        search: []
+        search: [],
     });
     const [isLoading, setIsLoading] = useState(true);
     const [rowCountState, setRowCountState] = useState(0);
     const [pageData, setPageData] = useState([]);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
-        ...columnVisibility
+        ...columnVisibility,
     });
 
     const handleSortModelChange = useCallback((sortModel) => {
@@ -86,7 +86,7 @@ export default function ModelsTable(props) {
             pageSize: paginationModel.pageSize,
             search: paginationModel.search,
             orderBy: sortModel[0].field,
-            order: sortModel[0].sort
+            order: sortModel[0].sort,
         });
     }, []);
     const handlePaginationModelChange = useCallback((newPaginationModel) => {
@@ -95,7 +95,7 @@ export default function ModelsTable(props) {
             order: paginationModel.order,
             search: paginationModel.search,
             page: newPaginationModel.page,
-            pageSize: newPaginationModel.pageSize
+            pageSize: newPaginationModel.pageSize,
         });
     }, []);
 
@@ -105,7 +105,7 @@ export default function ModelsTable(props) {
             order: paginationModel.order,
             page: paginationModel.page,
             pageSize: paginationModel.pageSize,
-            search: filterModel.quickFilterValues
+            search: filterModel.quickFilterValues,
         });
     }, []);
 
@@ -157,8 +157,8 @@ export default function ModelsTable(props) {
             slotProps={{
                 toolbar: {
                     showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 }
-                }
+                    quickFilterProps: { debounceMs: 500 },
+                },
             }}
             // disableColumnFilter
             //disableColumnSelector
@@ -172,15 +172,15 @@ export default function ModelsTable(props) {
                 borderColor: "primary.light",
                 "& .MuiDataGrid-toolbarContainer": {
                     "& .MuiButton-root": {
-                        color: "text.primary"
-                    }
+                        color: "text.primary",
+                    },
                 },
                 "& .MuiDataGrid-row.Mui-selected": {
-                    bgcolor: "rgba(255,255,255,0.25)"
+                    bgcolor: "rgba(255,255,255,0.25)",
                 },
                 "& .MuiDataGrid-row:hover": {
-                    bgcolor: "primary"
-                }
+                    bgcolor: "primary",
+                },
             }}
         />
     );
