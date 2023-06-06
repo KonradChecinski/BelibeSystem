@@ -4,17 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('product_extra_barcodes', function (Blueprint $table) {
+        Schema::create('product_barcodes', function (Blueprint $table) {
             $table->id();
             $table->foreignId("product_id")->references("id")->on("products")->restrictOnDelete();
             $table->string("barcode", 13);
+            $table->boolean("main");
             $table->timestamps();
         });
     }

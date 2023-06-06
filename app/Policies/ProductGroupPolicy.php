@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ProductGroup;
+use App\Models\Products\ProductGroup;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProductGroupPolicy
 {

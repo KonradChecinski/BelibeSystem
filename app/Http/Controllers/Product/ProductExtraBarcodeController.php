@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductExtraBarcodeRequest;
 use App\Http\Requests\UpdateProductExtraBarcodeRequest;
-use App\Models\ProductExtraBarcode;
+use App\Models\Products\ProductExtraBarcode;
 
 class ProductExtraBarcodeController extends Controller
 {

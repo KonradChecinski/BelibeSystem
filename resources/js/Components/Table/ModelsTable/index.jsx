@@ -4,6 +4,7 @@ import { router } from "@inertiajs/react";
 import { Button, IconButton } from "@mui/material";
 import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
+import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
 
 export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
@@ -15,17 +16,21 @@ export default function ModelsTable(props) {
         {
             field: "name",
             headerName: "Name",
-            width: 400,
+            width: 400
         },
-        { field: "group", headerName: "Grupa" },
+        {
+            field: "group.name", headerName: "Grupa", renderCell: (params) => {
+                return <GroupCell key={params.row.id} group={params.row.group} />;
+            }
+        },
         {
             field: "colors",
             headerName: "Kolory",
             sortable: false,
             renderCell: (params) => {
-                return <ColorsCell key={params.row.id} {...params} />;
+                return <ColorsCell key={params.row.id} colors={params.row.colors} />;
             },
-            flex: 1,
+            flex: 1
         },
         { field: "quantity", headerName: "Stan" },
         {
@@ -60,11 +65,11 @@ export default function ModelsTable(props) {
                         </IconButton>
                     </>
                 );
-            },
-        },
+            }
+        }
     ];
     const columnVisibility = {
-        id: false,
+        id: false
     };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -72,12 +77,13 @@ export default function ModelsTable(props) {
         orderBy: null,
         order: null,
         search: [],
+        filter: []
     });
     const [isLoading, setIsLoading] = useState(true);
     const [rowCountState, setRowCountState] = useState(0);
     const [pageData, setPageData] = useState([]);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
-        ...columnVisibility,
+        ...columnVisibility
     });
 
     const handleSortModelChange = useCallback((sortModel) => {
@@ -85,8 +91,9 @@ export default function ModelsTable(props) {
             page: paginationModel.page,
             pageSize: paginationModel.pageSize,
             search: paginationModel.search,
+            filter: paginationModel.filter,
             orderBy: sortModel[0].field,
-            order: sortModel[0].sort,
+            order: sortModel[0].sort
         });
     }, []);
     const handlePaginationModelChange = useCallback((newPaginationModel) => {
@@ -94,8 +101,9 @@ export default function ModelsTable(props) {
             orderBy: paginationModel.orderBy,
             order: paginationModel.order,
             search: paginationModel.search,
+            filter: paginationModel.filter,
             page: newPaginationModel.page,
-            pageSize: newPaginationModel.pageSize,
+            pageSize: newPaginationModel.pageSize
         });
     }, []);
 
@@ -106,7 +114,10 @@ export default function ModelsTable(props) {
             page: paginationModel.page,
             pageSize: paginationModel.pageSize,
             search: filterModel.quickFilterValues,
+            filter: filterModel.items
         });
+        console.log(paginationModel);
+        console.log(filterModel);
     }, []);
 
     useEffect(() => {
@@ -124,6 +135,9 @@ export default function ModelsTable(props) {
                     : "") +
                 (paginationModel.search.length != 0
                     ? `&search=${JSON.stringify(paginationModel.search)}`
+                    : "") +
+                (paginationModel.filter.length != 0
+                    ? `&filter=${JSON.stringify(paginationModel.filter)}`
                     : "");
             let option = { headers: { Accept: "application/json" } };
             const response = await fetch(fetchUrl, option);
@@ -157,8 +171,8 @@ export default function ModelsTable(props) {
             slotProps={{
                 toolbar: {
                     showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 },
-                },
+                    quickFilterProps: { debounceMs: 500 }
+                }
             }}
             // disableColumnFilter
             //disableColumnSelector
@@ -172,15 +186,15 @@ export default function ModelsTable(props) {
                 borderColor: "primary.light",
                 "& .MuiDataGrid-toolbarContainer": {
                     "& .MuiButton-root": {
-                        color: "text.primary",
-                    },
+                        color: "text.primary"
+                    }
                 },
                 "& .MuiDataGrid-row.Mui-selected": {
-                    bgcolor: "rgba(255,255,255,0.25)",
+                    bgcolor: "rgba(255,255,255,0.25)"
                 },
                 "& .MuiDataGrid-row:hover": {
-                    bgcolor: "primary",
-                },
+                    bgcolor: "primary"
+                }
             }}
         />
     );

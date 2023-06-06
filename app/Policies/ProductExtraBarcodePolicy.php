@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ProductExtraBarcode;
+use App\Models\Products\ProductExtraBarcode;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProductExtraBarcodePolicy
 {

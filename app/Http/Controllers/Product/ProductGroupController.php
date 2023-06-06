@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductGroupRequest;
 use App\Http\Requests\UpdateProductGroupRequest;
-use App\Models\ProductGroup;
+use App\Models\Products\ProductGroup;
 
 class ProductGroupController extends Controller
 {

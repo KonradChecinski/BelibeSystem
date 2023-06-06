@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,16 +35,23 @@ class Product extends Model
         'description_allegro',
     ];
 
-    public function color(): BelongsTo {
+    public function color(): BelongsTo
+    {
         return $this->belongsTo(ProductModelColor::class);
     }
-    public function images(): HasMany {
+
+    public function images(): HasMany
+    {
         return $this->hasMany(ProductImage::class);
     }
-    public function group(): BelongsTo {
+
+    public function group(): BelongsTo
+    {
         return $this->belongsTo(ProductGroup::class);
     }
-    public function extraBarcodes(): HasMany {
+
+    public function extraBarcodes(): HasMany
+    {
         return $this->hasMany(ProductExtraBarcode::class);
     }
 

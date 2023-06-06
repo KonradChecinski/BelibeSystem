@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,12 +22,13 @@ class ProductModelColor extends Model
     ];
 
 
-
-
-    public function model(): BelongsTo {
+    public function model(): BelongsTo
+    {
         return $this->belongsTo(ProductModel::class);
     }
-    public function products(): HasMany {
+
+    public function products(): HasMany
+    {
         return $this->hasMany(Product::class);
     }
 }

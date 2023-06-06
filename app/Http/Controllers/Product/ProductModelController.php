@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DataProductModelRequest;
 use App\Http\Requests\StoreProductModelRequest;
 use App\Http\Requests\UpdateProductModelRequest;
-use App\Models\ProductModel;
+use App\Models\Products\ProductGroup;
+use App\Models\Products\ProductModel;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -22,17 +23,89 @@ class ProductModelController extends Controller
 
     public function data(DataProductModelRequest $request)
     {
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products"])->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
-        //dd($models->get()->toArray());
-        //
+        $mainColumn = [
+            'id',
+            'symbol',
+            'name',
+        ];
+
+        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name"]);
+//        dd($models->get()->toArray());
+
         if ($request->search) {
             foreach (json_decode($request->search) as $word) {
-                $models->orWhere('id', 'LIKE', '%' . $word . '%');
-                $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
-                $models->orWhere('name', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
             }
         }
-        $models = $models->paginate($request->limit, ['id', 'symbol', 'name']);
+
+        if ($request->filter) {
+            foreach (json_decode($request->filter) as $filter) {
+                if (in_array($filter->field, $mainColumn)) {
+                    switch ($filter->operator) {
+                        case "contains":
+                            $models = $models->orWhere($filter->field, 'LIKE', '%' . $filter->value . '%');
+                            break;
+                        case "equals":
+                            $models = $models->orWhere($filter->field, 'LIKE', $filter->value);
+                            break;
+                        case "startsWith":
+                            $models = $models->orWhere($filter->field, 'LIKE', $filter->value . '%');
+                            break;
+                        case "endsWith":
+                            $models = $models->orWhere($filter->field, 'LIKE', '%' . $filter->value);
+                            break;
+                        case "isEmpty":
+                            $models = $models->orWhere($filter->field, 'LIKE', '');
+                            break;
+                        case "isNotEmpty":
+                            $models = $models->orWhere($filter->field, 'NOT LIKE', '');
+                            break;
+                        case "isAnyOf":
+                            foreach ($filter->value as $value) {
+                                $models = $models->orWhere($filter->field, 'LIKE', $value);
+                            }
+                            break;
+                    }
+                } else {
+                    switch ($filter->operator) {
+                        case "contains":
+                            $models = $models->WhereHas($filter->field, function ($query) {
+                                return $query->Where("name", 'LIKE', '%' . 'p' . '%');
+                            });
+                            break;
+//                        case "equals":
+//                            $models->orWhereHas($filter->field, 'LIKE', $filter->value);
+//                            break;
+//                        case "startsWith":
+//                            $models->orWhereHas($filter->field, 'LIKE', $filter->value . '%');
+//                            break;
+//                        case "endsWith":
+//                            $models->orWhereHas($filter->field, 'LIKE', '%' . $filter->value);
+//                            break;
+//                        case "isEmpty":
+//                            $models->orWhereHas($filter->field, 'LIKE', '');
+//                            break;
+//                        case "isNotEmpty":
+//                            $models->orWhereHas($filter->field, 'NOT LIKE', '');
+//                            break;
+//                        case "isAnyOf":
+//                            foreach ($filter->value as $value) {
+//                                $models->orWhereHas($filter->field, 'LIKE', $value);
+//                            }
+//                            break;
+                    }
+                }
+
+
+            }
+
+        }
+        $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
+
+        dd($models->get()->toArray());
+        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
         return response()->json([$models]);
     }
 

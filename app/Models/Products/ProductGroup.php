@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProductExtraBarcode extends Model
+class ProductGroup extends Model
 {
     use HasFactory;
-
 
 
     /**
@@ -18,14 +17,12 @@ class ProductExtraBarcode extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_id',
-        'barcode',
+        'name',
     ];
 
-
-
-
-    public function product(): BelongsTo{
-        return $this->belongsTo(Product::class);
+    public function models(): HasMany
+    {
+        return $this->hasMany(ProductModel::class);
     }
+
 }

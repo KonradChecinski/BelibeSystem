@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ProductModelColor;
+use App\Models\Products\ProductModelColor;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProductModelColorPolicy
 {

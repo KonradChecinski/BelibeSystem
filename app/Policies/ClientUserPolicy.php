@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ClientUser;
+use App\Models\Client\ClientUser;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ClientUserPolicy
 {

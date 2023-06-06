@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientUser;
 use App\Http\Requests\StoreClientUserRequest;
 use App\Http\Requests\UpdateClientUserRequest;
+use App\Models\Client\ClientUser;
 
 class ClientUserController extends Controller
 {

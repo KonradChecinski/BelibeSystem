@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductImage extends Model
 {
     use HasFactory;
-
 
 
     /**
@@ -28,7 +26,8 @@ class ProductImage extends Model
     ];
 
 
-    public function product(): BelongsTo {
+    public function product(): BelongsTo
+    {
         return $this->belongsTo(Product::class);
     }
 }

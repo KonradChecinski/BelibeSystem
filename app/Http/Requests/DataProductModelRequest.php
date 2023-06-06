@@ -27,6 +27,7 @@ class DataProductModelRequest extends FormRequest
             'orderBy' => 'string',
             'order' => 'string|in:asc,desc',
             'search' => 'json',
+            'filter' => 'json'
         ];
     }
 }

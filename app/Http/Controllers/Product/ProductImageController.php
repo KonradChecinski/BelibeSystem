@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductImageRequest;
 use App\Http\Requests\UpdateProductImageRequest;
-use App\Models\ProductImage;
+use App\Models\Products\ProductImage;
 
 class ProductImageController extends Controller
 {

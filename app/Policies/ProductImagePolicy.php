@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ProductImage;
+use App\Models\Products\ProductImage;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProductImagePolicy
 {
