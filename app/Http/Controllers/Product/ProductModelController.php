@@ -45,26 +45,26 @@ class ProductModelController extends Controller
                 if (in_array($filter->field, $mainColumn)) {
                     switch ($filter->operator) {
                         case "contains":
-                            $models = $models->orWhere($filter->field, 'LIKE', '%' . $filter->value . '%');
+                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value . '%');
                             break;
                         case "equals":
-                            $models = $models->orWhere($filter->field, 'LIKE', $filter->value);
+                            $models = $models->Where($filter->field, 'LIKE', $filter->value);
                             break;
                         case "startsWith":
-                            $models = $models->orWhere($filter->field, 'LIKE', $filter->value . '%');
+                            $models = $models->Where($filter->field, 'LIKE', $filter->value . '%');
                             break;
                         case "endsWith":
-                            $models = $models->orWhere($filter->field, 'LIKE', '%' . $filter->value);
+                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value);
                             break;
                         case "isEmpty":
-                            $models = $models->orWhere($filter->field, 'LIKE', '');
+                            $models = $models->Where($filter->field, 'LIKE', '');
                             break;
                         case "isNotEmpty":
-                            $models = $models->orWhere($filter->field, 'NOT LIKE', '');
+                            $models = $models->Where($filter->field, 'NOT LIKE', '');
                             break;
                         case "isAnyOf":
                             foreach ($filter->value as $value) {
-                                $models = $models->orWhere($filter->field, 'LIKE', $value);
+                                $models = $models->Where($filter->field, 'LIKE', $value);
                             }
                             break;
                     }
@@ -72,29 +72,32 @@ class ProductModelController extends Controller
                     switch ($filter->operator) {
                         case "contains":
                             $models = $models->WhereHas($filter->field, function ($query) {
-                                return $query->Where("name", 'LIKE', '%' . 'p' . '%');
+                                return $query->Where("name", 'LIKE', '%' . $filter->value . '%');
                             });
                             break;
-//                        case "equals":
-//                            $models->orWhereHas($filter->field, 'LIKE', $filter->value);
-//                            break;
-//                        case "startsWith":
-//                            $models->orWhereHas($filter->field, 'LIKE', $filter->value . '%');
-//                            break;
-//                        case "endsWith":
-//                            $models->orWhereHas($filter->field, 'LIKE', '%' . $filter->value);
-//                            break;
-//                        case "isEmpty":
-//                            $models->orWhereHas($filter->field, 'LIKE', '');
-//                            break;
-//                        case "isNotEmpty":
-//                            $models->orWhereHas($filter->field, 'NOT LIKE', '');
-//                            break;
-//                        case "isAnyOf":
-//                            foreach ($filter->value as $value) {
-//                                $models->orWhereHas($filter->field, 'LIKE', $value);
-//                            }
-//                            break;
+                        case "equals":
+                            $models = $models->WhereHas($filter->field, function ($query) {
+                                return $query->Where("name", 'LIKE', '%' . 'p' . '%');
+                            });
+                            $models->orWhereHas($filter->field, 'LIKE', $filter->value);
+                            break;
+                        case "startsWith":
+                            $models->orWhereHas($filter->field, 'LIKE', $filter->value . '%');
+                            break;
+                        case "endsWith":
+                            $models->orWhereHas($filter->field, 'LIKE', '%' . $filter->value);
+                            break;
+                        case "isEmpty":
+                            $models->orWhereHas($filter->field, 'LIKE', '');
+                            break;
+                        case "isNotEmpty":
+                            $models->orWhereHas($filter->field, 'NOT LIKE', '');
+                            break;
+                        case "isAnyOf":
+                            foreach ($filter->value as $value) {
+                                $models->orWhereHas($filter->field, 'LIKE', $value);
+                            }
+                            break;
                     }
                 }
 
