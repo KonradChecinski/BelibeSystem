@@ -26,7 +26,7 @@ export default function MenuMainLink({
                 minHeight: "40px",
                 // mx: 1,
                 my: 1,
-                pb: 0.5,
+                // pb: 0.5,
                 background: "#0073BB",
                 borderRadius: 1,
                 position: "relative"

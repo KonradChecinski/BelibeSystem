@@ -40,6 +40,7 @@ export default function Navbar({ auth }) {
     return (
         <>
             <Card
+                elevation={1}
                 className="p-2"
                 sx={{
                     display: "flex"

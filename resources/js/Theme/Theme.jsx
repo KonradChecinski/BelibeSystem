@@ -2,7 +2,7 @@ import {
     createTheme,
     CssBaseline,
     ThemeProvider,
-    useMediaQuery,
+    useMediaQuery
 } from "@mui/material";
 import { useMemo } from "react";
 
@@ -12,7 +12,7 @@ export default function Theme({ children }) {
     let lightTheme = {
         primary: {
             // main: "#1A2035",
-            main: "#2a54d9",
+            main: "#2a54d9"
         },
         // secondary: {},
         background: {
@@ -20,17 +20,18 @@ export default function Theme({ children }) {
             default: "#f3f4f6",
             paper: "#ffffff",
             card: "#ffffff",
-            toolbar: "#ffffff",
+            toolbar: "#ffffff"
         },
         gradient: {
             divider:
-                "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)",
-        },
+                "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)"
+        }
     };
 
     let darkTheme = {
         primary: {
-            main: "#1A2035",
+            // main: "#1A2035",
+            main: "#e4e6ee"
         },
         // secondary: {},
         background: {
@@ -38,12 +39,12 @@ export default function Theme({ children }) {
             default: "#111827",
             paper: "#1f2937",
             card: "#1f2937",
-            toolbar: "#1f2937",
+            toolbar: "#1f2937"
         },
         gradient: {
             divider:
-                "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
-        },
+                "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)"
+        }
     };
 
     const theme = useMemo(
@@ -51,14 +52,14 @@ export default function Theme({ children }) {
             createTheme({
                 palette: {
                     mode: prefersDarkMode ? "dark" : "light",
-                    ...(prefersDarkMode ? { ...darkTheme } : { ...lightTheme }),
+                    ...(prefersDarkMode ? { ...darkTheme } : { ...lightTheme })
                 },
                 typography: {
-                    fontSize: 11,
+                    fontSize: 11
                 },
                 shape: {
-                    borderRadius: 16,
-                },
+                    borderRadius: 16
+                }
             }),
 
         [prefersDarkMode]

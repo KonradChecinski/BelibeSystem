@@ -10,7 +10,7 @@ export default function IconGrid({ iconColor, icon, title, xs, md, children }) {
                 position: "absolute",
                 top: -10,
                 left: 40,
-                zIndex: 1000,
+                zIndex: 20,
                 "& .MuiSvgIcon-root": {
                     color: "white"
                 }
@@ -24,7 +24,7 @@ export default function IconGrid({ iconColor, icon, title, xs, md, children }) {
                 position: "absolute",
                 top: 5,
                 right: 20,
-                zIndex: 1000
+                zIndex: 20
             }}>
                 <Typography variant="h6"> {title} </Typography>
             </Box>

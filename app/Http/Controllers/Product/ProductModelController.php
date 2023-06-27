@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DataProductModelRequest;
 use App\Http\Requests\StoreProductModelRequest;
 use App\Http\Requests\UpdateProductModelRequest;
+use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
 use Inertia\Inertia;
@@ -144,10 +145,11 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "group"])->find($id);
+        $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
+        $categories = ProductCategory::all();
 
-        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups]);
+        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories]);
     }
 
     /**
@@ -155,10 +157,10 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "group"])->find($id);
+        $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
-
-        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups]);
+        $categories = ProductCategory::all();
+        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories]);
     }
 
     /**
