@@ -71,31 +71,42 @@ class ProductModelController extends Controller
                 } else {
                     switch ($filter->operator) {
                         case "contains":
-                            $models = $models->WhereHas($filter->field, function ($query) {
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
                                 return $query->Where("name", 'LIKE', '%' . $filter->value . '%');
                             });
                             break;
                         case "equals":
-                            $models = $models->WhereHas($filter->field, function ($query) {
-                                return $query->Where("name", 'LIKE', '%' . 'p' . '%');
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', $filter->value);
                             });
-                            $models->orWhereHas($filter->field, 'LIKE', $filter->value);
+
                             break;
                         case "startsWith":
-                            $models->orWhereHas($filter->field, 'LIKE', $filter->value . '%');
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', $filter->value . '%');
+                            });
+
                             break;
                         case "endsWith":
-                            $models->orWhereHas($filter->field, 'LIKE', '%' . $filter->value);
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', '%' . $filter->value);
+                            });
                             break;
                         case "isEmpty":
-                            $models->orWhereHas($filter->field, 'LIKE', '');
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', '');
+                            });
                             break;
                         case "isNotEmpty":
-                            $models->orWhereHas($filter->field, 'NOT LIKE', '');
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'NOT LIKE', '');
+                            });
                             break;
                         case "isAnyOf":
                             foreach ($filter->value as $value) {
-                                $models->orWhereHas($filter->field, 'LIKE', $value);
+                                $models = $models->WhereHas($filter->field, function ($query) use ($value) {
+                                    return $query->Where("name", 'LIKE', $value);
+                                });
                             }
                             break;
                     }
@@ -107,7 +118,7 @@ class ProductModelController extends Controller
         }
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
-        dd($models->get()->toArray());
+//        dd($models->get()->toArray());
         $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
         return response()->json([$models]);
     }
@@ -133,16 +144,21 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products"])->find($id);
-        return Inertia::render("Products/Model", ["productModel" => $productModel]);
+        $productModel = ProductModel::with(["colors", "products", "group"])->find($id);
+        $groups = ProductGroup::all();
+
+        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductModel $productModel)
+    public function edit(int $id)
     {
-        //
+        $productModel = ProductModel::with(["colors", "products", "group"])->find($id);
+        $groups = ProductGroup::all();
+
+        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups]);
     }
 
     /**

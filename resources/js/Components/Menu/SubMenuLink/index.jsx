@@ -6,18 +6,18 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
 
 export default function SubMainLink({
-    href,
-    active,
-    dropDown,
-    text,
-    children,
-}) {
+                                        href,
+                                        active,
+                                        dropDown,
+                                        text,
+                                        children
+                                    }) {
     const [showChildren, setShowChildren] = useState(
         isChildActive(children) || active
     );
 
     return (
-        <Box sx={{ pl: 1.4, pt: 0.0, position: "relative" }}>
+        <Box sx={{ pl: 1.4, pt: 0.0, pr: 1.75, position: "relative" }}>
             <Link href={href}>
                 <Box
                     sx={{
@@ -34,8 +34,8 @@ export default function SubMainLink({
                         color: "#ffffff",
                         "&:hover": {
                             cursor: "pointer",
-                            background: "#038ce3",
-                        },
+                            background: "#038ce3"
+                        }
                     }}
                 >
                     <Typography
@@ -43,7 +43,7 @@ export default function SubMainLink({
                         variant="body1"
                         sx={{
                             width: "fit-content",
-                            position: "relative",
+                            position: "relative"
                         }}
                     >
                         {text}

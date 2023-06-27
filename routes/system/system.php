@@ -44,6 +44,7 @@ Route::middleware("auth:user")->group(function () {
     Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
     Route::get("/models/data", [ProductModelController::class, 'data']);
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
+    Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
 
     Route::get("/settings", function () {
         return redirect()->route("system.settings.main");

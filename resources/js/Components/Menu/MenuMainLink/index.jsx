@@ -8,13 +8,13 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function MenuMainLink({
-    href,
-    active,
-    showContent,
-    dropDown,
-    text,
-    children,
-}) {
+                                         href,
+                                         active,
+                                         showContent,
+                                         dropDown,
+                                         text,
+                                         children
+                                     }) {
     const [showChildren, setShowChildren] = useState(
         isChildActive(children) || active
     );
@@ -26,9 +26,10 @@ export default function MenuMainLink({
                 minHeight: "40px",
                 // mx: 1,
                 my: 1,
+                pb: 0.5,
                 background: "#0073BB",
                 borderRadius: 1,
-                position: "relative",
+                position: "relative"
             }}
         >
             <Link href={href} className={"h-full min-h-[40px]"}>
@@ -47,15 +48,15 @@ export default function MenuMainLink({
                         color: "#ffffff",
                         "&:hover": {
                             cursor: "pointer",
-                            background: "#038ce3",
-                        },
+                            background: "#038ce3"
+                        }
                     }}
                 >
                     <DashboardIcon
                         sx={{
                             mr: showContent ? 1 : "auto",
                             ml: showContent ? "" : "auto",
-                            fontSize: "1rem",
+                            fontSize: "1rem"
                         }}
                     />
                     {showContent ? (
@@ -64,7 +65,7 @@ export default function MenuMainLink({
                             variant="h6"
                             sx={{
                                 width: "fit-content",
-                                position: "relative",
+                                position: "relative"
                             }}
                         >
                             {text}

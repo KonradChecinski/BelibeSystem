@@ -10,7 +10,7 @@ export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
         { field: "id", headerName: "Id" },
-        { field: "img", headerName: "Zdjęcie", sortable: false },
+        { field: "img", headerName: "Zdjęcie", sortable: false, filterable: false },
         { field: "symbol", headerName: "Symbol" },
 
         {
@@ -21,7 +21,9 @@ export default function ModelsTable(props) {
         {
             field: "group.name", headerName: "Grupa", renderCell: (params) => {
                 return <GroupCell key={params.row.id} group={params.row.group} />;
-            }
+            },
+            sortable: false,
+            filterable: false
         },
         {
             field: "colors",
@@ -30,14 +32,16 @@ export default function ModelsTable(props) {
             renderCell: (params) => {
                 return <ColorsCell key={params.row.id} colors={params.row.colors} />;
             },
-            flex: 1
+            flex: 1,
+            filterable: false
         },
-        { field: "quantity", headerName: "Stan" },
+        { field: "quantity", headerName: "Stan", filterable: false },
         {
             field: "action",
             headerName: "Akcje",
             width: 120,
             sortable: false,
+            filterable: false,
             renderCell: (params) => {
                 const onShowClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -48,7 +52,10 @@ export default function ModelsTable(props) {
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    // return alert(JSON.stringify(params.row, null, 4));
+                    router.get(
+                        route("system.products.model.edit", { id: params.row.id })
+                    );
                 };
 
                 return (

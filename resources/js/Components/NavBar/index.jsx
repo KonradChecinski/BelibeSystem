@@ -12,7 +12,7 @@ import {
     OutlinedInput,
     ListItemIcon,
     Avatar,
-    Typography,
+    Typography
 } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
 import { useState } from "react";
@@ -22,7 +22,7 @@ import {
     ArrowDropDown,
     PersonAdd,
     Settings,
-    Logout,
+    Logout
 } from "@mui/icons-material";
 import UserAvatar from "@/Components/UserAvatar";
 import UserAvatarMenu from "@/Components/UserAvatar/Menu";
@@ -42,7 +42,7 @@ export default function Navbar({ auth }) {
             <Card
                 className="p-2"
                 sx={{
-                    display: "flex",
+                    display: "flex"
                 }}
             >
                 <Grid
@@ -52,30 +52,32 @@ export default function Navbar({ auth }) {
                     alignItems="center"
                 >
                     <Grid item xs={4} md={2}>
-                        <FormControl
-                            sx={{ ml: 1, width: "100%" }}
-                            variant="outlined"
-                        >
-                            <InputLabel htmlFor="outlined-adornment-password">
-                                Produkt
-                            </InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-password"
-                                type="text"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                        // aria-label="toggle password visibility"
-                                        // onClick={handleClickShowPassword}
-                                        // onMouseDown={handleMouseDownPassword}
-                                        >
-                                            <Search />
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Password"
-                            />
-                        </FormControl>
+                        <form>
+                            <FormControl
+                                sx={{ ml: 1, width: "100%" }}
+                                variant="outlined"
+                            >
+                                <InputLabel htmlFor="outlined-adornment-models">
+                                    Model
+                                </InputLabel>
+                                <OutlinedInput
+                                    id="outlined-adornment-models"
+                                    type="text"
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                // aria-label="toggle password visibility"
+                                                // onClick={handleClickShowPassword}
+                                                // onMouseDown={handleMouseDownPassword}
+                                            >
+                                                <Search />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                    label="Model"
+                                />
+                            </FormControl>
+                        </form>
                     </Grid>
                     <Grid item xs={4} md={2}>
                         <FormControl
@@ -91,15 +93,15 @@ export default function Navbar({ auth }) {
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
-                                        // aria-label="toggle password visibility"
-                                        // onClick={handleClickShowPassword}
-                                        // onMouseDown={handleMouseDownPassword}
+                                            // aria-label="toggle password visibility"
+                                            // onClick={handleClickShowPassword}
+                                            // onMouseDown={handleMouseDownPassword}
                                         >
                                             <Search />
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                label="Password"
+                                label="Firma"
                             />
                         </FormControl>
                     </Grid>
@@ -122,7 +124,7 @@ export default function Navbar({ auth }) {
                                     display: "flex",
                                     justifyContent: "flex-end",
                                     alignItems: "center",
-                                    position: "relative",
+                                    position: "relative"
                                 }}
                             >
                                 <Tooltip title="Delete">
