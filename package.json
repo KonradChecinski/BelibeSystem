@@ -28,11 +28,14 @@
         "@mui/icons-material": "^5.11.16",
         "@mui/material": "^5.13.6",
         "@mui/x-data-grid": "^6.9.0",
+        "@react-buddy/ide-toolbox": "^2.3.1",
+        "@react-buddy/palette-mui": "^5.0.1",
+        "copy-image-clipboard": "^2.1.2",
         "laravel-react-i18n": "^2.0.4",
         "notistack": "^3.0.1",
+        "photoswipe": "^5.3.7",
         "prop-types": "^15.8.1",
-        "react-transition-group": "^4.4.5",
-        "@react-buddy/ide-toolbox": "^2.3.1",
-        "@react-buddy/palette-mui": "^5.0.1"
+        "react-draggable": "^4.4.5",
+        "react-transition-group": "^4.4.5"
     }
 }

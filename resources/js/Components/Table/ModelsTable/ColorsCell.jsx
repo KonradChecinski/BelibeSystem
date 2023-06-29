@@ -2,9 +2,13 @@ import { Box, Typography } from "@mui/material";
 
 export default function ColorsCell({ colors }) {
     return (
-        <Box>
+        <Box sx={{ height: "100%" }}>
             {colors.map((value, key) => {
-                return (<Typography key={key}>{value.shortcut} - {value.name}</Typography>);
+                return (
+                    <Typography key={key}>
+                        {value.shortcut} - {value.name}
+                    </Typography>
+                );
             })}
         </Box>
     );

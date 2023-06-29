@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Checkbox, IconButton } from "@mui/material";
 import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
 
-export default function ModelsColorTable({ data }) {
+export default function ModelsColorTable({ data, readOnly }) {
     const column = [
         { field: "id", headerName: "Id" },
         { field: "subiekt_id", headerName: "Id Subiekt" },
@@ -41,12 +41,13 @@ export default function ModelsColorTable({ data }) {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    params.row.show_in_subiekt = !params.row.show_in_subiekt;
                 };
 
                 return (
                     <Checkbox
-                        checked={params.row.show_in_b2b == 1 ? true : false}
+                        disabled={readOnly}
+                        checked={params.row.show_in_subiekt == 1 ? true : false}
                         onChange={handleChange}
                         sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
                     />
@@ -64,11 +65,12 @@ export default function ModelsColorTable({ data }) {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    params.row.show_in_b2b = !params.row.show_in_b2b;
                 };
 
                 return (
                     <Checkbox
+                        disabled={readOnly}
                         checked={params.row.show_in_b2b == 1 ? true : false}
                         onChange={handleChange}
                         sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
@@ -87,11 +89,12 @@ export default function ModelsColorTable({ data }) {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    params.row.show_in_b2c = !params.row.show_in_b2c;
                 };
 
                 return (
                     <Checkbox
+                        disabled={readOnly}
                         checked={params.row.show_in_b2c == 1 ? true : false}
                         onChange={handleChange}
                         sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
@@ -110,11 +113,12 @@ export default function ModelsColorTable({ data }) {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    params.row.show_in_allegro = !params.row.show_in_allegro;
                 };
 
                 return (
                     <Checkbox
+                        disabled={readOnly}
                         checked={params.row.show_in_allegro == 1 ? true : false}
                         onChange={handleChange}
                         sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
@@ -123,7 +127,7 @@ export default function ModelsColorTable({ data }) {
                 );
 
             }
-        },
+        }
 
     ];
 
@@ -195,7 +199,6 @@ export default function ModelsColorTable({ data }) {
             // disableColumnMenu
             disableVirtualization
             autoHeight
-            // pagination
             localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
             sx={{
                 boxShadow: 2,
@@ -205,6 +208,12 @@ export default function ModelsColorTable({ data }) {
                     "& .MuiButton-root": {
                         color: "text.primary"
                     }
+                },
+                "& .MuiToolbar-gutters": {
+                    display: "none"
+                },
+                "& .MuiDataGrid-selectedRowCount": {
+                    display: "none"
                 },
                 "& .MuiDataGrid-row.Mui-selected": {
                     bgcolor: "rgba(255,255,255,0.25)"

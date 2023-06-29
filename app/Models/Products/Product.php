@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Product extends Model
 {
@@ -40,9 +41,10 @@ class Product extends Model
         return $this->belongsTo(ProductModelColor::class);
     }
 
-    public function images(): HasMany
+    public function images(): hasManyThrough
     {
-        return $this->hasMany(ProductImage::class);
+        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
+        //Może nie działać
     }
 
     public function group(): BelongsTo

@@ -1,8 +1,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
+import { useSnackbar } from "notistack";
+import { Button } from "@mui/material";
 
 export default function Dashboard(props) {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
     return (
         <UserLayout
             auth={props.auth}
@@ -22,6 +26,15 @@ export default function Dashboard(props) {
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             You're logged in!
                         </div>
+                        <Button
+                            onClick={() =>
+                                enqueueSnackbar("Błąd", {
+                                    variant: "error"
+                                })
+                            }
+                        >
+                            Zrób cos
+                        </Button>
                     </div>
                 </div>
             </div>

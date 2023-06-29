@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html, #app {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    height: calc(100% - 90px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
 /*body{*/
 /*    background: #121212;*/
 /*}*/

@@ -22,18 +22,19 @@ import {
     ArrowDropDown,
     PersonAdd,
     Settings,
-    Logout
+    Logout, Event
 } from "@mui/icons-material";
 import UserAvatar from "@/Components/UserAvatar";
 import UserAvatarMenu from "@/Components/UserAvatar/Menu";
+import { router } from "@inertiajs/react";
 
 export default function Navbar({ auth }) {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
+    const openUserAvatar = Boolean(anchorElUserAvatar);
+    const handleClickUserAvatar = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleCloseUserAvatar = () => {
         setAnchorEl(null);
     };
 
@@ -53,32 +54,30 @@ export default function Navbar({ auth }) {
                     alignItems="center"
                 >
                     <Grid item xs={4} md={2}>
-                        <form>
-                            <FormControl
-                                sx={{ ml: 1, width: "100%" }}
-                                variant="outlined"
-                            >
-                                <InputLabel htmlFor="outlined-adornment-models">
-                                    Model
-                                </InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-models"
-                                    type="text"
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                // aria-label="toggle password visibility"
-                                                // onClick={handleClickShowPassword}
-                                                // onMouseDown={handleMouseDownPassword}
-                                            >
-                                                <Search />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Model"
-                                />
-                            </FormControl>
-                        </form>
+                        <FormControl
+                            sx={{ ml: 1, width: "100%" }}
+                            variant="outlined"
+                        >
+                            <InputLabel htmlFor="outlined-adornment-models">
+                                Model
+                            </InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-models"
+                                type="text"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            // aria-label="toggle password visibility"
+                                            // onClick={handleClickShowPassword}
+                                            // onMouseDown={handleMouseDownPassword}
+                                        >
+                                            <Search />
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Model"
+                            />
+                        </FormControl>
                     </Grid>
                     <Grid item xs={4} md={2}>
                         <FormControl
@@ -128,33 +127,36 @@ export default function Navbar({ auth }) {
                                     position: "relative"
                                 }}
                             >
-                                <Tooltip title="Delete">
-                                    <IconButton size={"large"}>
+                                <Tooltip title="Show events in system">
+                                    <IconButton size={"large"}
+                                                onClick={() => {
+                                                    router.visit(route("telescope"));
+                                                }}>
                                         <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 25 }} />
+                                            <Event sx={{ fontSize: 25 }} />
                                         </Badge>
                                     </IconButton>
                                 </Tooltip>
 
-                                <Tooltip title="Delete">
-                                    <IconButton>
-                                        <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 25 }} />
-                                        </Badge>
-                                    </IconButton>
-                                </Tooltip>
+                                {/*<Tooltip title="Delete">*/}
+                                {/*    <IconButton>*/}
+                                {/*        <Badge badgeContent={4} color="primary">*/}
+                                {/*            <Delete sx={{ fontSize: 25 }} />*/}
+                                {/*        </Badge>*/}
+                                {/*    </IconButton>*/}
+                                {/*</Tooltip>*/}
 
-                                <Tooltip title="Delete">
-                                    <IconButton>
-                                        <Badge badgeContent={4} color="primary">
-                                            <Delete sx={{ fontSize: 25 }} />
-                                        </Badge>
-                                    </IconButton>
-                                </Tooltip>
+                                {/*<Tooltip title="Delete">*/}
+                                {/*    <IconButton>*/}
+                                {/*        <Badge badgeContent={4} color="primary">*/}
+                                {/*            <Delete sx={{ fontSize: 25 }} />*/}
+                                {/*        </Badge>*/}
+                                {/*    </IconButton>*/}
+                                {/*</Tooltip>*/}
 
                                 <Tooltip title="Account settings">
                                     <IconButton
-                                        onClick={handleClick}
+                                        onClick={handleClickUserAvatar}
                                         sx={{ ml: 2 }}
                                         aria-controls={
                                             open ? "account-menu" : undefined
@@ -174,9 +176,9 @@ export default function Navbar({ auth }) {
             </Card>
 
             <UserAvatarMenu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
+                anchorEl={anchorElUserAvatar}
+                open={openUserAvatar}
+                onClose={handleCloseUserAvatar}
             />
         </>
     );

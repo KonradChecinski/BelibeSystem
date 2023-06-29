@@ -43,7 +43,7 @@ class ProductModel extends Model
 
     public function images(): HasManyThrough
     {
-        return $this->hasManyDeepFromRelations($this->products(), (new Product())->images());
+        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
     }
 
     public function categories(): BelongsToMany

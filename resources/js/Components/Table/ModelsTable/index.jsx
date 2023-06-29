@@ -184,10 +184,12 @@ export default function ModelsTable(props) {
             // disableColumnFilter
             //disableColumnSelector
             disableDensitySelector
-            autoHeight
+            // autoHeight
+            rowHeight={80}
             pagination
             localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
             sx={{
+                height: "100%",
                 boxShadow: 2,
                 border: 2,
                 borderColor: "primary.light",

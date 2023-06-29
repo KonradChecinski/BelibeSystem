@@ -73,6 +73,8 @@ export default function UserLayout({ auth, header, children }) {
 
                 <Box
                     sx={{
+                        // width: "100%",
+                        height: "calc(100% - 67px)",
                         [theme.breakpoints.down("sm")]: {
                             m: 1
                         },

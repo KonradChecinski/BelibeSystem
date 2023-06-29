@@ -17,7 +17,7 @@ class ProductModelColor extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_model_id',
+        'product_model_color_id',
         'name',
     ];
 
@@ -30,5 +30,10 @@ class ProductModelColor extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class);
     }
 }
