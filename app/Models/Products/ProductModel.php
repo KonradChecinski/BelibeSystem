@@ -13,18 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ProductModel extends Model
 {
     use HasFactory;
-    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'symbol',
-        'name',
-        'product_group_id'
-    ];
+    protected $fillable = ["symbol", "name", "product_group_id"];
 
     public function colors(): HasMany
     {
@@ -33,7 +28,7 @@ class ProductModel extends Model
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(ProductGroup::class, 'product_group_id');
+        return $this->belongsTo(ProductGroup::class, "product_group_id");
     }
 
     public function products(): HasManyThrough
@@ -43,7 +38,10 @@ class ProductModel extends Model
 
     public function images(): HasManyThrough
     {
-        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
+        return $this->hasManyThrough(
+            ProductImage::class,
+            ProductModelColor::class
+        );
     }
 
     public function categories(): BelongsToMany

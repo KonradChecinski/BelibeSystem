@@ -1,4 +1,4 @@
-import { Head, Link, router } from "@inertiajs/react";
+import {Head, Link, router} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import NavLink from "@/Components/NavLink";
 import {
@@ -30,7 +30,7 @@ import {
     AccordionDetails,
     Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
-import { useSnackbar } from "notistack";
+import {useSnackbar} from "notistack";
 import ModelsTable from "@/Components/Table/ModelsTable";
 import {
     Category,
@@ -43,17 +43,18 @@ import {
     Visibility
 } from "@mui/icons-material";
 import IconGrid from "@/Components/IconGrid";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import ModelsColorTable from "@/Components/Table/ModelsColorTable";
 
-import { sortBySizesModelColorObject } from "@/Functions/sortBySizes";
+import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import UserAvatar from "@/Components/UserAvatar";
-import { copyImageToClipboard } from "copy-image-clipboard";
+import {copyImageToClipboard} from "copy-image-clipboard";
 import Draggable from "react-draggable";
+import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
 
 export default function Model(props) {
 
@@ -61,7 +62,7 @@ export default function Model(props) {
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
 
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [productModel, setProductModel] = useState({
         ...props.productModel,
         categories: props.productModel.categories.map((value) => {
@@ -148,7 +149,7 @@ export default function Model(props) {
             children: "a",
             pswpModule: () => import("photoswipe")
         });
-        lightbox.on("uiRegister", function() {
+        lightbox.on("uiRegister", function () {
             lightbox.pswp.ui.registerElement({
                 name: "download-button",
                 order: 8,
@@ -188,34 +189,34 @@ export default function Model(props) {
     return (
 
         <UserLayout auth={props.auth} errors={props.errors} header={"Model: " + props.productModel.name}>
-            <Head title="Dashboard" />
+            <Head title="Dashboard"/>
             <Grid container spacing={2}>
-                <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<Category />} iconColor={"green"}>
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 5, mt: 2 }}>
+                <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<Category/>} iconColor={"green"}>
+                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>
                         <Box>
                             <TextField id="symbol" label="Symbol" variant="outlined"
                                        value={productModel.symbol}
                                 // disabled={!props.editing}
-                                       inputProps={{ readOnly: !props.editing }}
+                                       inputProps={{readOnly: !props.editing}}
                                        onChange={(value) => {
-                                           setProductModel({ ...productModel, symbol: value.target.value });
+                                           setProductModel({...productModel, symbol: value.target.value});
                                        }}
-                                       sx={{ width: "30ch" }} />
+                                       sx={{width: "30ch"}}/>
                         </Box>
                         <Box>
                             <TextField id="name" label="Nazwa" variant="outlined"
                                        value={productModel.name}
                                 // disabled={!props.editing}
                                        onChange={(value) => {
-                                           setProductModel({ ...productModel, name: value.target.value });
+                                           setProductModel({...productModel, name: value.target.value});
                                        }}
-                                       inputProps={{ readOnly: !props.editing }}
-                                       sx={{ width: "30ch" }} />
+                                       inputProps={{readOnly: !props.editing}}
+                                       sx={{width: "30ch"}}/>
 
 
                         </Box>
                         <Box>
-                            <FormControl sx={{ width: "30ch" }}>
+                            <FormControl sx={{width: "30ch"}}>
                                 <InputLabel id="group-select-label">Grupa</InputLabel>
                                 <Select
                                     labelId="group-select-label"
@@ -223,10 +224,10 @@ export default function Model(props) {
                                     label="Grupa"
                                     value={productModel.product_group_id}
                                     onChange={(value) => {
-                                        setProductModel({ ...productModel, product_group_id: value.target.value });
+                                        setProductModel({...productModel, product_group_id: value.target.value});
                                     }}
                                     // disabled={!props.editing}
-                                    inputProps={{ readOnly: !props.editing }}
+                                    inputProps={{readOnly: !props.editing}}
                                 >
                                     {props.groups.map((group) => {
                                         return (
@@ -243,7 +244,7 @@ export default function Model(props) {
 
                         </Box>
                         <Box>
-                            <FormControl sx={{ width: "30ch" }}>
+                            <FormControl sx={{width: "30ch"}}>
                                 <InputLabel id="category-checkbox-label">Kategoria</InputLabel>
                                 <Select
                                     labelId="category-checkbox-label"
@@ -252,10 +253,10 @@ export default function Model(props) {
                                     value={productModel.categories}
                                     onChange={(value) => {
                                         console.log(value.target);
-                                        setProductModel({ ...productModel, categories: value.target.value });
+                                        setProductModel({...productModel, categories: value.target.value});
                                     }}
-                                    input={<OutlinedInput label="Kategoria" />}
-                                    inputProps={{ readOnly: !props.editing }}
+                                    input={<OutlinedInput label="Kategoria"/>}
+                                    inputProps={{readOnly: !props.editing}}
                                     renderValue={(selected) => selected.map((value) => {
                                         return (<Typography key={value} variant="body1" gutterBottom>
                                             {props.categories.find(e => e.id == value).name}
@@ -266,8 +267,8 @@ export default function Model(props) {
                                     {props.categories.map((category) => (
                                         <MenuItem key={category.id} value={category.id}>
                                             <Checkbox
-                                                checked={productModel.categories.find(e => e == category.id) != null} />
-                                            <ListItemText primary={category.name} />
+                                                checked={productModel.categories.find(e => e == category.id) != null}/>
+                                            <ListItemText primary={category.name}/>
                                         </MenuItem>
                                     ))}
 
@@ -277,37 +278,17 @@ export default function Model(props) {
                     </Box>
 
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette />} iconColor={"blue"}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 5, mt: 2 }}>
-                        {props.productModel.colors.map((color) => {
-                            return (
-                                <Box key={color.id}>
-                                    <Chip label={`${color.shortcut} - ${color.name}`} color="primary" variant="outlined"
-                                          sx={{ fontSize: 15, height: 35 }} />
-                                    <Box>
-                                        <ModelsColorTable
-                                            readOnly={!props.editing}
-                                            data={
-                                                sortBySizesModelColorObject(props.productModel.products.filter((product) => {
-                                                    return product.product_model_color_id === color.id;
-                                                }))
-                                            }
 
-
-                                        />
-                                    </Box>
-                                </Box>
-                            );
-                        })}
-
-                    </Box>
+                <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"blue"}>
+                    <ModelColorComponent {...props}/>
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category />} iconColor={"blue"}>
+
+                <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
 
                     <Paper elevation={4}>
                         <Accordion defaultExpanded={true} disableGutters={true}>
                             <AccordionSummary
-                                expandIcon={<ExpandMore />}
+                                expandIcon={<ExpandMore/>}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
@@ -359,26 +340,26 @@ export default function Model(props) {
                                                 }}>
                                                     <Tooltip title="Info">
                                                         <IconButton onClick={InfoImg}>
-                                                            <Info sx={{ fontSize: 25 }} />
+                                                            <Info sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Download">
                                                         <IconButton onClick={() => {
                                                             downloadImg("brak.jpg", route("images") + "/brak.jpg");
                                                         }}>
-                                                            <FileDownload sx={{ fontSize: 25 }} />
+                                                            <FileDownload sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Copy">
                                                         <IconButton onClick={() => {
                                                             copyImg(route("images") + "/brak.jpg");
                                                         }}>
-                                                            <ContentCopy sx={{ fontSize: 25 }} />
+                                                            <ContentCopy sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Delete">
                                                         <IconButton onClick={deleteImg}>
-                                                            <Delete sx={{ fontSize: 25 }} />
+                                                            <Delete sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
 
@@ -395,12 +376,12 @@ export default function Model(props) {
 
                         <Accordion>
                             <AccordionSummary
-                                expandIcon={<ExpandMore />}
+                                expandIcon={<ExpandMore/>}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
                                 <Typography>Archiwalne</Typography>
-                                <Typography sx={{ color: "text.secondary", ml: 10 }}>Nie używać</Typography>
+                                <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <div className="pswp-gallery" id={"pswp-gallery"}>
@@ -448,26 +429,26 @@ export default function Model(props) {
                                                 }}>
                                                     <Tooltip title="Info">
                                                         <IconButton>
-                                                            <Info sx={{ fontSize: 25 }} />
+                                                            <Info sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Download">
                                                         <IconButton onClick={() => {
                                                             downloadImg("brak.jpg", route("images") + "/brak.jpg");
                                                         }}>
-                                                            <FileDownload sx={{ fontSize: 25 }} />
+                                                            <FileDownload sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Copy">
                                                         <IconButton onClick={() => {
                                                             copyImg(route("images") + "/brak.jpg");
                                                         }}>
-                                                            <ContentCopy sx={{ fontSize: 25 }} />
+                                                            <ContentCopy sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip title="Delete">
                                                         <IconButton onClick={deleteImg}>
-                                                            <Delete sx={{ fontSize: 25 }} />
+                                                            <Delete sx={{fontSize: 25}}/>
                                                         </IconButton>
                                                     </Tooltip>
                                                 </Box>
@@ -497,7 +478,7 @@ export default function Model(props) {
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
             >
-                <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+                <DialogTitle style={{cursor: "move"}} id="draggable-dialog-title">
                     Zdjęcie
                 </DialogTitle>
                 <DialogContent>
