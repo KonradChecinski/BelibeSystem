@@ -13,6 +13,9 @@ import { ComponentPreviews, useInitial } from "../../dev";
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
 
+const htmlLang =
+    window.document.getElementsByTagName("html")[0]?.lang || "en";
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
@@ -29,18 +32,18 @@ createInertiaApp({
 
         root.render(
             <LaravelReactI18nProvider
-                lang={"pl"}
+                lang={htmlLang}
                 fallbackLang={"en"}
-                resolve={async (lang) => {
-                    const langs = import.meta.globEager("../../lang/*.json");
-                    const fn = langs[`../../lang/${lang}.json`];
-
-                    return await fn;
-                    // if (typeof fn === 'function') {
-                    //     return await fn();
-                    // }
-                }}
-            >
+                // resolve={async (lang) => {
+                //     const langs = import.meta.globEager("../../lang/*.json");
+                //     const fn = langs[`../../lang/${lang}.json`];
+                //
+                //     return await fn;
+                //     // if (typeof fn === 'function') {
+                //     //     return await fn();
+                //     // }
+                // }}
+                files={import.meta.glob("/lang/*.json")}>
                 <SnackbarProvider
                     // dense
                     maxSnack={7}

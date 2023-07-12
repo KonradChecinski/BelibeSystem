@@ -177,7 +177,7 @@ export default function ModelsColorTable({ data, readOnly }) {
     return (
         <DataGrid
             rows={data}
-            columns={columnWithAction}
+            columns={readOnly ? column : columnWithAction}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={(newModel) =>
                 setColumnVisibilityModel(newModel)

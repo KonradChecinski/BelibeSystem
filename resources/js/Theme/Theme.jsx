@@ -12,7 +12,9 @@ export default function Theme({ children }) {
     let lightTheme = {
         primary: {
             // main: "#1A2035",
-            main: "#2a54d9"
+            main: "#2a54d9",
+            second: "rgba(0,0,0,0.08)",
+            third: "rgba(0,0,0,0.25)"
         },
         // secondary: {},
         background: {
@@ -31,7 +33,9 @@ export default function Theme({ children }) {
     let darkTheme = {
         primary: {
             // main: "#1A2035",
-            main: "#e4e6ee"
+            main: "#e4e6ee",
+            second: "rgba(255,255,255,0.08)",
+            third: "rgba(255,255,255,0.25)"
         },
         // secondary: {},
         background: {

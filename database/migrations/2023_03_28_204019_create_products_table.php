@@ -19,10 +19,9 @@ return new class extends Migration {
             $table->string("name", 200);
             $table->string("unit", 20);
 
+            $table->integer("quantity")->default(0);
             $table->string("size", 10);
-//            $table->string("color");
-//            $table->string("size");
-//            $table->string("size");
+
 
             $table->boolean("show_in_b2b");
             $table->boolean("show_in_b2c");
