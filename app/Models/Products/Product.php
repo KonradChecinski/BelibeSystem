@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -25,7 +26,7 @@ class Product extends Model
         'symbol',
         'name',
         'barcode',
-        'unit',
+        'product_unit_id',
         'size',
         'show_in_b2b',
         'show_in_b2c',
@@ -52,9 +53,14 @@ class Product extends Model
         return $this->belongsTo(ProductGroup::class);
     }
 
-    public function extraBarcodes(): HasMany
+    public function barcodes(): HasMany
     {
-        return $this->hasMany(ProductExtraBarcode::class);
+        return $this->hasMany(ProductBarcode::class);
+    }
+
+    public function unit(): HasOne
+    {
+        return $this->hasOne(ProductUnit::class);
     }
 
 }

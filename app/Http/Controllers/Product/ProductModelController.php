@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateProductModelRequest;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductUnit;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -148,8 +149,9 @@ class ProductModelController extends Controller
         $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
+        $units = ProductUnit::all();
 
-        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories]);
+        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit"=>$units]);
     }
 
     /**
@@ -160,7 +162,9 @@ class ProductModelController extends Controller
         $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
-        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories]);
+        $units = ProductUnit::all();
+
+        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit"=>$units]);
     }
 
     /**

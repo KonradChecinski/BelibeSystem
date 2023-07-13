@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->foreignId("subiekt_id");
             $table->string("symbol", 50);
             $table->string("name", 200);
-            $table->string("unit", 20);
+            $table->foreignId("product_unit_id")->references("id")->on("product_units")->restrictOnDelete();;
 
             $table->integer("quantity")->default(0);
             $table->string("size", 10);

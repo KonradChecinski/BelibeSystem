@@ -1,9 +1,14 @@
 import { DataGrid, GridToolbar, plPL, enUS } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
-import { Button, Checkbox, IconButton } from "@mui/material";
+import {Box, Button, Checkbox, Fab, IconButton, Typography, Zoom} from "@mui/material";
 import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
+import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
+import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import {useTheme} from "@mui/material/styles";
 
-export default function ModelsColorTable({ data, readOnly }) {
+export default function ModelsColorTable({ data, readOnly, units }) {
+    const theme = useTheme();
     const column = [
         { field: "id", headerName: "Id" },
         { field: "subiekt_id", headerName: "Id Subiekt" },
@@ -12,7 +17,7 @@ export default function ModelsColorTable({ data, readOnly }) {
             headerName: "Symbol",
             sortable: false,
             filterable: false,
-            width: 200
+            width: 160
         },
         {
             field: "name",
@@ -24,19 +29,47 @@ export default function ModelsColorTable({ data, readOnly }) {
             field: "size",
             headerName: "Rozmiar",
             sortable: false,
-            filterable: false
+            filterable: false,
+            width: 70
         },
         {
             field: "quantity",
             headerName: "Stan",
             sortable: false,
-            filterable: false
+            filterable: false,
+            type: "number",
+            width: 70
+        },
+        {
+            field: "unit",
+            headerName: "J.m.",
+            sortable: false,
+            filterable: false,
+            width: 70,
+            renderCell: (params) => {
+                return <Typography>{units.find(unit => unit.id === params.row.product_unit_id).name} </Typography>;
+            }
+        },
+        {
+            field: "codes",
+            headerName: "Kody kreskowe",
+            sortable: false,
+            filterable: true,
+            headerAlign: 'center',
+            align: 'center',
+            width: 150,
+            renderCell: (params) => {
+                return <BarcodesCell barcodes={params.row.barcodes} />;
+
+            }
         },
         {
             field: "show_in_subiekt",
             headerName: "Subiekt",
             sortable: false,
             filterable: false,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params) => {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -61,6 +94,8 @@ export default function ModelsColorTable({ data, readOnly }) {
             headerName: "B2B",
             sortable: false,
             filterable: false,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params) => {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -85,6 +120,8 @@ export default function ModelsColorTable({ data, readOnly }) {
             headerName: "B2C",
             sortable: false,
             filterable: false,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params) => {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -109,6 +146,8 @@ export default function ModelsColorTable({ data, readOnly }) {
             headerName: "Allegro",
             sortable: false,
             filterable: false,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params) => {
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -175,6 +214,7 @@ export default function ModelsColorTable({ data, readOnly }) {
 
 
     return (
+        <>
         <DataGrid
             rows={data}
             columns={readOnly ? column : columnWithAction}
@@ -201,9 +241,10 @@ export default function ModelsColorTable({ data, readOnly }) {
             autoHeight
             localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
             sx={{
+
                 boxShadow: 2,
                 border: 2,
-                borderColor: "primary.light",
+                borderColor: "primary.main",
                 "& .MuiDataGrid-toolbarContainer": {
                     "& .MuiButton-root": {
                         color: "text.primary"
@@ -223,5 +264,13 @@ export default function ModelsColorTable({ data, readOnly }) {
                 }
             }}
         />
+            <Box sx={{position: "absolute", bottom: -10, right: -10}}>
+                    <Fab color="primary" aria-label="add" >
+                        <Add />
+                    </Fab>
+
+            </Box>
+
+            </>
     );
 }

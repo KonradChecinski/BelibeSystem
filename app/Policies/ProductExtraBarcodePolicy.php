@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Products\ProductExtraBarcode;
+use App\Models\Products\ProductBarcode;
 use App\Models\User;
 
 class ProductExtraBarcodePolicy
@@ -18,7 +18,7 @@ class ProductExtraBarcodePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ProductExtraBarcode $productExtraBarcode): bool
+    public function view(User $user, ProductBarcode $productExtraBarcode): bool
     {
         //
     }
@@ -34,7 +34,7 @@ class ProductExtraBarcodePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ProductExtraBarcode $productExtraBarcode): bool
+    public function update(User $user, ProductBarcode $productExtraBarcode): bool
     {
         //
     }
@@ -42,7 +42,7 @@ class ProductExtraBarcodePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ProductExtraBarcode $productExtraBarcode): bool
+    public function delete(User $user, ProductBarcode $productExtraBarcode): bool
     {
         //
     }
@@ -50,7 +50,7 @@ class ProductExtraBarcodePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ProductExtraBarcode $productExtraBarcode): bool
+    public function restore(User $user, ProductBarcode $productExtraBarcode): bool
     {
         //
     }
@@ -58,7 +58,7 @@ class ProductExtraBarcodePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ProductExtraBarcode $productExtraBarcode): bool
+    public function forceDelete(User $user, ProductBarcode $productExtraBarcode): bool
     {
         //
     }
