@@ -1,8 +1,8 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Link } from "@inertiajs/react";
-import { Box, IconButton, Typography, Collapse } from "@mui/material";
-import { useState } from "react";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {Link} from "@inertiajs/react";
+import {Box, IconButton, Typography, Collapse} from "@mui/material";
+import {useState} from "react";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
 
 export default function SubMainLink({
@@ -17,7 +17,7 @@ export default function SubMainLink({
     );
 
     return (
-        <Box sx={{ pl: 1.4, pt: 0.0, pr: 1.75, position: "relative" }}>
+        <Box sx={{pl: 1.4, pt: 0.0, pr: 1.75, position: "relative"}}>
             <Link href={href}>
                 <Box
                     sx={{
@@ -52,13 +52,14 @@ export default function SubMainLink({
             </Link>
             {children !== undefined ? (
                 <IconButton
-                    sx={{ position: "absolute", top: "0px", right: "5px" }}
+                    sx={{position: "absolute", top: "0px", right: "5px"}}
                     aria-label="down"
                     onClick={() => {
                         setShowChildren(!showChildren);
                     }}
                 >
-                    {showChildren ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
+                    {showChildren ? <KeyboardArrowDown sx={{color: "menuText.main"}}/> :
+                        <KeyboardArrowUp sx={{color: "menuText.main"}}/>}
                 </IconButton>
             ) : (
                 ""

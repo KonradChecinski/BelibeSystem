@@ -1,17 +1,17 @@
-import { DataGrid, GridToolbar, plPL, enUS } from "@mui/x-data-grid";
-import { useCallback, useEffect, useState } from "react";
+import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Typography, Zoom} from "@mui/material";
-import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
+import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
 import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 
-export default function ModelsColorTable({ data, readOnly, units }) {
+export default function ModelsColorTable({data, readOnly, units}) {
     const theme = useTheme();
     const column = [
-        { field: "id", headerName: "Id" },
-        { field: "subiekt_id", headerName: "Id Subiekt" },
+        {field: "id", headerName: "Id"},
+        {field: "subiekt_id", headerName: "Id Subiekt"},
         {
             field: "symbol",
             headerName: "Symbol",
@@ -59,7 +59,7 @@ export default function ModelsColorTable({ data, readOnly, units }) {
             align: 'center',
             width: 150,
             renderCell: (params) => {
-                return <BarcodesCell barcodes={params.row.barcodes} />;
+                return <BarcodesCell barcodes={params.row.barcodes}/>;
 
             }
         },
@@ -82,7 +82,7 @@ export default function ModelsColorTable({ data, readOnly, units }) {
                         disabled={readOnly}
                         checked={params.row.show_in_subiekt == 1 ? true : false}
                         onChange={handleChange}
-                        sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
 
                 );
@@ -108,7 +108,7 @@ export default function ModelsColorTable({ data, readOnly, units }) {
                         disabled={readOnly}
                         checked={params.row.show_in_b2b == 1 ? true : false}
                         onChange={handleChange}
-                        sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
 
                 );
@@ -134,7 +134,7 @@ export default function ModelsColorTable({ data, readOnly, units }) {
                         disabled={readOnly}
                         checked={params.row.show_in_b2c == 1 ? true : false}
                         onChange={handleChange}
-                        sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
 
                 );
@@ -160,7 +160,7 @@ export default function ModelsColorTable({ data, readOnly, units }) {
                         disabled={readOnly}
                         checked={params.row.show_in_allegro == 1 ? true : false}
                         onChange={handleChange}
-                        sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
 
                 );
@@ -195,13 +195,13 @@ export default function ModelsColorTable({ data, readOnly, units }) {
 
                         <IconButton aria-label="preview">
                             {/*<Preview />*/}
-                            <Visibility />
+                            <Visibility/>
                         </IconButton>
                         <IconButton aria-label="edit" onClick={onClick}>
-                            <Edit />
+                            <Edit/>
                         </IconButton>
                         <IconButton aria-label="delete">
-                            <Delete />
+                            <Delete/>
                         </IconButton>
 
                     </>
@@ -215,62 +215,62 @@ export default function ModelsColorTable({ data, readOnly, units }) {
 
     return (
         <>
-        <DataGrid
-            rows={data}
-            columns={readOnly ? column : columnWithAction}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-                setColumnVisibilityModel(newModel)
-            }
-            rowCount={rowCountState}
-            pageSizeOptions={[5, 20, 50, 100]}
-
-
-            // slots={{ toolbar: GridToolbar }}
-            // slotProps={{
-            //     toolbar: {
-            //         showQuickFilter: true,
-            //         quickFilterProps: { debounceMs: 500 }
-            //     }
-            // }}
-            disableColumnFilter
-            // disableColumnSelector
-            disableDensitySelector
-            // disableColumnMenu
-            disableVirtualization
-            autoHeight
-            localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-            sx={{
-
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.main",
-                "& .MuiDataGrid-toolbarContainer": {
-                    "& .MuiButton-root": {
-                        color: "text.primary"
-                    }
-                },
-                "& .MuiToolbar-gutters": {
-                    display: "none"
-                },
-                "& .MuiDataGrid-selectedRowCount": {
-                    display: "none"
-                },
-                "& .MuiDataGrid-row.Mui-selected": {
-                    bgcolor: "rgba(255,255,255,0.25)"
-                },
-                "& .MuiDataGrid-row:hover": {
-                    bgcolor: "primary"
+            <DataGrid
+                rows={data}
+                columns={readOnly ? column : columnWithAction}
+                columnVisibilityModel={columnVisibilityModel}
+                onColumnVisibilityModelChange={(newModel) =>
+                    setColumnVisibilityModel(newModel)
                 }
-            }}
-        />
-            <Box sx={{position: "absolute", bottom: -10, right: -10}}>
-                    <Fab color="primary" aria-label="add" >
-                        <Add />
-                    </Fab>
+                rowCount={rowCountState}
+                pageSizeOptions={[5, 20, 50, 100]}
+
+
+                // slots={{ toolbar: GridToolbar }}
+                // slotProps={{
+                //     toolbar: {
+                //         showQuickFilter: true,
+                //         quickFilterProps: { debounceMs: 500 }
+                //     }
+                // }}
+                disableColumnFilter
+                // disableColumnSelector
+                disableDensitySelector
+                // disableColumnMenu
+                disableVirtualization
+                autoHeight
+                localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+                sx={{
+
+                    boxShadow: 2,
+                    border: 2,
+                    borderColor: "primary.main",
+                    "& .MuiDataGrid-toolbarContainer": {
+                        "& .MuiButton-root": {
+                            color: "text.primary"
+                        }
+                    },
+                    "& .MuiToolbar-gutters": {
+                        display: "none"
+                    },
+                    "& .MuiDataGrid-selectedRowCount": {
+                        display: "none"
+                    },
+                    "& .MuiDataGrid-row.Mui-selected": {
+                        bgcolor: "rgba(255,255,255,0.25)"
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                        bgcolor: "primary"
+                    }
+                }}
+            />
+            <Box sx={{position: "absolute", bottom: -10, right: -10, zIndex: 20}}>
+                <Fab color="primary" aria-label="add">
+                    <Add/>
+                </Fab>
 
             </Box>
 
-            </>
+        </>
     );
 }

@@ -2,20 +2,19 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import NavLink from "@/Components/NavLink";
 import {Card} from "@mui/material";
-import UsersTable from "@/Components/Table/UsersTable";
 
-export default function Dashboard2(props) {
+export default function Permissions(props) {
     return (
         <UserLayout
             auth={props.auth}
             errors={props.errors}
             header={
-                "Users"
+                "Permissions"
             }
         >
-            <Head title="Users"/>
+            <Head title="Permissions"/>
             <Card sx={{height: "100%", width: 1}}>
-                <UsersTable {...props} />
+
             </Card>
         </UserLayout>
     );

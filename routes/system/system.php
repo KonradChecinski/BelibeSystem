@@ -4,6 +4,8 @@ use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsUsersController;
+use App\Http\Controllers\SettingsPermissionsController;
+use App\Http\Controllers\SettingsRolesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,22 +48,24 @@ Route::middleware("auth:user")->group(function () {
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
     Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
 
-    Route::get("/settings", function () {
-        return redirect()->route("system.settings.main");
-    })->name("system.settings");
-    Route::get("/settings/main", [SettingsMainController::class, 'index'])->name("system.settings.main");
-    Route::get("/settings/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
+    Route::group(['prefix' => '/settings'], function () {
+        Route::get("/", function () {
+            return redirect()->route("system.settings.main");
+        })->name("system.settings");
 
+        Route::get("/main", [SettingsMainController::class, 'index'])->name("system.settings.main");
+        Route::get("/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
+        Route::get("/user/data", [SettingsUsersController::class, 'data']);
+        Route::get("/permissions", [SettingsPermissionsController::class, 'index'])->name("system.settings.permissions");
+        Route::get("/roles", [SettingsRolesController::class, 'index'])->name("system.settings.roles");
+    });
 
-    Route::get("/profile", [ProfileController::class, "edit"])->name(
-        "profile.edit"
-    );
-    Route::patch("/profile", [ProfileController::class, "update"])->name(
-        "profile.update"
-    );
-    Route::delete("/profile", [ProfileController::class, "destroy"])->name(
-        "profile.destroy"
-    );
+    Route::group(['prefix' => '/profile'], function () {
+        Route::get("/", [ProfileController::class, "edit"])->name("profile.edit");
+        Route::patch("/", [ProfileController::class, "update"])->name("profile.update");
+        Route::delete("/", [ProfileController::class, "destroy"])->name("profile.destroy");
+    });
+
 
 });
 

@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import {Link} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import {
     Badge,
@@ -14,8 +14,8 @@ import {
     Avatar,
     Typography
 } from "@mui/material";
-import { ClickAwayListener } from "@mui/base";
-import { useState } from "react";
+import {ClickAwayListener} from "@mui/base";
+import {useState} from "react";
 import {
     Delete,
     Search,
@@ -26,16 +26,16 @@ import {
 } from "@mui/icons-material";
 import UserAvatar from "@/Components/UserAvatar";
 import UserAvatarMenu from "@/Components/UserAvatar/Menu";
-import { router } from "@inertiajs/react";
+import {router} from "@inertiajs/react";
 
-export default function Navbar({ auth }) {
+export default function Navbar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
     const openUserAvatar = Boolean(anchorElUserAvatar);
     const handleClickUserAvatar = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorElUserAvatar(event.currentTarget);
     };
     const handleCloseUserAvatar = () => {
-        setAnchorEl(null);
+        setAnchorElUserAvatar(null);
     };
 
     return (
@@ -55,7 +55,7 @@ export default function Navbar({ auth }) {
                 >
                     <Grid item xs={4} md={2}>
                         <FormControl
-                            sx={{ ml: 1, width: "100%" }}
+                            sx={{ml: 1, width: "100%"}}
                             variant="outlined"
                         >
                             <InputLabel htmlFor="outlined-adornment-models">
@@ -71,7 +71,7 @@ export default function Navbar({ auth }) {
                                             // onClick={handleClickShowPassword}
                                             // onMouseDown={handleMouseDownPassword}
                                         >
-                                            <Search />
+                                            <Search/>
                                         </IconButton>
                                     </InputAdornment>
                                 }
@@ -81,7 +81,7 @@ export default function Navbar({ auth }) {
                     </Grid>
                     <Grid item xs={4} md={2}>
                         <FormControl
-                            sx={{ ml: 1, width: "100%" }}
+                            sx={{ml: 1, width: "100%"}}
                             variant="outlined"
                         >
                             <InputLabel htmlFor="outlined-adornment-password">
@@ -97,7 +97,7 @@ export default function Navbar({ auth }) {
                                             // onClick={handleClickShowPassword}
                                             // onMouseDown={handleMouseDownPassword}
                                         >
-                                            <Search />
+                                            <Search/>
                                         </IconButton>
                                     </InputAdornment>
                                 }
@@ -133,7 +133,7 @@ export default function Navbar({ auth }) {
                                                     router.visit(route("telescope"));
                                                 }}>
                                         <Badge badgeContent={4} color="primary">
-                                            <Event sx={{ fontSize: 25 }} />
+                                            <Event sx={{fontSize: 25}}/>
                                         </Badge>
                                     </IconButton>
                                 </Tooltip>
@@ -157,7 +157,7 @@ export default function Navbar({ auth }) {
                                 <Tooltip title="Account settings">
                                     <IconButton
                                         onClick={handleClickUserAvatar}
-                                        sx={{ ml: 2 }}
+                                        sx={{ml: 2}}
                                         aria-controls={
                                             open ? "account-menu" : undefined
                                         }
@@ -166,7 +166,7 @@ export default function Navbar({ auth }) {
                                             open ? "true" : undefined
                                         }
                                     >
-                                        <UserAvatar auth={auth} />
+                                        <UserAvatar user={auth.user}/>
                                     </IconButton>
                                 </Tooltip>
                             </Grid>

@@ -1,16 +1,16 @@
-import { Link } from "@inertiajs/react";
+import {Link} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { Box, Card, Divider, Icon, Typography } from "@mui/material";
+import {Box, Card, Divider, Icon, Typography} from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import React from "react";
 import NavLink from "@/Components/NavLink";
 import MenuMainLink from "@/Components/Menu/MenuMainLink";
 import SubMenuLink from "@/Components/Menu/SubMenuLink";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TransitionGroup } from "react-transition-group";
+import {TransitionGroup} from "react-transition-group";
 
-export default function Menu({ menu, showContent }) {
+export default function Menu({menu, showContent}) {
     const theme = useTheme();
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     return (
@@ -25,7 +25,7 @@ export default function Menu({ menu, showContent }) {
             }}
         >
             <Link href="/">
-                <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200" />
+                <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200"/>
             </Link>
             <Divider
                 component="div"
@@ -72,9 +72,20 @@ export default function Menu({ menu, showContent }) {
                     />
                     <SubMenuLink
                         href={route("system.settings.users")}
-                        active={route().current("system.settings.users")}
-                        text={"Użytkownicy"}
-                    />
+                        active={false}
+                        text={"Użytkownicy i uprawnienia"}
+                    >
+                        <SubMenuLink
+                            href={route("system.settings.users")}
+                            active={route().current("system.settings.users")}
+                            text={"Lista użytkowników"}
+                        />
+                        <SubMenuLink
+                            href={route("system.settings.roles")}
+                            active={route().current("system.settings.roles")}
+                            text={"Role systemowe"}
+                        />
+                    </SubMenuLink>
                 </MenuMainLink>
             </Box>
         </Card>

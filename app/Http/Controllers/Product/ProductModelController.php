@@ -146,12 +146,12 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colors", "products", "prices", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
 
-        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit"=>$units]);
+        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit" => $units]);
     }
 
     /**
@@ -159,12 +159,12 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colors", "products", "prices", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
 
-        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit"=>$units]);
+        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit" => $units]);
     }
 
     /**

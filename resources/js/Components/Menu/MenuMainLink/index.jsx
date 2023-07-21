@@ -1,10 +1,10 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Link } from "@inertiajs/react";
-import { Box, Collapse, IconButton, Typography } from "@mui/material";
-import { useState } from "react";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {Link} from "@inertiajs/react";
+import {Box, Collapse, IconButton, Typography} from "@mui/material";
+import {useState} from "react";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function MenuMainLink({
@@ -78,16 +78,16 @@ export default function MenuMainLink({
             {showContent ? (
                 children !== undefined ? (
                     <IconButton
-                        sx={{ position: "absolute", top: "3px", right: "5px" }}
+                        sx={{position: "absolute", top: "3px", right: "5px"}}
                         aria-label="down"
                         onClick={() => {
                             setShowChildren(!showChildren);
                         }}
                     >
                         {showChildren ? (
-                            <KeyboardArrowDown />
+                            <KeyboardArrowDown sx={{color: "menuText.main"}}/>
                         ) : (
-                            <KeyboardArrowUp />
+                            <KeyboardArrowUp sx={{color: "menuText.main"}}/>
                         )}
                     </IconButton>
                 ) : (

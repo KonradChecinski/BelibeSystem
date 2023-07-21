@@ -2,6 +2,7 @@
 
 namespace App\Models\Products;
 
+use App\Models\Products\Price\ProductModelPrice;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +36,11 @@ class ProductModel extends Model
     public function products(): HasManyThrough
     {
         return $this->hasManyThrough(Product::class, ProductModelColor::class)->with('barcodes');
+    }
+
+    public function prices(): HasOne
+    {
+        return $this->hasOne(ProductModelPrice::class);
     }
 
 

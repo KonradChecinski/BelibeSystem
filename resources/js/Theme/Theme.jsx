@@ -4,9 +4,9 @@ import {
     ThemeProvider,
     useMediaQuery
 } from "@mui/material";
-import { useMemo } from "react";
+import {useMemo} from "react";
 
-export default function Theme({ children }) {
+export default function Theme({children}) {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
     let lightTheme = {
@@ -27,6 +27,9 @@ export default function Theme({ children }) {
         gradient: {
             divider:
                 "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)"
+        },
+        menuText: {
+            main: "#ffffff",
         }
     };
 
@@ -48,6 +51,9 @@ export default function Theme({ children }) {
         gradient: {
             divider:
                 "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)"
+        },
+        menuText: {
+            main: "#ffffff",
         }
     };
 
@@ -56,7 +62,7 @@ export default function Theme({ children }) {
             createTheme({
                 palette: {
                     mode: prefersDarkMode ? "dark" : "light",
-                    ...(prefersDarkMode ? { ...darkTheme } : { ...lightTheme })
+                    ...(prefersDarkMode ? {...darkTheme} : {...lightTheme})
                 },
                 typography: {
                     fontSize: 11
@@ -70,7 +76,7 @@ export default function Theme({ children }) {
     );
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
+            <CssBaseline/>
             {children}
         </ThemeProvider>
     );

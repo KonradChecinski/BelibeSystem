@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductCategoryRequest;
-use App\Http\Requests\UpdateProductCategoryRequest;
-use App\Models\Products\ProductCategory;
+use App\Http\Requests\StoreSettingsPermissionsRequest;
+use App\Http\Requests\UpdateSettingsPermissionsRequest;
+use Inertia\Inertia;
 
-class ProductCategoryController extends Controller
+class SettingsPermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render("Settings/Permissions");
+
     }
 
     /**
@@ -27,7 +28,7 @@ class ProductCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductCategoryRequest $request)
+    public function store(StoreSettingsPermissionsRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProductCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductCategory $productCategory)
+    public function show(int $settingsPermissions)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProductCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductCategory $productCategory)
+    public function edit(int $settingsPermissions)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProductCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
+    public function update(UpdateSettingsPermissionsRequest $request, int $settingsPermissions)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProductCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductCategory $productCategory)
+    public function destroy(int $settingsPermissions)
     {
         //
     }

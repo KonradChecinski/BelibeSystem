@@ -46,8 +46,15 @@ import IconGrid from "@/Components/IconGrid";
 import {useState} from "react";
 import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
 import ImagesComponent from "@/Components/Pages/Model/ImagesComponent";
+import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent";
+import RichTextExample from "@/Components/Slate/richtext";
+import TextEditorAllegro from "@/Components/TextEditor/Allegro";
+import TextEditorWebsite from "@/Components/TextEditor/Website";
+
 
 export default function Model(props) {
+
+
     const countQuantityInModel = () => {
         let quantity = 0;
         props.productModel.products.forEach((value) => {
@@ -180,11 +187,19 @@ export default function Model(props) {
 
                 </IconGrid>
 
+                <IconGrid xs={12} md={12} title={"Ceny"} icon={<Palette/>} iconColor={"green"}>
+                    <ModelPricesComponent {...props} />
+                </IconGrid>
+
                 <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"blue"}>
                     <ModelColorComponent {...props} />
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Sklep"} icon={<Palette/>} iconColor={"green"}>
-
+                <IconGrid xs={12} md={12} title={"Sklep Internetowy"} icon={<Palette/>} iconColor={"green"}>
+                    {/*<RichTextExample/>*/}
+                    <TextEditorWebsite/>
+                </IconGrid>
+                <IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>
+                    <TextEditorAllegro/>
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
@@ -198,3 +213,4 @@ export default function Model(props) {
         </UserLayout>
     );
 }
+
