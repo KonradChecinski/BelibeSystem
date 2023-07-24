@@ -19,6 +19,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // create permissions
         Permission::findOrCreate('edit products', 'user');
+        Permission::findOrCreate('createRole', "user");
+        Permission::findOrCreate('editRole', "user");
+        Permission::findOrCreate('deleteRole', "user");
 //        Permission::create(['name' => 'delete articles']);
 //        Permission::create(['name' => 'publish articles']);
 //        Permission::create(['name' => 'unpublish articles']);
@@ -26,7 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // create roles and assign created permissions
 
         // this can be done as separate statements
-        Role::findOrCreate('admin', 'user');
+        $admin = Role::findOrCreate('admin', 'user');
         Role::findOrCreate('handlowiec', 'user');
         Role::findOrCreate('magazyn', 'user');
         Role::findOrCreate('logistyk', 'user');
@@ -40,5 +43,7 @@ class RolesAndPermissionsSeeder extends Seeder
 //
 //        $role = Role::create(['name' => 'super-admin']);
 //        $role->givePermissionTo(Permission::all());
+
+        $admin->syncPermissions(Permission::all());
     }
 }

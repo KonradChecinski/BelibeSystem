@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSettingsRolesRequest extends FormRequest
+class DeleteSettingsRolesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasPermissionTo("createRole", "user");
+        return auth()->user()->hasPermissionTo("deleteRole", "user");
     }
 
     /**
@@ -22,7 +22,7 @@ class StoreSettingsRolesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|required|min:3'
+            //
         ];
     }
 }

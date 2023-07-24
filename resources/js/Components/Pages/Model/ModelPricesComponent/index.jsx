@@ -23,14 +23,14 @@ export default function ModelPricesComponent(props) {
                     }}>
                         <TableRow>
                             <TableCell>Hurtowa</TableCell>
-                            <TableCell>{Number(props.productModel.prices.wholesale_net_price).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
-                            <TableCell>{Number(props.productModel.prices.wholesale_gross_price).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
+                            <TableCell>{Number(props.productModel.prices.wholesale_net_price / 100).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
+                            <TableCell>{Number(props.productModel.prices.wholesale_gross_price / 100).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
                             <TableCell>{Number(props.productModel.prices.vat_rate).toLocaleString()} %</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Detaliczna</TableCell>
-                            <TableCell>{Number(props.productModel.prices.retail_net_price).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
-                            <TableCell>{Number(props.productModel.prices.retail_gross_price).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
+                            <TableCell>{Number(props.productModel.prices.retail_net_price / 100).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
+                            <TableCell>{Number(props.productModel.prices.retail_gross_price / 100).toLocaleString(undefined, {minimumFractionDigits: 2})} {props.productModel.prices.currency}</TableCell>
                             <TableCell>{Number(props.productModel.prices.vat_rate).toLocaleString()} %</TableCell>
                         </TableRow>
                     </TableBody>

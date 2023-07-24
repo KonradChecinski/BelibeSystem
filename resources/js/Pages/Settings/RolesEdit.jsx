@@ -13,12 +13,12 @@ export default function Roles(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                "Roles"
+                "Roles edit"
             }
         >
             <Head title="Roles"/>
             <Card sx={{height: "100%", width: 1}}>
-                <RolesTable {...props} />
+
             </Card>
         </UserLayout>
     );

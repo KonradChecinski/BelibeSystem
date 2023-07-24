@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import {useState} from "react";
+import {Box, Typography} from "@mui/material";
 import Theme from "@/Theme/Theme";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Menu from "@/Components/Menu";
 import Navbar from "@/Components/NavBar";
 import AppBar from "@/Components/AppBar";
 
-export default function UserLayout({ auth, header, children }) {
+export default function UserLayout({auth, header, children}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -42,7 +42,7 @@ export default function UserLayout({ auth, header, children }) {
                                 }
                             }}
                         >
-                            <Menu showContent={showMenu} />
+                            <Menu showContent={showMenu}/>
                         </Box>
 
                         <Box
@@ -59,14 +59,14 @@ export default function UserLayout({ auth, header, children }) {
                                 }
                             }}
                         >
-                            <Navbar auth={auth} />
+                            <Navbar auth={auth}/>
                         </Box>
                     </>
                 ) : (
                     <>
                         <AppBar position={"static"}></AppBar>
                         <AppBar position={"fixed"}>
-                            <Menu showContent={true} />
+                            <Menu showContent={true}/>
                         </AppBar>
                     </>
                 )}
@@ -74,23 +74,23 @@ export default function UserLayout({ auth, header, children }) {
                 <Box
                     sx={{
                         // width: "100%",
-                        height: "calc(100% - 67px)",
+                        height: "calc(100% - 82px)",
                         [theme.breakpoints.down("sm")]: {
                             m: 1
                         },
                         [theme.breakpoints.up("sm")]: {
                             marginLeft: "100px",
-                            marginTop: "90px"
+                            paddingTop: "90px"
                         },
                         [theme.breakpoints.up("md")]: {
                             marginLeft: "max(17%,220px)",
                             marginRight: "10px",
-                            marginTop: "90px",
+                            paddingTop: "90px",
                             marginBottom: "10px"
                         }
                     }}
                 >
-                    <Typography variant="h4" sx={{ my: 2, mx: 1, pt: 1 }}>{header}</Typography>
+                    <Typography variant="h4" sx={{my: 2, mx: 1, pt: 1}}>{header}</Typography>
 
                     {children}
                 </Box>

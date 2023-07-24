@@ -50,6 +50,7 @@ import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent"
 import RichTextExample from "@/Components/Slate/richtext";
 import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 import TextEditorWebsite from "@/Components/TextEditor/Website";
+import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
 
 
 export default function Model(props) {
@@ -74,16 +75,6 @@ export default function Model(props) {
     console.log(props);
     // console.log(productModel);
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250
-            }
-        }
-    };
 
     return (
 
@@ -142,38 +133,7 @@ export default function Model(props) {
 
 
                         </Box>
-                        <Box>
-                            <FormControl sx={{width: "30ch"}}>
-                                <InputLabel id="category-checkbox-label">Kategoria</InputLabel>
-                                <Select
-                                    labelId="category-checkbox-label"
-                                    id="category-checkbox"
-                                    multiple
-                                    value={productModel.categories}
-                                    onChange={(value) => {
-                                        console.log(value.target);
-                                        setProductModel({...productModel, categories: value.target.value});
-                                    }}
-                                    input={<OutlinedInput label="Kategoria"/>}
-                                    inputProps={{readOnly: !props.editing}}
-                                    renderValue={(selected) => selected.map((value) => {
-                                        return (<Typography key={value} variant="body1" gutterBottom>
-                                            {props.categories.find(e => e.id == value).name}
-                                        </Typography>);
-                                    })}
-                                    MenuProps={MenuProps}
-                                >
-                                    {props.categories.map((category) => (
-                                        <MenuItem key={category.id} value={category.id}>
-                                            <Checkbox
-                                                checked={productModel.categories.find(e => e == category.id) != null}/>
-                                            <ListItemText primary={category.name}/>
-                                        </MenuItem>
-                                    ))}
 
-                                </Select>
-                            </FormControl>
-                        </Box>
                         <Box>
                             <TextField id="quantity" label="Stan w magazynie ogólnie" variant="outlined"
                                        value={countQuantityInModel()}
@@ -194,13 +154,16 @@ export default function Model(props) {
                 <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"blue"}>
                     <ModelColorComponent {...props} />
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Sklep Internetowy"} icon={<Palette/>} iconColor={"green"}>
-                    {/*<RichTextExample/>*/}
+                <IconGrid xs={12} md={12} title={"Sklep Internetowy - B2C"} icon={<Palette/>} iconColor={"green"}>
                     <TextEditorWebsite/>
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>
-                    <TextEditorAllegro/>
+                <IconGrid xs={12} md={12} title={"B2B"} icon={<Palette/>} iconColor={"green"}>
+                    <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}
+                                       props={{...props}}/>
                 </IconGrid>
+                {/*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*/}
+                {/*    <TextEditorAllegro/>*/}
+                {/*</IconGrid>*/}
 
                 <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
                     <ImagesComponent/>

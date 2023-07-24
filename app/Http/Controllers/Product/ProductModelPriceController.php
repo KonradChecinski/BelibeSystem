@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductModelPriceRequest;
 use App\Http\Requests\UpdateProductModelPriceRequest;
 use App\Models\Products\Price\ProductModelPrice;

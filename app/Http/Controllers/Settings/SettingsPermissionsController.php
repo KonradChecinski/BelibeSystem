@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings;
 
-use App\Http\Requests\StoreSettingsRolesRequest;
-use App\Http\Requests\UpdateSettingsRolesRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSettingsPermissionsRequest;
+use App\Http\Requests\UpdateSettingsPermissionsRequest;
 use Inertia\Inertia;
 
-class SettingsRolesController extends Controller
+class SettingsPermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render("Settings/Roles");
+        return Inertia::render("Settings/Permissions");
+
     }
 
     /**
@@ -27,7 +29,7 @@ class SettingsRolesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSettingsRolesRequest $request)
+    public function store(StoreSettingsPermissionsRequest $request)
     {
         //
     }
@@ -35,7 +37,7 @@ class SettingsRolesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $settingsRoles)
+    public function show(int $settingsPermissions)
     {
         //
     }
@@ -43,7 +45,7 @@ class SettingsRolesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $settingsRoles)
+    public function edit(int $settingsPermissions)
     {
         //
     }
@@ -51,7 +53,7 @@ class SettingsRolesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSettingsRolesRequest $request, int $settingsRoles)
+    public function update(UpdateSettingsPermissionsRequest $request, int $settingsPermissions)
     {
         //
     }
@@ -59,7 +61,7 @@ class SettingsRolesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $settingsRoles)
+    public function destroy(int $settingsPermissions)
     {
         //
     }

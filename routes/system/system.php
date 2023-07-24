@@ -3,10 +3,9 @@
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsMainController;
+use App\Http\Controllers\Settings\SettingsPermissionsController;
+use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
-use App\Http\Controllers\SettingsPermissionsController;
-use App\Http\Controllers\SettingsRolesController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -54,10 +53,18 @@ Route::middleware("auth:user")->group(function () {
         })->name("system.settings");
 
         Route::get("/main", [SettingsMainController::class, 'index'])->name("system.settings.main");
+
         Route::get("/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
         Route::get("/user/data", [SettingsUsersController::class, 'data']);
+
         Route::get("/permissions", [SettingsPermissionsController::class, 'index'])->name("system.settings.permissions");
+
         Route::get("/roles", [SettingsRolesController::class, 'index'])->name("system.settings.roles");
+        Route::get("/roles/{edit}/edit", [SettingsRolesController::class, 'edit'])->name("system.settings.roles.edit");
+        Route::post("/roles", [SettingsRolesController::class, 'store']);
+        Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
+        Route::get("/roles/data", [SettingsRolesController::class, 'data']);
+
     });
 
     Route::group(['prefix' => '/profile'], function () {

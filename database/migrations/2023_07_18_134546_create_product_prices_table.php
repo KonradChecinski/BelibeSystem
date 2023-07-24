@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignId("product_id")->references('id')->on('products')->restrictOnDelete();
             $table->integer('vat_rate')->default(23);
-            $table->decimal('wholesale_net_price');
-            $table->decimal('wholesale_gross_price');
-            $table->decimal('retail_net_price');
-            $table->decimal('retail_gross_price');
+            $table->integer('wholesale_net_price');
+            $table->integer('wholesale_gross_price');
+            $table->integer('retail_net_price');
+            $table->integer('retail_gross_price');
             $table->string("currency", 3)->default("PLN");
             $table->timestamps();
         });

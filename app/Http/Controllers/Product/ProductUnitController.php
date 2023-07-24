@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
-use App\Http\Requests\StoreSettingsPermissionsRequest;
-use App\Http\Requests\UpdateSettingsPermissionsRequest;
-use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductUnitRequest;
+use App\Http\Requests\UpdateProductUnitRequest;
+use App\Models\ProductUnit;
 
-class SettingsPermissionsController extends Controller
+class ProductUnitController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render("Settings/Permissions");
-
+        //
     }
 
     /**
@@ -28,7 +28,7 @@ class SettingsPermissionsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSettingsPermissionsRequest $request)
+    public function store(StoreProductUnitRequest $request)
     {
         //
     }
@@ -36,7 +36,7 @@ class SettingsPermissionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $settingsPermissions)
+    public function show(ProductUnit $productUnit)
     {
         //
     }
@@ -44,7 +44,7 @@ class SettingsPermissionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $settingsPermissions)
+    public function edit(ProductUnit $productUnit)
     {
         //
     }
@@ -52,7 +52,7 @@ class SettingsPermissionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSettingsPermissionsRequest $request, int $settingsPermissions)
+    public function update(UpdateProductUnitRequest $request, ProductUnit $productUnit)
     {
         //
     }
@@ -60,7 +60,7 @@ class SettingsPermissionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $settingsPermissions)
+    public function destroy(ProductUnit $productUnit)
     {
         //
     }
