@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreSettingsPermissionsRequest;
-use App\Http\Requests\UpdateSettingsPermissionsRequest;
+use App\Http\Requests\Settings\StoreSettingsPermissionsRequest;
+use App\Http\Requests\Settings\UpdateSettingsPermissionsRequest;
 use Inertia\Inertia;
 
 class SettingsPermissionsController extends Controller

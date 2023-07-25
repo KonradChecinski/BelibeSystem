@@ -10,7 +10,7 @@ import {
     MenuItem,
     Paper,
     Select,
-    TextField,
+    TextField, Typography,
     useTheme
 } from "@mui/material";
 import {
@@ -27,13 +27,8 @@ import {
 } from "@mui/icons-material";
 
 
-export default function TextEditorWebsite() {
-    const [value, setValue] = useState('<p><strong>sasa</strong></p><ul><li>KOnrad1</li><li>konrad2</li></ul>');
+export default function TextEditorWebsite({value, setValue, setEdited, props}) {
 
-
-    useEffect(() => {
-        console.log(value)
-    }, [value])
     return (
         <Paper elevation={5} sx={{
             // bgcolor: 'blue',
@@ -49,7 +44,10 @@ export default function TextEditorWebsite() {
             <Box className="text-editor-website">
                 <CustomToolbar/>
                 <Divider sx={{borderBottomWidth: 2, my: 1, bgcolor: "text.primary"}}/>
-                <ReactQuill value={value} onChange={setValue} modules={modules}
+                <ReactQuill value={value} onChange={value => {
+                    setValue(value)
+                    setEdited(true)
+                }} modules={modules}
                             formats={formats} theme={false}/>
             </Box>
         </Paper>
@@ -64,30 +62,36 @@ const CustomToolbar = () => {
     return (
         <div id="toolbar-website">
 
-            <select className="ql-header"
-                    defaultValue={""}
-                    onChange={e => e.persist()}
-                    style={{
-                        backgroundColor: "transparent",
-                        // display: "none",
-                    }}
-            >
-                <option value="1" style={{
-                    backgroundColor: theme.palette.background.paper,
-                }}>
-                    Nagłówek 1
-                </option>
-                <option value="2" style={{
-                    backgroundColor: theme.palette.background.paper,
-                }}>
-                    Nagłówek 2
-                </option>
-                <option value="" style={{
-                    backgroundColor: theme.palette.background.paper,
-                }}>
-                    Zwykły
-                </option>
-            </select>
+            {/*<select className="ql-header"*/}
+            {/*        defaultValue={""}*/}
+            {/*        onChange={e => e.persist()}*/}
+            {/*        style={{*/}
+            {/*            backgroundColor: "transparent",*/}
+            {/*            // display: "none",*/}
+            {/*        }}*/}
+            {/*>*/}
+            {/*    <option value="1" style={{*/}
+            {/*        backgroundColor: theme.palette.background.paper,*/}
+            {/*    }}>*/}
+            {/*        Nagłówek 1*/}
+            {/*    </option>*/}
+            {/*    <option value="2" style={{*/}
+            {/*        backgroundColor: theme.palette.background.paper,*/}
+            {/*    }}>*/}
+            {/*        Nagłówek 2*/}
+            {/*    </option>*/}
+            {/*    <option value="" style={{*/}
+            {/*        backgroundColor: theme.palette.background.paper,*/}
+            {/*    }}>*/}
+            {/*        Zwykły*/}
+            {/*    </option>*/}
+            {/*</select>*/}
+            <IconButton aria-label="header1" className="ql-header" value="1">
+                <LooksOne/>
+            </IconButton>
+            <IconButton aria-label="header2" className="ql-header" value="2">
+                <LooksTwo/>
+            </IconButton>
             <IconButton aria-label="bold" className="ql-bold">
                 <FormatBold/>
             </IconButton>
@@ -103,6 +107,12 @@ const CustomToolbar = () => {
             </IconButton>
             <IconButton aria-label="underline" className="ql-list" value="bullet">
                 <FormatListBulleted/>
+            </IconButton>
+            <IconButton aria-label="insertColor" className="ql-insertColor">
+                <Typography>Kolor</Typography>
+            </IconButton>
+            <IconButton aria-label="insertSize" className="ql-insertSize">
+                <Typography>Rozmiar</Typography>
             </IconButton>
 
             {/*<BlockButton format="heading-one" icon={<LooksOne/>}/>*/}
@@ -126,14 +136,27 @@ const CustomToolbar = () => {
 const modules = {
     toolbar: {
         container: "#toolbar-website",
-        // handlers: {
-        //     insertStar: insertStar
-        // }
+        handlers: {
+            insertColor: insertColor,
+            insertSize: insertSize
+        }
     },
     clipboard: {
         matchVisual: false,
     }
 };
+
+function insertColor() {
+    const cursorPosition = this.quill.getSelection().index;
+    this.quill.insertText(cursorPosition, "[{$color$}]");
+    this.quill.setSelection(cursorPosition + 11);
+}
+
+function insertSize() {
+    const cursorPosition = this.quill.getSelection().index;
+    this.quill.insertText(cursorPosition, "[{$size$}]");
+    this.quill.setSelection(cursorPosition + 11);
+}
 
 /*
  * Quill editor formats

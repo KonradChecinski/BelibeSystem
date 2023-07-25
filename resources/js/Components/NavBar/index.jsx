@@ -27,6 +27,7 @@ import {
 import UserAvatar from "@/Components/UserAvatar";
 import UserAvatarMenu from "@/Components/UserAvatar/Menu";
 import {router} from "@inertiajs/react";
+import Countdown from 'react-countdown';
 
 export default function Navbar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
@@ -127,14 +128,27 @@ export default function Navbar({auth}) {
                                     position: "relative"
                                 }}
                             >
+
+                                <Countdown date={Date.now() + 7200000}
+                                           renderer={({hours, minutes, seconds}) => {
+                                               return (
+                                                   <Typography variant="h6" gutterBottom>
+                                                       {hours.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                       :
+                                                       {minutes.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                       :
+                                                       {seconds.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                   </Typography>
+                                               );
+                                           }
+                                           }/>
+
                                 <Tooltip title="Show events in system">
                                     <IconButton size={"large"}
                                                 onClick={() => {
                                                     router.visit(route("telescope"));
                                                 }}>
-                                        <Badge badgeContent={4} color="primary">
-                                            <Event sx={{fontSize: 25}}/>
-                                        </Badge>
+                                        <Event sx={{fontSize: 25}}/>
                                     </IconButton>
                                 </Tooltip>
 
@@ -183,3 +197,4 @@ export default function Navbar({auth}) {
         </>
     );
 }
+

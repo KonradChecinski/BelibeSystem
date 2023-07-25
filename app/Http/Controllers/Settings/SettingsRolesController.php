@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DeleteSettingsRolesRequest;
-use App\Http\Requests\StoreSettingsRolesRequest;
-use App\Http\Requests\UpdateSettingsRolesRequest;
+use App\Http\Requests\Settings\DeleteSettingsRolesRequest;
+use App\Http\Requests\Settings\StoreSettingsRolesRequest;
+use App\Http\Requests\Settings\UpdateSettingsRolesRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;

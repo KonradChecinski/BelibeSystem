@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreClientUserRequest;
-use App\Http\Requests\UpdateClientUserRequest;
+use App\Http\Requests\Auth\StoreClientUserRequest;
+use App\Http\Requests\Auth\UpdateClientUserRequest;
 use App\Models\Client\ClientUser;
 
 class ClientUserController extends Controller

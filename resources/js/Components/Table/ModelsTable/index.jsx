@@ -1,17 +1,19 @@
-import { DataGrid, GridToolbar, plPL, enUS } from "@mui/x-data-grid";
-import { useCallback, useEffect, useState } from "react";
-import { router } from "@inertiajs/react";
-import { Button, IconButton } from "@mui/material";
-import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
+import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {useCallback, useEffect, useState} from "react";
+import {router} from "@inertiajs/react";
+import {Button, IconButton} from "@mui/material";
+import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
+import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
+import ModelsDeleteDialog from "@/Components/Dialogs/ModelsDialog/ModelsDeleteDialog";
 
 export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
-        { field: "id", headerName: "Id" },
-        { field: "img", headerName: "Zdjęcie", sortable: false, filterable: false },
-        { field: "symbol", headerName: "Symbol" },
+        {field: "id", headerName: "Id"},
+        {field: "img", headerName: "Zdjęcie", sortable: false, filterable: false},
+        {field: "symbol", headerName: "Symbol"},
 
         {
             field: "name",
@@ -20,7 +22,7 @@ export default function ModelsTable(props) {
         },
         {
             field: "group.name", headerName: "Grupa", renderCell: (params) => {
-                return <GroupCell key={params.row.id} group={params.row.group} />;
+                return <GroupCell key={params.row.id} group={params.row.group}/>;
             },
             sortable: false,
             filterable: false
@@ -30,12 +32,12 @@ export default function ModelsTable(props) {
             headerName: "Kolory",
             sortable: false,
             renderCell: (params) => {
-                return <ColorsCell key={params.row.id} colors={params.row.colors} />;
+                return <ColorsCell key={params.row.id} colors={params.row.colors}/>;
             },
             flex: 1,
             filterable: false
         },
-        { field: "quantity", headerName: "Stan", filterable: false },
+        {field: "quantity", headerName: "Stan", filterable: false},
         {
             field: "action",
             headerName: "Akcje",
@@ -46,7 +48,7 @@ export default function ModelsTable(props) {
                 const onShowClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
                     router.get(
-                        route("system.products.model", { id: params.row.id })
+                        route("system.products.model", {id: params.row.id})
                     );
                 };
                 const onEditClick = (e) => {
@@ -54,22 +56,31 @@ export default function ModelsTable(props) {
 
                     // return alert(JSON.stringify(params.row, null, 4));
                     router.get(
-                        route("system.products.model.edit", { id: params.row.id })
+                        route("system.products.model.edit", {id: params.row.id})
                     );
+                };
+                const [openDialogDelete, setOpenDialogDelete] = useState(false);
+                const onDeleteClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+
+                    setOpenDialogDelete(true);
                 };
 
                 return (
                     <>
                         <IconButton aria-label="preview" onClick={onShowClick}>
                             {/*<Preview />*/}
-                            <Visibility />
+                            <Visibility/>
                         </IconButton>
                         <IconButton aria-label="edit" onClick={onEditClick}>
-                            <Edit />
+                            <Edit/>
                         </IconButton>
-                        <IconButton aria-label="delete">
-                            <Delete />
+                        <IconButton aria-label="delete" onClick={onDeleteClick}>
+                            <Delete/>
                         </IconButton>
+
+                        <ModelsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                            reloadData={reloadData} model={params.row}/>
                     </>
                 );
             }
@@ -146,7 +157,7 @@ export default function ModelsTable(props) {
                 (paginationModel.filter.length != 0
                     ? `&filter=${JSON.stringify(paginationModel.filter)}`
                     : "");
-            let option = { headers: { Accept: "application/json" } };
+            let option = {headers: {Accept: "application/json"}};
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
@@ -155,6 +166,10 @@ export default function ModelsTable(props) {
         };
         fetchData();
     }, [paginationModel]);
+
+    const reloadData = () => {
+        setPaginationModel({...paginationModel})
+    }
 
     return (
         <DataGrid
@@ -174,11 +189,11 @@ export default function ModelsTable(props) {
             onSortModelChange={handleSortModelChange}
             filterMode="server"
             onFilterModelChange={onFilterChange}
-            slots={{ toolbar: GridToolbar }}
+            slots={{toolbar: GridToolbar}}
             slotProps={{
                 toolbar: {
                     showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 }
+                    quickFilterProps: {debounceMs: 500}
                 }
             }}
             // disableColumnFilter

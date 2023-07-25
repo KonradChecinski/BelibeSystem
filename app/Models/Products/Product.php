@@ -32,9 +32,7 @@ class Product extends Model
         'show_in_b2c',
         'show_in_allegro',
         'show_in_subiekt',
-        'description_b2b',
-        'description_b2c',
-        'description_allegro',
+
     ];
 
     public function color(): BelongsTo

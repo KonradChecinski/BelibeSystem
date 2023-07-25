@@ -28,10 +28,6 @@ return new class extends Migration {
             $table->boolean("show_in_allegro");
             $table->boolean("show_in_subiekt");
 
-            $table->text("description_b2b");
-            $table->text("description_b2c");
-            $table->text("description_allegro");
-
             $table->timestamps();
         });
     }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductModelColorRequest;
-use App\Http\Requests\UpdateProductModelColorRequest;
+use App\Http\Requests\Product\StoreProductModelColorRequest;
+use App\Http\Requests\Product\UpdateProductModelColorRequest;
 use App\Models\Products\ProductModelColor;
 
 class ProductModelColorController extends Controller

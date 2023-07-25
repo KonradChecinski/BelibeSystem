@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Product\B2BProductModelController;
+use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\ProductModelController;
+use App\Http\Controllers\Product\ProductModelPriceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
@@ -44,8 +47,14 @@ Route::get("/", function () {
 Route::middleware("auth:user")->group(function () {
     Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
     Route::get("/models/data", [ProductModelController::class, 'data']);
+    Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
+
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
     Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
+    Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
+    Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
+
+    Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
 
     Route::group(['prefix' => '/settings'], function () {
         Route::get("/", function () {

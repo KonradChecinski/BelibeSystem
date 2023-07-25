@@ -21,7 +21,14 @@ class ProductModel extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ["symbol", "name", "product_group_id"];
+    protected $fillable = [
+        "symbol",
+        "name",
+        "product_group_id",
+        'description_b2b',
+        'description_b2c',
+        'description_allegro',
+    ];
 
     public function colors(): HasMany
     {

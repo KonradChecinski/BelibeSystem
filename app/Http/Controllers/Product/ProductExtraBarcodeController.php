@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductExtraBarcodeRequest;
-use App\Http\Requests\UpdateProductExtraBarcodeRequest;
+use App\Http\Requests\Product\StoreProductExtraBarcodeRequest;
+use App\Http\Requests\Product\UpdateProductExtraBarcodeRequest;
 use App\Models\Products\ProductBarcode;
 
 class ProductExtraBarcodeController extends Controller

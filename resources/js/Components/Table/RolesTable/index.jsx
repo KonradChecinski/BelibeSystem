@@ -58,6 +58,7 @@ export default function RolesTable(props) {
 
                         {params.row.id !== 1 ? (
                             <>
+                                {props.auth.permissions.con}
                                 <IconButton aria-label="edit" onClick={onEditClick}>
                                     <Edit/>
                                 </IconButton>

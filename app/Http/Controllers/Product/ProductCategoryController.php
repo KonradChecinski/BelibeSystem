@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductCategoryRequest;
-use App\Http\Requests\UpdateProductCategoryRequest;
+use App\Http\Requests\Product\StoreProductCategoryRequest;
+use App\Http\Requests\Product\UpdateProductCategoryRequest;
 use App\Models\Products\ProductCategory;
 
 class ProductCategoryController extends Controller

@@ -15,6 +15,10 @@ return new class extends Migration {
             $table->string("symbol")->unique();
             $table->string("name");
             $table->foreignId("product_group_id")->references("id")->on("product_groups")->restrictOnDelete();
+
+            $table->text("description_b2b");
+            $table->text("description_b2c");
+            $table->text("description_allegro");
             $table->timestamps();
         });
     }

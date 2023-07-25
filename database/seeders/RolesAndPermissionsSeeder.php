@@ -18,10 +18,18 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::findOrCreate('edit products', 'user');
+        Permission::findOrCreate('createModel', 'user');
+        Permission::findOrCreate('editModel', 'user');
+        Permission::findOrCreate('deleteModel', 'user');
+
+        Permission::findOrCreate('editProducts', 'user');
+        Permission::findOrCreate('updateProductPrice', "user");
+
         Permission::findOrCreate('createRole', "user");
         Permission::findOrCreate('editRole', "user");
         Permission::findOrCreate('deleteRole', "user");
+
+
 //        Permission::create(['name' => 'delete articles']);
 //        Permission::create(['name' => 'publish articles']);
 //        Permission::create(['name' => 'unpublish articles']);

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DataProductModelRequest;
-use App\Http\Requests\StoreProductModelRequest;
-use App\Http\Requests\UpdateProductModelRequest;
+use App\Http\Requests\Product\DataProductModelRequest;
+use App\Http\Requests\Product\DeleteProductModelRequest;
+use App\Http\Requests\Product\StoreProductModelRequest;
+use App\Http\Requests\Product\UpdateProductModelRequest;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
@@ -175,11 +176,12 @@ class ProductModelController extends Controller
         //
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductModel $productModel)
+    public function destroy(DeleteProductModelRequest $request, ProductModel $productModel)
     {
-        //
+        $productModel->delete();
     }
 }

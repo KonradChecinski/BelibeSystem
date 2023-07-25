@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductImageRequest;
-use App\Http\Requests\UpdateProductImageRequest;
+use App\Http\Requests\Product\StoreProductImageRequest;
+use App\Http\Requests\Product\UpdateProductImageRequest;
 use App\Models\Products\ProductImage;
 
 class ProductImageController extends Controller

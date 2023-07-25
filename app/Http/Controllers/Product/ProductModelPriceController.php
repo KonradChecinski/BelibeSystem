@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductModelPriceRequest;
-use App\Http\Requests\UpdateProductModelPriceRequest;
+use App\Http\Requests\Product\StoreProductModelPriceRequest;
+use App\Http\Requests\Product\UpdateProductModelPriceRequest;
 use App\Models\Products\Price\ProductModelPrice;
 
 class ProductModelPriceController extends Controller
@@ -54,7 +54,7 @@ class ProductModelPriceController extends Controller
      */
     public function update(UpdateProductModelPriceRequest $request, ProductModelPrice $productModelPrice)
     {
-        //
+        $productModelPrice->update($request->all());
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductPriceRequest;
-use App\Http\Requests\UpdateProductPriceRequest;
+use App\Http\Requests\Product\StoreProductPriceRequest;
+use App\Http\Requests\Product\UpdateProductPriceRequest;
 use App\Models\Products\Price\ProductPrice;
 
 class ProductPriceController extends Controller

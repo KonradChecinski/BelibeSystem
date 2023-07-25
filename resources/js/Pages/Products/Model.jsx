@@ -51,18 +51,13 @@ import RichTextExample from "@/Components/Slate/richtext";
 import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 import TextEditorWebsite from "@/Components/TextEditor/Website";
 import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
+import TextEditorB2B from "@/Components/TextEditor/B2B";
+import BasicInfoComponent from "@/Components/Pages/Model/BasicInfoComponent";
+import ModelB2CComponent from "@/Components/Pages/Model/ModelB2CComponent";
 
 
 export default function Model(props) {
 
-
-    const countQuantityInModel = () => {
-        let quantity = 0;
-        props.productModel.products.forEach((value) => {
-            quantity += value.quantity;
-        });
-        return quantity;
-    }
 
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [productModel, setProductModel] = useState({
@@ -82,69 +77,7 @@ export default function Model(props) {
             <Head title={props.productModel.name}/>
             <Grid container spacing={2}>
                 <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<Category/>} iconColor={"green"}>
-                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>
-                        <Box>
-                            <TextField id="symbol" label="Symbol" variant="outlined"
-                                       value={productModel.symbol}
-                                // disabled={!props.editing}
-                                       inputProps={{readOnly: !props.editing}}
-                                       onChange={(value) => {
-                                           setProductModel({...productModel, symbol: value.target.value});
-                                       }}
-                                       sx={{width: "30ch"}}/>
-                        </Box>
-                        <Box>
-                            <TextField id="name" label="Nazwa" variant="outlined"
-                                       value={productModel.name}
-                                // disabled={!props.editing}
-                                       onChange={(value) => {
-                                           setProductModel({...productModel, name: value.target.value});
-                                       }}
-                                       inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "30ch"}}/>
-
-
-                        </Box>
-                        <Box>
-                            <FormControl sx={{width: "30ch"}}>
-                                <InputLabel id="group-select-label">Grupa</InputLabel>
-                                <Select
-                                    labelId="group-select-label"
-                                    id="group-select"
-                                    label="Grupa"
-                                    value={productModel.product_group_id}
-                                    onChange={(value) => {
-                                        setProductModel({...productModel, product_group_id: value.target.value});
-                                    }}
-                                    // disabled={!props.editing}
-                                    inputProps={{readOnly: !props.editing}}
-                                >
-                                    {props.groups.map((group) => {
-                                        return (
-                                            <MenuItem key={group.id} value={group.id}>
-                                                {group.name}
-                                            </MenuItem>
-                                        );
-                                    })}
-
-                                </Select>
-
-                            </FormControl>
-
-
-                        </Box>
-
-                        <Box>
-                            <TextField id="quantity" label="Stan w magazynie ogólnie" variant="outlined"
-                                       value={countQuantityInModel()}
-                                       type="number"
-                                       inputProps={{readOnly: true}}
-                                       sx={{width: "30ch"}}/>
-
-
-                        </Box>
-                    </Box>
-
+                    <BasicInfoComponent {...props}/>
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Ceny"} icon={<Palette/>} iconColor={"green"}>
@@ -154,8 +87,10 @@ export default function Model(props) {
                 <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"blue"}>
                     <ModelColorComponent {...props} />
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Sklep Internetowy - B2C"} icon={<Palette/>} iconColor={"green"}>
-                    <TextEditorWebsite/>
+                <IconGrid xs={12} md={12} title={"B2C"} icon={<Palette/>} iconColor={"green"}>
+                    <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}
+                                       props={{...props}}/>
+
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2B"} icon={<Palette/>} iconColor={"green"}>
                     <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}
@@ -166,7 +101,7 @@ export default function Model(props) {
                 {/*</IconGrid>*/}
 
                 <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
-                    <ImagesComponent/>
+                    <ImagesComponent {...props}/>
                 </IconGrid>
 
                 {/*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*/}
