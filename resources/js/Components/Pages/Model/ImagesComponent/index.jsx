@@ -7,12 +7,12 @@ import {
     Paper, Tooltip,
     Typography
 } from "@mui/material";
-import { ContentCopy, Delete, ExpandMore, FileDownload, Info } from "@mui/icons-material";
-import { useSnackbar } from "notistack";
-import { copyImageToClipboard } from "copy-image-clipboard";
+import {ContentCopy, Delete, ExpandMore, FileDownload, Info} from "@mui/icons-material";
+import {useSnackbar} from "notistack";
+import {copyImageToClipboard} from "copy-image-clipboard";
 import Draggable from "react-draggable";
-import { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
+import {useEffect, useState} from "react";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
@@ -23,7 +23,7 @@ export default function ImagesComponent(params) {
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
 
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const [open, setOpen] = useState(false);
 
@@ -42,7 +42,7 @@ export default function ImagesComponent(params) {
             children: "a",
             pswpModule: () => import("photoswipe")
         });
-        lightbox.on("uiRegister", function() {
+        lightbox.on("uiRegister", function () {
             lightbox.pswp.ui.registerElement({
                 name: "download-button",
                 order: 8,
@@ -133,7 +133,7 @@ export default function ImagesComponent(params) {
             <Paper elevation={4}>
                 <Accordion defaultExpanded={true} disableGutters={true}>
                     <AccordionSummary
-                        expandIcon={<ExpandMore />}
+                        expandIcon={<ExpandMore/>}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
@@ -153,7 +153,7 @@ export default function ImagesComponent(params) {
                                     }}>
                                         <Box>
                                             <a
-                                                href={route("images") + "/brak.jpg"}
+                                                href={route("images", {path: "brak.jpg"})}
                                                 data-pswp-width={645}
                                                 data-pswp-height={960}
                                                 key={"pswp-gallery" + "-" + "1"}//index
@@ -162,7 +162,7 @@ export default function ImagesComponent(params) {
                                             >
 
                                                 <img
-                                                    src={route("images") + "/brak.jpg"}
+                                                    src={route("images", {path: "brak.jpg"})}
                                                     // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                                     alt={"brak"}
                                                     loading="lazy"
@@ -185,26 +185,26 @@ export default function ImagesComponent(params) {
                                         }}>
                                             <Tooltip title="Info">
                                                 <IconButton onClick={InfoImg}>
-                                                    <Info sx={{ fontSize: 25 }} />
+                                                    <Info sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Download">
                                                 <IconButton onClick={() => {
-                                                    downloadImg("brak.jpg", route("images") + "/brak.jpg");
+                                                    downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
                                                 }}>
-                                                    <FileDownload sx={{ fontSize: 25 }} />
+                                                    <FileDownload sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Copy">
                                                 <IconButton onClick={() => {
-                                                    copyImg(route("images") + "/brak.jpg");
+                                                    copyImg(route("images", {path: "brak.jpg"}));
                                                 }}>
-                                                    <ContentCopy sx={{ fontSize: 25 }} />
+                                                    <ContentCopy sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Delete">
                                                 <IconButton onClick={deleteImg}>
-                                                    <Delete sx={{ fontSize: 25 }} />
+                                                    <Delete sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
 
@@ -221,12 +221,12 @@ export default function ImagesComponent(params) {
 
                 <Accordion>
                     <AccordionSummary
-                        expandIcon={<ExpandMore />}
+                        expandIcon={<ExpandMore/>}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
                         <Typography>Archiwalne</Typography>
-                        <Typography sx={{ color: "text.secondary", ml: 10 }}>Nie używać</Typography>
+                        <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div className="pswp-gallery" id={"pswp-gallery"}>
@@ -242,7 +242,7 @@ export default function ImagesComponent(params) {
                                     }}>
                                         <Box>
                                             <a
-                                                href={route("images") + "/brak.jpg"}
+                                                href={route("images", {path: "brak.jpg"})}
                                                 data-pswp-width={645}
                                                 data-pswp-height={960}
                                                 key={"pswp-gallery" + "-" + "1"}//index
@@ -251,7 +251,7 @@ export default function ImagesComponent(params) {
                                             >
 
                                                 <img
-                                                    src={route("images") + "/brak.jpg"}
+                                                    src={route("images", {path: "brak.jpg"})}
                                                     // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                                     alt={"brak"}
                                                     loading="lazy"
@@ -274,26 +274,26 @@ export default function ImagesComponent(params) {
                                         }}>
                                             <Tooltip title="Info">
                                                 <IconButton>
-                                                    <Info sx={{ fontSize: 25 }} />
+                                                    <Info sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Download">
                                                 <IconButton onClick={() => {
-                                                    downloadImg("brak.jpg", route("images") + "/brak.jpg");
+                                                    downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
                                                 }}>
-                                                    <FileDownload sx={{ fontSize: 25 }} />
+                                                    <FileDownload sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Copy">
                                                 <IconButton onClick={() => {
-                                                    copyImg(route("images") + "/brak.jpg");
+                                                    copyImg(route("images", {path: "brak.jpg"}));
                                                 }}>
-                                                    <ContentCopy sx={{ fontSize: 25 }} />
+                                                    <ContentCopy sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Delete">
                                                 <IconButton onClick={deleteImg}>
-                                                    <Delete sx={{ fontSize: 25 }} />
+                                                    <Delete sx={{fontSize: 25}}/>
                                                 </IconButton>
                                             </Tooltip>
                                         </Box>
@@ -314,7 +314,7 @@ export default function ImagesComponent(params) {
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
             >
-                <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+                <DialogTitle style={{cursor: "move"}} id="draggable-dialog-title">
                     Zdjęcie
                 </DialogTitle>
                 <DialogContent>

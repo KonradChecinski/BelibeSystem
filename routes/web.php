@@ -56,7 +56,7 @@ Route::get('assets/{path}', function ($path) {
     return response()->file(public_path("assets/$path"));
 })->name("assets");
 
-Route::get('images/', function () {
-    return response()->file(public_path("assets/images/"));
+Route::get('images/{path}', function ($path) {
+    return response()->file(public_path("assets/images/$path"));
 })->name("images");
 require __DIR__ . "/auth.php";

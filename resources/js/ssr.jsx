@@ -1,8 +1,8 @@
 import ReactDOMServer from 'react-dom/server';
-import { createInertiaApp } from '@inertiajs/react';
+import {createInertiaApp} from '@inertiajs/react';
 import createServer from '@inertiajs/react/server';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import route from '../../vendor/tightenco/ziggy/dist/index.m';
+import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
+import route from '../../vendor/tightenco/ziggy/dist/index.m.js';
 
 const appName = 'Laravel';
 
@@ -12,7 +12,7 @@ createServer((page) =>
         render: ReactDOMServer.renderToString,
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
-        setup: ({ App, props }) => {
+        setup: ({App, props}) => {
             global.route = (name, params, absolute) =>
                 route(name, params, absolute, {
                     ...page.props.ziggy,

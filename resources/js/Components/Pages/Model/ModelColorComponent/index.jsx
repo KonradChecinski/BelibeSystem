@@ -36,7 +36,7 @@ export default function ModelColorComponent(props) {
                                 id="panel1a-header"
                             >
                                 <img
-                                    src={color.images.length ? route("images") + "/" + color.images.find(image => image.order === 0).path : route("images") + "/brak.jpg"}
+                                    src={color.images.length ? route("images", {path: color.images.find(image => image.order === 0).path}) : route("images", {path: "brak.jpg"})}
                                     // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                     alt={"brak"}
                                     width={50}
