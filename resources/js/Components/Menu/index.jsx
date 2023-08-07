@@ -10,7 +10,7 @@ import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {TransitionGroup} from "react-transition-group";
 
-export default function Menu({menu, showContent}) {
+export default function Menu({menu, showContent, auth}) {
     const theme = useTheme();
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     return (
@@ -53,40 +53,50 @@ export default function Menu({menu, showContent}) {
                     showContent={smBreakpointUp || showContent}
                     text={"Dashboard"}
                 />
-                <MenuMainLink
-                    href={route("system.products.models")}
-                    active={route().current("system.products.models")}
-                    showContent={smBreakpointUp || showContent}
-                    text={"Produkty"}
-                />
-                <MenuMainLink
-                    href={route("system.settings")}
-                    active={route().current("system.settings")}
-                    showContent={smBreakpointUp || showContent}
-                    text={"Ustawienia"}
-                >
-                    <SubMenuLink
-                        href={route("system.settings.main")}
-                        active={route().current("system.settings.main")}
-                        text={"Główne"}
-                    />
-                    <SubMenuLink
-                        href={route("system.settings.users")}
-                        active={false}
-                        text={"Użytkownicy i uprawnienia"}
-                    >
-                        <SubMenuLink
-                            href={route("system.settings.users")}
-                            active={route().current("system.settings.users")}
-                            text={"Lista użytkowników"}
-                        />
-                        <SubMenuLink
-                            href={route("system.settings.roles")}
-                            active={route().current("system.settings.roles")}
-                            text={"Role systemowe"}
-                        />
-                    </SubMenuLink>
-                </MenuMainLink>
+                {auth.permissions.includes("showModel") ?
+                    <>
+                        <MenuMainLink
+                            href={route("system.products.models")}
+                            active={route().current("system.products.models")}
+                            showContent={smBreakpointUp || showContent}
+                            text={"Produkty"}
+                        /></> : ""}
+                {auth.permissions.includes("showSetting") ?
+                    <>
+                        <MenuMainLink
+                            href={route("system.settings")}
+                            active={route().current("system.settings")}
+                            showContent={smBreakpointUp || showContent}
+                            text={"Ustawienia"}
+                        >
+                            <SubMenuLink
+                                href={route("system.settings.main")}
+                                active={route().current("system.settings.main")}
+                                text={"Główne"}
+                            />
+                            <SubMenuLink
+                                href={route("system.settings.users")}
+                                active={false}
+                                text={"Użytkownicy i uprawnienia"}
+                            >
+                                {auth.permissions.includes("showRole") ?
+                                    <>
+                                        <SubMenuLink
+                                            href={route("system.settings.users")}
+                                            active={route().current("system.settings.users")}
+                                            text={"Lista użytkowników"}
+                                        />
+
+                                        <SubMenuLink
+                                            href={route("system.settings.roles")}
+                                            active={route().current("system.settings.roles")}
+                                            text={"Role systemowe"}
+                                        />
+                                    </>
+                                    : ""}
+                            </SubMenuLink>
+                        </MenuMainLink>
+                    </> : ""}
             </Box>
         </Card>
     );

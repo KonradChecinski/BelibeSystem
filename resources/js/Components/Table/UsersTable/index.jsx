@@ -7,6 +7,8 @@ import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
 import RoleCell from "@/Components/Table/UsersTable/RoleCell";
 import UserAvatar from "@/Components/UserAvatar";
+import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
+import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
 
 export default function UsersTable(props) {
     const url = route(route().current()) + "/data";
@@ -226,6 +228,12 @@ export default function UsersTable(props) {
 
     }, [paginationModel]);
 
+    const reloadData = () => {
+        setPaginationModel({...paginationModel})
+    }
+
+    const [openDialogAdd, setOpenDialogAdd] = useState(false);
+
     return (
         <>
             <DataGrid
@@ -279,10 +287,13 @@ export default function UsersTable(props) {
             />
 
             <Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20}}>
-                <Fab color="primary" aria-label="add">
+                <Fab color="primary" aria-label="add" onClick={() => {
+                    setOpenDialogAdd(true)
+                }}>
                     <Add/>
                 </Fab>
             </Box>
+            <UserAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} roles={props.roles}/>
 
         </>
     );

@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Helpers\Helper;
+use App\Helpers\SystemName;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\StoreSettingsUsersRequest;
+use App\Models\Client\ClientUser;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class SettingsUsersController extends Controller
 {
@@ -15,7 +22,7 @@ class SettingsUsersController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/User");
+        return Inertia::render("Settings/User", ["roles" => Role::all()]);
     }
 
     public function data(Request $request) //DataProductModelRequest
@@ -131,9 +138,28 @@ class SettingsUsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSettingsUsersRequest $request)
     {
-        //
+
+        $validatedUserCredential = [
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => Hash::make($request->password),
+        ];
+
+        $systemName = Helper::getSystemNameFromDomain($request);
+        if ($systemName == SystemName::SYSTEM) {
+            $user = User::create($validatedUserCredential);
+            $user->assignRole($request->roles);
+        } elseif ($systemName == SystemName::B2B) {
+            $user = ClientUser::create($validatedUserCredential);
+        } else {
+            return back();
+        }
+
+
+        event(new Registered($user));
+
     }
 
     /**

@@ -47,16 +47,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function canImpersonate(): bool
     {
-        // For example
-//        return $this->is_admin == 1;
-        return false;
+        return $this->hasPermissionTo("canImpersonate", "user");
     }
 
 
     public function canBeImpersonated(): bool
     {
-        // For example
-//        return $this->can_be_impersonated == 1;
-        return false;
+        return $this->hasPermissionTo("canBeImpersonate", "user");
     }
 }

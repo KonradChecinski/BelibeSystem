@@ -135,16 +135,22 @@ class SettingsRolesController extends Controller
      */
     public function edit(int $settingsRoles)
     {
+        $role = Role::findById($settingsRoles, "user");
+        $permissions = $role->getAllPermissions()->map(function ($item) {
+            return ['id' => $item['id']];//, 'name' => $item['name']
+        })->toArray();
+        $role = $role->toArray();
+        $role['permissions'] = $permissions;
 
-        return Inertia::render("Settings/RolesEdit", ["role" => Role::findById($settingsRoles, "user"), "permissions" => Permission::all()]);
+        return Inertia::render("Settings/RolesEdit", ["role" => $role, "permissions" => Permission::all()]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSettingsRolesRequest $request, int $settingsRoles)
+    public function update(UpdateSettingsRolesRequest $request, Role $settingsRole)
     {
-        //
+        $settingsRole->syncPermissions($request->permissions);
     }
 
     /**

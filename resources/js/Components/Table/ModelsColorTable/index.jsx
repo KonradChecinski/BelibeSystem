@@ -1,14 +1,28 @@
 import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Checkbox, Fab, IconButton, Typography, Zoom} from "@mui/material";
-import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
+import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
+import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
 import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
+import {router, useForm} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
+import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
+import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 
-export default function ModelsColorTable({data, readOnly, units}) {
+export default function ModelsColorTable({products, readOnly, units}) {
     const theme = useTheme();
+
+    for (const product of products) {
+        product.edit = false;
+    }
+
+    const {data, setData, post, processing, errors, clearErrors, reset} = useForm(products)
+
+    console.log(products)
+    console.log(data)
+
     const column = [
         {field: "id", headerName: "Id"},
         {field: "subiekt_id", headerName: "Id Subiekt"},
@@ -17,12 +31,14 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerName: "Symbol",
             sortable: false,
             filterable: false,
+            editable: true,
             width: 160
         },
         {
             field: "name",
             headerName: "Nazwa", sortable: false,
             filterable: false,
+            editable: true,
             width: 300
         },
         {
@@ -30,6 +46,8 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerName: "Rozmiar",
             sortable: false,
             filterable: false,
+            editable: true,
+
             width: 70
         },
         {
@@ -45,6 +63,8 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerName: "J.m.",
             sortable: false,
             filterable: false,
+            editable: true,
+
             width: 70,
             renderCell: (params) => {
                 return <Typography>{units.find(unit => unit.id === params.row.product_unit_id).name} </Typography>;
@@ -55,6 +75,8 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerName: "Kody kreskowe",
             sortable: false,
             filterable: true,
+            editable: true,
+            
             headerAlign: 'center',
             align: 'center',
             width: 150,
@@ -71,16 +93,34 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => {
+                const {data: rowData, setData: setRowData, reset} = useForm({
+                    id: params.row.id,
+                    show_in_subiekt: Boolean(params.row.show_in_subiekt)
+                })
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    params.row.show_in_subiekt = !params.row.show_in_subiekt;
+                    setRowData("show_in_subiekt", !rowData.show_in_subiekt);
+
+                    router.post(route("system.products.update.show", {product: rowData.id}),
+                        {...rowData, show_in_subiekt: !rowData.show_in_subiekt},
+                        {
+                            onSuccess: params => {
+                                // setEdited(false);
+                                enqueueSnackbar("Zapisano", {variant: 'success'})
+
+                            },
+                            onError: params => {
+                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
+                            },
+                            preserveScroll: true
+                        })
                 };
 
                 return (
                     <Checkbox
                         disabled={readOnly}
-                        checked={params.row.show_in_subiekt == 1 ? true : false}
+                        checked={rowData.show_in_subiekt}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
@@ -97,16 +137,34 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => {
+                const {data: rowData, setData: setRowData, reset} = useForm({
+                    id: params.row.id,
+                    show_in_b2b: Boolean(params.row.show_in_b2b)
+                })
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    params.row.show_in_b2b = !params.row.show_in_b2b;
+                    setRowData("show_in_b2b", !rowData.show_in_b2b);
+
+                    router.post(route("system.products.update.show", {product: rowData.id}),
+                        {...rowData, show_in_b2b: !rowData.show_in_b2b},
+                        {
+                            onSuccess: params => {
+                                // setEdited(false);
+                                enqueueSnackbar("Zapisano", {variant: 'success'})
+
+                            },
+                            onError: params => {
+                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
+                            },
+                            preserveScroll: true
+                        })
                 };
 
                 return (
                     <Checkbox
                         disabled={readOnly}
-                        checked={params.row.show_in_b2b == 1 ? true : false}
+                        checked={rowData.show_in_b2b}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
@@ -123,16 +181,33 @@ export default function ModelsColorTable({data, readOnly, units}) {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => {
+                const {data: rowData, setData: setRowData, reset} = useForm({
+                    id: params.row.id,
+                    show_in_b2c: Boolean(params.row.show_in_b2c)
+                })
                 const handleChange = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    params.row.show_in_b2c = !params.row.show_in_b2c;
-                };
+                    setRowData("show_in_b2c", !rowData.show_in_b2c);
 
+                    router.post(route("system.products.update.show", {product: rowData.id}),
+                        {...rowData, show_in_b2c: !rowData.show_in_b2c},
+                        {
+                            onSuccess: params => {
+                                // setEdited(false);
+                                enqueueSnackbar("Zapisano", {variant: 'success'})
+
+                            },
+                            onError: params => {
+                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
+                            },
+                            preserveScroll: true
+                        })
+                };
                 return (
                     <Checkbox
                         disabled={readOnly}
-                        checked={params.row.show_in_b2c == 1 ? true : false}
+                        checked={rowData.show_in_b2c}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
@@ -141,32 +216,32 @@ export default function ModelsColorTable({data, readOnly, units}) {
 
             }
         },
-        {
-            field: "show_in_allegro",
-            headerName: "Allegro",
-            sortable: false,
-            filterable: false,
-            headerAlign: 'center',
-            align: 'center',
-            renderCell: (params) => {
-                const handleChange = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    params.row.show_in_allegro = !params.row.show_in_allegro;
-                };
-
-                return (
-                    <Checkbox
-                        disabled={readOnly}
-                        checked={params.row.show_in_allegro == 1 ? true : false}
-                        onChange={handleChange}
-                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
-                    />
-
-                );
-
-            }
-        }
+        // {
+        //     field: "show_in_allegro",
+        //     headerName: "Allegro",
+        //     sortable: false,
+        //     filterable: false,
+        //     headerAlign: 'center',
+        //     align: 'center',
+        //     renderCell: (params) => {
+        //         const handleChange = (e) => {
+        //             e.stopPropagation(); // don't select this row after clicking
+        //
+        //             params.row.show_in_allegro = !params.row.show_in_allegro;
+        //         };
+        //
+        //         return (
+        //             <Checkbox
+        //                 disabled={readOnly}
+        //                 checked={params.row.show_in_allegro == 1 ? true : false}
+        //                 onChange={handleChange}
+        //                 sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
+        //             />
+        //
+        //         );
+        //
+        //     }
+        // }
 
     ];
 
@@ -184,26 +259,65 @@ export default function ModelsColorTable({data, readOnly, units}) {
             width: 120,
             sortable: false,
             renderCell: (params) => {
-                const onClick = (e) => {
+                const [openDialogDelete, setOpenDialogDelete] = useState(false);
+
+
+                const onEditClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    // return alert(JSON.stringify(params.row, null, 4));
+                    let row = {...data.find(e => e.id === params.row.id)}
+                    row.edit = true
+                    console.log('row', row)
+                    setData([...data.filter(e => e.id !== params.row.id), row])
+
+                };
+
+                const onSaveClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert(JSON.stringify(params.row, null, 4));
+                    // return alert(JSON.stringify(params.row, null, 4));
+                    let row = {...data.find(e => e.id === params.row.id)}
+                    row.edit = false
+                    console.log('row', row)
+                    setData([...data.filter(e => e.id !== params.row.id), row])
+                };
+
+                const onDeleteClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+
+                    setOpenDialogDelete(true);
                 };
 
                 return (
                     <>
+                        {params.row.edit ?
+                            <Tooltip title="Zapis">
+                                <IconButton aria-label="save" onClick={onSaveClick}>
+                                    <Save/>
+                                </IconButton>
+                            </Tooltip>
+                            :
+                            <Tooltip title="Edycja">
+                                <IconButton aria-label="edit" onClick={onEditClick}>
+                                    <Edit/>
+                                </IconButton>
+                            </Tooltip>
+                        }
 
-                        <IconButton aria-label="preview">
-                            {/*<Preview />*/}
-                            <Visibility/>
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={onClick}>
-                            <Edit/>
-                        </IconButton>
-                        <IconButton aria-label="delete">
-                            <Delete/>
-                        </IconButton>
 
+                        <Tooltip title="Powiel">
+                            <IconButton aria-label="copy">
+                                <ContentCopy/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Usuń">
+                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
+                        <ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                              deleteRow={deleteRow} product={params.row}/>
+                        {/*reloadData={reloadData}*/}
                     </>
 
                 );
@@ -213,10 +327,15 @@ export default function ModelsColorTable({data, readOnly, units}) {
     ];
 
 
+    const deleteRow = (id) => {
+        setData(data.filter((e) => e.id !== id))
+    }
+
     return (
         <>
             <DataGrid
-                rows={data}
+                // rows={data}
+                rows={sortBySizesModelColorObject([...data])}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -224,7 +343,7 @@ export default function ModelsColorTable({data, readOnly, units}) {
                 }
                 rowCount={rowCountState}
                 pageSizeOptions={[5, 20, 50, 100]}
-
+                editMode="row"
 
                 // slots={{ toolbar: GridToolbar }}
                 // slotProps={{

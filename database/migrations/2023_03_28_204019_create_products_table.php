@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
 //            $table->foreignId("product_model_id")->references("id")->on("product_models")->restrictOnDelete();
             $table->foreignId("product_model_color_id")->references("id")->on("product_model_colors")->restrictOnDelete();
-            $table->foreignId("subiekt_id");
+            $table->foreignId("subiekt_id")->nullable();
             $table->string("symbol", 50);
             $table->string("name", 200);
             $table->foreignId("product_unit_id")->references("id")->on("product_units")->restrictOnDelete();;

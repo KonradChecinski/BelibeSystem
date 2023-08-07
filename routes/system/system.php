@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
+use App\Http\Controllers\Product\BasicProductModelController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductModelPriceController;
+use App\Http\Controllers\Product\ShowProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
@@ -53,6 +56,10 @@ Route::middleware("auth:user")->group(function () {
     Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
     Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
     Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
+    Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
+
+    Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.update.show");
+    Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
 
@@ -64,13 +71,16 @@ Route::middleware("auth:user")->group(function () {
         Route::get("/main", [SettingsMainController::class, 'index'])->name("system.settings.main");
 
         Route::get("/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
+        Route::post("/user", [SettingsUsersController::class, 'store']);
         Route::get("/user/data", [SettingsUsersController::class, 'data']);
 
         Route::get("/permissions", [SettingsPermissionsController::class, 'index'])->name("system.settings.permissions");
 
         Route::get("/roles", [SettingsRolesController::class, 'index'])->name("system.settings.roles");
-        Route::get("/roles/{edit}/edit", [SettingsRolesController::class, 'edit'])->name("system.settings.roles.edit");
         Route::post("/roles", [SettingsRolesController::class, 'store']);
+        Route::get("/roles/{settingsRole}/edit", [SettingsRolesController::class, 'edit'])->name("system.settings.roles.edit");
+        Route::post("/roles/{settingsRole}/edit", [SettingsRolesController::class, 'update']);
+
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
 

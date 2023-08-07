@@ -58,16 +58,26 @@ export default function RolesTable(props) {
 
                         {params.row.id !== 1 ? (
                             <>
-                                {props.auth.permissions.con}
-                                <IconButton aria-label="edit" onClick={onEditClick}>
-                                    <Edit/>
-                                </IconButton>
-                                <IconButton aria-label="delete" onClick={onDeleteClick}>
-                                    <Delete/>
-                                </IconButton>
+                                {props.auth.permissions.includes("editRole") ?
+                                    <IconButton aria-label="edit" onClick={onEditClick}>
+                                        <Edit/>
+                                    </IconButton>
+                                    :
+                                    ""
+                                }
+                                {props.auth.permissions.includes("deleteRole") ?
+                                    <>
+                                        <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                            <Delete/>
+                                        </IconButton>
+                                        <RolesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                           reloadData={reloadData} role={params.row}/>
+                                    </>
+                                    :
+                                    ""
+                                }
 
-                                <RolesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                   reloadData={reloadData} role={params.row}/>
+
                             </>
                         ) : ""
                         }

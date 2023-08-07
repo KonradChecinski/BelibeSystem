@@ -67,7 +67,6 @@ export default function Model(props) {
             return value.id;
         })
     });
-    console.log(props);
     // console.log(productModel);
 
 

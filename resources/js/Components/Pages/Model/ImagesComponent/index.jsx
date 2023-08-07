@@ -1,10 +1,20 @@
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton,
+    AccordionSummary,
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
     ImageList,
     ImageListItem,
-    Paper, Tooltip,
+    Paper,
+    Tooltip,
     Typography
 } from "@mui/material";
 import {ContentCopy, Delete, ExpandMore, FileDownload, Info} from "@mui/icons-material";
@@ -20,8 +30,6 @@ import * as PropTypes from "prop-types";
 
 
 export default function ImagesComponent(props) {
-
-    console.log(props)
     return (
         <>
             <Paper elevation={4}>
@@ -46,7 +54,7 @@ export default function ImagesComponent(props) {
                                             <Typography>Kolor - {color.name}</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            <ImageColorList/>
+                                            <ImageColorList {...props}/>
                                         </AccordionDetails>
                                     </Accordion>
                                 </Paper>
@@ -67,7 +75,7 @@ export default function ImagesComponent(props) {
                         <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <ImageColorList/>
+                        <ImageColorList {...props}/>
                     </AccordionDetails>
                 </Accordion>
             </Paper>
@@ -78,7 +86,7 @@ export default function ImagesComponent(props) {
 }
 
 
-const ImageColorList = () => {
+const ImageColorList = (props) => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
@@ -87,6 +95,7 @@ const ImageColorList = () => {
 
     const [open, setOpen] = useState(false);
 
+    // console.log(props)
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -191,7 +200,7 @@ const ImageColorList = () => {
     return (
         <>
             <div className="pswp-gallery" id={"pswp-gallery"}>
-                <ImageList cols={matchDownLg ? matchDownMd ? 3 : 4 : 8}>
+                <ImageList cols={matchDownLg ? matchDownMd ? 3 : 4 : 8} sx={{py: 1}}>
                     {Array(5).fill(1).map((num, i) => {
                         return (
                             <ImageListItem key={i} sx={{
@@ -210,6 +219,7 @@ const ImageColorList = () => {
                                         key={"pswp-gallery" + "-" + "1"}//index
                                         target="_blank"
                                         rel="noreferrer"
+                                        className={"relative"}
                                     >
 
                                         <img
@@ -219,7 +229,60 @@ const ImageColorList = () => {
                                             loading="lazy"
                                         />
 
+                                        {/*<Chip label={`Udostępnione`} color="primary"*/}
+                                        {/*      variant="outlined"*/}
+                                        {/*      sx={{fontSize: 10, px: 0}}/>*/}
+
                                     </a>
+                                </Box>
+
+                                <Box sx={{
+                                    // bgcolor: "yellow",
+                                    width: "70px",
+                                    height: "70px",
+                                    overflow: "hidden",
+                                    position: "absolute",
+                                    top: "-2px",
+                                    left: "-2px",
+                                    "&::before, &::after": {
+                                        position: "absolute",
+                                        zIndex: -1,
+                                        content: "''",
+                                        display: "block",
+                                        border: "5px solid #2980b9",
+                                        borderTopColor: "transparent",
+                                        borderLeftColor: "transparent",
+                                    },
+                                    "&::before": {
+                                        top: 0,
+                                        right: 8,
+                                    },
+                                    "&::after": {
+                                        bottom: 8,
+                                        left: 0,
+                                    },
+
+                                }}>
+                                    <Typography variant="body2" gutterBottom sx={{
+                                        right: "-5px",
+                                        top: "15px",
+                                        transform: "rotate(-45deg)",
+
+                                        position: "absolute",
+                                        display: "block",
+                                        width: "100px",
+                                        padding: "5px 0",
+                                        backgroundColor: "#3498db",
+                                        boxShadow: "0 5px 10px rgba(0,0,0,.1)",
+                                        color: "#fff",
+                                        textShadow: "0 1px 1px rgba(0,0,0,.2)",
+                                        textTransform: "uppercase",
+                                        textAlign: "center",
+                                        fontSize: 6
+                                    }}>
+                                        Udostępnione
+                                    </Typography>
+
                                 </Box>
 
                                 <Box sx={{
@@ -232,33 +295,37 @@ const ImageColorList = () => {
                                     justifyContent: "space-evenly",
                                     alignItems: "center",
                                     opacity: "0%",
-                                    transition: "opacity 0.3s ease-in-out"
+                                    transition: "opacity 0.3s ease-in-out",
+
                                 }}>
-                                    <Tooltip title="Info">
-                                        <IconButton onClick={InfoImg}>
-                                            <Info sx={{fontSize: 25, color: "menuText.main"}}/>
-                                        </IconButton>
-                                    </Tooltip>
+                                    {props.editing ?
+                                        <Tooltip title="Info">
+                                            <IconButton onClick={InfoImg}>
+                                                <Info sx={{fontSize: 20, color: "menuText.main"}}/>
+                                            </IconButton>
+                                        </Tooltip>
+                                        : ""}
                                     <Tooltip title="Download">
                                         <IconButton onClick={() => {
                                             downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
                                         }}>
-                                            <FileDownload sx={{fontSize: 25, color: "menuText.main"}}/>
+                                            <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Copy">
                                         <IconButton onClick={() => {
                                             copyImg(route("images", {path: "brak.jpg"}));
                                         }}>
-                                            <ContentCopy sx={{fontSize: 25, color: "menuText.main"}}/>
+                                            <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
                                         </IconButton>
                                     </Tooltip>
-                                    <Tooltip title="Delete">
-                                        <IconButton onClick={deleteImg}>
-                                            <Delete sx={{fontSize: 25, color: "menuText.main"}}/>
-                                        </IconButton>
-                                    </Tooltip>
-
+                                    {props.editing ?
+                                        <Tooltip title="Delete">
+                                            <IconButton onClick={deleteImg}>
+                                                <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
+                                            </IconButton>
+                                        </Tooltip>
+                                        : ""}
                                 </Box>
                             </ImageListItem>
                         );

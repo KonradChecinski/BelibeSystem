@@ -52,10 +52,10 @@ export default function ModelColorComponent(props) {
                                 <Box sx={{position: "relative"}}>
                                     <ModelsColorTable
                                         readOnly={!props.editing}
-                                        data={
-                                            sortBySizesModelColorObject(props.productModel.products.filter((product) => {
+                                        products={
+                                            props.productModel.products.filter((product) => {
                                                 return product.product_model_color_id === color.id;
-                                            }))
+                                            })
                                         }
                                         units={props.unit}
                                     />

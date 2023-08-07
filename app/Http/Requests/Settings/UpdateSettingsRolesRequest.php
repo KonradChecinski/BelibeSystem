@@ -11,7 +11,7 @@ class UpdateSettingsRolesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editRole", "user");
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateSettingsRolesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'numeric|required',
+            'name' => 'string|required|min:3',
+            'permissions' => 'array|required'
         ];
     }
 }

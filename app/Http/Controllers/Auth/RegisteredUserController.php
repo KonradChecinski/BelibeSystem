@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
         $systemName = Helper::getSystemNameFromDomain($request);
         if ($systemName == SystemName::SYSTEM) {
             $user = User::create($validatedUserCredential);
+            $user->assignRole("Użytkownik");
+
         } elseif ($systemName == SystemName::B2B) {
             $user = ClientUser::create($validatedUserCredential);
         } else {

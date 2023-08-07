@@ -42,7 +42,7 @@ export default function UserLayout({auth, header, children}) {
                                 }
                             }}
                         >
-                            <Menu showContent={showMenu}/>
+                            <Menu showContent={showMenu} auth={auth}/>
                         </Box>
 
                         <Box
@@ -66,7 +66,7 @@ export default function UserLayout({auth, header, children}) {
                     <>
                         <AppBar position={"static"}></AppBar>
                         <AppBar position={"fixed"}>
-                            <Menu showContent={true}/>
+                            <Menu showContent={true} auth={auth}/>
                         </AppBar>
                     </>
                 )}

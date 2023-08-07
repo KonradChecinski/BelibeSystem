@@ -1,7 +1,7 @@
 import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
-import {Button, IconButton} from "@mui/material";
+import {Button, IconButton, Tooltip} from "@mui/material";
 import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
@@ -68,16 +68,25 @@ export default function ModelsTable(props) {
 
                 return (
                     <>
-                        <IconButton aria-label="preview" onClick={onShowClick}>
-                            {/*<Preview />*/}
-                            <Visibility/>
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={onEditClick}>
-                            <Edit/>
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={onDeleteClick}>
-                            <Delete/>
-                        </IconButton>
+                        <Tooltip title="Pokaż">
+
+                            <IconButton aria-label="preview" onClick={onShowClick}>
+                                {/*<Preview />*/}
+                                <Visibility/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edycja">
+
+                            <IconButton aria-label="edit" onClick={onEditClick}>
+                                <Edit/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Usuń">
+
+                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
 
                         <ModelsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                             reloadData={reloadData} model={params.row}/>

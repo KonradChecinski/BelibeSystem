@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\DeleteProductModelRequest;
-use App\Http\Requests\Product\DeleteProductRequest;
-use App\Http\Requests\Product\StoreProductRequest;
-use App\Http\Requests\Product\UpdateProductRequest;
+use App\Http\Requests\Product\UpdateB2BProductModelRequest;
+use App\Http\Requests\Product\UpdateB2CProductModelRequest;
+use App\Http\Requests\Product\UpdateBasicProductModelRequest;
+use App\Http\Requests\Product\UpdateShowProductRequest;
 use App\Models\Products\Product;
+use App\Models\Products\ProductModel;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ShowProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,7 +32,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -38,7 +40,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(string $id)
     {
         //
     }
@@ -46,7 +48,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
     {
         //
     }
@@ -54,16 +56,17 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateShowProductRequest $request, Product $product)
     {
-        //
+        $product->update($request->all());
+        $product->save();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeleteProductRequest $request, Product $product)
+    public function destroy(string $id)
     {
-        $product->delete();
+        //
     }
 }

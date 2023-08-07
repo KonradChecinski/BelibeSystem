@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permissions\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -18,29 +18,38 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::findOrCreate('createModel', 'user');
-        Permission::findOrCreate('editModel', 'user');
-        Permission::findOrCreate('deleteModel', 'user');
+        Permission::findOrCreate('showModel', 'user', 'Model - wyświetlanie', 'Produkty');
+        Permission::findOrCreate('createModel', 'user', 'Model - tworzenie', 'Produkty');
+        Permission::findOrCreate('editModel', 'user', 'Model - edycja', 'Produkty');
+        Permission::findOrCreate('deleteModel', 'user', 'Model - usuwanie', 'Produkty');
 
-        Permission::findOrCreate('editProducts', 'user');
-        Permission::findOrCreate('updateProductPrice', "user");
+        Permission::findOrCreate('editProducts', 'user', 'Produkt - edycja', 'Produkty');
+        Permission::findOrCreate('deleteProducts', 'user', 'Produkt - usuwanie', 'Produkty');
+        Permission::findOrCreate('updateProductPrice', "user", 'Produkt - edycja cen', 'Produkty');
 
-        Permission::findOrCreate('createRole', "user");
-        Permission::findOrCreate('editRole', "user");
-        Permission::findOrCreate('deleteRole', "user");
+        Permission::findOrCreate('showRole', "user", 'Role - wyświetlanie', 'Admin');
+        Permission::findOrCreate('createRole', "user", 'Role - tworzenie', 'Admin');
+        Permission::findOrCreate('editRole', "user", 'Role - edycja', 'Admin');
+        Permission::findOrCreate('deleteRole', "user", 'Role - usuwanie', 'Admin');
+
+        Permission::findOrCreate('createUser', "user", 'Użytkownik - tworzenie', 'Admin');
+        Permission::findOrCreate('editUser', "user", 'Użytkownik - edycja', 'Admin');
+        Permission::findOrCreate('canImpersonate', "user", 'Może się wcielać w innych użytkowników', 'Admin');
+        Permission::findOrCreate('canBeImpersonate', "user", 'Można się wcielić w tego użytkownika', 'Admin');
 
 
-//        Permission::create(['name' => 'delete articles']);
-//        Permission::create(['name' => 'publish articles']);
-//        Permission::create(['name' => 'unpublish articles']);
+        Permission::findOrCreate('showSetting', "user", 'Ustawienia - wyświetlanie', 'Admin');
+        Permission::findOrCreate('editSetting', "user", 'Ustawienia - edycja', 'Admin');
+
 
         // create roles and assign created permissions
 
         // this can be done as separate statements
-        $admin = Role::findOrCreate('admin', 'user');
-        Role::findOrCreate('handlowiec', 'user');
-        Role::findOrCreate('magazyn', 'user');
-        Role::findOrCreate('logistyk', 'user');
+        $admin = Role::findOrCreate('Administrator', 'user');
+        Role::findOrCreate('Użytkownik', 'user');
+        Role::findOrCreate('Handlowiec', 'user');
+        Role::findOrCreate('Magazyn', 'user');
+        Role::findOrCreate('Logistyk', 'user');
 
 //        $role = Role::create(['guard_name' => 'admin', 'name' => 'logistyk']);
 //        $role->givePermissionTo('edit articles');
