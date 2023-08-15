@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -53,10 +54,10 @@ Route::domain("b2b." . config("app.domain"))->group(function () {
 
 
 Route::get('assets/{path}', function ($path) {
-    return response()->file(public_path("assets/$path"));
+//    return response()->file(public_path("assets/$path"));
 })->name("assets");
 
 Route::get('images/{path}', function ($path) {
-    return response()->file(public_path("assets/images/$path"));
+    return Storage::get('public/images/' . str_replace('\\', '/', $path));
 })->name("images");
 require __DIR__ . "/auth.php";

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductModelColorRequest;
 use App\Http\Requests\Product\UpdateProductModelColorRequest;
+use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 
 class ProductModelColorController extends Controller
@@ -28,9 +29,9 @@ class ProductModelColorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductModelColorRequest $request)
+    public function store(StoreProductModelColorRequest $request, ProductModel $model)
     {
-        //
+        $model->colors()->create($request->all());
     }
 
     /**

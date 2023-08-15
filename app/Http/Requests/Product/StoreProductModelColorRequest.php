@@ -11,7 +11,7 @@ class StoreProductModelColorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("createModel", "user");
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreProductModelColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|min:3',
+            'shortcut' => 'string|required|min:1|max:10',
         ];
     }
 }

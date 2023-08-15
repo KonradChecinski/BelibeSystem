@@ -228,7 +228,7 @@ const ImageColorList = (props) => {
                                             alt={"brak"}
                                             loading="lazy"
                                         />
-
+                                        <Typography>{i}</Typography>
                                         {/*<Chip label={`Udostępnione`} color="primary"*/}
                                         {/*      variant="outlined"*/}
                                         {/*      sx={{fontSize: 10, px: 0}}/>*/}

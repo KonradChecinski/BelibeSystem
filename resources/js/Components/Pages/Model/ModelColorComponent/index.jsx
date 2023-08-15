@@ -12,6 +12,8 @@ import {
 import ModelsColorTable from "@/Components/Table/ModelsColorTable";
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import {ContentCopy, Delete, ExpandMore, FileDownload, Info} from "@mui/icons-material";
+import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
+import {useState} from "react";
 
 export default function ModelColorComponent(props) {
     const countQuantityInColor = (color_id) => {
@@ -22,6 +24,11 @@ export default function ModelColorComponent(props) {
             quantity += value.quantity;
         });
         return quantity;
+    }
+
+    const [openDialogAdd, setOpenDialogAdd] = useState(false);
+    const reloadData = () => {
+        // setPaginationModel({...paginationModel})
     }
 
     return (
@@ -76,7 +83,10 @@ export default function ModelColorComponent(props) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-            }}><Typography variant={"body1"}>Dodaj kolor</Typography></Button>
+            }} onClick={() => setOpenDialogAdd(true)}><Typography variant={"body1"}>Dodaj kolor</Typography></Button>
+            <ModelColorAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} params={props}
+            />
+
 
         </Box>
     )

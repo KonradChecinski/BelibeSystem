@@ -4,6 +4,7 @@ use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductModelColorController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductModelPriceController;
 use App\Http\Controllers\Product\ShowProductController;
@@ -54,6 +55,7 @@ Route::middleware("auth:user")->group(function () {
 
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
     Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
+    Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
     Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
     Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
     Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
