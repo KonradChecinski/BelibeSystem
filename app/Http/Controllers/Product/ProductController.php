@@ -8,6 +8,7 @@ use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Products\Product;
+use App\Models\Products\ProductModelColor;
 
 class ProductController extends Controller
 {
@@ -64,6 +65,10 @@ class ProductController extends Controller
      */
     public function destroy(DeleteProductRequest $request, Product $product)
     {
+        $deleteColorModel = $product->color->products()->count()==1 ? true : false;
+
         $product->delete();
+
+        if($deleteColorModel) $product->color->delete();
     }
 }

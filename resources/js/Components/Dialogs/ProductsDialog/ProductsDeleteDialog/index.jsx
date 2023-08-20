@@ -15,7 +15,7 @@ import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
-export default function ProductsDeleteDialog({open, setOpen, deleteRow, product, params}) {
+export default function ProductsDeleteDialog({open, setOpen, deleteRow, product, last, params}) {
 
     const {data, setData, delete: destroy, processing, errors, reset} = useForm({
         product: product.id,
@@ -65,7 +65,22 @@ export default function ProductsDeleteDialog({open, setOpen, deleteRow, product,
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>Chcesz usunąć id:{product.id} "{product.name}"</DialogContentText>
-
+                {last?
+                    <>
+                        <br/>
+                        <DialogContentText sx={{
+                            color:"error.main"
+                        }}>
+                            Jest to ostatni produkt z koloru.
+                        </DialogContentText>
+<DialogContentText sx={{
+    color:"error.main"
+}}>
+    Usunięcie tego produktu spowoduje usunięcie całego koloru
+</DialogContentText>
+                    </>
+                     : ""
+                }
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleClose}>

@@ -37,7 +37,7 @@ class Product extends Model
 
     public function color(): BelongsTo
     {
-        return $this->belongsTo(ProductModelColor::class);
+        return $this->belongsTo(ProductModelColor::class, "product_model_color_id", "id");
     }
 
     public function images(): hasManyThrough
@@ -60,5 +60,4 @@ class Product extends Model
     {
         return $this->hasOne(ProductUnit::class);
     }
-
 }

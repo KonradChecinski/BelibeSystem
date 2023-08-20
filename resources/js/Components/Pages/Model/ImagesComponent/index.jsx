@@ -20,73 +20,102 @@ import {
 import {ContentCopy, Delete, ExpandMore, FileDownload, Info} from "@mui/icons-material";
 import {useSnackbar} from "notistack";
 import {copyImageToClipboard} from "copy-image-clipboard";
-import Draggable from "react-draggable";
+import ReactDraggable from "react-draggable";
 import {useEffect, useState} from "react";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 import * as PropTypes from "prop-types";
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
 
 
 export default function ImagesComponent(props) {
     return (
         <>
-            <Paper elevation={4}>
-                <Accordion defaultExpanded={true} disableGutters={true}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore/>}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Aktualne</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {props.productModel.colors.map((color) => {
-                            return (
-                                <Paper elevation={4} key={color.id} sx={{my: 1}}>
-                                    <Accordion defaultExpanded={true} disableGutters={true}>
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMore/>}
-                                            aria-controls="panel1a-content"
-                                            id="panel1a-header"
-                                        >
-                                            <Typography>Kolor - {color.name}</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <ImageColorList {...props}/>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                </Paper>
-                            );
-                        })}
-
-                    </AccordionDetails>
-                </Accordion>
+            <DragDropContext onDragEnd={(e)=>console.log(e)}>
 
 
-                <Accordion defaultExpanded={false} disableGutters={true}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore/>}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Archiwalne</Typography>
-                        <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <ImageColorList {...props}/>
-                    </AccordionDetails>
-                </Accordion>
-            </Paper>
+            {props.productModel.colors.map((color) => {
+                return (
+                    <Paper elevation={4} key={color.id} sx={{my: 1}}>
+
+                        <Accordion defaultExpanded={true} disableGutters={true}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMore/>}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>{color.shortcut} - {color.name}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Droppable droppableId={color.shortcut + "_main"} type={"group"}>
+                                    {(provided)=>(
+                                        <Box {...provided.droppableProps} ref={provided.innerRef}>
+                                            <ImageColorList props={props} dropId={color.shortcut + "_main"}/>
+                                            {provided.placeholder}
+                                        </Box>
+
+                                    )}
+                                </Droppable>
 
 
+                                <Accordion defaultExpanded={false} disableGutters={true}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore/>}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>Duży rozmiar</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Droppable droppableId={color.shortcut + "_big"} type={"group"}>
+                                            {(provided)=>(
+                                                <Box {...provided.droppableProps} ref={provided.innerRef}>
+                                                    <ImageColorList props={props} dropId={color.shortcut + "_big"}/>
+                                                    {provided.placeholder}
+                                                </Box>
+
+                                            )}
+                                        </Droppable>
+
+                                    </AccordionDetails>
+                                </Accordion>
+
+
+                                <Accordion defaultExpanded={false} disableGutters={true}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore/>}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>Archiwalne</Typography>
+                                        <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Droppable droppableId={color.shortcut + "_old"} type={"group"}>
+                                            {(provided)=>(
+                                                <Box {...provided.droppableProps} ref={provided.innerRef}>
+                                                    <ImageColorList props={props} dropId={color.shortcut + "_old"}/>
+                                                    {provided.placeholder}
+                                                </Box>
+
+                                            )}
+                                        </Droppable>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Paper>
+                );
+            })}
+            </DragDropContext>
         </>
     );
 }
 
 
-const ImageColorList = (props) => {
+const ImageColorList = ({props, dropId}) => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
@@ -150,12 +179,12 @@ const ImageColorList = (props) => {
 
     function PaperComponent(props) {
         return (
-            <Draggable
+            <ReactDraggable
                 handle="#draggable-dialog-title"
                 cancel={"[class*=\"MuiDialogContent-root\"]"}
             >
                 <Paper {...props} />
-            </Draggable>
+            </ReactDraggable>
         );
     }
 
@@ -200,134 +229,159 @@ const ImageColorList = (props) => {
     return (
         <>
             <div className="pswp-gallery" id={"pswp-gallery"}>
+
                 <ImageList cols={matchDownLg ? matchDownMd ? 3 : 4 : 8} sx={{py: 1}}>
+                {/*<Box sx={{*/}
+                {/*    py: 1,*/}
+                {/*    overflowY: "hidden",*/}
+                {/*    display: "inline-block",*/}
+                {/*    // gap:1*/}
+                {/*}}>*/}
+
+
                     {Array(5).fill(1).map((num, i) => {
                         return (
-                            <ImageListItem key={i} sx={{
-                                "&:hover": {
-                                    "& .MuiBox-root": {
-                                        opacity: "100%"
-                                    }
+                            <Draggable draggableId={dropId+"_"+i} key={i} index={i}>
 
-                                }
-                            }}>
-                                <Box>
-                                    <a
-                                        href={route("images", {path: "brak.jpg"})}
-                                        data-pswp-width={645}
-                                        data-pswp-height={960}
-                                        key={"pswp-gallery" + "-" + "1"}//index
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className={"relative"}
-                                    >
+                                {(provided)=>(
+                                    <Box
+                                        {...provided.dragHandleProps}
+                                        {...provided.draggableProps}
+                                        ref={provided.innerRef}
+                                        >
+                                    <ImageListItem key={i}
 
-                                        <img
-                                            src={route("images", {path: "brak.jpg"})}
-                                            // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={"brak"}
-                                            loading="lazy"
-                                        />
-                                        <Typography>{i}</Typography>
-                                        {/*<Chip label={`Udostępnione`} color="primary"*/}
-                                        {/*      variant="outlined"*/}
-                                        {/*      sx={{fontSize: 10, px: 0}}/>*/}
+                                                   sx={{
+                                        "&:hover": {
+                                            "& .MuiBox-root": {
+                                                opacity: "100%"
+                                            }
 
-                                    </a>
-                                </Box>
-
-                                <Box sx={{
-                                    // bgcolor: "yellow",
-                                    width: "70px",
-                                    height: "70px",
-                                    overflow: "hidden",
-                                    position: "absolute",
-                                    top: "-2px",
-                                    left: "-2px",
-                                    "&::before, &::after": {
-                                        position: "absolute",
-                                        zIndex: -1,
-                                        content: "''",
-                                        display: "block",
-                                        border: "5px solid #2980b9",
-                                        borderTopColor: "transparent",
-                                        borderLeftColor: "transparent",
-                                    },
-                                    "&::before": {
-                                        top: 0,
-                                        right: 8,
-                                    },
-                                    "&::after": {
-                                        bottom: 8,
-                                        left: 0,
-                                    },
-
-                                }}>
-                                    <Typography variant="body2" gutterBottom sx={{
-                                        right: "-5px",
-                                        top: "15px",
-                                        transform: "rotate(-45deg)",
-
-                                        position: "absolute",
-                                        display: "block",
-                                        width: "100px",
-                                        padding: "5px 0",
-                                        backgroundColor: "#3498db",
-                                        boxShadow: "0 5px 10px rgba(0,0,0,.1)",
-                                        color: "#fff",
-                                        textShadow: "0 1px 1px rgba(0,0,0,.2)",
-                                        textTransform: "uppercase",
-                                        textAlign: "center",
-                                        fontSize: 6
+                                        }
                                     }}>
-                                        Udostępnione
-                                    </Typography>
+                                        <Box>
+                                            <a
+                                                href={route("images", {path: "brak.jpg"})}
+                                                data-pswp-width={645}
+                                                data-pswp-height={960}
+                                                key={"pswp-gallery" + "-" + "1"}//index
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className={"relative"}
+                                            >
 
-                                </Box>
+                                                <img
+                                                    src={route("images", {path: "brak.jpg"})}
+                                                    // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                                    alt={"brak"}
+                                                    loading="lazy"
+                                                />
+                                                <Typography>{i}</Typography>
+                                                {/*<Chip label={`Udostępnione`} color="primary"*/}
+                                                {/*      variant="outlined"*/}
+                                                {/*      sx={{fontSize: 10, px: 0}}/>*/}
 
-                                <Box sx={{
-                                    bgcolor: "rgba(0,0,0,0.5)",
-                                    position: "absolute",
-                                    bottom: 0,
-                                    width: 1,
-                                    zIndex: 20,
-                                    display: "flex",
-                                    justifyContent: "space-evenly",
-                                    alignItems: "center",
-                                    opacity: "0%",
-                                    transition: "opacity 0.3s ease-in-out",
+                                            </a>
+                                        </Box>
 
-                                }}>
-                                    {props.editing ?
-                                        <Tooltip title="Info">
-                                            <IconButton onClick={InfoImg}>
-                                                <Info sx={{fontSize: 20, color: "menuText.main"}}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                        : ""}
-                                    <Tooltip title="Download">
-                                        <IconButton onClick={() => {
-                                            downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
+                                        <Box sx={{
+                                            // bgcolor: "yellow",
+                                            width: "70px",
+                                            height: "70px",
+                                            overflow: "hidden",
+                                            position: "absolute",
+                                            top: "-2px",
+                                            left: "-2px",
+                                            "&::before, &::after": {
+                                                position: "absolute",
+                                                zIndex: -1,
+                                                content: "''",
+                                                display: "block",
+                                                border: "5px solid #2980b9",
+                                                borderTopColor: "transparent",
+                                                borderLeftColor: "transparent",
+                                            },
+                                            "&::before": {
+                                                top: 0,
+                                                right: 8,
+                                            },
+                                            "&::after": {
+                                                bottom: 8,
+                                                left: 0,
+                                            },
+
                                         }}>
-                                            <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Copy">
-                                        <IconButton onClick={() => {
-                                            copyImg(route("images", {path: "brak.jpg"}));
+                                            <Typography variant="body2" gutterBottom sx={{
+                                                right: "-5px",
+                                                top: "15px",
+                                                transform: "rotate(-45deg)",
+
+                                                position: "absolute",
+                                                display: "block",
+                                                width: "100px",
+                                                padding: "5px 0",
+                                                backgroundColor: "#3498db",
+                                                boxShadow: "0 5px 10px rgba(0,0,0,.1)",
+                                                color: "#fff",
+                                                textShadow: "0 1px 1px rgba(0,0,0,.2)",
+                                                textTransform: "uppercase",
+                                                textAlign: "center",
+                                                fontSize: 6
+                                            }}>
+                                                Udostępnione
+                                            </Typography>
+
+                                        </Box>
+
+                                        <Box sx={{
+                                            bgcolor: "rgba(0,0,0,0.5)",
+                                            position: "absolute",
+                                            bottom: 0,
+                                            width: 1,
+                                            zIndex: 20,
+                                            display: "flex",
+                                            justifyContent: "space-evenly",
+                                            alignItems: "center",
+                                            opacity: "0%",
+                                            transition: "opacity 0.3s ease-in-out",
+
                                         }}>
-                                            <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
-                                        </IconButton>
-                                    </Tooltip>
-                                    {props.editing ?
-                                        <Tooltip title="Delete">
-                                            <IconButton onClick={deleteImg}>
-                                                <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                        : ""}
-                                </Box>
-                            </ImageListItem>
+                                            {props.editing ?
+                                                <Tooltip title="Info">
+                                                    <IconButton onClick={InfoImg}>
+                                                        <Info sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                : ""}
+                                            <Tooltip title="Download">
+                                                <IconButton onClick={() => {
+                                                    downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
+                                                }}>
+                                                    <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Copy">
+                                                <IconButton onClick={() => {
+                                                    copyImg(route("images", {path: "brak.jpg"}));
+                                                }}>
+                                                    <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            {props.editing ?
+                                                <Tooltip title="Delete">
+                                                    <IconButton onClick={deleteImg}>
+                                                        <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                : ""}
+                                        </Box>
+                                    </ImageListItem>
+                                    </Box>
+                                )}
+
+
+
+                            </Draggable>
                         );
                     })
                     }

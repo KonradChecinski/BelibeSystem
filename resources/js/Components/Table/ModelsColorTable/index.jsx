@@ -76,7 +76,7 @@ export default function ModelsColorTable({products, readOnly, units}) {
             sortable: false,
             filterable: true,
             editable: true,
-            
+
             headerAlign: 'center',
             align: 'center',
             width: 150,
@@ -316,7 +316,7 @@ export default function ModelsColorTable({products, readOnly, units}) {
                             </IconButton>
                         </Tooltip>
                         <ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                              deleteRow={deleteRow} product={params.row}/>
+                                              deleteRow={deleteRow} product={params.row} last={products.length===1}/>
                         {/*reloadData={reloadData}*/}
                     </>
 
