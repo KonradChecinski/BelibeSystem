@@ -100,6 +100,7 @@ function ModelPricesComponentEdit(props) {
 
     const savePrice = () => {
         post(route("system.products.model.price", {productModelPrice: data.id}), {
+            preserveScroll: true,
             onSuccess: params => {
                 setEdited(false);
                 enqueueSnackbar("Zapisano ceny", {variant: 'success'})

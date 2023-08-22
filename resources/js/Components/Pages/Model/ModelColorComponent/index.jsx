@@ -33,7 +33,7 @@ export default function ModelColorComponent(props) {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 5, mt: 2}}>
-            {props.productModel.colors.map((color) => {
+            {props.productModel.colors_with_images.map((color) => {
                 return (
                     <Paper elevation={12} key={color.id}>
                         <Accordion defaultExpanded={true} disableGutters={true}>
@@ -65,6 +65,8 @@ export default function ModelColorComponent(props) {
                                             })
                                         }
                                         units={props.unit}
+                                        color={color}
+                                        props={props}
                                     />
                                 </Box>
                             </AccordionDetails>

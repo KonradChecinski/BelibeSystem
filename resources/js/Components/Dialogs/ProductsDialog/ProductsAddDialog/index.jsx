@@ -1,4 +1,5 @@
 import {
+    Autocomplete,
     Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
@@ -14,15 +15,25 @@ import {useState, useRef} from "react";
 import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import {DataGrid, useGridApiRef} from "@mui/x-data-grid";
 
-export default function ModelColorAddDialog({open, setOpen, reloadData, roles, params}) {
+export default function ProductsAddDialog({open, setOpen, reloadData, color, props}) {
     const form = useRef();
     const formName = useRef();
     const formShortcut = useRef();
 
+
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
+        color: {
+            id: color?.id,
+            shortcut: color?.shortcut,
+            label: color?.shortcut + " - " + color?.name
+        },
+        symbol: createSymbol(props?.productModel.symbol, color?.id),
         name: '',
-        shortcut: '',
+        size: '',
+        unit: '',
+        barcode: []
     })
 
 
@@ -55,7 +66,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     };
 
     const save = () => {
-        post(route("system.products.model.color", {model: params.productModel.id}),
+        post(route("system.products.model.color", {model: props.productModel.id}),
 
             {
                 preserveScroll: true,
@@ -85,7 +96,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         >
 
             <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie koloru
+                Dodawanie produktu
             </DialogTitle>
             <DialogContent>
                 <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
@@ -100,11 +111,12 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
                     <Step1
                         data={data}
                         setData={setData}
+                        props={props}
                         formRef={form}
                         formNameRef={formName}
                         formShortcutRef={formShortcut}
                     /> : ""}
-                {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : ""}
+                {activeStep === 1 ? <Step2 data={data} setData={setData} color={color} errors={errors}/> : ""}
 
             </DialogContent>
             <DialogActions>
@@ -132,23 +144,68 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     );
 }
 
-function Step1({data, setData, formRef, formNameRef, formShortcutRef}) {
+function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
+    const apiRef = useGridApiRef();
+    const addColumn = () => {
+        setData("barcode", [...data.barcode, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
+    }
+    const handleProcessRowUpdate = (newRow, oldRow) => {
+        console.log(newRow.barcode.length !== 13 && isNaN(newRow.barcode))
+        if (!isNaN(newRow.barcode) && newRow.barcode.length === 13) {
+            setData("barcode", data.barcode.map((row) => (row.id === newRow.id ? newRow : row)))
+            return newRow;
+        }
+
+
+    }
 
     return (
         <Box>
             <ValidatorForm instantValidate ref={formRef} onSubmit={() => {
             }}>
-                <TextValidator
-                    id="shortcut"
-                    label="Symbol"
-                    ref={formShortcutRef}
-                    onChange={(value) => {
-                        setData('shortcut', value.target.value);
+                <Autocomplete
+                    disablePortal
+                    id="color"
+                    options={props.productModel.colors_with_images.map(e => ({
+                        id: e.id,
+                        shortcut: e.shortcut,
+                        label: e.shortcut + " - " + e.name
+                    }))}
+                    sx={{width: "30ch"}}
+                    value={data.color}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={(e, value) => {
+                        setData({
+                            ...data,
+                            color: value,
+                            symbol: createSymbol(props?.productModel.symbol, value.shortcut, data.size)
+                        })
                     }}
-                    validators={['required', 'maxStringLength:10', 'minStringLength:1']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 20', 'Minimalna długość nazwy to 2']}
-                    value={data.shortcut}
-                    sx={{width: "30ch", my: 1}}
+                    renderInput={(params) => <TextField {...params} label="Kolor" sx={{my: 1}}/>}
+                />
+
+                <Autocomplete
+                    disablePortal
+                    id="size"
+                    options={["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL", "7XL", "8XL", "9XL", "10XL",
+                        "92", "98", "104", "110", "116", "122", "128", "134", "140", "146", "152", "158", "164", "170"]}
+                    sx={{width: "30ch"}}
+                    value={data.size}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    onChange={(e, value) => {
+                        setData({
+                            ...data,
+                            size: value,
+                            symbol: createSymbol(props?.productModel.symbol, data.color.shortcut, value)
+                        })
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Rozmiar" sx={{my: 1}}/>}
+                />
+
+                <TextField id="shortcut" label="Symbol" variant="outlined"
+                           value={data.symbol}
+                           inputProps={{readOnly: true}}
+                           sx={{width: "30ch", my: 1}}
                 />
 
                 <TextValidator
@@ -166,6 +223,43 @@ function Step1({data, setData, formRef, formNameRef, formShortcutRef}) {
                 />
 
 
+                <Autocomplete
+                    disablePortal
+                    id="unit"
+                    options={["szt."]}
+                    sx={{width: "30ch"}}
+                    value={data.unit}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    onChange={(e, value) => {
+                        setData("unit", value)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Jednostka" sx={{my: 1}}/>}
+                />
+                <Box sx={{position: "relative"}}>
+                    <DataGrid apiRef={apiRef}
+                              rows={data.barcode}
+                              columns={[{
+                                  field: 'barcode',
+                                  // type: 'number',
+                                  flex: 1,
+                                  align: "left",
+                                  headerName: "Kody kreskowe",
+                                  headerAlign: "left",
+                                  sortable: false,
+                                  editable: true
+                              }]}
+                              disableColumnMenu
+                              autoHeight={true}
+                              hideFooter={true}
+                              editMode={"row"}
+                              processRowUpdate={handleProcessRowUpdate}
+                    />
+                    <Button size="small" onClick={addColumn} sx={{position: "absolute", right: 10, top: 15}}>
+                        Dodaj
+                    </Button>
+                </Box>
+
+
             </ValidatorForm>
         </Box>
     );
@@ -179,16 +273,15 @@ function Step2({data, setData, errors}) {
     })
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-            <TextField id="shortcut" label="Symbol" variant="outlined"
-                       value={data.shortcut}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
-
             <TextField id="name" label="Nazwa" variant="outlined"
                        value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
+            <TextField id="shortcut" label="Symbol" variant="outlined"
+                       value={data.shortcut}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
@@ -213,3 +306,6 @@ function PaperComponent(props) {
     );
 }
 
+const createSymbol = (modelSymbol = '', colorId = '', size = '') => {
+    return modelSymbol + "-" + colorId + "-" + size
+}

@@ -168,7 +168,18 @@ export default function ModelsTable(props) {
                     : "");
             let option = {headers: {Accept: "application/json"}};
             const response = await fetch(fetchUrl, option);
-            const json = await response.json();
+            let json = await response.json();
+
+            for (const model of json[0].data) {
+                console.log(model)
+                let quantity = 0;
+                for (const product of model.products) {
+                    quantity += product.quantity
+                }
+                model.quantity = quantity
+            }
+
+
             setRowCountState(json[0].total);
             setPageData(json[0].data);
             setIsLoading(false);

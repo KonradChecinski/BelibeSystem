@@ -121,7 +121,7 @@ class ProductModelController extends Controller
         }
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
-//        dd($models->get()->toArray());
+//        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
         $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
         return response()->json([$models]);
     }
@@ -147,7 +147,7 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "prices", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -160,7 +160,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colors", "products", "prices", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();

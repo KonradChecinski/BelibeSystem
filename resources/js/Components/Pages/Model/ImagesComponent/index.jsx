@@ -9,113 +9,210 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
+    DialogTitle, Divider, Fade,
     IconButton,
     ImageList,
     ImageListItem,
-    Paper,
+    Paper, Stack,
     Tooltip,
     Typography
 } from "@mui/material";
-import {ContentCopy, Delete, ExpandMore, FileDownload, Info} from "@mui/icons-material";
-import {useSnackbar} from "notistack";
+import {ContentCopy, Delete, ExpandMore, FileDownload, Info, Save} from "@mui/icons-material";
+import {enqueueSnackbar, useSnackbar} from "notistack";
 import {copyImageToClipboard} from "copy-image-clipboard";
 import ReactDraggable from "react-draggable";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 import * as PropTypes from "prop-types";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
+import {useForm} from "@inertiajs/react";
 
 
 export default function ImagesComponent(props) {
+    const [edited, setEdited] = useState(false);
+
+
+    const {data, setData, processing, post} = useForm({
+        'id': props.productModel.id,
+        "description_b2b": props.productModel.description_b2b,
+        "categories": props.productModel.categories.map((value) => {
+            return value.id;
+        })
+    })
+
+    const saveImages = () => {
+        setEdited(false);
+
+        // post(route("system.products.model.update.b2b", {productModel: data.id}), {
+        //     onSuccess: params => {
+        //         setEdited(false);
+        //         enqueueSnackbar("Zapisano B2B", {variant: 'success'})
+        //     },
+        //     onError: params => {
+        //         enqueueSnackbar("Błąd przy zapisywaniu B2B", {variant: 'error'})
+        //     },
+        //     preserveScroll: true
+        // })
+    }
+
+    const [imageArray, setImageArray] = useState(props.productModel.colors_with_images.map(({shortcut}) => ({
+        shortcut, "images": {
+            "main": Array.from({length: 5}, (_, i) => shortcut + "main" + (i + 1)),
+            "big": Array.from({length: 2}, (_, i) => shortcut + "big" + (i + 1)),
+            "old": Array.from({length: 6}, (_, i) => shortcut + "old" + (i + 1)),
+        }
+    })))
+    const onDragEnd = (e) => {
+        console.log(e)
+        console.log(imageArray)
+
+        if (!e.destination) return;
+        if (e.source.droppableId === e.destination.droppableId && e.source.index === e.destination.index) return;
+
+        setEdited(true);
+
+        const newImageArray = [...imageArray]
+
+        //Source
+        const sourceShortcut = e.source.droppableId.split("_")[0]
+        const sourceType = e.source.droppableId.split("_")[1]
+        const sourceIndex = e.source.index
+        let sourceImageRow = newImageArray.find(e => e.shortcut === sourceShortcut).images[sourceType]
+
+        //Destination
+        const destinationShortcut = e.destination.droppableId.split("_")[0]
+        const destinationType = e.destination.droppableId.split("_")[1]
+        const destinationIndex = e.destination.index
+        let destinationImageRow = newImageArray.find(e => e.shortcut === destinationShortcut).images[destinationType]
+
+        //
+        // console.log(newImageArray)
+        // console.log("sourceIndex", sourceIndex)
+        // console.log(newImageArray.find(e => e.shortcut === sourceShortcut).images[sourceType][sourceIndex])
+        // console.log(sourceImageRow)
+
+        const dropElement = sourceImageRow.splice(sourceIndex, 1)
+        destinationImageRow.splice(destinationIndex, 0, dropElement)
+    }
     return (
         <>
-            <DragDropContext onDragEnd={(e)=>console.log(e)}>
+            <DragDropContext onDragEnd={onDragEnd}>
 
 
-            {props.productModel.colors.map((color) => {
-                return (
-                    <Paper elevation={4} key={color.id} sx={{my: 1}}>
+                {props.productModel.colors_with_images.map((color) => {
+                    const [bigAccordion, setBigAccordion] = useState(false);
+                    const [oldAccordion, setOldAccordion] = useState(false);
+                    return (
+                        <Paper elevation={4} key={color.id} sx={{my: 1}}>
 
-                        <Accordion defaultExpanded={true} disableGutters={true}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMore/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>{color.shortcut} - {color.name}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Droppable droppableId={color.shortcut + "_main"} type={"group"}>
-                                    {(provided)=>(
-                                        <Box {...provided.droppableProps} ref={provided.innerRef}>
-                                            <ImageColorList props={props} dropId={color.shortcut + "_main"}/>
-                                            {provided.placeholder}
-                                        </Box>
+                            <Accordion defaultExpanded={true} disableGutters={true}>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMore/>}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography>{color.shortcut} - {color.name}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Droppable droppableId={color.shortcut + "_main"} type={"group"}
+                                               direction="horizontal">
+                                        {(provided) => (
+                                            <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                 sx={{height: 270}}>
+                                                <ImageColorList props={props} dropId={color.shortcut + "_main"}
+                                                                imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.main}/>
+                                                {provided.placeholder}
+                                            </Box>
 
-                                    )}
-                                </Droppable>
+                                        )}
+                                    </Droppable>
+
+                                    <Paper elevation={4}>
+                                        <Accordion expanded={bigAccordion}
+                                                   onChange={() => setBigAccordion(!bigAccordion)}
+                                                   disableGutters={true}>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMore/>}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Typography>Duży format</Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <Droppable droppableId={color.shortcut + "_big"} type={"group"}
+                                                           direction="horizontal">
+                                                    {(provided) => (
+                                                        <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                             sx={{height: bigAccordion ? 270 : 0}}>
+                                                            <ImageColorList props={props}
+                                                                            dropId={color.shortcut + "_big"}
+                                                                            imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.big}/>
+                                                            {provided.placeholder}
+                                                        </Box>
+
+                                                    )}
+                                                </Droppable>
+
+                                            </AccordionDetails>
+                                        </Accordion>
 
 
-                                <Accordion defaultExpanded={false} disableGutters={true}>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMore/>}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Duży rozmiar</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Droppable droppableId={color.shortcut + "_big"} type={"group"}>
-                                            {(provided)=>(
-                                                <Box {...provided.droppableProps} ref={provided.innerRef}>
-                                                    <ImageColorList props={props} dropId={color.shortcut + "_big"}/>
-                                                    {provided.placeholder}
-                                                </Box>
+                                        <Accordion expanded={oldAccordion}
+                                                   onChange={() => setOldAccordion(!oldAccordion)}
+                                                   disableGutters={true}>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMore/>}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Typography>Archiwalne</Typography>
+                                                <Typography sx={{color: "text.secondary", ml: 10}}>Nie
+                                                    używać</Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <Droppable droppableId={color.shortcut + "_old"} type={"group"}
+                                                           direction="horizontal" style="overflow-y: scroll;">
+                                                    {(provided) => (
+                                                        <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                             sx={{height: oldAccordion ? 270 : 0}}>
+                                                            <ImageColorList props={props}
+                                                                            dropId={color.shortcut + "_old"}
+                                                                            imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.old}/>
+                                                            {provided.placeholder}
+                                                        </Box>
 
-                                            )}
-                                        </Droppable>
-
-                                    </AccordionDetails>
-                                </Accordion>
-
-
-                                <Accordion defaultExpanded={false} disableGutters={true}>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMore/>}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Archiwalne</Typography>
-                                        <Typography sx={{color: "text.secondary", ml: 10}}>Nie używać</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Droppable droppableId={color.shortcut + "_old"} type={"group"}>
-                                            {(provided)=>(
-                                                <Box {...provided.droppableProps} ref={provided.innerRef}>
-                                                    <ImageColorList props={props} dropId={color.shortcut + "_old"}/>
-                                                    {provided.placeholder}
-                                                </Box>
-
-                                            )}
-                                        </Droppable>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Paper>
-                );
-            })}
+                                                    )}
+                                                </Droppable>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </Paper>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Paper>
+                    );
+                })}
             </DragDropContext>
+            <Fade in={edited}>
+                <Button variant="outlined" startIcon={<Save/>}
+                        disabled={processing}
+                        onClick={saveImages}
+                        sx={{
+                            position: "absolute",
+                            top: 7,
+                            right: 100,
+                        }}>
+                    Zapisz
+                </Button>
+            </Fade>
         </>
     );
 }
 
 
-const ImageColorList = ({props, dropId}) => {
+const ImageColorList = ({props, dropId, imageArray}) => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
@@ -224,170 +321,188 @@ const ImageColorList = ({props, dropId}) => {
 
     const InfoImg = () => {
         handleClickOpen();
+        console.log(dropId)
     };
+
 
     return (
         <>
-            <div className="pswp-gallery" id={"pswp-gallery"}>
 
-                <ImageList cols={matchDownLg ? matchDownMd ? 3 : 4 : 8} sx={{py: 1}}>
-                {/*<Box sx={{*/}
-                {/*    py: 1,*/}
-                {/*    overflowY: "hidden",*/}
-                {/*    display: "inline-block",*/}
-                {/*    // gap:1*/}
-                {/*}}>*/}
+            <Box
+                className="pswp-gallery" id={"pswp-gallery"}
+                sx={{
+                    py: 1,
+                    width: 1,
+                    overflowY: "hidden",
+                    overflowX: "auto",
+                }}>
+                <Box sx={{
+                    display: "flex",
+                    gap: 1,
+                    "&>.MuiBox-root": {
+                        borderStyle: "solid",
+                        borderColor: "transparent",
+                        borderWidth: 3,
+                    },
+
+                    ...(dropId.includes("main") && {
+                        "&>.MuiBox-root:first-of-type": {
+                            borderColor: "info.main",
+                        },
+                    })
 
 
-                    {Array(5).fill(1).map((num, i) => {
+                }}>
+
+
+                    {imageArray.map((num, i) => {
                         return (
-                            <Draggable draggableId={dropId+"_"+i} key={i} index={i}>
+                            <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}>
 
-                                {(provided)=>(
+                                {(provided) => (
                                     <Box
                                         {...provided.dragHandleProps}
                                         {...provided.draggableProps}
                                         ref={provided.innerRef}
-                                        >
-                                    <ImageListItem key={i}
+                                    >
+                                        <Box sx={{
+                                            position: "relative",
+                                            "&:hover": {
+                                                "& .MuiBox-root": {
+                                                    opacity: "100%"
+                                                }
 
-                                                   sx={{
-                                        "&:hover": {
-                                            "& .MuiBox-root": {
-                                                opacity: "100%"
                                             }
-
-                                        }
-                                    }}>
-                                        <Box>
-                                            <a
-                                                href={route("images", {path: "brak.jpg"})}
-                                                data-pswp-width={645}
-                                                data-pswp-height={960}
-                                                key={"pswp-gallery" + "-" + "1"}//index
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className={"relative"}
-                                            >
-
-                                                <img
-                                                    src={route("images", {path: "brak.jpg"})}
-                                                    // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                                    alt={"brak"}
-                                                    loading="lazy"
-                                                />
-                                                <Typography>{i}</Typography>
-                                                {/*<Chip label={`Udostępnione`} color="primary"*/}
-                                                {/*      variant="outlined"*/}
-                                                {/*      sx={{fontSize: 10, px: 0}}/>*/}
-
-                                            </a>
-                                        </Box>
-
-                                        <Box sx={{
-                                            // bgcolor: "yellow",
-                                            width: "70px",
-                                            height: "70px",
-                                            overflow: "hidden",
-                                            position: "absolute",
-                                            top: "-2px",
-                                            left: "-2px",
-                                            "&::before, &::after": {
-                                                position: "absolute",
-                                                zIndex: -1,
-                                                content: "''",
-                                                display: "block",
-                                                border: "5px solid #2980b9",
-                                                borderTopColor: "transparent",
-                                                borderLeftColor: "transparent",
-                                            },
-                                            "&::before": {
-                                                top: 0,
-                                                right: 8,
-                                            },
-                                            "&::after": {
-                                                bottom: 8,
-                                                left: 0,
-                                            },
-
                                         }}>
-                                            <Typography variant="body2" gutterBottom sx={{
-                                                right: "-5px",
-                                                top: "15px",
-                                                transform: "rotate(-45deg)",
-
-                                                position: "absolute",
-                                                display: "block",
-                                                width: "100px",
-                                                padding: "5px 0",
-                                                backgroundColor: "#3498db",
-                                                boxShadow: "0 5px 10px rgba(0,0,0,.1)",
-                                                color: "#fff",
-                                                textShadow: "0 1px 1px rgba(0,0,0,.2)",
-                                                textTransform: "uppercase",
-                                                textAlign: "center",
-                                                fontSize: 6
+                                            <Box sx={{
+                                                "& .product-image": {
+                                                    height: 200,
+                                                    maxWidth: "fit-content"
+                                                }
                                             }}>
-                                                Udostępnione
-                                            </Typography>
+                                                <a
+                                                    href={route("images", {path: "brak.jpg"})}
+                                                    data-pswp-width={645}
+                                                    data-pswp-height={960}
+                                                    key={"pswp-gallery" + "-" + "1"}//index
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className={"relative"}
+                                                >
 
-                                        </Box>
+                                                    <img
+                                                        src={route("images", {path: "brak.jpg"})}
+                                                        // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                                        alt={"brak"}
+                                                        className={"product-image"}
+                                                        loading="lazy"
+                                                    />
 
-                                        <Box sx={{
-                                            bgcolor: "rgba(0,0,0,0.5)",
-                                            position: "absolute",
-                                            bottom: 0,
-                                            width: 1,
-                                            zIndex: 20,
-                                            display: "flex",
-                                            justifyContent: "space-evenly",
-                                            alignItems: "center",
-                                            opacity: "0%",
-                                            transition: "opacity 0.3s ease-in-out",
+                                                </a>
+                                            </Box>
 
-                                        }}>
-                                            {props.editing ?
-                                                <Tooltip title="Info">
-                                                    <IconButton onClick={InfoImg}>
-                                                        <Info sx={{fontSize: 20, color: "menuText.main"}}/>
+                                            <Box sx={{
+                                                // bgcolor: "yellow",
+                                                width: "70px",
+                                                height: "70px",
+                                                overflow: "hidden",
+                                                position: "absolute",
+                                                top: "-2px",
+                                                left: "-2px",
+                                                "&::before, &::after": {
+                                                    position: "absolute",
+                                                    zIndex: -1,
+                                                    content: "''",
+                                                    display: "block",
+                                                    border: "5px solid #2980b9",
+                                                    borderTopColor: "transparent",
+                                                    borderLeftColor: "transparent",
+                                                },
+                                                "&::before": {
+                                                    top: 0,
+                                                    right: 8,
+                                                },
+                                                "&::after": {
+                                                    bottom: 8,
+                                                    left: 0,
+                                                },
+
+                                            }}>
+                                                <Typography variant="body2" gutterBottom sx={{
+                                                    right: "-5px",
+                                                    top: "15px",
+                                                    transform: "rotate(-45deg)",
+
+                                                    position: "absolute",
+                                                    display: "block",
+                                                    width: "100px",
+                                                    padding: "5px 0",
+                                                    backgroundColor: "#3498db",
+                                                    boxShadow: "0 5px 10px rgba(0,0,0,.1)",
+                                                    color: "#fff",
+                                                    textShadow: "0 1px 1px rgba(0,0,0,.2)",
+                                                    textTransform: "uppercase",
+                                                    textAlign: "center",
+                                                    fontSize: 6
+                                                }}>
+                                                    Udostępnione
+                                                </Typography>
+
+                                            </Box>
+
+                                            <Box sx={{
+                                                bgcolor: "rgba(0,0,0,0.5)",
+                                                position: "absolute",
+                                                bottom: 0,
+                                                width: 1,
+                                                zIndex: 20,
+                                                display: "flex",
+                                                justifyContent: "space-evenly",
+                                                alignItems: "center",
+                                                opacity: "0%",
+                                                transition: "opacity 0.3s ease-in-out",
+
+                                            }}>
+                                                {props.editing ?
+                                                    <Tooltip title="Info">
+                                                        <IconButton onClick={InfoImg}>
+                                                            <Info sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    : ""}
+                                                <Tooltip title="Download">
+                                                    <IconButton onClick={() => {
+                                                        downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
+                                                    }}>
+                                                        <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>
                                                 </Tooltip>
-                                                : ""}
-                                            <Tooltip title="Download">
-                                                <IconButton onClick={() => {
-                                                    downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
-                                                }}>
-                                                    <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Copy">
-                                                <IconButton onClick={() => {
-                                                    copyImg(route("images", {path: "brak.jpg"}));
-                                                }}>
-                                                    <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            {props.editing ?
-                                                <Tooltip title="Delete">
-                                                    <IconButton onClick={deleteImg}>
-                                                        <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                <Tooltip title="Copy">
+                                                    <IconButton onClick={() => {
+                                                        copyImg(route("images", {path: "brak.jpg"}));
+                                                    }}>
+                                                        <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>
                                                 </Tooltip>
-                                                : ""}
+                                                {props.editing ?
+                                                    <Tooltip title="Delete">
+                                                        <IconButton onClick={deleteImg}>
+                                                            <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    : ""}
+                                            </Box>
                                         </Box>
-                                    </ImageListItem>
                                     </Box>
                                 )}
-
 
 
                             </Draggable>
                         );
                     })
                     }
-
-                </ImageList>
-            </div>
+                </Box>
+            </Box>
 
 
             <Dialog

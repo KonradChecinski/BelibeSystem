@@ -10,18 +10,17 @@ import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
+import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 
-export default function ModelsColorTable({products, readOnly, units}) {
+export default function ModelsColorTable({products, readOnly, units, color, props}) {
     const theme = useTheme();
+    const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
-    for (const product of products) {
-        product.edit = false;
-    }
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm(products)
-
-    console.log(products)
-    console.log(data)
+    //
+    // console.log(products)
+    // console.log(data)
 
     const column = [
         {field: "id", headerName: "Id"},
@@ -31,14 +30,12 @@ export default function ModelsColorTable({products, readOnly, units}) {
             headerName: "Symbol",
             sortable: false,
             filterable: false,
-            editable: true,
             width: 160
         },
         {
             field: "name",
             headerName: "Nazwa", sortable: false,
             filterable: false,
-            editable: true,
             width: 300
         },
         {
@@ -46,7 +43,6 @@ export default function ModelsColorTable({products, readOnly, units}) {
             headerName: "Rozmiar",
             sortable: false,
             filterable: false,
-            editable: true,
 
             width: 70
         },
@@ -63,7 +59,6 @@ export default function ModelsColorTable({products, readOnly, units}) {
             headerName: "J.m.",
             sortable: false,
             filterable: false,
-            editable: true,
 
             width: 70,
             renderCell: (params) => {
@@ -75,7 +70,6 @@ export default function ModelsColorTable({products, readOnly, units}) {
             headerName: "Kody kreskowe",
             sortable: false,
             filterable: true,
-            editable: true,
 
             headerAlign: 'center',
             align: 'center',
@@ -260,26 +254,17 @@ export default function ModelsColorTable({products, readOnly, units}) {
             sortable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
+                const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
                     // return alert(JSON.stringify(params.row, null, 4));
-                    let row = {...data.find(e => e.id === params.row.id)}
-                    row.edit = true
-                    console.log('row', row)
-                    setData([...data.filter(e => e.id !== params.row.id), row])
-
-                };
-
-                const onSaveClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    // return alert(JSON.stringify(params.row, null, 4));
-                    let row = {...data.find(e => e.id === params.row.id)}
-                    row.edit = false
-                    console.log('row', row)
-                    setData([...data.filter(e => e.id !== params.row.id), row])
+                    // let row = {...data.find(e => e.id === params.row.id)}
+                    // row.edit = true
+                    // console.log('row', row)
+                    // setData([...data.filter(e => e.id !== params.row.id), row])
+                    setOpenDialogAdd(true)
                 };
 
                 const onDeleteClick = (e) => {
@@ -290,19 +275,11 @@ export default function ModelsColorTable({products, readOnly, units}) {
 
                 return (
                     <>
-                        {params.row.edit ?
-                            <Tooltip title="Zapis">
-                                <IconButton aria-label="save" onClick={onSaveClick}>
-                                    <Save/>
-                                </IconButton>
-                            </Tooltip>
-                            :
-                            <Tooltip title="Edycja">
-                                <IconButton aria-label="edit" onClick={onEditClick}>
-                                    <Edit/>
-                                </IconButton>
-                            </Tooltip>
-                        }
+                        <Tooltip title="Edycja">
+                            <IconButton aria-label="edit" onClick={onEditClick}>
+                                <Edit/>
+                            </IconButton>
+                        </Tooltip>
 
 
                         <Tooltip title="Powiel">
@@ -316,7 +293,8 @@ export default function ModelsColorTable({products, readOnly, units}) {
                             </IconButton>
                         </Tooltip>
                         <ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                              deleteRow={deleteRow} product={params.row} last={products.length===1}/>
+                                              deleteRow={deleteRow} product={params.row} last={products.length === 1}/>
+                        <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd}/>
                         {/*reloadData={reloadData}*/}
                     </>
 
@@ -384,12 +362,12 @@ export default function ModelsColorTable({products, readOnly, units}) {
                 }}
             />
             <Box sx={{position: "absolute", bottom: -10, right: -10, zIndex: 20}}>
-                <Fab color="primary" aria-label="add">
+                <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
                     <Add/>
                 </Fab>
 
             </Box>
-
+            <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} props={props}/>
         </>
     );
 }

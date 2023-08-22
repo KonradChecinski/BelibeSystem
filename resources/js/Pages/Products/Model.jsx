@@ -67,11 +67,10 @@ export default function Model(props) {
             return value.id;
         })
     });
-    // console.log(productModel);
+    console.log(productModel);
 
 
     return (
-
         <UserLayout auth={props.auth} errors={props.errors} header={"Model: " + props.productModel.name}>
             <Head title={props.productModel.name}/>
             <Grid container spacing={2}>

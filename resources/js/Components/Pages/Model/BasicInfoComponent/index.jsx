@@ -100,11 +100,12 @@ export default function BasicInfoComponent(props) {
             </Box>
 
             <Box>
-                <TextField id="quantity" label="Stan w magazynie ogólnie" variant="outlined"
+                <TextField id="quantity" label="Stan" variant="outlined"
                            value={countQuantityInModel()}
                            type="number"
                            inputProps={{readOnly: true}}
-                           sx={{width: "20ch"}}/>
+                           disabled={true}
+                           sx={{width: "10ch"}}/>
 
 
             </Box>
