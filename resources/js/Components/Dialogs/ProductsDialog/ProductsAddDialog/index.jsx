@@ -4,7 +4,7 @@ import {
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, ListItemText, MenuItem, Paper,
+    DialogTitle, ListItemText, MenuItem, Paper, Stack,
     Step,
     StepLabel,
     Stepper,
@@ -29,7 +29,7 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
             shortcut: color?.shortcut,
             label: color?.shortcut + " - " + color?.name
         },
-        symbol: createSymbol(props?.productModel.symbol, color?.id),
+        symbol: createSymbol(props?.productModel.symbol, color?.shortcut),
         name: '',
         size: '',
         unit: '',
@@ -253,6 +253,13 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
                               hideFooter={true}
                               editMode={"row"}
                               processRowUpdate={handleProcessRowUpdate}
+                              slots={{
+                                  noRowsOverlay: ()=> (
+                                      <Stack height="100%" alignItems="center" justifyContent="center">
+                                          Brak kodów kreskowych
+                                      </Stack>
+                                  ),
+                              }}
                     />
                     <Button size="small" onClick={addColumn} sx={{position: "absolute", right: 10, top: 15}}>
                         Dodaj
