@@ -11,7 +11,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editProducts", "user");
     }
 
     /**
@@ -22,7 +22,16 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'color.id' => 'required|numeric',
+            'symbol' => 'required|string|min:5',
+            'name' => 'required|string|min:5',
+            'size' => 'required',
+            'size.id' => 'required|numeric',
+            'unit' => 'required',
+            'unit.id' => 'required|numeric',
+            'barcodes' => 'required|array',
+            'barcodes.*.id' => 'required|numeric',
+            'barcodes.*.barcode' => 'required|string|min:13|max:13'
         ];
     }
 }

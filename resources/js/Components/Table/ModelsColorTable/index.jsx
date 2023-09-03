@@ -17,10 +17,11 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
-    const {data, setData, post, processing, errors, clearErrors, reset} = useForm(products)
+    // const {data, setData, post, processing, errors, clearErrors, reset} = useForm(products)
     //
     // console.log(products)
     // console.log(data)
+
 
     const column = [
         {field: "id", headerName: "Id"},
@@ -258,6 +259,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const [openDialogAdd, setOpenDialogAdd] = useState(false);
+                const [openDialogCopy, setOpenDialogCopy] = useState(false);
 
 
                 const onEditClick = (e) => {
@@ -268,6 +270,11 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                     // console.log('row', row)
                     // setData([...data.filter(e => e.id !== params.row.id), row])
                     setOpenDialogAdd(true)
+                };
+
+                const onCopyClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    setOpenDialogCopy(true)
                 };
 
                 const onDeleteClick = (e) => {
@@ -286,18 +293,23 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
 
                         <Tooltip title="Powiel">
-                            <IconButton aria-label="copy">
+                            <IconButton aria-label="copy" onClick={onCopyClick}>
                                 <ContentCopy/>
                             </IconButton>
                         </Tooltip>
+
                         <Tooltip title="Usuń">
                             <IconButton aria-label="delete" onClick={onDeleteClick}>
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
                         <ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                              deleteRow={deleteRow} product={params.row} last={products.length === 1}/>
-                        <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd}/>
+                                              product={params.row} last={products.length === 1}/>
+                        <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}
+                                           method={"update"} actualState={params.row} props={props}/>
+
+                        <ProductsAddDialog open={openDialogCopy} setOpen={setOpenDialogCopy} color={color}
+                                           method={"copy"} actualState={params.row} props={props}/>
                         {/*reloadData={reloadData}*/}
                     </>
 
@@ -308,15 +320,11 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     ];
 
 
-    const deleteRow = (id) => {
-        setData(data.filter((e) => e.id !== id))
-    }
-
     return (
         <>
             <DataGrid
                 // rows={data}
-                rows={sortBySizesModelColorObject([...data])}
+                rows={sortBySizesModelColorObject(products)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -370,7 +378,8 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                 </Fab>
 
             </Box>
-            <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} props={props}/>
+            <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}
+                               props={props}/>
         </>
     );
 }

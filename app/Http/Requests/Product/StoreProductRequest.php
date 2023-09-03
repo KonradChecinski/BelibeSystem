@@ -25,11 +25,13 @@ class StoreProductRequest extends FormRequest
             'color.id' => 'required|numeric',
             'symbol' => 'required|string|min:5',
             'name' => 'required|string|min:5',
-            'size' => 'required|string',
-            'unit' => 'required|string',
-            'barcode' => 'required|array',
-            'barcode.*.id' => 'required|numeric',
-            'barcode.*.barcode' => 'required|string|min:13|max:13'
+            'size' => 'required',
+            'size.id' => 'required|numeric',
+            'unit' => 'required',
+            'unit.id' => 'required|numeric',
+            'barcodes' => 'required|array',
+            'barcodes.*.id' => 'required|numeric',
+            'barcodes.*.barcode' => 'required|string|min:13|max:13'
         ];
     }
 }

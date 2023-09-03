@@ -28,7 +28,7 @@ class Product extends Model
         'name',
 //        'barcode',
         'product_unit_id',
-        'size',
+        'product_size_id',
         'show_in_b2b',
         'show_in_b2c',
         'show_in_allegro',
@@ -62,8 +62,8 @@ class Product extends Model
         return $this->hasMany(ProductBarcode::class);
     }
 
-    public function unit(): HasOne
+    public function unit(): BelongsTo
     {
-        return $this->hasOne(ProductUnit::class);
+        return $this->belongsTo(ProductUnit::class, "product_unit_id", "id");
     }
 }

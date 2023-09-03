@@ -8,7 +8,10 @@ use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Products\Product;
+use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModelColor;
+use App\Models\Products\ProductUnit;
+use App\Models\SettingsDictionarySize;
 
 class ProductController extends Controller
 {
@@ -33,11 +36,22 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request, ProductModelColor $modelColor)
     {
-//        dd($request, $modelColor);
+        $size = SettingsDictionarySize::find($request->size['id']);
+        $unit = ProductUnit::find($request->unit['id']);
+
         $product = new Product($request->all());
-        $modelColor->products()->save($product);
-        dd($product);
-//        $modelColor->products()->create([$request->all()]);
+        $product->size()->associate($size);
+        $product->unit()->associate($unit);
+
+        $product2 = $modelColor->products()->save($product);
+
+        foreach ($request->barcodes as $id => $barcodeValue) {
+            $barcode = new ProductBarcode($barcodeValue);
+            $barcode->main = $id == 0;
+            $barcode->product()->associate($product2);
+            $barcode->save();
+        }
+
     }
 
     /**
@@ -61,7 +75,12 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        if ($request->size['id'] !== $product->size->id) $product->size()->associate($request->size['id']);
+        if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
+
+
+        $product->save();
+//        dd($request, $product);
     }
 
     /**
@@ -69,10 +88,10 @@ class ProductController extends Controller
      */
     public function destroy(DeleteProductRequest $request, Product $product)
     {
-        $deleteColorModel = $product->color->products()->count()==1 ? true : false;
+        $deleteColorModel = $product->color->products()->count() == 1 ? true : false;
 
         $product->delete();
 
-        if($deleteColorModel) $product->color->delete();
+        if ($deleteColorModel) $product->color->delete();
     }
 }

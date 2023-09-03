@@ -64,6 +64,7 @@ Route::middleware("auth:user")->group(function () {
 
     Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
     Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
+    Route::patch("/product/{product}", [ProductController::class, 'update'])->name("system.products");
     Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");

@@ -11,7 +11,7 @@ import {
     TextField, Typography
 } from "@mui/material";
 import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
-import {useState, useRef, useCallback} from "react";
+import {useState, useRef, useCallback, useEffect} from "react";
 import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -19,25 +19,30 @@ import {DataGrid, GridActionsCellItem, useGridApiRef} from "@mui/x-data-grid";
 import validbarcode from "barcode-validator";
 import {Delete} from "@mui/icons-material";
 
-export default function ProductsAddDialog({open, setOpen, reloadData, color, props}) {
+export default function ProductsAddDialog({open, setOpen, method, color, actualState = null, props}) {
     const form = useRef();
     const formName = useRef();
     const formShortcut = useRef();
 
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm()
 
-
-    const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
-        color: {
-            id: color?.id,
-            shortcut: color?.shortcut,
-            label: color?.shortcut + " - " + color?.name
-        },
-        symbol: createSymbol(props?.productModel.symbol, color?.shortcut),
-        name: '',
-        size: null,
-        unit: null,
-        barcode: []
-    })
+    useEffect(() => {
+        setData({
+            color: {
+                id: color?.id,
+                shortcut: color?.shortcut,
+                label: color?.shortcut + " - " + color?.name
+            },
+            symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
+            name: actualState?.name ? actualState?.name : '',
+            size: method !== "copy" ? (actualState?.size ? {
+                ...actualState?.size,
+                label: actualState?.size?.name
+            } : null) : null,
+            unit: actualState?.unit ? {...actualState?.unit, label: actualState?.unit?.name} : null,
+            barcodes: method !== "copy" ? (actualState?.barcodes ? actualState?.barcodes : []) : []
+        })
+    }, [actualState]);
 
 
     const [activeStep, setActiveStep] = useState(0);
@@ -53,11 +58,11 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
             if (data.color?.id === "") return;
             if (data.size === "") return;
             if (data.unit === "") return;
-            if (data.barcode.length === 0){
+            if (data.barcodes.length === 0) {
                 return;
             }
-            for (const barcodeElement of data.barcode) {
-                if(barcodeElement.barcode==='') return;
+            for (const barcodeElement of data.barcodes) {
+                if (barcodeElement.barcode === '') return;
             }
         }
         setActiveStep(activeStep + 1)
@@ -77,20 +82,36 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
     };
 
     const save = () => {
-        post(route("system.products", {modelColor: color.id}),
+        if (method === "create" || method === "copy") {
+            post(route("system.products", {modelColor: color.id}),
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano produkt", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu produktu", {variant: 'error'})
+                    },
+                })
+        } else if (method === "update") {
+            patch(route("system.products", {product: actualState.id}),
 
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    reset();
-                    setActiveStep(0);
-                    enqueueSnackbar("Dodano produkt", {variant: 'success'})
-                    handleClose();
-                },
-                onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawniu produktu", {variant: 'error'})
-                },
-            })
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano produkt", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji produktu", {variant: 'error'})
+                    },
+                })
+        }
 
 
     }
@@ -107,7 +128,7 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
         >
 
             <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie produktu
+                {method === 'create' || method === "copy" ? "Dodawanie produktu" : "Edycja produktu"}
             </DialogTitle>
             <DialogContent>
                 <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
@@ -158,14 +179,14 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
 function Step1({data, setData, props, formNameRef}) {
     const apiRef = useGridApiRef();
     const addColumn = () => {
-        setData("barcode", [...data.barcode, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
+        setData("barcode", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
         handleClose()
     }
     const handleProcessRowUpdate = (newRow, oldRow) => {
         if (!isNaN(newRow.barcode) && newRow.barcode.length === 13 && validbarcode(newRow.barcode)) {
-            setData("barcode", data.barcode.map((row) => (row.id === newRow.id ? newRow : row)))
+            setData("barcode", data.barcodes.map((row) => (row.id === newRow.id ? newRow : row)))
             return newRow;
-        }else{
+        } else {
             enqueueSnackbar("Błędny EAN-13", {variant: 'error'})
         }
 
@@ -183,11 +204,11 @@ function Step1({data, setData, props, formNameRef}) {
 
     const deleteUser = useCallback(
         (id) => () => {
-            setData("barcode", data.barcode.filter((row) => (row.id !== id)))
+            setData("barcode", data.barcodes.filter((row) => (row.id !== id)))
         },
         [],
     );
-console.log(props)
+
     return (
         <Box>
             <ValidatorForm instantValidate onSubmit={() => {
@@ -221,7 +242,7 @@ console.log(props)
                         name: e.name,
                         label: e.name
                     }))}
-                  sx={{width: "30ch"}}
+                    sx={{width: "30ch"}}
                     value={data.size}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     onChange={(e, value) => {
@@ -273,7 +294,7 @@ console.log(props)
                 />
                 <Box sx={{position: "relative"}}>
                     <DataGrid apiRef={apiRef}
-                              rows={data.barcode}
+                              rows={data.barcodes}
                               columns={[{
                                   field: 'barcode',
                                   // type: 'number',
@@ -283,10 +304,13 @@ console.log(props)
                                   headerAlign: "left",
                                   sortable: false,
                                   editable: true
-                              },{field: 'actions', type: 'actions', headerName:"", width: 10,
+                              }, {
+                                  field: 'actions', type: 'actions', headerName: "", width: 10,
                                   getActions: (params) => [
-                                      <GridActionsCellItem icon={<Delete/>} onClick={deleteUser(params.id)}  label="Delete" />,
-                              ]}]}
+                                      <GridActionsCellItem icon={<Delete/>} onClick={deleteUser(params.id)}
+                                                           label="Delete"/>,
+                                  ]
+                              }]}
                               disableColumnMenu
                               autoHeight={true}
                               hideFooter={true}
@@ -319,9 +343,9 @@ console.log(props)
 
 function Step2({data, setData, errors}) {
 
-    const barcodeValue = ()=>{
+    const barcodeValue = () => {
         let barcodes = ""
-        for (const barcodeElement of data.barcode) {
+        for (const barcodeElement of data.barcodes) {
             barcodes += barcodeElement.barcode + "\n"
         }
         return barcodes.trim()
@@ -333,8 +357,8 @@ function Step2({data, setData, errors}) {
                        value={data.color.label}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
- <TextField id="size" label="Rozmiar" variant="outlined"
-                       value={data.size}
+            <TextField id="size" label="Rozmiar" variant="outlined"
+                       value={data.size.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
             <TextField id="shortcut" label="Symbol" variant="outlined"
@@ -342,23 +366,22 @@ function Step2({data, setData, errors}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-   <TextField id="name" label="Nazwa" variant="outlined"
+            <TextField id="name" label="Nazwa" variant="outlined"
                        value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
             <TextField id="unit" label="Jednostka" variant="outlined"
-                       value={data.unit}
+                       value={data.unit.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
 
-          <TextField id="barcode" label="Kod kreskowy" variant="outlined"
+            <TextField id="barcode" label="Kod kreskowy" variant="outlined"
                        value={barcodeValue()}
-                     multiline={true}
+                       multiline={true}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
-
 
 
             {Object.keys(errors).map((key, index) => {

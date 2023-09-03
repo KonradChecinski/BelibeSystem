@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('product_barcodes', function (Blueprint $table) {
             $table->id();
             $table->foreignId("product_id")->references("id")->on("products")->restrictOnDelete();
-            $table->string("barcode", 13);
+            $table->string("barcode", 13)->unique();
             $table->boolean("main");
             $table->timestamps();
         });

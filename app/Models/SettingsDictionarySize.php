@@ -15,7 +15,7 @@ class SettingsDictionarySize extends Model
         'name'
     ];
 
-    public function color(): hasMany
+    public function products(): hasMany
     {
         return $this->hasMany(Product::class, "id", "product_size_id");
     }

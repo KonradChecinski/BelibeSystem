@@ -15,7 +15,7 @@ import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
-export default function ProductsDeleteDialog({open, setOpen, deleteRow, product, last, params}) {
+export default function ProductsDeleteDialog({open, setOpen, product, last, params}) {
 
     const {data, setData, delete: destroy, processing, errors, reset} = useForm({
         product: product.id,
@@ -35,7 +35,7 @@ export default function ProductsDeleteDialog({open, setOpen, deleteRow, product,
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    deleteRow(product.id)
+                    // deleteRow(product.id)
                     enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
                     handleClose();
                 },
@@ -65,21 +65,21 @@ export default function ProductsDeleteDialog({open, setOpen, deleteRow, product,
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>Chcesz usunąć id:{product.id} "{product.name}"</DialogContentText>
-                {last?
+                {last ?
                     <>
                         <br/>
                         <DialogContentText sx={{
-                            color:"error.main"
+                            color: "error.main"
                         }}>
                             Jest to ostatni produkt z koloru.
                         </DialogContentText>
-<DialogContentText sx={{
-    color:"error.main"
-}}>
-    Usunięcie tego produktu spowoduje usunięcie całego koloru
-</DialogContentText>
+                        <DialogContentText sx={{
+                            color: "error.main"
+                        }}>
+                            Usunięcie tego produktu spowoduje usunięcie całego koloru
+                        </DialogContentText>
                     </>
-                     : ""
+                    : ""
                 }
             </DialogContent>
             <DialogActions>

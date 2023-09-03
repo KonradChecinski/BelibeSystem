@@ -15,7 +15,7 @@ return new class extends Migration {
 //            $table->foreignId("product_model_id")->references("id")->on("product_models")->restrictOnDelete();
             $table->foreignId("product_model_color_id")->references("id")->on("product_model_colors")->restrictOnDelete();
             $table->foreignId("subiekt_id")->nullable();
-            $table->string("symbol", 50);
+            $table->string("symbol", 50)->unique();
             $table->string("name", 200);
             $table->foreignId("product_unit_id")->references("id")->on("product_units")->restrictOnDelete();;
 
@@ -23,10 +23,10 @@ return new class extends Migration {
             $table->foreignId("product_size_id")->references("id")->on("settings_dictionary_sizes")->restrictOnDelete();
 
 
-            $table->boolean("show_in_b2b");
-            $table->boolean("show_in_b2c");
-            $table->boolean("show_in_allegro");
-            $table->boolean("show_in_subiekt");
+            $table->boolean("show_in_b2b")->default(0);
+            $table->boolean("show_in_b2c")->default(0);
+            $table->boolean("show_in_allegro")->default(0);
+            $table->boolean("show_in_subiekt")->default(0);
 
             $table->timestamps();
         });
