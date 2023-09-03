@@ -31,9 +31,13 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request, ProductModelColor $modelColor)
     {
-        //
+//        dd($request, $modelColor);
+        $product = new Product($request->all());
+        $modelColor->products()->save($product);
+        dd($product);
+//        $modelColor->products()->create([$request->all()]);
     }
 
     /**

@@ -95,6 +95,23 @@ export default function Menu({menu, showContent, auth}) {
                                     </>
                                     : ""}
                             </SubMenuLink>
+                            <SubMenuLink
+                                href={route("system.settings.sizes")}
+                                active={false}
+                                text={"Słowniki"}
+
+                            >
+                                {auth.permissions.includes("showRole") ?
+                                    <>
+                                        <SubMenuLink
+                                            href={route("system.settings.sizes")}
+                                            active={route().current("system.settings.sizes")}
+                                            text={"Rozmiary"}
+                                        />
+
+                                    </>
+                                    : ""}
+                            </SubMenuLink>
                         </MenuMainLink>
                     </> : ""}
             </Box>

@@ -64,7 +64,7 @@ export default function ModelColorComponent(props) {
                                                 return product.product_model_color_id === color.id;
                                             })
                                         }
-                                        units={props.unit}
+                                        units={props.units}
                                         color={color}
                                         props={props}
                                     />

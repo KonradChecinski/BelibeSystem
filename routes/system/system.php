@@ -13,6 +13,8 @@ use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
 use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
+use App\Http\Controllers\SettingsDictionarySizeController;
+use App\Models\SettingsDictionarySize;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -60,7 +62,8 @@ Route::middleware("auth:user")->group(function () {
     Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
     Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
 
-    Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.update.show");
+    Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
+    Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
     Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
@@ -85,6 +88,9 @@ Route::middleware("auth:user")->group(function () {
 
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
+
+        Route::get("/dictionaries/sizes", [SettingsDictionarySizeController::class, 'index'])->name("system.settings.sizes");
+
 
     });
 

@@ -4,23 +4,26 @@ import {
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, ListItemText, MenuItem, Paper,
+    DialogTitle, ListItemText, Menu, MenuItem, Paper,
     Step,
     StepLabel,
     Stepper,
     TextField, Typography
 } from "@mui/material";
 import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
-import {useState, useRef} from "react";
+import {useState, useRef, useCallback} from "react";
 import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
-import {DataGrid, useGridApiRef} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem, useGridApiRef} from "@mui/x-data-grid";
+import validbarcode from "barcode-validator";
+import {Delete} from "@mui/icons-material";
 
 export default function ProductsAddDialog({open, setOpen, reloadData, color, props}) {
     const form = useRef();
     const formName = useRef();
     const formShortcut = useRef();
+
 
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
@@ -29,10 +32,10 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
             shortcut: color?.shortcut,
             label: color?.shortcut + " - " + color?.name
         },
-        symbol: createSymbol(props?.productModel.symbol, color?.id),
+        symbol: createSymbol(props?.productModel.symbol, color?.shortcut),
         name: '',
-        size: '',
-        unit: '',
+        size: null,
+        unit: null,
         barcode: []
     })
 
@@ -47,7 +50,15 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
     const nextStep = () => {
         if (activeStep == 0) {
             if (!formName.current.isValid() || data.name === "") return;
-            if (!formShortcut.current.isValid() || data.name === "") return;
+            if (data.color?.id === "") return;
+            if (data.size === "") return;
+            if (data.unit === "") return;
+            if (data.barcode.length === 0){
+                return;
+            }
+            for (const barcodeElement of data.barcode) {
+                if(barcodeElement.barcode==='') return;
+            }
         }
         setActiveStep(activeStep + 1)
 
@@ -66,18 +77,18 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
     };
 
     const save = () => {
-        post(route("system.products.model.color", {model: props.productModel.id}),
+        post(route("system.products", {modelColor: color.id}),
 
             {
                 preserveScroll: true,
                 onSuccess: () => {
                     reset();
                     setActiveStep(0);
-                    enqueueSnackbar("Dodano kolor", {variant: 'success'})
+                    enqueueSnackbar("Dodano produkt", {variant: 'success'})
                     handleClose();
                 },
                 onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
+                    enqueueSnackbar("Błąd przy dodawniu produktu", {variant: 'error'})
                 },
             })
 
@@ -144,24 +155,42 @@ export default function ProductsAddDialog({open, setOpen, reloadData, color, pro
     );
 }
 
-function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
+function Step1({data, setData, props, formNameRef}) {
     const apiRef = useGridApiRef();
     const addColumn = () => {
         setData("barcode", [...data.barcode, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
+        handleClose()
     }
     const handleProcessRowUpdate = (newRow, oldRow) => {
-        console.log(newRow.barcode.length !== 13 && isNaN(newRow.barcode))
-        if (!isNaN(newRow.barcode) && newRow.barcode.length === 13) {
+        if (!isNaN(newRow.barcode) && newRow.barcode.length === 13 && validbarcode(newRow.barcode)) {
             setData("barcode", data.barcode.map((row) => (row.id === newRow.id ? newRow : row)))
             return newRow;
+        }else{
+            enqueueSnackbar("Błędny EAN-13", {variant: 'error'})
         }
 
 
     }
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const deleteUser = useCallback(
+        (id) => () => {
+            setData("barcode", data.barcode.filter((row) => (row.id !== id)))
+        },
+        [],
+    );
+console.log(props)
     return (
         <Box>
-            <ValidatorForm instantValidate ref={formRef} onSubmit={() => {
+            <ValidatorForm instantValidate onSubmit={() => {
             }}>
                 <Autocomplete
                     disablePortal
@@ -178,7 +207,7 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
                         setData({
                             ...data,
                             color: value,
-                            symbol: createSymbol(props?.productModel.symbol, value.shortcut, data.size)
+                            symbol: createSymbol(props?.productModel.symbol, value.shortcut, data.size?.name)
                         })
                     }}
                     renderInput={(params) => <TextField {...params} label="Kolor" sx={{my: 1}}/>}
@@ -187,16 +216,19 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
                 <Autocomplete
                     disablePortal
                     id="size"
-                    options={["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL", "7XL", "8XL", "9XL", "10XL",
-                        "92", "98", "104", "110", "116", "122", "128", "134", "140", "146", "152", "158", "164", "170"]}
-                    sx={{width: "30ch"}}
+                    options={props.sizes.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        label: e.name
+                    }))}
+                  sx={{width: "30ch"}}
                     value={data.size}
-                    isOptionEqualToValue={(option, value) => option === value}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     onChange={(e, value) => {
                         setData({
                             ...data,
                             size: value,
-                            symbol: createSymbol(props?.productModel.symbol, data.color.shortcut, value)
+                            symbol: createSymbol(props?.productModel.symbol, data.color.shortcut, value.name)
                         })
                     }}
                     renderInput={(params) => <TextField {...params} label="Rozmiar" sx={{my: 1}}/>}
@@ -226,10 +258,14 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
                 <Autocomplete
                     disablePortal
                     id="unit"
-                    options={["szt."]}
+                    options={props.units.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        label: e.name
+                    }))}
                     sx={{width: "30ch"}}
                     value={data.unit}
-                    isOptionEqualToValue={(option, value) => option === value}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     onChange={(e, value) => {
                         setData("unit", value)
                     }}
@@ -247,16 +283,32 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
                                   headerAlign: "left",
                                   sortable: false,
                                   editable: true
-                              }]}
+                              },{field: 'actions', type: 'actions', headerName:"", width: 10,
+                                  getActions: (params) => [
+                                      <GridActionsCellItem icon={<Delete/>} onClick={deleteUser(params.id)}  label="Delete" />,
+                              ]}]}
                               disableColumnMenu
                               autoHeight={true}
                               hideFooter={true}
                               editMode={"row"}
                               processRowUpdate={handleProcessRowUpdate}
                     />
-                    <Button size="small" onClick={addColumn} sx={{position: "absolute", right: 10, top: 15}}>
+                    <Button size="small" onClick={handleClick} sx={{position: "absolute", right: 10, top: 15}}>
                         Dodaj
                     </Button>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={addColumn}>Pusty</MenuItem>
+                        <MenuItem disabled={true}>Wygeneruj wewnętrzny</MenuItem>
+                        <MenuItem disabled={true}>Wygeneruj z GS1</MenuItem>
+                    </Menu>
                 </Box>
 
 
@@ -266,22 +318,48 @@ function Step1({data, setData, props, formRef, formNameRef, formShortcutRef}) {
 }
 
 function Step2({data, setData, errors}) {
-    const renderCell = (selected) => selected.map((value) => {
-        return (<Typography key={value} variant="body1" gutterBottom>
-            {roles.find(e => e.id == value).name}
-        </Typography>);
-    })
+
+    const barcodeValue = ()=>{
+        let barcodes = ""
+        for (const barcodeElement of data.barcode) {
+            barcodes += barcodeElement.barcode + "\n"
+        }
+        return barcodes.trim()
+    }
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-            <TextField id="name" label="Nazwa" variant="outlined"
+            <TextField id="color" label="Kolor" variant="outlined"
+                       value={data.color.label}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+ <TextField id="size" label="Rozmiar" variant="outlined"
+                       value={data.size}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+            <TextField id="shortcut" label="Symbol" variant="outlined"
+                       value={data.symbol}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+   <TextField id="name" label="Nazwa" variant="outlined"
                        value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-            <TextField id="shortcut" label="Symbol" variant="outlined"
-                       value={data.shortcut}
+            <TextField id="unit" label="Jednostka" variant="outlined"
+                       value={data.unit}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+
+
+          <TextField id="barcode" label="Kod kreskowy" variant="outlined"
+                       value={barcodeValue()}
+                     multiline={true}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>

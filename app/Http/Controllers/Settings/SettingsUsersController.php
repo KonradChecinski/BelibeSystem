@@ -22,7 +22,7 @@ class SettingsUsersController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/User", ["roles" => Role::all()]);
+        return Inertia::render("Settings/UsersAndPermissions/User", ["roles" => Role::all()]);
     }
 
     public function data(Request $request) //DataProductModelRequest

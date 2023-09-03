@@ -2,6 +2,7 @@
 
 namespace App\Models\Products;
 
+use App\Models\SettingsDictionarySize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,11 +22,11 @@ class Product extends Model
      */
     protected $fillable = [
         'product_model_color_id',
-        'product_group_id',
+//        'product_group_id',
         'subiekt_id',
         'symbol',
         'name',
-        'barcode',
+//        'barcode',
         'product_unit_id',
         'size',
         'show_in_b2b',
@@ -38,6 +39,11 @@ class Product extends Model
     public function color(): BelongsTo
     {
         return $this->belongsTo(ProductModelColor::class, "product_model_color_id", "id");
+    }
+
+    public function size(): BelongsTo
+    {
+        return $this->belongsTo(SettingsDictionarySize::class, "product_size_id", "id");
     }
 
     public function images(): hasManyThrough

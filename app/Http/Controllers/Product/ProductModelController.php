@@ -11,6 +11,7 @@ use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductUnit;
+use App\Models\SettingsDictionarySize;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -151,8 +152,10 @@ class ProductModelController extends Controller
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
+        $sizes = SettingsDictionarySize::all();
 
-        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit" => $units]);
+
+        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
     }
 
     /**
@@ -164,8 +167,9 @@ class ProductModelController extends Controller
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
+        $sizes = SettingsDictionarySize::all();
 
-        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "unit" => $units]);
+        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
     }
 
     /**

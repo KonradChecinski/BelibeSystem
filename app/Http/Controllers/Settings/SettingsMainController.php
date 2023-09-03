@@ -13,7 +13,7 @@ class SettingsMainController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/Main");
+        return Inertia::render("Settings/Main/Main");
     }
 
     /**

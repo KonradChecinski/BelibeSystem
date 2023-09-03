@@ -18,7 +18,7 @@ class SettingsRolesController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/Roles");
+        return Inertia::render("Settings/UsersAndPermissions/Roles");
     }
 
 
@@ -142,7 +142,7 @@ class SettingsRolesController extends Controller
         $role = $role->toArray();
         $role['permissions'] = $permissions;
 
-        return Inertia::render("Settings/RolesEdit", ["role" => $role, "permissions" => Permission::all()]);
+        return Inertia::render("Settings/UsersAndPermissions/RolesEdit", ["role" => $role, "permissions" => Permission::all()]);
     }
 
     /**

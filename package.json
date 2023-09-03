@@ -31,6 +31,7 @@
         "@mui/icons-material": "^5.11.16",
         "@mui/material": "^5.13.6",
         "@mui/x-data-grid": "^6.9.0",
+        "barcode-validator": "^1.0.2",
         "copy-image-clipboard": "^2.1.2",
         "is-hotkey": "^0.2.0",
         "laravel-react-i18n": "^2.0.4",

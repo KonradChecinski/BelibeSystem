@@ -18,11 +18,12 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::findOrCreate('showModel', 'user', 'Model - wyświetlanie', 'Produkty');
-        Permission::findOrCreate('createModel', 'user', 'Model - tworzenie', 'Produkty');
-        Permission::findOrCreate('editModel', 'user', 'Model - edycja', 'Produkty');
-        Permission::findOrCreate('deleteModel', 'user', 'Model - usuwanie', 'Produkty');
+        Permission::findOrCreate('showModel', 'user', 'Model - wyświetlanie', 'Model');
+        Permission::findOrCreate('createModel', 'user', 'Model - tworzenie', 'Model');
+        Permission::findOrCreate('editModel', 'user', 'Model - edycja', 'Model');
+        Permission::findOrCreate('deleteModel', 'user', 'Model - usuwanie', 'Model');
 
+        Permission::findOrCreate('createProducts', 'user', 'Produkt - tworzenie', 'Produkty');
         Permission::findOrCreate('editProducts', 'user', 'Produkt - edycja', 'Produkty');
         Permission::findOrCreate('deleteProducts', 'user', 'Produkt - usuwanie', 'Produkty');
         Permission::findOrCreate('updateProductPrice', "user", 'Produkt - edycja cen', 'Produkty');

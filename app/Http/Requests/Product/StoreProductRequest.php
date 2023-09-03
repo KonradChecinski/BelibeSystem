@@ -11,7 +11,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("createProducts", "user");
     }
 
     /**
@@ -22,7 +22,14 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'color.id' => 'required|numeric',
+            'symbol' => 'required|string|min:5',
+            'name' => 'required|string|min:5',
+            'size' => 'required|string',
+            'unit' => 'required|string',
+            'barcode' => 'required|array',
+            'barcode.*.id' => 'required|numeric',
+            'barcode.*.barcode' => 'required|string|min:13|max:13'
         ];
     }
 }

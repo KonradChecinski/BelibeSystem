@@ -47,7 +47,7 @@ class ProductModel extends Model
 
     public function products(): HasManyThrough
     {
-        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with('barcodes');
+        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size']);
     }
 
     public function prices(): HasOne

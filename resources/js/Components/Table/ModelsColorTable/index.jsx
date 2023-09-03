@@ -44,7 +44,10 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
             sortable: false,
             filterable: false,
 
-            width: 70
+            width: 70,
+            renderCell: (params) => {
+                return <Typography>{params.row.size.name} </Typography>;
+            }
         },
         {
             field: "quantity",
@@ -69,7 +72,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
             field: "codes",
             headerName: "Kody kreskowe",
             sortable: false,
-            filterable: true,
+            filterable: false,
 
             headerAlign: 'center',
             align: 'center',
@@ -96,7 +99,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                     setRowData("show_in_subiekt", !rowData.show_in_subiekt);
 
-                    router.post(route("system.products.update.show", {product: rowData.id}),
+                    router.post(route("system.products.show.update", {product: rowData.id}),
                         {...rowData, show_in_subiekt: !rowData.show_in_subiekt},
                         {
                             onSuccess: params => {
@@ -140,7 +143,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                     setRowData("show_in_b2b", !rowData.show_in_b2b);
 
-                    router.post(route("system.products.update.show", {product: rowData.id}),
+                    router.post(route("system.products.show.update", {product: rowData.id}),
                         {...rowData, show_in_b2b: !rowData.show_in_b2b},
                         {
                             onSuccess: params => {
@@ -184,7 +187,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                     setRowData("show_in_b2c", !rowData.show_in_b2c);
 
-                    router.post(route("system.products.update.show", {product: rowData.id}),
+                    router.post(route("system.products.show.update", {product: rowData.id}),
                         {...rowData, show_in_b2c: !rowData.show_in_b2c},
                         {
                             onSuccess: params => {
