@@ -53,6 +53,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
 
     const nextStep = () => {
+        console.log(data)
         if (activeStep == 0) {
             if (!formName.current.isValid() || data.name === "") return;
             if (data.color?.id === "") return;
@@ -83,6 +84,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
     const save = () => {
         if (method === "create" || method === "copy") {
+            console.log("create")
             post(route("system.products", {modelColor: color.id}),
                 {
                     preserveScroll: true,
@@ -97,6 +99,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
                     },
                 })
         } else if (method === "update") {
+            console.log("update")
             patch(route("system.products", {product: actualState.id}),
 
                 {
@@ -179,12 +182,13 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 function Step1({data, setData, props, formNameRef}) {
     const apiRef = useGridApiRef();
     const addColumn = () => {
-        setData("barcode", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
+        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
         handleClose()
     }
     const handleProcessRowUpdate = (newRow, oldRow) => {
+        console.log(newRow)
         if (!isNaN(newRow.barcode) && newRow.barcode.length === 13 && validbarcode(newRow.barcode)) {
-            setData("barcode", data.barcodes.map((row) => (row.id === newRow.id ? newRow : row)))
+            setData("barcodes", data.barcodes.map((row) => (row.id === newRow.id ? newRow : row)))
             return newRow;
         } else {
             enqueueSnackbar("Błędny EAN-13", {variant: 'error'})
@@ -204,7 +208,7 @@ function Step1({data, setData, props, formNameRef}) {
 
     const deleteUser = useCallback(
         (id) => () => {
-            setData("barcode", data.barcodes.filter((row) => (row.id !== id)))
+            setData("barcodes", data.barcodes.filter((row) => (row.id !== id)))
         },
         [],
     );
@@ -258,6 +262,7 @@ function Step1({data, setData, props, formNameRef}) {
                 <TextField id="shortcut" label="Symbol" variant="outlined"
                            value={data.symbol}
                            inputProps={{readOnly: true}}
+                           disabled={true}
                            sx={{width: "30ch", my: 1}}
                 />
 
@@ -297,7 +302,7 @@ function Step1({data, setData, props, formNameRef}) {
                               rows={data.barcodes}
                               columns={[{
                                   field: 'barcode',
-                                  // type: 'number',
+                                  type: 'string',
                                   flex: 1,
                                   align: "left",
                                   headerName: "Kody kreskowe",
@@ -314,6 +319,7 @@ function Step1({data, setData, props, formNameRef}) {
                               disableColumnMenu
                               autoHeight={true}
                               hideFooter={true}
+                              pageSizeOptions={[100]}
                               editMode={"row"}
                               processRowUpdate={handleProcessRowUpdate}
                     />
@@ -342,7 +348,7 @@ function Step1({data, setData, props, formNameRef}) {
 }
 
 function Step2({data, setData, errors}) {
-
+console.log(data)
     const barcodeValue = () => {
         let barcodes = ""
         for (const barcodeElement of data.barcodes) {

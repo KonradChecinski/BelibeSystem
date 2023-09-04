@@ -52,11 +52,6 @@ class Product extends Model
         //Może nie działać
     }
 
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(ProductGroup::class);
-    }
-
     public function barcodes(): HasMany
     {
         return $this->hasMany(ProductBarcode::class);
