@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 
 
-export default function TextEditorWebsite({value, setValue, setEdited, props}) {
+export default function TextEditorWebsite({value, setValue, setEdited, readOnly, props}) {
 
     return (
         <Paper elevation={5} sx={{
@@ -48,7 +48,7 @@ export default function TextEditorWebsite({value, setValue, setEdited, props}) {
                     setValue(value)
                     setEdited(true)
                 }} modules={modules}
-                            formats={formats} theme={false}/>
+                            formats={formats} theme={false} readOnly={readOnly}/>
             </Box>
         </Paper>
 
@@ -147,15 +147,19 @@ const modules = {
 };
 
 function insertColor() {
-    const cursorPosition = this.quill.getSelection().index;
-    this.quill.insertText(cursorPosition, "[{$color$}]");
-    this.quill.setSelection(cursorPosition + 11);
+    if (!this.quill.options.readOnly) {
+        const cursorPosition = this.quill.getSelection().index;
+        this.quill.insertText(cursorPosition, "[{$color$}]");
+        this.quill.setSelection(cursorPosition + 11);
+    }
 }
 
 function insertSize() {
-    const cursorPosition = this.quill.getSelection().index;
-    this.quill.insertText(cursorPosition, "[{$size$}]");
-    this.quill.setSelection(cursorPosition + 11);
+    if (!this.quill.options.readOnly) {
+        const cursorPosition = this.quill.getSelection().index;
+        this.quill.insertText(cursorPosition, "[{$size$}]");
+        this.quill.setSelection(cursorPosition + 11);
+    }
 }
 
 /*

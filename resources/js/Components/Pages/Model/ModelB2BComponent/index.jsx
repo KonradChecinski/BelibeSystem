@@ -91,6 +91,7 @@ export default function ModelB2BComponent({productModel, setProductModel, props}
                         setData("description_b2b", value)
                     }}
                     setEdited={value => setEdited(value)}
+                    readOnly={!props.editing}
                 />
             </Box>
 

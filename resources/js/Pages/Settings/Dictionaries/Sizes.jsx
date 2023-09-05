@@ -1,9 +1,6 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import NavLink from "@/Components/NavLink";
-import ModelsTable from "@/Components/Table/ModelsTable";
 import {Card} from "@mui/material";
-import UsersTable from "@/Components/Table/UsersTable";
 import RolesTable from "@/Components/Table/RolesTable";
 
 export default function Sizes(props) {

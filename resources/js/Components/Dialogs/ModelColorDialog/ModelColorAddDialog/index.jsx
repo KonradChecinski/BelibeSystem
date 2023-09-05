@@ -14,11 +14,14 @@ import {useState, useRef} from "react";
 import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 
 export default function ModelColorAddDialog({open, setOpen, reloadData, roles, params}) {
     const form = useRef();
     const formName = useRef();
     const formShortcut = useRef();
+
+    const [color, setColor] = useState({});
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
         name: '',
@@ -59,11 +62,14 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
             {
                 preserveScroll: true,
-                onSuccess: () => {
+                onSuccess: (e) => {
+                    console.log(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
+                    setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
                     reset();
                     setActiveStep(0);
                     enqueueSnackbar("Dodano kolor", {variant: 'success'})
                     handleClose();
+                    setOpenDialogAdd(true);
                 },
                 onError: errors => {
                     enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
@@ -72,63 +78,67 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
 
     }
+    const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
     return (
+        <>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                PaperComponent={PaperComponent}
+                aria-labelledby="draggable-dialog-title"
+                scroll="paper"
+            >
 
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            PaperComponent={PaperComponent}
-            aria-labelledby="draggable-dialog-title"
-            scroll="paper"
-        >
+                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                    Dodawanie koloru
+                </DialogTitle>
+                <DialogContent>
+                    <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
 
-            <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie koloru
-            </DialogTitle>
-            <DialogContent>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
+                    {activeStep === 0 ?
+                        <Step1
+                            data={data}
+                            setData={setData}
+                            formRef={form}
+                            formNameRef={formName}
+                            formShortcutRef={formShortcut}
+                        /> : ""}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : ""}
 
-                {activeStep === 0 ?
-                    <Step1
-                        data={data}
-                        setData={setData}
-                        formRef={form}
-                        formNameRef={formName}
-                        formShortcutRef={formShortcut}
-                    /> : ""}
-                {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : ""}
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleClose}>
+                        Zamknij
+                    </Button>
 
-            </DialogContent>
-            <DialogActions>
-                <Button autoFocus onClick={handleClose}>
-                    Zamknij
-                </Button>
+                    <Button onClick={previousStep} disabled={activeStep === 0}>
+                        Wstecz
+                    </Button>
 
-                <Button onClick={previousStep} disabled={activeStep === 0}>
-                    Wstecz
-                </Button>
+                    <Button onClick={nextStep} disabled={activeStep === 1}
+                            sx={{display: activeStep === 1 ? "none" : "block"}}>
+                        Następne
+                    </Button>
 
-                <Button onClick={nextStep} disabled={activeStep === 1}
-                        sx={{display: activeStep === 1 ? "none" : "block"}}>
-                    Następne
-                </Button>
+                    <Button onClick={save} disabled={processing}
+                            sx={{display: activeStep === 0 ? "none" : "block"}}>
+                        Zapisz
+                    </Button>
+                </DialogActions>
 
-                <Button onClick={save} disabled={processing}
-                        sx={{display: activeStep === 0 ? "none" : "block"}}>
-                    Zapisz
-                </Button>
-            </DialogActions>
+            </Dialog>
 
-        </Dialog>
-
+            <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}
+                               method={"create"} props={params}/>
+        </>
     );
 }
 

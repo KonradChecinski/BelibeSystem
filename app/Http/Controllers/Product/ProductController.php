@@ -79,38 +79,15 @@ class ProductController extends Controller
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
         if ($request->color['id'] !== $product->color->id) $product->color()->associate($request->color['id']);
 
-
-
-        $barcodes = $request->barcodes;
-
-        $barcodes_without_id = collect($barcodes)->where('id', '');
-        $barcodes_with_id = (clone collect($barcodes))->where('id', '!=', '');
-        $barcodes_ids = $barcodes_with_id->pluck('id');
-
-        dd($barcodes_without_id, $barcodes_with_id, $barcodes_ids);
-
-        foreach ($barcodes_with_id as $barcode) {
-            $obj = App\ProductItem::find($item['id']);
-            $obj->name = $item['name'];
-            $obj->price = $item['price'];
-            $obj->quantity = $item['quantity'];
-            $obj->save();
+        $barcodes = [];
+        foreach ($request->barcodes as $id => $barcodeValue) {
+            $barcode = new ProductBarcode($barcodeValue);
+            $barcode->main = $id == 0;
+            array_push($barcodes, $barcode);
         }
-//
-//        $product->barcodes()->whereNotIn('id', $barcodes_ids)->delete();
-//
-//        $barcodes_without_id->each(function ($barcode) use ($product) {
-//            $obj = new App\ProductItem();
-//            $obj->name = $item['name'];
-//            $obj->price = $item['price'];
-//            $obj->quantity = $item['quantity'];
-//            $obj->product_id = $product->id;
-//            $obj->save();
-//        });
 
-
-
-
+        $product->barcodes()->delete();
+        $product->barcodes()->saveMany($barcodes);
 
 
         $product->symbol = $request->symbol;

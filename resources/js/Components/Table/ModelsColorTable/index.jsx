@@ -17,10 +17,11 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
-    // const {data, setData, post, processing, errors, clearErrors, reset} = useForm(products)
-    //
-    // console.log(products)
-    // console.log(data)
+    const {data, setData} = useForm([])
+
+    useEffect(() => {
+        setData(products)
+    }, [products]);
 
 
     const column = [
@@ -324,7 +325,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
         <>
             <DataGrid
                 // rows={data}
-                rows={sortBySizesModelColorObject(products)}
+                rows={sortBySizesModelColorObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>

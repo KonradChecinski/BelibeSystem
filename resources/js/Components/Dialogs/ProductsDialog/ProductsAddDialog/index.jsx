@@ -24,7 +24,21 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
     const formName = useRef();
     const formShortcut = useRef();
 
-    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm()
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
+        color: {
+            id: color?.id,
+            shortcut: color?.shortcut,
+            label: color?.shortcut + " - " + color?.name
+        },
+        symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
+        name: actualState?.name ? actualState?.name : '',
+        size: method !== "copy" ? (actualState?.size ? {
+            ...actualState?.size,
+            label: actualState?.size?.name
+        } : null) : null,
+        unit: actualState?.unit ? {...actualState?.unit, label: actualState?.unit?.name} : null,
+        barcodes: method !== "copy" ? (actualState?.barcodes ? actualState?.barcodes : []) : []
+    })
 
     useEffect(() => {
         setData({
@@ -42,7 +56,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
             unit: actualState?.unit ? {...actualState?.unit, label: actualState?.unit?.name} : null,
             barcodes: method !== "copy" ? (actualState?.barcodes ? actualState?.barcodes : []) : []
         })
-    }, [actualState]);
+    }, [actualState, color]);
 
 
     const [activeStep, setActiveStep] = useState(0);
@@ -53,7 +67,6 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
 
     const nextStep = () => {
-        console.log(data)
         if (activeStep == 0) {
             if (!formName.current.isValid() || data.name === "") return;
             if (data.color?.id === "") return;
@@ -84,7 +97,6 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
     const save = () => {
         if (method === "create" || method === "copy") {
-            console.log("create")
             post(route("system.products", {modelColor: color.id}),
                 {
                     preserveScroll: true,
@@ -99,7 +111,6 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
                     },
                 })
         } else if (method === "update") {
-            console.log("update")
             patch(route("system.products", {product: actualState.id}),
 
                 {
@@ -348,7 +359,7 @@ function Step1({data, setData, props, formNameRef}) {
 }
 
 function Step2({data, setData, errors}) {
-console.log(data)
+    console.log(data)
     const barcodeValue = () => {
         let barcodes = ""
         for (const barcodeElement of data.barcodes) {

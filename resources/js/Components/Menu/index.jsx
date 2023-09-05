@@ -57,7 +57,7 @@ export default function Menu({menu, showContent, auth}) {
                     <>
                         <MenuMainLink
                             href={route("system.products.models")}
-                            active={route().current("system.products.models")}
+                            active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                             showContent={smBreakpointUp || showContent}
                             text={"Produkty"}
                         /></> : ""}
