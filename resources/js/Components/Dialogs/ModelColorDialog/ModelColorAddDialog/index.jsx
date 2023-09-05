@@ -63,7 +63,6 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
             {
                 preserveScroll: true,
                 onSuccess: (e) => {
-                    console.log(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
                     setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
                     reset();
                     setActiveStep(0);
@@ -73,6 +72,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
                 },
                 onError: errors => {
                     enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
+                    console.error(errors)
                 },
             })
 

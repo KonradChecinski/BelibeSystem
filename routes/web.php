@@ -58,6 +58,6 @@ Route::get('assets/{path}', function ($path) {
 })->name("assets");
 
 Route::get('images/{path}', function ($path) {
-    return Storage::get('public/images/' . str_replace('\\', '/', $path));
+    return Storage::get('images/' . str_replace('\\', '/', $path));
 })->name("images");
 require __DIR__ . "/auth.php";

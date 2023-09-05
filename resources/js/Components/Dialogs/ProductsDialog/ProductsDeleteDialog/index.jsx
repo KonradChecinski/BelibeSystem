@@ -40,9 +40,8 @@ export default function ProductsDeleteDialog({open, setOpen, product, last, para
                     handleClose();
                 },
                 onError: errors => {
-                    console.log(errors)
                     enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-
+                    console.error(errors)
                 }
             })
 

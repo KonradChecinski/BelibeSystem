@@ -4,6 +4,7 @@ use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductImageController;
 use App\Http\Controllers\Product\ProductModelColorController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductModelPriceController;
@@ -66,6 +67,9 @@ Route::middleware("auth:user")->group(function () {
     Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
     Route::patch("/product/{product}", [ProductController::class, 'update'])->name("system.products.update");
     Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
+
+    Route::post("/models/images/{modelColor}", [ProductImageController::class, 'store'])->name("system.products.images.create");
+
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
 

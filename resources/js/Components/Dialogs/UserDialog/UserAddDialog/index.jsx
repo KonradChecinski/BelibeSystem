@@ -74,6 +74,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
                 },
                 onError: errors => {
                     enqueueSnackbar("Błąd przy zapisywaniu użytkownika", {variant: 'error'})
+                    console.error(errors)
                 },
             })
 

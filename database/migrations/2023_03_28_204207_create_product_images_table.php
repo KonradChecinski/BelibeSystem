@@ -13,11 +13,12 @@ return new class extends Migration {
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId("product_model_color_id")->references("id")->on("product_model_colors")->restrictOnDelete();
-            $table->unsignedBigInteger("order");
+            $table->unsignedInteger("order");
             $table->string("path");
 
-            $table->boolean("active");
-            $table->boolean("old");
+            $table->unsignedInteger("width");
+            $table->unsignedInteger("height");
+            $table->unsignedInteger("type");
             $table->boolean("publish");
 
             $table->timestamps();

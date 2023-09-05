@@ -123,6 +123,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
                     },
                     onError: errors => {
                         enqueueSnackbar("Błąd przy edycji produktu", {variant: 'error'})
+                        console.error(errors)
                     },
                 })
         }

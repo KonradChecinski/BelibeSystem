@@ -20,8 +20,9 @@ class ProductImage extends Model
         'product_id',
         'order',
         'path',
-        'active',
-        'old',
+        'width',
+        'height',
+        'type',
         'publish',
     ];
 

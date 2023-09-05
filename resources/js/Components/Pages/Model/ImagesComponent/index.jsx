@@ -29,19 +29,53 @@ import "photoswipe/style.css";
 import * as PropTypes from "prop-types";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
 import {useForm} from "@inertiajs/react";
+import DropzoneDialog from "@/Components/Dialogs/DropzoneDialog";
+import DropzoneImagesAddDialog from "@/Components/Dialogs/DropzoneDialog";
 
 
 export default function ImagesComponent(props) {
     const [edited, setEdited] = useState(false);
 
+    const [accordion, setAccordion] = useState(
+        props.productModel.colors_with_images.map((color) => {
+                const {shortcut} = color
+                return {shortcut: shortcut, '2': false, '3': false}
+            }
+        ))
 
-    const {data, setData, processing, post} = useForm({
-        'id': props.productModel.id,
-        "description_b2b": props.productModel.description_b2b,
-        "categories": props.productModel.categories.map((value) => {
-            return value.id;
-        })
-    })
+
+    const {data, setData, processing, post} = useForm(
+        props.productModel.colors_with_images.map(({shortcut, images}) => ({
+            shortcut,
+            images: images.reduce((group, image) => {
+                const {type} = image;
+                group[type] = group[type] ?? [];
+                group[type].push(image);
+                return group;
+            }, {})
+        }))
+    )
+
+    useEffect(() => {
+        // console.log("zmieniam", data)
+
+        setData(props.productModel.colors_with_images.map(({shortcut, images}) => ({
+            shortcut,
+            images: images.reduce((group, image) => {
+                const {type} = image;
+                group[type] = group[type] ?? [];
+                group[type].push(image);
+                return group;
+            }, {})
+        })))
+
+        setAccordion([props.productModel.colors_with_images.map((color) => {
+                const {shortcut} = color
+                return {shortcut: shortcut, '2': false, '3': false}
+            }
+        ), ...accordion])
+    }, [props]);
+
 
     const saveImages = () => {
         setEdited(false);
@@ -57,24 +91,23 @@ export default function ImagesComponent(props) {
         //     preserveScroll: true
         // })
     }
-
-    const [imageArray, setImageArray] = useState(props.productModel.colors_with_images.map(({shortcut}) => ({
-        shortcut, "images": {
-            "main": Array.from({length: 5}, (_, i) => shortcut + "main" + (i + 1)),
-            "big": Array.from({length: 2}, (_, i) => shortcut + "big" + (i + 1)),
-            "old": Array.from({length: 6}, (_, i) => shortcut + "old" + (i + 1)),
-        }
-    })))
+    // const [imageArray, setImageArray] = useState(props.productModel.colors_with_images.map(({shortcut}) => ({
+    //     shortcut, "images": {
+    //         "main": Array.from({length: 5}, (_, i) => shortcut + "main" + (i + 1)),
+    //         "big": Array.from({length: 2}, (_, i) => shortcut + "big" + (i + 1)),
+    //         "old": Array.from({length: 6}, (_, i) => shortcut + "old" + (i + 1)),
+    //     }
+    // })))
     const onDragEnd = (e) => {
-        console.log(e)
-        console.log(imageArray)
+        // console.log(e)
+        // console.log(data)
 
         if (!e.destination) return;
         if (e.source.droppableId === e.destination.droppableId && e.source.index === e.destination.index) return;
 
         setEdited(true);
 
-        const newImageArray = [...imageArray]
+        const newImageArray = [...data]
 
         //Source
         const sourceShortcut = e.source.droppableId.split("_")[0]
@@ -88,113 +121,122 @@ export default function ImagesComponent(props) {
         const destinationIndex = e.destination.index
         let destinationImageRow = newImageArray.find(e => e.shortcut === destinationShortcut).images[destinationType]
 
-        //
-        // console.log(newImageArray)
-        // console.log("sourceIndex", sourceIndex)
-        // console.log(newImageArray.find(e => e.shortcut === sourceShortcut).images[sourceType][sourceIndex])
-        // console.log(sourceImageRow)
-
-        const dropElement = sourceImageRow.splice(sourceIndex, 1)
+        const dropElement = sourceImageRow.splice(sourceIndex, 1)[0]
         destinationImageRow.splice(destinationIndex, 0, dropElement)
     }
     return (
         <>
             <DragDropContext onDragEnd={onDragEnd}>
 
-
+                {console.log(props.productModel.colors_with_images)}
                 {props.productModel.colors_with_images.map((color) => {
-                    const [bigAccordion, setBigAccordion] = useState(false);
-                    const [oldAccordion, setOldAccordion] = useState(false);
-                    return (
-                        <Paper elevation={4} key={color.id} sx={{my: 1}}>
+                    if (accordion.find(e => e.shortcut === color.shortcut)) {
+                        return (
+                            <Paper elevation={4} key={color.id} sx={{my: 1}}>
 
-                            <Accordion defaultExpanded={true} disableGutters={true}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMore/>}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>{color.shortcut} - {color.name}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Droppable droppableId={color.shortcut + "_main"} type={"group"}
-                                               direction="horizontal">
-                                        {(provided) => (
-                                            <Box {...provided.droppableProps} ref={provided.innerRef}
-                                                 sx={{height: 270}}>
-                                                <ImageColorList props={props} dropId={color.shortcut + "_main"}
-                                                                imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.main}/>
-                                                {provided.placeholder}
-                                            </Box>
+                                <Accordion defaultExpanded={true} disableGutters={true}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore/>}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>{color.shortcut} - {color.name}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Droppable droppableId={color.shortcut + "_1"} type={"group"}
+                                                   direction="horizontal">
+                                            {(provided) => (
+                                                <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                     sx={{height: 270}}>
+                                                    <ImageColorList props={props} dropId={color.shortcut + "_1"}
+                                                                    imageArray={data.find(e => e.shortcut === color.shortcut).images[1] ?
+                                                                        data.find(e => e.shortcut === color.shortcut).images[1] : []}/>
 
-                                        )}
-                                    </Droppable>
+                                                    {provided.placeholder}
+                                                </Box>
 
-                                    <Paper elevation={4}>
-                                        <Accordion expanded={bigAccordion}
-                                                   onChange={() => setBigAccordion(!bigAccordion)}
-                                                   disableGutters={true}>
-                                            <AccordionSummary
-                                                expandIcon={<ExpandMore/>}
-                                                aria-controls="panel1a-content"
-                                                id="panel1a-header"
-                                            >
-                                                <Typography>Duży format</Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                                <Droppable droppableId={color.shortcut + "_big"} type={"group"}
-                                                           direction="horizontal">
-                                                    {(provided) => (
-                                                        <Box {...provided.droppableProps} ref={provided.innerRef}
-                                                             sx={{height: bigAccordion ? 270 : 0}}>
-                                                            <ImageColorList props={props}
-                                                                            dropId={color.shortcut + "_big"}
-                                                                            imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.big}/>
-                                                            {provided.placeholder}
-                                                        </Box>
+                                            )}
+                                        </Droppable>
 
-                                                    )}
-                                                </Droppable>
+                                        <Paper elevation={4}>
+                                            <Accordion expanded={accordion.find(e => e.shortcut === color.shortcut)[2]}
+                                                       onChange={() => {
+                                                           let object = accordion.find(e => e.shortcut === color.shortcut)
+                                                           object[2] = !object[2]
 
-                                            </AccordionDetails>
-                                        </Accordion>
+                                                           setAccordion([...accordion, object])
+                                                       }}
+                                                       disableGutters={true}>
+                                                <AccordionSummary
+                                                    expandIcon={<ExpandMore/>}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                >
+                                                    <Typography>Duży format</Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                    <Droppable droppableId={color.shortcut + "_2"} type={"group"}
+                                                               direction="horizontal">
+                                                        {(provided) => (
+                                                            <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                                 sx={{height: accordion.find(e => e.shortcut === color.shortcut)[2] ? 270 : 0}}>
+                                                                <ImageColorList props={props}
+                                                                                dropId={color.shortcut + "_2"}
+                                                                                imageArray={data.find(e => e.shortcut === color.shortcut).images[2] ?
+                                                                                    data.find(e => e.shortcut === color.shortcut).images[2] : []}/>
+                                                                {provided.placeholder}
+                                                            </Box>
 
+                                                        )}
+                                                    </Droppable>
 
-                                        <Accordion expanded={oldAccordion}
-                                                   onChange={() => setOldAccordion(!oldAccordion)}
-                                                   disableGutters={true}>
-                                            <AccordionSummary
-                                                expandIcon={<ExpandMore/>}
-                                                aria-controls="panel1a-content"
-                                                id="panel1a-header"
-                                            >
-                                                <Typography>Archiwalne</Typography>
-                                                <Typography sx={{color: "text.secondary", ml: 10}}>Nie
-                                                    używać</Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                                <Droppable droppableId={color.shortcut + "_old"} type={"group"}
-                                                           direction="horizontal" style="overflow-y: scroll;">
-                                                    {(provided) => (
-                                                        <Box {...provided.droppableProps} ref={provided.innerRef}
-                                                             sx={{height: oldAccordion ? 270 : 0}}>
-                                                            <ImageColorList props={props}
-                                                                            dropId={color.shortcut + "_old"}
-                                                                            imageArray={imageArray.find(e => e.shortcut === color.shortcut).images.old}/>
-                                                            {provided.placeholder}
-                                                        </Box>
+                                                </AccordionDetails>
+                                            </Accordion>
 
-                                                    )}
-                                                </Droppable>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    </Paper>
-                                </AccordionDetails>
-                            </Accordion>
-                        </Paper>
-                    );
+                                            {}
+                                            <Accordion expanded={accordion.find(e => e.shortcut === color.shortcut)[3]}
+                                                       onChange={() => {
+                                                           let object = accordion.find(e => e.shortcut === color.shortcut)
+                                                           object[3] = !object[3]
+
+                                                           setAccordion([...accordion, object])
+                                                       }}
+                                                       disableGutters={true}>
+                                                <AccordionSummary
+                                                    expandIcon={<ExpandMore/>}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                >
+                                                    <Typography>Archiwalne</Typography>
+                                                    <Typography sx={{color: "text.secondary", ml: 10}}>Nie
+                                                        używać</Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                    <Droppable droppableId={color.shortcut + "_3"} type={"group"}
+                                                               direction="horizontal" style="overflow-y: scroll;">
+                                                        {(provided) => (
+                                                            <Box {...provided.droppableProps} ref={provided.innerRef}
+                                                                 sx={{height: accordion.find(e => e.shortcut === color.shortcut)[3] ? 270 : 0}}>
+                                                                <ImageColorList props={props}
+                                                                                dropId={color.shortcut + "_3"}
+                                                                                imageArray={data.find(e => e.shortcut === color.shortcut).images[3] ?
+                                                                                    data.find(e => e.shortcut === color.shortcut).images[3] : []}/>
+                                                                {provided.placeholder}
+                                                            </Box>
+
+                                                        )}
+                                                    </Droppable>
+                                                </AccordionDetails>
+                                            </Accordion>
+                                        </Paper>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Paper>
+                        )
+                    }
                 })}
             </DragDropContext>
+            <DropzoneImagesAddDialog {...props} />
             <Fade in={edited}>
                 <Button variant="outlined" startIcon={<Save/>}
                         disabled={processing}
@@ -354,8 +396,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
                 }}>
 
-
-                    {imageArray.map((num, i) => {
+                    {imageArray.map((image, i) => {
                         return (
                             <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}>
 
@@ -381,17 +422,16 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                 }
                                             }}>
                                                 <a
-                                                    href={route("images", {path: "brak.jpg"})}
-                                                    data-pswp-width={645}
-                                                    data-pswp-height={960}
+                                                    href={route("images", {path: image.path})}
+                                                    data-pswp-width={image.width}
+                                                    data-pswp-height={image.height}
                                                     key={"pswp-gallery" + "-" + "1"}//index
                                                     target="_blank"
                                                     rel="noreferrer"
                                                     className={"relative"}
                                                 >
-
                                                     <img
-                                                        src={route("images", {path: "brak.jpg"})}
+                                                        src={route("images", {path: image.path})}
                                                         // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                                         alt={"brak"}
                                                         className={"product-image"}

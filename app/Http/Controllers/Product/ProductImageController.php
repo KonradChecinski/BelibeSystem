@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductImageRequest;
 use App\Http\Requests\Product\UpdateProductImageRequest;
 use App\Models\Products\ProductImage;
+use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class ProductImageController extends Controller
 {
@@ -28,9 +32,28 @@ class ProductImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductImageRequest $request)
+    public function store(StoreProductImageRequest $request, ProductModelColor $modelColor)
     {
-        //
+        $numberOfImages = $modelColor->images()->count();
+        $model = $modelColor->model;
+        $type = 1;
+        $path = "images/" . $model->symbol . "/" . $modelColor->shortcut . "/" . $type . "/";
+        foreach ($request->allFiles()['files'] as $id => $file) {
+            $pathImage = Storage::disk('local')->putFileAs($path, $file, ($numberOfImages + $id) . "." . $file->getClientOriginalExtension());
+            $image = Image::make($file);
+            if ($pathImage) {
+                $image = new ProductImage([
+                    'order' => $numberOfImages + $id,
+                    'path' => str_replace('/', '\\', substr($pathImage, 7)),
+                    'width' => $image->width(),
+                    'height' => $image->height(),
+                    'type' => $type,
+                    'publish' => false,
+                ]);
+                $modelColor->images()->save($image);
+            }
+
+        }
     }
 
     /**

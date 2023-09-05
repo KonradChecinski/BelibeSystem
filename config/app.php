@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -200,6 +200,7 @@ return [
         App\Providers\TelescopeServiceProvider::class,
         Lab404\Impersonate\ImpersonateServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -215,7 +216,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Helper' => \App\Helpers\Helper::class
+        'Helper' => \App\Helpers\Helper::class,
+        'Image' => Intervention\Image\Facades\Image::class
     ])->toArray(),
 
 ];
