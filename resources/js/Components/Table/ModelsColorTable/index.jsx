@@ -17,7 +17,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
-    const {data, setData} = useForm([])
+    const {data, setData, re} = useForm([])
 
     useEffect(() => {
         setData(products)

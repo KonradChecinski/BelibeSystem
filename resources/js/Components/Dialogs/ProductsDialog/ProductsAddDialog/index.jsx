@@ -111,7 +111,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
                     },
                 })
         } else if (method === "update") {
-            patch(route("system.products", {product: actualState.id}),
+            patch(route("system.products.update", {product: actualState.id}),
 
                 {
                     preserveScroll: true,
@@ -217,12 +217,10 @@ function Step1({data, setData, props, formNameRef}) {
         setAnchorEl(null);
     };
 
-    const deleteUser = useCallback(
-        (id) => () => {
-            setData("barcodes", data.barcodes.filter((row) => (row.id !== id)))
-        },
-        [],
-    );
+    const deleteUser = (id) => {
+        setData("barcodes", data.barcodes.filter((row) => (row.id !== id)))
+    }
+
 
     return (
         <Box>
@@ -323,7 +321,7 @@ function Step1({data, setData, props, formNameRef}) {
                               }, {
                                   field: 'actions', type: 'actions', headerName: "", width: 10,
                                   getActions: (params) => [
-                                      <GridActionsCellItem icon={<Delete/>} onClick={deleteUser(params.id)}
+                                      <GridActionsCellItem icon={<Delete/>} onClick={() => deleteUser(params.id)}
                                                            label="Delete"/>,
                                   ]
                               }]}
@@ -405,7 +403,6 @@ function Step2({data, setData, errors}) {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
                     {errors[key]}
                 </Typography>)
-
             })}
 
 

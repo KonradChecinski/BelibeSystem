@@ -4,7 +4,7 @@ import {Box, Card, Divider, Icon, Typography} from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import React from "react";
 import NavLink from "@/Components/NavLink";
-import MenuMainLink from "@/Components/Menu/MenuMainLink";
+import MainMenuLink from "@/Components/Menu/MenuMainLink";
 import SubMenuLink from "@/Components/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -47,7 +47,7 @@ export default function Menu({menu, showContent, auth}) {
                     width: "80%"
                 }}
             >
-                <MenuMainLink
+                <MainMenuLink
                     href={route("system.dashboard")}
                     active={route().current("system.dashboard")}
                     showContent={smBreakpointUp || showContent}
@@ -55,7 +55,7 @@ export default function Menu({menu, showContent, auth}) {
                 />
                 {auth.permissions.includes("showModel") ?
                     <>
-                        <MenuMainLink
+                        <MainMenuLink
                             href={route("system.products.models")}
                             active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                             showContent={smBreakpointUp || showContent}
@@ -63,7 +63,7 @@ export default function Menu({menu, showContent, auth}) {
                         /></> : ""}
                 {auth.permissions.includes("showSetting") ?
                     <>
-                        <MenuMainLink
+                        <MainMenuLink
                             href={route("system.settings")}
                             active={route().current("system.settings")}
                             showContent={smBreakpointUp || showContent}
@@ -112,7 +112,7 @@ export default function Menu({menu, showContent, auth}) {
                                     </>
                                     : ""}
                             </SubMenuLink>
-                        </MenuMainLink>
+                        </MainMenuLink>
                     </> : ""}
             </Box>
         </Card>

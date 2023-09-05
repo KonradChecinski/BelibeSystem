@@ -7,7 +7,7 @@ import isChildActive from "@/Functions/isChildActive";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export default function MenuMainLink({
+export default function MainMenuLink({
                                          href,
                                          active,
                                          showContent,
