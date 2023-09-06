@@ -17,7 +17,7 @@ import {
     Tooltip,
     Typography
 } from "@mui/material";
-import {ContentCopy, Delete, ExpandMore, FileDownload, Info, Save} from "@mui/icons-material";
+import {Add, ContentCopy, Delete, ExpandMore, FileDownload, Info, Save} from "@mui/icons-material";
 import {enqueueSnackbar, useSnackbar} from "notistack";
 import {copyImageToClipboard} from "copy-image-clipboard";
 import ReactDraggable from "react-draggable";
@@ -35,6 +35,7 @@ import DropzoneImagesAddDialog from "@/Components/Dialogs/DropzoneDialog";
 
 export default function ImagesComponent(props) {
     const [edited, setEdited] = useState(false);
+    const [openAddDialog, setOpenAddDialog] = useState(false);
 
     const [accordion, setAccordion] = useState(
         props.productModel.colors_with_images.map((color) => {
@@ -149,6 +150,7 @@ export default function ImagesComponent(props) {
                                                 <Box {...provided.droppableProps} ref={provided.innerRef}
                                                      sx={{height: 270}}>
                                                     <ImageColorList props={props} dropId={color.shortcut + "_1"}
+
                                                                     imageArray={data.find(e => e.shortcut === color.shortcut).images[1] ?
                                                                         data.find(e => e.shortcut === color.shortcut).images[1] : []}/>
 
@@ -182,6 +184,7 @@ export default function ImagesComponent(props) {
                                                                  sx={{height: accordion.find(e => e.shortcut === color.shortcut)[2] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
                                                                                 dropId={color.shortcut + "_2"}
+
                                                                                 imageArray={data.find(e => e.shortcut === color.shortcut).images[2] ?
                                                                                     data.find(e => e.shortcut === color.shortcut).images[2] : []}/>
                                                                 {provided.placeholder}
@@ -219,6 +222,7 @@ export default function ImagesComponent(props) {
                                                                  sx={{height: accordion.find(e => e.shortcut === color.shortcut)[3] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
                                                                                 dropId={color.shortcut + "_3"}
+
                                                                                 imageArray={data.find(e => e.shortcut === color.shortcut).images[3] ?
                                                                                     data.find(e => e.shortcut === color.shortcut).images[3] : []}/>
                                                                 {provided.placeholder}
@@ -236,7 +240,16 @@ export default function ImagesComponent(props) {
                     }
                 })}
             </DragDropContext>
-            <DropzoneImagesAddDialog {...props} />
+            <Button variant="outlined" startIcon={<Add/>}
+                    onClick={() => setOpenAddDialog(true)}
+                    sx={{
+                        position: "absolute",
+                        top: 7,
+                        right: 100,
+                    }}>
+                Dodaj
+            </Button>
+            <DropzoneImagesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} props={props}/>
             <Fade in={edited}>
                 <Button variant="outlined" startIcon={<Save/>}
                         disabled={processing}
@@ -244,7 +257,7 @@ export default function ImagesComponent(props) {
                         sx={{
                             position: "absolute",
                             top: 7,
-                            right: 100,
+                            right: 200,
                         }}>
                     Zapisz
                 </Button>
@@ -260,6 +273,8 @@ const ImageColorList = ({props, dropId, imageArray}) => {
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
 
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+    const {delete: remove} = useForm()
 
     const [open, setOpen] = useState(false);
 
@@ -355,10 +370,22 @@ const ImageColorList = ({props, dropId, imageArray}) => {
         });
     };
 
-    const deleteImg = () => {
-        enqueueSnackbar("Usunięto", {
-            variant: "success"
-        });
+    const deleteImg = (image) => {
+
+        console.log(image)
+        remove(route("system.products.images.delete", {image: image.id}),
+
+            {
+                preserveScroll: true,
+                onSuccess: (e) => {
+
+                    enqueueSnackbar("Usunięto zdjęcie", {variant: 'success'})
+                },
+                onError: errors => {
+                    enqueueSnackbar("Błąd przy usuwaniu zdjęć", {variant: 'error'})
+                    console.error(errors)
+                },
+            })
     };
 
     const InfoImg = () => {
@@ -512,21 +539,21 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                     : ""}
                                                 <Tooltip title="Download">
                                                     <IconButton onClick={() => {
-                                                        downloadImg("brak.jpg", route("images", {path: "brak.jpg"}));
+                                                        downloadImg(image.path.replaceAll("\\\\", "-").replaceAll("\\", "-"), route("images", {path: image.path}));
                                                     }}>
                                                         <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="Copy">
                                                     <IconButton onClick={() => {
-                                                        copyImg(route("images", {path: "brak.jpg"}));
+                                                        copyImg(route("images", {path: image.path}));
                                                     }}>
                                                         <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>
                                                 </Tooltip>
-                                                {props.editing ?
+                                                {props.editing && props.auth.permissions.includes("deleteImages") ?
                                                     <Tooltip title="Delete">
-                                                        <IconButton onClick={deleteImg}>
+                                                        <IconButton onClick={() => deleteImg(image)}>
                                                             <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
                                                         </IconButton>
                                                     </Tooltip>

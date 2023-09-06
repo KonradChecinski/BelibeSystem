@@ -69,6 +69,7 @@ Route::middleware("auth:user")->group(function () {
     Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
     Route::post("/models/images/{modelColor}", [ProductImageController::class, 'store'])->name("system.products.images.create");
+    Route::delete("/models/images/{image}", [ProductImageController::class, 'destroy'])->name("system.products.images.delete");
 
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");

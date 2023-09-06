@@ -24,8 +24,10 @@ class StoreProductImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "model_color_id" => 'required|numeric|min:1',
-            "type" => 'required|numeric|min:1|max:3',
+            "model_color" => 'required',
+            "model_color.id" => 'required|numeric|min:1',
+            "type" => 'required',
+            "type.id" => 'required|numeric|min:1|max:3',
             "files" => 'required|array|max:10',
             "files.*" => [
                 'required',

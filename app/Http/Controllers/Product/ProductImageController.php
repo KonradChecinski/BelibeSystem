@@ -83,8 +83,12 @@ class ProductImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductImage $productImage)
+    public function destroy(ProductImage $image)
     {
-        //
+        if (auth()->user()->hasPermissionTo("deleteImages", "user")) {
+            $image->delete();
+        } else {
+            abort(403);
+        }
     }
 }
