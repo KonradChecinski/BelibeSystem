@@ -98,7 +98,7 @@ export default function Model(props) {
                 {/*    <TextEditorAllegro/>*/}
                 {/*</IconGrid>*/}
 
-                <IconGrid className={"test"} xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
+                <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<Category/>} iconColor={"blue"}>
                     <ImagesComponent {...props}/>
                 </IconGrid>
 
