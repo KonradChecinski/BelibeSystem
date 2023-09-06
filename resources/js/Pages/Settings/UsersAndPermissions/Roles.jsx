@@ -1,22 +1,22 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import NavLink from "@/Components/NavLink";
-import ModelsTable from "@/Components/Table/ModelsTable";
 import {Card} from "@mui/material";
-import UsersTable from "@/Components/Table/UsersTable";
 import RolesTable from "@/Components/Table/RolesTable";
+import {useLaravelReactI18n} from "laravel-react-i18n";
 
 export default function Roles(props) {
+    const {t} = useLaravelReactI18n();
+
     console.log(props)
     return (
         <UserLayout
             auth={props.auth}
             errors={props.errors}
             header={
-                "Roles"
+                t("Roles")
             }
         >
-            <Head title="Roles"/>
+            <Head title={t("Roles")}/>
             <Card sx={{height: "100%", width: 1}}>
                 <RolesTable {...props} />
             </Card>
