@@ -1,18 +1,18 @@
 import {Link} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import {Box, Card, Divider, Icon, Typography} from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import {Box, Card, Divider} from "@mui/material";
 import React from "react";
-import NavLink from "@/Components/NavLink";
 import MainMenuLink from "@/Components/Menu/MenuMainLink";
 import SubMenuLink from "@/Components/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {TransitionGroup} from "react-transition-group";
+import {useLaravelReactI18n} from "laravel-react-i18n";
 
-export default function Menu({menu, showContent, auth}) {
+export default function Menu({showContent, auth}) {
     const theme = useTheme();
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
+    const {t} = useLaravelReactI18n();
+
     return (
         <Card
             sx={{
@@ -51,7 +51,7 @@ export default function Menu({menu, showContent, auth}) {
                     href={route("system.dashboard")}
                     active={route().current("system.dashboard")}
                     showContent={smBreakpointUp || showContent}
-                    text={"Dashboard"}
+                    text={t("Dashboard")}
                 />
                 {auth.permissions.includes("showModel") ?
                     <>
