@@ -54,66 +54,60 @@ export default function Menu({showContent, auth}) {
                     text={t("Dashboard")}
                 />
                 {auth.permissions.includes("showModel") ?
-                    <>
-                        <MainMenuLink
-                            href={route("system.products.models")}
-                            active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
-                            showContent={smBreakpointUp || showContent}
-                            text={"Produkty"}
-                        /></> : ""}
+                    <MainMenuLink
+                        href={route("system.products.models")}
+                        active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Produkty"}
+                    /> : ""}
                 {auth.permissions.includes("showSetting") ?
-                    <>
-                        <MainMenuLink
-                            href={route("system.settings")}
-                            active={route().current("system.settings")}
-                            showContent={smBreakpointUp || showContent}
-                            text={"Ustawienia"}
+                    <MainMenuLink
+                        href={route("system.settings")}
+                        active={route().current("system.settings")}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Ustawienia"}
+                    >
+                        <SubMenuLink
+                            href={route("system.settings.main")}
+                            active={route().current("system.settings.main")}
+                            text={"Główne"}
+                        />
+                        <SubMenuLink
+                            href={route("system.settings.users")}
+                            active={false}
+                            text={"Użytkownicy i uprawnienia"}
                         >
-                            <SubMenuLink
-                                href={route("system.settings.main")}
-                                active={route().current("system.settings.main")}
-                                text={"Główne"}
-                            />
-                            <SubMenuLink
-                                href={route("system.settings.users")}
-                                active={false}
-                                text={"Użytkownicy i uprawnienia"}
-                            >
-                                {auth.permissions.includes("showRole") ?
-                                    <>
-                                        <SubMenuLink
-                                            href={route("system.settings.users")}
-                                            active={route().current("system.settings.users")}
-                                            text={"Lista użytkowników"}
-                                        />
+                            {auth.permissions.includes("showRole") ?
+                                <React.Fragment>
+                                    <SubMenuLink
+                                        href={route("system.settings.users")}
+                                        active={route().current("system.settings.users")}
+                                        text={"Lista użytkowników"}
+                                    />
 
-                                        <SubMenuLink
-                                            href={route("system.settings.roles")}
-                                            active={route().current("system.settings.roles")}
-                                            text={"Role systemowe"}
-                                        />
-                                    </>
-                                    : ""}
-                            </SubMenuLink>
-                            <SubMenuLink
-                                href={route("system.settings.sizes")}
-                                active={false}
-                                text={"Słowniki"}
-
-                            >
-                                {auth.permissions.includes("showRole") ?
-                                    <>
-                                        <SubMenuLink
-                                            href={route("system.settings.sizes")}
-                                            active={route().current("system.settings.sizes")}
-                                            text={"Rozmiary"}
-                                        />
-
-                                    </>
-                                    : ""}
-                            </SubMenuLink>
-                        </MainMenuLink>
-                    </> : ""}
+                                    <SubMenuLink
+                                        href={route("system.settings.roles")}
+                                        active={route().current("system.settings.roles")}
+                                        text={"Role systemowe"}
+                                    />
+                                </React.Fragment>
+                                : ""}
+                        </SubMenuLink>
+                        <SubMenuLink
+                            href={route("system.settings.sizes")}
+                            active={false}
+                            text={"Słowniki"}
+                        >
+                            {auth.permissions.includes("showRole") ?
+                                <SubMenuLink
+                                    href={route("system.settings.sizes")}
+                                    active={route().current("system.settings.sizes")}
+                                    text={"Rozmiary"}
+                                />
+                                : ""}
+                        </SubMenuLink>
+                    </MainMenuLink>
+                    : ""}
             </Box>
         </Card>
     );
