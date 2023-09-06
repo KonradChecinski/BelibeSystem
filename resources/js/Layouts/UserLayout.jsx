@@ -26,9 +26,9 @@ export default function UserLayout({auth, header, children}) {
                             sx={{
                                 position: "fixed",
                                 top: "1%",
+                                bottom: "8px",
                                 left: ".5%",
                                 zIndex: 1001,
-                                height: "98vh",
                                 width: "16%",
                                 minWidth: "200px",
                                 transition: "all .5s ease-in-out;",

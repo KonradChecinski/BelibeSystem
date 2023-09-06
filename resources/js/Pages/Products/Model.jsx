@@ -73,7 +73,7 @@ export default function Model(props) {
     return (
         <UserLayout auth={props.auth} errors={props.errors} header={"Model: " + props.productModel.name}>
             <Head title={props.productModel.name}/>
-            <Grid container spacing={2}>
+            <Grid container spacing={3} sx={{pb: 1}}>
                 <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<Category/>} iconColor={"green"}>
                     <BasicInfoComponent {...props}/>
                 </IconGrid>
