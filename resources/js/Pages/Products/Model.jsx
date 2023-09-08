@@ -1,60 +1,16 @@
-import {Head, Link, router} from "@inertiajs/react";
+import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import NavLink from "@/Components/NavLink";
-import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Checkbox,
-    FormControl,
-    Grid,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Paper,
-    Select,
-    TextField,
-    Typography,
-    OutlinedInput,
-    Chip,
-    IconButton,
-    ImageListItem,
-    ImageList,
-    Tooltip,
-    Badge,
-    Fade,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
-} from "@mui/material";
+import {Grid} from "@mui/material";
 import {useSnackbar} from "notistack";
-import ModelsTable from "@/Components/Table/ModelsTable";
-import {
-    Category,
-    ContentCopy,
-    Delete,
-    Edit,
-    ExpandMore,
-    FileDownload, Info,
-    Palette,
-    Visibility
-} from "@mui/icons-material";
+import {Category, Palette} from "@mui/icons-material";
 import IconGrid from "@/Components/IconGrid";
 import {useState} from "react";
 import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
 import ImagesComponent from "@/Components/Pages/Model/ImagesComponent";
 import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent";
-import RichTextExample from "@/Components/Slate/richtext";
-import TextEditorAllegro from "@/Components/TextEditor/Allegro";
-import TextEditorWebsite from "@/Components/TextEditor/Website";
 import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
-import TextEditorB2B from "@/Components/TextEditor/B2B";
 import BasicInfoComponent from "@/Components/Pages/Model/BasicInfoComponent";
 import ModelB2CComponent from "@/Components/Pages/Model/ModelB2CComponent";
-
 
 export default function Model(props) {
 

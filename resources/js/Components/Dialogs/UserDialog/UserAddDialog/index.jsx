@@ -2,20 +2,27 @@ import {
     Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle, ListItemText, MenuItem, Paper,
+    DialogTitle, FormControl, InputLabel, ListItemText, MenuItem, Paper, Select,
     Step,
     StepLabel,
     Stepper,
     TextField, Typography
 } from "@mui/material";
-import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
-import {useState, useRef} from "react";
+import {useState, useRef, useEffect} from "react";
 import Draggable from "react-draggable";
-import {router, useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import {useAddUserForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useAddUserForm";
 
-export default function UserAddDialog({open, setOpen, reloadData, roles, params}) {
+export default function UserAddDialog({open, setOpen, reloadData, roles}) {
+    const {
+        register,
+        handleSubmit,
+        errors: fieldErrors,
+        setValue,
+        clearErrors: clrErrors,
+    } = useAddUserForm()
+
     const form = useRef();
     const formName = useRef();
     const formPassword = useRef();
@@ -26,9 +33,23 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
         name: '',
         email: '',
         password: '',
-        roles: [],
+        roles: Array(),
     })
 
+    useEffect(() => {
+        // inicjacja wartości pól
+        setValue("name", data.name)
+        setValue("email", data.email)
+        setValue("password", data.password)
+        setValue("roles", data.roles)
+    }, [setValue]);
+
+    const onSubmit = (data) => {
+        setData(data)
+        console.log("Jest git wszystko", data)
+
+        setActiveStep(activeStep + 1)
+    }
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = [
@@ -36,17 +57,6 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
         "Podsumowanie"
     ];
 
-
-    const nextStep = () => {
-        if (activeStep == 0) {
-            if (!formName.current.isValid() || data.name === "") return;
-            if (!formPassword.current.isValid() || data.name === "") return;
-            if (!formEmail.current.isValid() || data.email === "") return;
-            if (!formRole.current.isValid() || data.roles.length == 0) return;
-        }
-        setActiveStep(activeStep + 1)
-
-    }
     const previousStep = () => {
         setActiveStep(activeStep - 1);
         clearErrors()
@@ -57,6 +67,18 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
     };
 
     const handleClose = () => {
+        setValue("name", "");
+        setValue("email", "");
+        setValue("password", "");
+        setValue("roles", []);
+
+        setData("roles", Array());
+
+        clrErrors("name")
+        clrErrors("email")
+        clrErrors("password")
+        clrErrors("roles")
+
         setOpen(false);
     };
 
@@ -83,7 +105,6 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
 
 
     return (
-
         <Dialog
             open={open}
             onClose={handleClose}
@@ -92,129 +113,131 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, params}
             scroll="paper"
         >
 
-            <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie użytkownika
-            </DialogTitle>
-            <DialogContent>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
-                {activeStep === 0 ?
-                    <Step1
-                        data={data}
-                        setData={setData}
-                        roles={roles}
-                        formRef={form}
-                        formNameRef={formName}
-                        formEmailRef={formEmail}
-                        formPasswordRef={formPassword}
-                        formRoleRef={formRole}
-                    /> : ""}
-                {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : ""}
+                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                    Dodawanie użytkownika
+                </DialogTitle>
+                <DialogContent>
+                    <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
 
-            </DialogContent>
-            <DialogActions>
-                <Button autoFocus onClick={handleClose}>
-                    Zamknij
-                </Button>
+                    {activeStep === 0 ?
+                        <Step1
+                            register={register}
+                            errors={fieldErrors}
+                            data={data}
+                            setData={setData}
+                            roles={roles}
+                        />
+                        : null}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : null}
 
-                <Button onClick={previousStep} disabled={activeStep === 0}>
-                    Wstecz
-                </Button>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleClose}>
+                        Zamknij
+                    </Button>
 
-                <Button onClick={nextStep} disabled={activeStep === 1}
-                        sx={{display: activeStep === 1 ? "none" : "block"}}>
-                    Następne
-                </Button>
+                    <Button onClick={previousStep} disabled={activeStep === 0}>
+                        Wstecz
+                    </Button>
 
-                <Button onClick={save} disabled={processing}
-                        sx={{display: activeStep === 0 ? "none" : "block"}}>
-                    Zapisz
-                </Button>
-            </DialogActions>
+                    <Button type="submit"
+                            sx={{display: activeStep === 1 ? "none" : "block"}}>
+                        Następne
+                    </Button>
 
+                    <Button onClick={save} disabled={processing}
+                            sx={{display: activeStep === 0 ? "none" : "block"}}>
+                        Zapisz
+                    </Button>
+                </DialogActions>
+
+            </form>
         </Dialog>
 
     );
 }
 
-function Step1({data, setData, roles, formRef, formNameRef, formPasswordRef, formEmailRef, formRoleRef}) {
+function Step1({register, errors, data, roles, setData}) {
     const onChangeSelect = (value) => {
         setData('roles', value.target.value);
     }
+
     const renderCell = (selected) => selected.map((value) => {
         return (<Typography key={value} variant="body1" gutterBottom>
-            {roles.find(e => e.id == value).name}
+            {roles.find(e => e.id === value).name}
         </Typography>);
     })
 
 
     return (
-        <Box>
-            <ValidatorForm instantValidate ref={formRef} onSubmit={() => {
-            }}>
-                <TextValidator
-                    id="name"
-                    label="Nazwa"
-                    ref={formNameRef}
-                    onChange={(value) => {
-                        setData('name', value.target.value);
-                    }}
-                    validators={['required', 'minStringLength:3']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 3']}
-                    // errorMessages={['this field is required']}
-                    value={data.name}
-                    sx={{width: "30ch", my: 1}}
-                />
+        <Box sx={{display: "flex", flexDirection: "column"}}>
 
-                <TextValidator
-                    id="email"
-                    label="Email"
-                    ref={formEmailRef}
-                    onChange={(value) => {
-                        setData('email', value.target.value);
-                    }}
-                    validators={['required', 'isEmail']}
-                    errorMessages={['Pole wymagane', 'Musi być adresem email']}
-                    // errorMessages={['this field is required']}
-                    value={data.email}
-                    sx={{width: "30ch", my: 1}}
-                />
+            <TextField
+                type="text"
+                id="name"
+                label="Nazwa"
+                color={errors.name?.message && "error"}
+                {...register("name")}
+                defaultValue={data.name}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.name?.message && (
+                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    {errors.name?.message.toString()}
+                </Typography>
+            )}
 
-                <TextValidator
-                    id="password"
-                    label="Hasło"
-                    ref={formPasswordRef}
-                    onChange={(value) => {
-                        setData('password', value.target.value);
-                    }}
-                    validators={['required', 'minStringLength:8']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość hasła to 8']}
-                    value={data.password}
-                    sx={{width: "30ch", my: 1}}
-                />
+            <TextField
+                type="text"
+                id="email"
+                label="Email"
+                color={errors.email?.message && "error"}
+                {...register("email")}
+                defaultValue={data.email}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.email?.message && (
+                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    {errors.email?.message.toString()}
+                </Typography>
+            )}
 
-                <SelectValidator
+            <TextField
+                type="text"
+                id="password"
+                label="Hasło"
+                color={errors.password?.message && "error"}
+                {...register("password")}
+                defaultValue={data.password}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.password?.message && (
+                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    {errors.password?.message.toString()}
+                </Typography>
+            )}
+
+            <FormControl sx={{width: "30ch", my: 1}}>
+                <InputLabel>Role</InputLabel>
+                <Select
                     id="role"
                     label="Role"
-                    ref={formRoleRef}
-
-                    validators={['required']}
-                    errorMessages={['Pole wymagane']}
-                    SelectProps={{
-                        multiple: true,
-                        value: data.roles,
-                        onChange: onChangeSelect,
-                        renderValue: renderCell
-                    }}
-                    sx={{width: "30ch", my: 1}}>
+                    multiple={true}
+                    color={errors.roles?.message && "error"}
+                    {...register("roles")}
+                    onChange={onChangeSelect}
+                    value={data.roles}
+                    renderValue={renderCell}
+                >
                     {roles.map(role => {
-
                         return (
                             <MenuItem key={role.id} value={role.id}>
                                 <Checkbox
@@ -223,15 +246,19 @@ function Step1({data, setData, roles, formRef, formNameRef, formPasswordRef, for
                             </MenuItem>
                         );
                     })}
+                </Select>
+                {errors.roles?.message && (
+                    <Typography variant="caption" color="error" sx={{ml: 1}}>
+                        {errors.roles?.message.toString()}
+                    </Typography>
+                )}
+            </FormControl>
 
-                </SelectValidator>
-            </ValidatorForm>
         </Box>
     );
 }
 
-function Step2({data, setData, roles, errors}) {
-    console.log(errors)
+function Step2({data, roles, errors}) {
     const renderCell = (selected) => selected.map((value) => {
         return (<Typography key={value} variant="body1" gutterBottom>
             {roles.find(e => e.id == value).name}
