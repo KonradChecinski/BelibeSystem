@@ -1,5 +1,4 @@
 import * as yup from 'yup'
-import {number} from "yup";
 
 const schema = yup.object().shape({
     name: yup
