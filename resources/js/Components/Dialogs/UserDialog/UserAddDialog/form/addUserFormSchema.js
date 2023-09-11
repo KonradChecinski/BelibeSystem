@@ -11,7 +11,7 @@ const schema = yup.object().shape({
     password: yup
         .string()
         .required("Pole jest wymagane")
-        .min(8, "Hasło musi składać się z conajmniej 8 znaków"),
+        .min(8, "Hasło musi składać się z co najmniej 8 znaków"),
     roles: yup
         .array(undefined)
         .min(1, "Pole jest wymagane")

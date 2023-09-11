@@ -29,8 +29,8 @@ import "photoswipe/style.css";
 import * as PropTypes from "prop-types";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
 import {useForm} from "@inertiajs/react";
-import DropzoneDialog from "@/Components/Dialogs/DropzoneDialog";
-import DropzoneImagesAddDialog from "@/Components/Dialogs/DropzoneDialog";
+import DropzoneImagesAddDialog from "@/Components/Dialogs/ModelImageDialog/DropzoneImagesAddDialog";
+import ImagesDeleteDialog from "@/Components/Dialogs/ModelImageDialog/ImageDeleteDialog";
 
 
 export default function ImagesComponent(props) {
@@ -44,9 +44,9 @@ export default function ImagesComponent(props) {
             }
         ))
 
-
-    const {data, setData, processing, post} = useForm(
-        props.productModel.colors_with_images.map(({shortcut, images}) => ({
+    const makeDataStructure = () => {
+        let newData = [...props.productModel.colors_with_images.map(({id, shortcut, images}) => ({
+            id,
             shortcut,
             images: images.reduce((group, image) => {
                 const {type} = image;
@@ -54,21 +54,25 @@ export default function ImagesComponent(props) {
                 group[type].push(image);
                 return group;
             }, {})
-        }))
-    )
+        }))]
+
+        const typeOfImages = [1, 2, 3]
+        for (const row of newData) {
+            for (const type of typeOfImages) {
+                row.images[type] = row.images[type] ?? []
+            }
+        }
+
+        return newData
+    }
+
+    const {data, setData, processing, put} = useForm(makeDataStructure())
+
 
     useEffect(() => {
-        // console.log("zmieniam", data)
+        console.log("zmieniam", data)
 
-        setData(props.productModel.colors_with_images.map(({shortcut, images}) => ({
-            shortcut,
-            images: images.reduce((group, image) => {
-                const {type} = image;
-                group[type] = group[type] ?? [];
-                group[type].push(image);
-                return group;
-            }, {})
-        })))
+        setData(makeDataStructure())
 
         setAccordion([props.productModel.colors_with_images.map((color) => {
                 const {shortcut} = color
@@ -79,29 +83,22 @@ export default function ImagesComponent(props) {
 
 
     const saveImages = () => {
-        setEdited(false);
 
-        // post(route("system.products.model.update.b2b", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano B2B", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         enqueueSnackbar("Błąd przy zapisywaniu B2B", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+        put(route("system.products.images.update.order", {productModel: props.productModel.id}), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano kolejność zdjęć", {variant: 'success'})
+            },
+            onError: params => {
+                enqueueSnackbar("Błąd przy zapisywaniu kolejności zdjęć", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
     }
-    // const [imageArray, setImageArray] = useState(props.productModel.colors_with_images.map(({shortcut}) => ({
-    //     shortcut, "images": {
-    //         "main": Array.from({length: 5}, (_, i) => shortcut + "main" + (i + 1)),
-    //         "big": Array.from({length: 2}, (_, i) => shortcut + "big" + (i + 1)),
-    //         "old": Array.from({length: 6}, (_, i) => shortcut + "old" + (i + 1)),
-    //     }
-    // })))
+
     const onDragEnd = (e) => {
         // console.log(e)
-        // console.log(data)
+        // console.log("1", data)
 
         if (!e.destination) return;
         if (e.source.droppableId === e.destination.droppableId && e.source.index === e.destination.index) return;
@@ -128,8 +125,6 @@ export default function ImagesComponent(props) {
     return (
         <>
             <DragDropContext onDragEnd={onDragEnd}>
-
-                {console.log(props.productModel.colors_with_images)}
                 {props.productModel.colors_with_images.map((color) => {
                     if (accordion.find(e => e.shortcut === color.shortcut)) {
                         return (
@@ -278,6 +273,21 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
     const [open, setOpen] = useState(false);
 
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(
+        imageArray.map((image, i) => {
+            return false
+        })
+    )
+    const handleSetOpenDeleteDialog = (index, value) => {
+        let array = [...openDeleteDialog]
+        array[index] = value
+        setOpenDeleteDialog(array)
+    }
+    const handleOpenDeleteDialog = (index) => {
+        return openDeleteDialog[index]
+    }
+
+
     // console.log(props)
     const handleClickOpen = () => {
         setOpen(true);
@@ -324,6 +334,11 @@ const ImageColorList = ({props, dropId, imageArray}) => {
             });
         });
         lightbox.init();
+
+        setOpenDeleteDialog([...imageArray.map((image, i) => {
+                return false
+            }
+        )])
 
         return () => {
             lightbox.destroy();
@@ -372,20 +387,20 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
     const deleteImg = (image) => {
 
-        console.log(image)
-        remove(route("system.products.images.delete", {image: image.id}),
-
-            {
-                preserveScroll: true,
-                onSuccess: (e) => {
-
-                    enqueueSnackbar("Usunięto zdjęcie", {variant: 'success'})
-                },
-                onError: errors => {
-                    enqueueSnackbar("Błąd przy usuwaniu zdjęć", {variant: 'error'})
-                    console.error(errors)
-                },
-            })
+        // console.log(image)
+        // remove(route("system.products.images.delete", {image: image.id}),
+        //
+        //     {
+        //         preserveScroll: true,
+        //         onSuccess: (e) => {
+        //
+        //             enqueueSnackbar("Usunięto zdjęcie", {variant: 'success'})
+        //         },
+        //         onError: errors => {
+        //             enqueueSnackbar("Błąd przy usuwaniu zdjęć", {variant: 'error'})
+        //             console.error(errors)
+        //         },
+        //     })
     };
 
     const InfoImg = () => {
@@ -414,7 +429,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                         borderWidth: 3,
                     },
 
-                    ...(dropId.includes("main") && {
+                    ...(dropId.includes("1") && {
                         "&>.MuiBox-root:first-of-type": {
                             borderColor: "info.main",
                         },
@@ -424,6 +439,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                 }}>
 
                     {imageArray.map((image, i) => {
+                        // console.log(openDeleteDialog)
                         return (
                             <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}>
 
@@ -468,54 +484,58 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                 </a>
                                             </Box>
 
-                                            <Box sx={{
-                                                // bgcolor: "yellow",
-                                                width: "70px",
-                                                height: "70px",
-                                                overflow: "hidden",
-                                                position: "absolute",
-                                                top: "-2px",
-                                                left: "-2px",
-                                                "&::before, &::after": {
+                                            {image.publish ?
+                                                <Box sx={{
+                                                    // bgcolor: "yellow",
+                                                    width: "70px",
+                                                    height: "70px",
+                                                    overflow: "hidden",
                                                     position: "absolute",
-                                                    zIndex: -1,
-                                                    content: "''",
-                                                    display: "block",
-                                                    border: "5px solid #2980b9",
-                                                    borderTopColor: "transparent",
-                                                    borderLeftColor: "transparent",
-                                                },
-                                                "&::before": {
-                                                    top: 0,
-                                                    right: 8,
-                                                },
-                                                "&::after": {
-                                                    bottom: 8,
-                                                    left: 0,
-                                                },
+                                                    top: "-2px",
+                                                    left: "-2px",
+                                                    "&::before, &::after": {
+                                                        position: "absolute",
+                                                        zIndex: -1,
+                                                        content: "''",
+                                                        display: "block",
+                                                        border: "5px solid #2980b9",
+                                                        borderTopColor: "transparent",
+                                                        borderLeftColor: "transparent",
+                                                    },
+                                                    "&::before": {
+                                                        top: 0,
+                                                        right: 8,
+                                                    },
+                                                    "&::after": {
+                                                        bottom: 8,
+                                                        left: 0,
+                                                    },
 
-                                            }}>
-                                                <Typography variant="body2" gutterBottom sx={{
-                                                    right: "-5px",
-                                                    top: "15px",
-                                                    transform: "rotate(-45deg)",
-
-                                                    position: "absolute",
-                                                    display: "block",
-                                                    width: "100px",
-                                                    padding: "5px 0",
-                                                    backgroundColor: "#3498db",
-                                                    boxShadow: "0 5px 10px rgba(0,0,0,.1)",
-                                                    color: "#fff",
-                                                    textShadow: "0 1px 1px rgba(0,0,0,.2)",
-                                                    textTransform: "uppercase",
-                                                    textAlign: "center",
-                                                    fontSize: 6
                                                 }}>
-                                                    Udostępnione
-                                                </Typography>
+                                                    <Typography variant="body2" gutterBottom sx={{
+                                                        right: "-5px",
+                                                        top: "15px",
+                                                        transform: "rotate(-45deg)",
 
-                                            </Box>
+                                                        position: "absolute",
+                                                        display: "block",
+                                                        width: "100px",
+                                                        padding: "5px 0",
+                                                        backgroundColor: "#3498db",
+                                                        boxShadow: "0 5px 10px rgba(0,0,0,.1)",
+                                                        color: "#fff",
+                                                        textShadow: "0 1px 1px rgba(0,0,0,.2)",
+                                                        textTransform: "uppercase",
+                                                        textAlign: "center",
+                                                        fontSize: 6
+                                                    }}>
+                                                        Udostępnione
+                                                    </Typography>
+
+                                                </Box>
+
+                                                : ""}
+
 
                                             <Box sx={{
                                                 bgcolor: "rgba(0,0,0,0.5)",
@@ -552,11 +572,19 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                     </IconButton>
                                                 </Tooltip>
                                                 {props.editing && props.auth.permissions.includes("deleteImages") ?
-                                                    <Tooltip title="Delete">
-                                                        <IconButton onClick={() => deleteImg(image)}>
-                                                            <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
-                                                        </IconButton>
-                                                    </Tooltip>
+                                                    <>
+                                                        <Tooltip title="Delete">
+                                                            <IconButton
+                                                                onClick={() => handleSetOpenDeleteDialog(i, true)}>
+                                                                <Delete sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <ImagesDeleteDialog open={Boolean(handleOpenDeleteDialog(i))}
+                                                                            setOpen={(value) => handleSetOpenDeleteDialog(i, value)}
+                                                                            image={image}
+                                                                            params={props}/>
+                                                    </>
+
                                                     : ""}
                                             </Box>
                                         </Box>

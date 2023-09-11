@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('updateProductPrice', "user", 'Produkt - edycja cen', 'Produkty');
 
         Permission::findOrCreate('createImages', "user", 'Zdjęcia - dodawanie', 'Zdjęcia');
+        Permission::findOrCreate('editImages', "user", 'Zdjęcia - edycja', 'Zdjęcia');
         Permission::findOrCreate('deleteImages', "user", 'Zdjęcia - usuwanie', 'Zdjęcia');
 
         Permission::findOrCreate('showRole', "user", 'Role - wyświetlanie', 'Admin');

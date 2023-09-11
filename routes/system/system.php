@@ -9,6 +9,7 @@ use App\Http\Controllers\Product\ProductModelColorController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductModelPriceController;
 use App\Http\Controllers\Product\ShowProductController;
+use App\Http\Controllers\ProductImageOrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
@@ -69,6 +70,7 @@ Route::middleware("auth:user")->group(function () {
     Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
     Route::post("/models/images/{modelColor}", [ProductImageController::class, 'store'])->name("system.products.images.create");
+    Route::put("/models/images/{productModel}/order", [ProductImageOrderController::class, 'update'])->name("system.products.images.update.order");
     Route::delete("/models/images/{image}", [ProductImageController::class, 'destroy'])->name("system.products.images.delete");
 
 
