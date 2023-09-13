@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Helpers\Helper;
+use App\Helpers\SystemName;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -60,8 +61,14 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status == Password::PASSWORD_RESET) {
-
-            return redirect()->route(Helper::getSystemNameFromDomain($request)->name . '.login')->with('status', __($status));
+            $systemName = Helper::getSystemNameFromDomain($request);
+            if ($systemName == SystemName::SYSTEM) {
+                return redirect()->route('system.login')->with('status', __($status));
+            } elseif ($systemName == SystemName::B2B) {
+                return redirect()->route('b2b.login')->with('status', __($status));
+            } else {
+                return back();
+            }
         }
 
         throw ValidationException::withMessages([
