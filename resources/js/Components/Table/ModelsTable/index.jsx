@@ -42,6 +42,7 @@ export default function ModelsTable(props) {
             field: "action",
             headerName: "Akcje",
             width: 120,
+            type: 'actions',
             sortable: false,
             filterable: false,
             renderCell: (params) => {
@@ -68,28 +69,29 @@ export default function ModelsTable(props) {
 
                 return (
                     <>
-                        <Tooltip title="Pokaż">
+                        {props.auth.permissions.includes("showModel") ?
+                            <Tooltip title="Pokaż">
+                                <IconButton aria-label="preview" onClick={onShowClick}>
+                                    {/*<Preview />*/}
+                                    <Visibility/>
+                                </IconButton>
+                            </Tooltip>
+                            : ""}
+                        {props.auth.permissions.includes("editModel") ?
+                            <Tooltip title="Edycja">
+                                <IconButton aria-label="edit" onClick={onEditClick}>
+                                    <Edit/>
+                                </IconButton>
+                            </Tooltip>
+                            : ""}
+                        {/*<Tooltip title="Usuń">*/}
+                        {/*<IconButton aria-label="delete" onClick={onDeleteClick}>*/}
+                        {/*    <Delete/>*/}
+                        {/*</IconButton>*/}
+                        {/*</Tooltip>*/}
 
-                            <IconButton aria-label="preview" onClick={onShowClick}>
-                                {/*<Preview />*/}
-                                <Visibility/>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edycja">
-
-                            <IconButton aria-label="edit" onClick={onEditClick}>
-                                <Edit/>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Usuń">
-
-                            <IconButton aria-label="delete" onClick={onDeleteClick}>
-                                <Delete/>
-                            </IconButton>
-                        </Tooltip>
-
-                        <ModelsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                            reloadData={reloadData} model={params.row}/>
+                        {/*<ModelsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
+                        {/*                    reloadData={reloadData} model={params.row}/>*/}
                     </>
                 );
             }

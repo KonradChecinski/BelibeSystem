@@ -61,10 +61,9 @@ export default function ImagesComponent(props) {
         for (const row of newData) {
             for (const type of typeOfImages) {
                 row.images[type] = row.images[type] ?? []
-                row.images[type].sort( (a,b) => a.order - b.order );
+                row.images[type].sort((a, b) => a.order - b.order);
             }
         }
-
 
 
         return newData
@@ -250,18 +249,23 @@ export default function ImagesComponent(props) {
                 Dodaj
             </Button>
             <DropzoneImagesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} props={props}/>
-            <Fade in={edited}>
-                <Button variant="outlined" startIcon={<Save/>}
-                        disabled={processing}
-                        onClick={saveImages}
-                        sx={{
-                            position: "absolute",
-                            top: 7,
-                            right: 200,
-                        }}>
-                    Zapisz
-                </Button>
-            </Fade>
+            {props.editing ?
+
+                <Fade in={edited}>
+                    <Button variant="outlined" startIcon={<Save/>}
+                            disabled={processing}
+                            onClick={saveImages}
+                            sx={{
+                                position: "absolute",
+                                top: 7,
+                                right: 200,
+                            }}>
+                        Zapisz
+                    </Button>
+                </Fade>
+
+                : ""}
+
         </>
     );
 }
@@ -303,7 +307,6 @@ const ImageColorList = ({props, dropId, imageArray}) => {
     const handleOpenInfoDialog = (index) => {
         return openInfoDialog[index]
     }
-
 
 
     useEffect(() => {
@@ -453,7 +456,8 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
                     {imageArray.map((image, i) => {
                         return (
-                            <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}>
+                            <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}
+                                       isDragDisabled={!props.editing}>
 
                                 {(provided) => (
 
@@ -566,14 +570,15 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                 {props.editing ?
                                                     <>
                                                         <Tooltip title="Info">
-                                                            <IconButton onClick={() => handleSetOpenInfoDialog(i, true)}>
+                                                            <IconButton
+                                                                onClick={() => handleSetOpenInfoDialog(i, true)}>
                                                                 <Info sx={{fontSize: 20, color: "menuText.main"}}/>
                                                             </IconButton>
                                                         </Tooltip>
                                                         <ImagesInfoDialog open={Boolean(handleOpenInfoDialog(i))}
-                                                                            setOpen={(value) => handleSetOpenInfoDialog(i, value)}
-                                                                            image={image}
-                                                                            props={props}/>
+                                                                          setOpen={(value) => handleSetOpenInfoDialog(i, value)}
+                                                                          image={image}
+                                                                          props={props}/>
                                                     </>
 
                                                     : ""}
@@ -618,7 +623,6 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                     }
                 </Box>
             </Box>
-
 
 
         </>

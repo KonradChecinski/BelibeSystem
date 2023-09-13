@@ -23,7 +23,7 @@ export default function Model(props) {
             return value.id;
         })
     });
-    console.log(productModel);
+    console.log(props);
 
 
     return (
