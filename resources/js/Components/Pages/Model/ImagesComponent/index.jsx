@@ -31,6 +31,7 @@ import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
 import {useForm} from "@inertiajs/react";
 import DropzoneImagesAddDialog from "@/Components/Dialogs/ModelImageDialog/DropzoneImagesAddDialog";
 import ImagesDeleteDialog from "@/Components/Dialogs/ModelImageDialog/ImageDeleteDialog";
+import ImagesInfoDialog from "@/Components/Dialogs/ModelImageDialog/ImageInfoDialog";
 
 
 export default function ImagesComponent(props) {
@@ -60,11 +61,15 @@ export default function ImagesComponent(props) {
         for (const row of newData) {
             for (const type of typeOfImages) {
                 row.images[type] = row.images[type] ?? []
+                row.images[type].sort( (a,b) => a.order - b.order );
             }
         }
 
+
+
         return newData
     }
+
 
     const {data, setData, processing, put} = useForm(makeDataStructure())
 
@@ -271,8 +276,6 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
     const {delete: remove} = useForm()
 
-    const [open, setOpen] = useState(false);
-
     const [openDeleteDialog, setOpenDeleteDialog] = useState(
         imageArray.map((image, i) => {
             return false
@@ -287,15 +290,20 @@ const ImageColorList = ({props, dropId, imageArray}) => {
         return openDeleteDialog[index]
     }
 
+    const [openInfoDialog, setOpenInfoDialog] = useState(
+        imageArray.map((image, i) => {
+            return false
+        })
+    )
+    const handleSetOpenInfoDialog = (index, value) => {
+        let array = [...openInfoDialog]
+        array[index] = value
+        setOpenInfoDialog(array)
+    }
+    const handleOpenInfoDialog = (index) => {
+        return openInfoDialog[index]
+    }
 
-    // console.log(props)
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
 
     useEffect(() => {
@@ -336,6 +344,11 @@ const ImageColorList = ({props, dropId, imageArray}) => {
         lightbox.init();
 
         setOpenDeleteDialog([...imageArray.map((image, i) => {
+                return false
+            }
+        )])
+
+        setOpenInfoDialog([...imageArray.map((image, i) => {
                 return false
             }
         )])
@@ -429,7 +442,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                         borderWidth: 3,
                     },
 
-                    ...(dropId.includes("1") && {
+                    ...(dropId.includes("_1") && {
                         "&>.MuiBox-root:first-of-type": {
                             borderColor: "info.main",
                         },
@@ -439,11 +452,11 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                 }}>
 
                     {imageArray.map((image, i) => {
-                        // console.log(openDeleteDialog)
                         return (
                             <Draggable draggableId={dropId + "_" + i} key={dropId + "_" + i} index={i}>
 
                                 {(provided) => (
+
                                     <Box
                                         {...provided.dragHandleProps}
                                         {...provided.draggableProps}
@@ -551,11 +564,18 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
                                             }}>
                                                 {props.editing ?
-                                                    <Tooltip title="Info">
-                                                        <IconButton onClick={InfoImg}>
-                                                            <Info sx={{fontSize: 20, color: "menuText.main"}}/>
-                                                        </IconButton>
-                                                    </Tooltip>
+                                                    <>
+                                                        <Tooltip title="Info">
+                                                            <IconButton onClick={() => handleSetOpenInfoDialog(i, true)}>
+                                                                <Info sx={{fontSize: 20, color: "menuText.main"}}/>
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <ImagesInfoDialog open={Boolean(handleOpenInfoDialog(i))}
+                                                                            setOpen={(value) => handleSetOpenInfoDialog(i, value)}
+                                                                            image={image}
+                                                                            props={props}/>
+                                                    </>
+
                                                     : ""}
                                                 <Tooltip title="Download">
                                                     <IconButton onClick={() => {
@@ -600,26 +620,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
             </Box>
 
 
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                PaperComponent={PaperComponent}
-                aria-labelledby="draggable-dialog-title"
-            >
-                <DialogTitle style={{cursor: "move"}} id="draggable-dialog-title">
-                    Zdjęcie
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Data utworzenia: dd.mm.YYYY HH:MM
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Zamknij
-                    </Button>
-                </DialogActions>
-            </Dialog>
+
         </>
     );
 }

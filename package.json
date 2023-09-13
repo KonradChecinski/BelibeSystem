@@ -36,6 +36,7 @@
         "copy-image-clipboard": "^2.1.2",
         "is-hotkey": "^0.2.0",
         "laravel-react-i18n": "^2.0.4",
+        "moment": "^2.29.4",
         "mui-file-dropzone": "^4.0.2",
         "notistack": "^3.0.1",
         "photoswipe": "^5.3.7",

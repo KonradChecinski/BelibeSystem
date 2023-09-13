@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProductImagePublishRequest;
 use App\Models\ProductImageOrder;
 use App\Http\Requests\StoreProductImageOrderRequest;
 use App\Http\Requests\UpdateProductImageOrderRequest;
@@ -9,7 +10,7 @@ use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 
-class ProductImageOrderController extends Controller
+class ProductImagePublishController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -54,19 +55,10 @@ class ProductImageOrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductImageOrderRequest $request, ProductModel $productModel)
+    public function update(UpdateProductImagePublishRequest $request, ProductImage $productImage)
     {
-        foreach ($request->all() as $item) {
-//            $productModelColor = ProductModelColor::find($item["id"]);
-            foreach ($item['images'] as $type=>$images) {
-                foreach ($images as $id=>$image) {
-                    $productImage = ProductImage::find($image["id"]);
-                    $productImage->order=$id;
-                    $productImage->save();
-                }
-
-            }
-        }
+        $productImage->publish = $request->publish;
+        $productImage->save();
     }
 
     /**

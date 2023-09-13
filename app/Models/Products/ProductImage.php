@@ -17,7 +17,7 @@ class ProductImage extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_id',
+        'product_model_color_id',
         'order',
         'path',
         'width',
@@ -27,8 +27,8 @@ class ProductImage extends Model
     ];
 
 
-    public function product(): BelongsTo
+    public function color(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductModelColor::class, "product_model_color_id", "id");
     }
 }

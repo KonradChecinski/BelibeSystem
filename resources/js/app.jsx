@@ -9,6 +9,9 @@ import {SnackbarProvider} from "notistack";
 
 import {DevSupport} from "@react-buddy/ide-toolbox";
 import {ComponentPreviews, useInitial} from "../../dev";
+import moment from "moment";
+import 'moment/dist/locale/pl';
+import 'moment/dist/locale/en-gb';
 
 
 const appName =
@@ -16,6 +19,8 @@ const appName =
 
 const htmlLang =
     window.document.getElementsByTagName("html")[0]?.lang || "en";
+
+moment.locale(htmlLang)
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -30,6 +35,7 @@ createInertiaApp({
         // root.render(<App {...props} />);
 
         const root = createRoot(el);
+
 
         root.render(
             <LaravelReactI18nProvider

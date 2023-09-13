@@ -34,8 +34,8 @@ export default function ImagesDeleteDialog({open, setOpen, image, params}) {
             {
                 preserveScroll: true,
                 onSuccess: (e) => {
-
                     enqueueSnackbar("Usunięto zdjęcie", {variant: 'success'})
+                    handleClose()
                 },
                 onError: errors => {
                     enqueueSnackbar("Błąd przy usuwaniu zdjęć", {variant: 'error'})

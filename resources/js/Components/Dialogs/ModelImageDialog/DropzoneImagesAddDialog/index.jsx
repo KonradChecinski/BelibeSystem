@@ -92,8 +92,8 @@ export default function DropzoneImagesAddDialog({open, setOpen, props}) {
                         id="type"
                         options={[
                             {id: '1', label: 'Normalne'},
-                            {id: '1', label: 'Duże'},
-                            {id: '1', label: 'Archiwalne'}
+                            {id: '2', label: 'Duże'},
+                            {id: '3', label: 'Archiwalne'}
                         ]}
                         sx={{width: "30ch"}}
                         value={data.type}

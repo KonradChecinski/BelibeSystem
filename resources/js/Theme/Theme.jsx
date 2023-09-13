@@ -16,7 +16,7 @@ export default function Theme({children}) {
             second: "rgba(0,0,0,0.08)",
             third: "rgba(0,0,0,0.25)"
         },
-        // secondary: {},
+        secondary: {main: "#2a53d7"},
         background: {
             background: "#f3f4f6",
             default: "#f3f4f6",
@@ -40,7 +40,7 @@ export default function Theme({children}) {
             second: "rgba(255,255,255,0.08)",
             third: "rgba(255,255,255,0.25)"
         },
-        // secondary: {},
+        secondary: {main: "#0072ba"},
         background: {
             background: "#111827",
             default: "#111827",

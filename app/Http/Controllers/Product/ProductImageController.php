@@ -34,12 +34,12 @@ class ProductImageController extends Controller
      */
     public function store(StoreProductImageRequest $request, ProductModelColor $modelColor)
     {
-        $numberOfImages = $modelColor->images()->count();
+        $type = $request->type["id"];
+        $numberOfImages = $modelColor->images()->where('type', $type)->count();
         $model = $modelColor->model;
-        $type = 1;
         $path = "images/" . $model->symbol . "/" . $modelColor->shortcut . "/" . $type . "/";
         foreach ($request->allFiles()['files'] as $id => $file) {
-            $pathImage = Storage::disk('local')->putFileAs($path, $file, ($numberOfImages + $id) . "." . $file->getClientOriginalExtension());
+            $pathImage = Storage::disk('local')->putFileAs($path, $file, uniqid() . "." . $file->getClientOriginalExtension());
             $image = Image::make($file);
             if ($pathImage) {
                 $image = new ProductImage([
@@ -86,7 +86,16 @@ class ProductImageController extends Controller
     public function destroy(ProductImage $image)
     {
         if (auth()->user()->hasPermissionTo("deleteImages", "user")) {
+            $modelColor = $image->color;
+            $imageType = $image->type;
+            $imageOrder = $image->order;
+            $imagesToChangeOrder = $modelColor->images()->where('type', $imageType)->where('order', '>', $imageOrder)->orderBy('order')->get();
             $image->delete();
+            foreach ($imagesToChangeOrder as $id=>$imageToOrder) {
+                $imageToOrder->order= $imageOrder + $id;
+                $imageToOrder->save();
+            }
+
         } else {
             abort(403);
         }
