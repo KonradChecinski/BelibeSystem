@@ -1,9 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
-export default function GroupCell({ group }) {
+export default function GroupCell({group}) {
     return (
         <Box>
-            <Typography>{group.name}</Typography>
+            <Typography>{group?.name}</Typography>
         </Box>
     );
 }

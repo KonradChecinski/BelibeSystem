@@ -11,7 +11,7 @@ class StoreProductModelRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("createModel", "user");
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreProductModelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'symbol' => 'required|string|min:3',
+            'name' => 'required|string|min:3'
         ];
     }
 }

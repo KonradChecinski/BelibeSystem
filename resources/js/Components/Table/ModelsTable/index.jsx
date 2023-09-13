@@ -1,18 +1,41 @@
 import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
-import {Button, IconButton, Tooltip} from "@mui/material";
+import {Box, Button, Fab, IconButton, Tooltip} from "@mui/material";
 import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
 import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
 import ModelsDeleteDialog from "@/Components/Dialogs/ModelsDialog/ModelsDeleteDialog";
+import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
+import ModelsAddDialog from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog";
 
 export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
         {field: "id", headerName: "Id"},
-        {field: "img", headerName: "Zdjęcie", sortable: false, filterable: false},
+        {
+            field: "img",
+            headerName: "Zdjęcie",
+            sortable: false,
+            filterable: false,
+            width: 80,
+            renderCell: (params) => {
+                return (
+                    (
+                        params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0 ?
+                            <img
+                                src={route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path})}
+                                alt={"Zdjęcie produktu"}
+                                className={"w-100 p-1.5"}
+                            />
+                            : ""
+                    )
+
+
+                );
+            }
+        },
         {field: "symbol", headerName: "Symbol"},
 
         {
@@ -193,157 +216,68 @@ export default function ModelsTable(props) {
         setPaginationModel({...paginationModel})
     }
 
-    return (
-        <DataGrid
-            rows={pageData}
-            columns={column}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-                setColumnVisibilityModel(newModel)
-            }
-            rowCount={rowCountState}
-            loading={isLoading}
-            pageSizeOptions={[5, 20, 50, 100]}
-            paginationMode="server"
-            paginationModel={paginationModel}
-            onPaginationModelChange={handlePaginationModelChange}
-            sortingMode="server"
-            onSortModelChange={handleSortModelChange}
-            filterMode="server"
-            onFilterModelChange={onFilterChange}
-            slots={{toolbar: GridToolbar}}
-            slotProps={{
-                toolbar: {
-                    showQuickFilter: true,
-                    quickFilterProps: {debounceMs: 500}
-                }
-            }}
-            // disableColumnFilter
-            //disableColumnSelector
-            disableDensitySelector
-            // autoHeight
-            rowHeight={80}
-            pagination
-            localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-            sx={{
-                height: "100%",
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.light",
-                "& .MuiDataGrid-toolbarContainer": {
-                    "& .MuiButton-root": {
-                        color: "text.primary"
-                    }
-                },
-                "& .MuiDataGrid-row.Mui-selected": {
-                    bgcolor: "rgba(255,255,255,0.25)"
-                },
-                "& .MuiDataGrid-row:hover": {
-                    bgcolor: "primary"
-                }
-            }}
-        />
-    );
-}
+    const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
-//
-// export default function Table({url, column, reloadData}) {
-//     const [paginationModel, setPaginationModel] = useState({
-//         page: 0,
-//         pageSize: 20,
-//         orderBy: null,
-//         order: null,
-//         search: []
-//     });
-//     const [isLoading, setIsLoading] = useState(true);
-//     const [rowCountState, setRowCountState] = useState(0);
-//     const [pageData, setPageData] = useState([]);
-//
-//     const columnWithAction = [...column, {field: "action", headerName: "Akcje", width: 200},]
-//
-//     const handleSortModelChange = useCallback((sortModel) => {
-//         setPaginationModel({
-//             page: paginationModel.page,
-//             pageSize: paginationModel.pageSize,
-//             search: paginationModel.search,
-//             orderBy: sortModel[0].field,
-//             order: sortModel[0].sort
-//         });
-//     }, []);
-//     const handlePaginationModelChange = useCallback((newPaginationModel) => {
-//         setPaginationModel({
-//             orderBy: paginationModel.orderBy,
-//             order: paginationModel.order,
-//             search: paginationModel.search,
-//             page: newPaginationModel.page,
-//             pageSize: newPaginationModel.pageSize
-//         });
-//     }, []);
-//
-//     const onFilterChange = useCallback((filterModel) => {
-//         setPaginationModel({
-//             orderBy: paginationModel.orderBy,
-//             order: paginationModel.order,
-//             page: paginationModel.page,
-//             pageSize: paginationModel.pageSize,
-//             search: filterModel.quickFilterValues
-//         });
-//     }, []);
-//
-//     const fetchData = async () => {
-//         setIsLoading(true);
-//         let fetchUrl = url +
-//             `?page=${paginationModel.page + 1}` +
-//             `&limit=${paginationModel.pageSize}` +
-//             (paginationModel.order ? `&order=${paginationModel.order}` : "") +
-//             (paginationModel.orderBy ? `&orderBy=${paginationModel.orderBy}` : "") +
-//             (paginationModel.search.length != 0 ? `&search=${JSON.stringify(paginationModel.search)}` : "");
-//         let option = {headers: {"Accept": "application/json"}};
-//         const response = await fetch(fetchUrl, option);
-//         const json = await response.json();
-//         setRowCountState(json[0].total);
-//         setPageData(json[0].data);
-//         setIsLoading(false);
-//     };
-//
-//     useEffect(() => {
-//         fetchData();
-//     }, [paginationModel]);
-//
-//     useImperativeHandle(reloadData, () => ({
-//         reloadData() {
-//             fetchData();
-//         }
-//     }));
-//
-//     return (
-//         <DataGrid
-//             rows={pageData}
-//             columns={columnWithAction}
-//             rowCount={rowCountState}
-//             loading={isLoading}
-//             pageSizeOptions={[5, 20, 50, 100]}
-//             paginationMode="server"
-//             paginationModel={paginationModel}
-//             onPaginationModelChange={handlePaginationModelChange}
-//             sortingMode="server"
-//             onSortModelChange={handleSortModelChange}
-//             filterMode="server"
-//             onFilterModelChange={onFilterChange}
-//             slots={{toolbar: GridToolbar}}
-//             slotProps={{
-//                 toolbar: {
-//                     showQuickFilter: true,
-//                     quickFilterProps: {debounceMs: 500}
-//                 }
-//             }}
-//             // disableColumnFilter
-//             disableColumnSelector
-//             disableDensitySelector
-//             autoHeight
-//             pagination
-//             localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-//         />
-//     );
-//
-// }
+    return (
+        <>
+            <DataGrid
+                rows={pageData}
+                columns={column}
+                columnVisibilityModel={columnVisibilityModel}
+                onColumnVisibilityModelChange={(newModel) =>
+                    setColumnVisibilityModel(newModel)
+                }
+                rowCount={rowCountState}
+                loading={isLoading}
+                pageSizeOptions={[5, 20, 50, 100]}
+                paginationMode="server"
+                paginationModel={paginationModel}
+                onPaginationModelChange={handlePaginationModelChange}
+                sortingMode="server"
+                onSortModelChange={handleSortModelChange}
+                filterMode="server"
+                onFilterModelChange={onFilterChange}
+                slots={{toolbar: GridToolbar}}
+                slotProps={{
+                    toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: {debounceMs: 500}
+                    }
+                }}
+                // disableColumnFilter
+                //disableColumnSelector
+                disableDensitySelector
+                // autoHeight
+                rowHeight={80}
+                pagination
+                localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+                sx={{
+                    height: "100%",
+                    boxShadow: 2,
+                    border: 2,
+                    borderColor: "primary.light",
+                    "& .MuiDataGrid-toolbarContainer": {
+                        "& .MuiButton-root": {
+                            color: "text.primary"
+                        }
+                    },
+                    "& .MuiDataGrid-row.Mui-selected": {
+                        bgcolor: "rgba(255,255,255,0.25)"
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                        bgcolor: "primary"
+                    }
+                }}
+            />
+            <Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20}}>
+                <Fab color="primary" aria-label="add" onClick={() => {
+                    setOpenDialogAdd(true)
+                }}>
+                    <Add/>
+                </Fab>
+            </Box>
+            <ModelsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
+        </>
+    );
+
+}

@@ -14,7 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->string("symbol")->unique();
             $table->string("name");
-            $table->foreignId("product_group_id")->references("id")->on("product_groups")->restrictOnDelete();
+            $table
+                ->foreignId("product_group_id")
+                ->nullable()
+                ->references("id")
+                ->on("product_groups")
+                ->restrictOnDelete();
 
             $table->text("description_b2b");
             $table->text("description_b2c");

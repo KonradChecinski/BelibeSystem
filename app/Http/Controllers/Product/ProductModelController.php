@@ -7,6 +7,7 @@ use App\Http\Requests\Product\DataProductModelRequest;
 use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\StoreProductModelRequest;
 use App\Http\Requests\Product\UpdateProductModelRequest;
+use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
@@ -33,7 +34,7 @@ class ProductModelController extends Controller
             'name',
         ];
 
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name"]);
+        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"]);
 //        dd($models->get()->toArray());
 
         if ($request->search) {
@@ -140,7 +141,15 @@ class ProductModelController extends Controller
      */
     public function store(StoreProductModelRequest $request)
     {
-        //
+
+
+        $model = new ProductModel($request->all());
+        $model->description_b2b = "";
+        $model->description_b2c = "";
+        $model->description_allegro = "";
+        $model->save();
+
+        $model->prices()->create([]);
     }
 
     /**

@@ -56,6 +56,7 @@ Route::get("/", function () {
 Route::middleware("auth:user")->group(function () {
     Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
     Route::get("/models/data", [ProductModelController::class, 'data']);
+    Route::post("/models", [ProductModelController::class, 'store'])->name("system.products.models.create");
     Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
 
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
