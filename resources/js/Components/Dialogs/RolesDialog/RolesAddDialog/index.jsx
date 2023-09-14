@@ -34,8 +34,6 @@ export default function RolesAddDialog({open, setOpen, reloadData}) {
     const onSubmit = (data) => {
         setData(data)
         setActiveStep(activeStep + 1)
-
-        console.log("Role data: ", data)
     }
 
     const [activeStep, setActiveStep] = useState(0);

@@ -2,31 +2,44 @@ import {
     Box, Button,
     Dialog, DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle, Paper,
     Step,
     StepLabel,
     Stepper,
-    TextField
+    TextField, Typography
 } from "@mui/material";
-import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
-import {useState, useRef} from "react";
+import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
-import {router, useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import {useModelsAddForm} from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog/form/useModelsAddForm";
 
-export default function ModelsAddDialog({open, setOpen, reloadData, params}) {
-    const form = useRef();
-    const formName = useRef();
-    const formSymbol = useRef();
+export default function ModelsAddDialog({open, setOpen, reloadData}) {
+    const {
+        register,
+        handleSubmit,
+        errors: fieldErrors,
+        setValue,
+        clearErrors: clrErrors,
+    } = useModelsAddForm()
 
-    const {data, setData, post, processing, errors, reset} = useForm({
+    const {data, setData, post, processing, reset} = useForm({
         name: '',
         symbol: ''
     })
 
-    const [error, setError] = useState(false);
-    const [errorText, setErrorText] = useState("");
+    useEffect(() => {
+        // inicjacja wartości pól
+        setValue("symbol", data.symbol)
+        setValue("name", data.name)
+    }, [setValue]);
+
+    const onSubmit = (data) => {
+        setData(data)
+        setActiveStep(activeStep + 1)
+
+        console.log("Model data: ", data)
+    }
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = [
@@ -35,23 +48,18 @@ export default function ModelsAddDialog({open, setOpen, reloadData, params}) {
     ];
 
 
-    const nextStep = () => {
-        if (activeStep == 0) {
-            if (!formName.current.isValid()) return;
-            if (!formSymbol.current.isValid()) return;
-        }
-        setActiveStep(activeStep + 1)
-
-    }
     const previousStep = () => {
         setActiveStep(activeStep - 1);
     }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
     const handleClose = () => {
+        setValue("symbol", "");
+        setValue("name", "");
+        clrErrors("symbol");
+        clrErrors("name");
+
+        setActiveStep(0);
+
         setOpen(false);
     };
 
@@ -72,8 +80,6 @@ export default function ModelsAddDialog({open, setOpen, reloadData, params}) {
                     console.error(errors)
                 },
             })
-
-
     }
 
 
@@ -86,88 +92,86 @@ export default function ModelsAddDialog({open, setOpen, reloadData, params}) {
             aria-labelledby="draggable-dialog-title"
             scroll="paper"
         >
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
-            <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie modelu
-            </DialogTitle>
-            <DialogContent>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
+                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                    Dodawanie modelu
+                </DialogTitle>
+                <DialogContent>
+                    <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
 
-                {activeStep === 0 ?
-                    <Step1 data={data} setData={setData} formRef={form} formNameRef={formName}
-                           formSymbolRef={formSymbol}/> : ""}
-                {activeStep === 1 ? <Step2 data={data} setData={setData}/> : ""}
+                    {activeStep === 0 ?
+                        <Step1 data={data} register={register} errors={fieldErrors}/> : null}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData}/> : null}
 
-            </DialogContent>
-            <DialogActions>
-                <Button autoFocus onClick={handleClose}>
-                    Zamknij
-                </Button>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleClose}>
+                        Zamknij
+                    </Button>
 
-                <Button onClick={previousStep} disabled={activeStep === 0}>
-                    Wstecz
-                </Button>
+                    <Button onClick={previousStep} disabled={activeStep === 0}>
+                        Wstecz
+                    </Button>
 
-                <Button onClick={nextStep} disabled={activeStep === 1}
-                        sx={{display: activeStep === 1 ? "none" : "block"}}>
-                    Następne
-                </Button>
+                    <Button type="submit"
+                            sx={{display: activeStep === 1 ? "none" : "block"}}>
+                        Następne
+                    </Button>
 
-                <Button onClick={save} disabled={processing}
-                        sx={{display: activeStep === 0 ? "none" : "block"}}>
-                    Zapisz
-                </Button>
-            </DialogActions>
-
+                    <Button onClick={save} disabled={processing}
+                            sx={{display: activeStep === 0 ? "none" : "block"}}>
+                        Zapisz
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog>
 
     );
 }
 
-function Step1({data, setData, formRef, formNameRef, formSymbolRef}) {
+function Step1({data, register, errors}) {
     return (
-        <Box>
-            <ValidatorForm instantValidate ref={formRef} onSubmit={() => {
-            }}>
-                <TextValidator
-                    id="symbol"
-                    label="Symbol"
-                    ref={formSymbolRef}
-                    onChange={(value) => {
-                        setData('symbol', value.target.value);
-                    }}
-                    validators={['required', 'minStringLength:3']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 3']}
-                    // errorMessages={['this field is required']}
-                    value={data.symbol}
-                    sx={{width: "30ch", my: 1}}
-                />
-                <TextValidator
-                    id="name"
-                    label="Nazwa"
-                    ref={formNameRef}
-                    onChange={(value) => {
-                        setData('name', value.target.value);
-                    }}
-                    validators={['required', 'minStringLength:3']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 3']}
-                    // errorMessages={['this field is required']}
-                    value={data.name}
-                    sx={{width: "30ch", my: 1}}
-                />
-
-            </ValidatorForm>
+        <Box sx={{display: "flex", flexDirection: "column"}}>
+            <TextField
+                type="text"
+                id="symbol"
+                label="Symbol"
+                color={errors.symbol?.message && "error"}
+                {...register("symbol")}
+                defaultValue={data.symbol}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.symbol?.message && (
+                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    {errors.symbol?.message.toString()}
+                </Typography>
+            )}
+            <TextField
+                type="text"
+                id="name"
+                label="Nazwa"
+                color={errors.name?.message && "error"}
+                {...register("name")}
+                defaultValue={data.name}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.name?.message && (
+                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    {errors.name?.message.toString()}
+                </Typography>
+            )}
         </Box>
     );
 }
 
-function Step2({data, setData}) {
+function Step2({data}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="symbol" label="Symbol" variant="outlined"
