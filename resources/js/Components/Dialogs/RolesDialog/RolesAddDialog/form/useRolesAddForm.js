@@ -1,8 +1,8 @@
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
-import schema from "./addUserFormSchema";
+import schema from "./rolesAddFormSchema";
 
-export const useAddUserForm = () => {
+export const useRolesAddForm = () => {
     const {
         register,
         handleSubmit,

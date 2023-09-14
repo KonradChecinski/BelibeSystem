@@ -8,11 +8,11 @@ import {
     Stepper,
     TextField, Typography
 } from "@mui/material";
-import {useState, useRef, useEffect} from "react";
+import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
-import {useAddUserForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useAddUserForm";
+import {useUserAddForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useUserAddForm";
 
 export default function UserAddDialog({open, setOpen, reloadData, roles}) {
     const {
@@ -21,13 +21,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useAddUserForm()
-
-    const form = useRef();
-    const formName = useRef();
-    const formPassword = useRef();
-    const formEmail = useRef();
-    const formRole = useRef();
+    } = useUserAddForm()
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
         name: '',
@@ -46,8 +40,6 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
 
     const onSubmit = (data) => {
         setData(data)
-        console.log("Jest git wszystko", data)
-
         setActiveStep(activeStep + 1)
     }
 
@@ -62,10 +54,6 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
         clearErrors()
     }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
     const handleClose = () => {
         setValue("name", "");
         setValue("email", "");
@@ -78,6 +66,8 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
         clrErrors("email")
         clrErrors("password")
         clrErrors("roles")
+
+        setActiveStep(0);
 
         setOpen(false);
     };
@@ -99,8 +89,6 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
                     console.error(errors)
                 },
             })
-
-
     }
 
 
@@ -261,7 +249,7 @@ function Step1({register, errors, data, roles, setData}) {
 function Step2({data, roles, errors}) {
     const renderCell = (selected) => selected.map((value) => {
         return (<Typography key={value} variant="body1" gutterBottom>
-            {roles.find(e => e.id == value).name}
+            {roles.find(e => e.id === value).name}
         </Typography>);
     })
     return (
