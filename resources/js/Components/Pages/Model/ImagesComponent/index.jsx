@@ -239,6 +239,8 @@ export default function ImagesComponent(props) {
                     }
                 })}
             </DragDropContext>
+            {props.editing ?
+                <>
             <Button variant="outlined" startIcon={<Add/>}
                     onClick={() => setOpenAddDialog(true)}
                     sx={{
@@ -249,7 +251,7 @@ export default function ImagesComponent(props) {
                 Dodaj
             </Button>
             <DropzoneImagesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} props={props}/>
-            {props.editing ?
+
 
                 <Fade in={edited}>
                     <Button variant="outlined" startIcon={<Save/>}
@@ -263,7 +265,7 @@ export default function ImagesComponent(props) {
                         Zapisz
                     </Button>
                 </Fade>
-
+                </>
                 : ""}
 
         </>

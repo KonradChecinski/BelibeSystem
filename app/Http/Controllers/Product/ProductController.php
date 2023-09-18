@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Helpers\Barcodes\BarcodeInside;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\DeleteProductRequest;
@@ -45,13 +46,21 @@ class ProductController extends Controller
 
         $product2 = $modelColor->products()->save($product);
 
+        if(collect($request->barcodes)->where("type", 2)->count()> 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+
+
         foreach ($request->barcodes as $id => $barcodeValue) {
-            $barcode = new ProductBarcode($barcodeValue);
+            if($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW"){
+                $barcode = BarcodeInside::generate();
+                if($barcode ==null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            }
+            else{
+                $barcode = new ProductBarcode($barcodeValue);
+            }
             $barcode->main = $id == 0;
             $barcode->product()->associate($product2);
             $barcode->save();
         }
-
     }
 
     /**
@@ -79,9 +88,19 @@ class ProductController extends Controller
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
         if ($request->color['id'] !== $product->color->id) $product->color()->associate($request->color['id']);
 
+        if(collect($request->barcodes)->where("type", 2)->count()> 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+
+
         $barcodes = [];
         foreach ($request->barcodes as $id => $barcodeValue) {
-            $barcode = new ProductBarcode($barcodeValue);
+
+            if($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW"){
+                $barcode = BarcodeInside::generate();
+                if($barcode ==null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            }
+            else{
+                $barcode = new ProductBarcode($barcodeValue);
+            }
             $barcode->main = $id == 0;
             array_push($barcodes, $barcode);
         }

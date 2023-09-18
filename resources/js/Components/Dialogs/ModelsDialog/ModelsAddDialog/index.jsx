@@ -139,6 +139,9 @@ export default function ModelsAddDialog({open, setOpen, reloadData}) {
 function Step1({data, register, errors}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
+            <Typography variant="body2" color={"error"} textAlign={"center"}>
+                Pamiętaj! Symbolu nie można później zmienić
+            </Typography>
             <TextField
                 type="text"
                 id="symbol"

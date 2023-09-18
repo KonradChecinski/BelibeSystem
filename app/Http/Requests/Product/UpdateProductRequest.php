@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -21,7 +22,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules =  [
             'color.id' => 'required|numeric',
             'symbol' => 'required|string|min:5',
             'name' => 'required|string|min:5',
@@ -31,7 +32,18 @@ class UpdateProductRequest extends FormRequest
             'unit.id' => 'required|numeric',
             'barcodes' => 'required|array',
             'barcodes.*.id' => 'required|numeric',
-            'barcodes.*.barcode' => 'required|string|min:13|max:13'
+            'barcodes.*.type' => 'required|numeric|min:1|max:3',
+
         ];
+
+        foreach(request()->input('barcodes', []) as $index => $barcode) {
+            $rules["barcodes.{$index}.barcode"] = [
+                'required',
+                'string',
+                $barcode['type'] == 3 ? 'size:13' : (($barcode['barcode']=="WEW" || $barcode['barcode']=="GS1") ? 'size:3' : 'size:13')
+            ];
+        }
+
+        return $rules;
     }
 }

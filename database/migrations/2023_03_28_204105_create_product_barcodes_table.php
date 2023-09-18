@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId("product_id")->references("id")->on("products")->restrictOnDelete();
             $table->string("barcode", 13)->unique();
             $table->boolean("main");
+            $table->unsignedInteger("type")->default(1);
             $table->timestamps();
         });
     }

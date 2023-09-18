@@ -25,6 +25,9 @@ class UpdateBasicProductModelRequest extends FormRequest
             'symbol' => 'required|string',
             'name' => 'required|string',
             'product_group_id' => 'required|numeric',
+            'name_11_char' => 'required|string',
+            'name_6_char' => 'required|string',
+
         ];
     }
 }

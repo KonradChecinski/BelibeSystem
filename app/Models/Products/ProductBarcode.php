@@ -20,6 +20,7 @@ class ProductBarcode extends Model
         'product_id',
         'barcode',
         'main',
+        'type',
     ];
 
 

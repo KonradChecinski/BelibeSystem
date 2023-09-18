@@ -75,6 +75,8 @@ export default function ModelColorComponent(props) {
 
                 );
             })}
+            {props.editing?
+                <>
             <Button variant="outlined" sx={{
                 height: 40,
                 mx: 2,
@@ -88,7 +90,7 @@ export default function ModelColorComponent(props) {
             }} onClick={() => setOpenDialogAdd(true)}><Typography variant={"body1"}>Dodaj kolor</Typography></Button>
             <ModelColorAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} params={props}
             />
-
+</> : ""}
 
         </Box>
     )

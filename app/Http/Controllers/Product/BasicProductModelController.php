@@ -56,7 +56,7 @@ class BasicProductModelController extends Controller
      */
     public function update(UpdateBasicProductModelRequest $request, ProductModel $productModel)
     {
-        $productModel->update(["name" => $request->name]);
+        $productModel->update($request->all());
         $productModel->group()->associate($request->product_group_id);
         $productModel->save();
     }

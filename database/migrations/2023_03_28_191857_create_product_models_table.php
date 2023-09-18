@@ -24,6 +24,9 @@ return new class extends Migration {
             $table->text("description_b2b");
             $table->text("description_b2c");
             $table->text("description_allegro");
+            $table->string("name_11_char")->default("");
+            $table->string("name_6_char")->default("");
+
             $table->timestamps();
         });
     }

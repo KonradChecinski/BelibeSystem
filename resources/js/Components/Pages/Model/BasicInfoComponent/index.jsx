@@ -11,6 +11,8 @@ export default function BasicInfoComponent(props) {
         'symbol': props.productModel.symbol,
         'name': props.productModel.name,
         'product_group_id': props.productModel.product_group_id,
+        'name_11_char': props.productModel.name_11_char,
+        'name_6_char': props.productModel.name_6_char,
 
     })
 
@@ -52,6 +54,16 @@ export default function BasicInfoComponent(props) {
                     //     setProductModel({...productModel, symbol: value.target.value});
                     // }}
                            sx={{width: "30ch"}}/>
+            </Box>
+            <Box>
+                <TextField id="quantity" label="Stan" variant="outlined"
+                           value={countQuantityInModel()}
+                           type="number"
+                           inputProps={{readOnly: true}}
+                           disabled={true}
+                           sx={{width: "10ch"}}/>
+
+
             </Box>
             <Box>
                 <TextField id="name" label="Nazwa" variant="outlined"
@@ -99,13 +111,30 @@ export default function BasicInfoComponent(props) {
 
             </Box>
 
+
             <Box>
-                <TextField id="quantity" label="Stan" variant="outlined"
-                           value={countQuantityInModel()}
-                           type="number"
-                           inputProps={{readOnly: true}}
-                           disabled={true}
-                           sx={{width: "10ch"}}/>
+                <TextField id="name_6_char" label="Wydruk 6 znaków" variant="outlined"
+                           value={data.name_6_char}
+                           onChange={(value) => {
+                               // setProductModel({...productModel, name: value.target.value});
+                               setData("name_6_char", value.target.value)
+                               setEdited(true)
+                           }}
+                           inputProps={{readOnly: !props.editing}}
+                           sx={{width: "30ch"}}/>
+
+
+            </Box>
+            <Box>
+                <TextField id="name_11_char" label="Wydruk 11 znaków" variant="outlined"
+                           value={data.name_11_char}
+                           onChange={(value) => {
+                               // setProductModel({...productModel, name: value.target.value});
+                               setData("name_11_char", value.target.value)
+                               setEdited(true)
+                           }}
+                           inputProps={{readOnly: !props.editing}}
+                           sx={{width: "30ch"}}/>
 
 
             </Box>

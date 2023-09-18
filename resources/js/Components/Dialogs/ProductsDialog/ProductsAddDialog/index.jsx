@@ -193,8 +193,16 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
 function Step1({data, setData, props, formNameRef}) {
     const apiRef = useGridApiRef();
-    const addColumn = () => {
-        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: ""}])
+    const addColumnEmpty = () => {
+        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "", type:"3"}])
+        handleClose()
+    }
+    const addColumnWew = () => {
+        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "WEW", type:"2"}])
+        handleClose()
+    }
+    const addColumnGS1 = () => {
+        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "GS1", type:"1"}])
         handleClose()
     }
     const handleProcessRowUpdate = (newRow, oldRow) => {
@@ -332,6 +340,7 @@ function Step1({data, setData, props, formNameRef}) {
                               pageSizeOptions={[100]}
                               editMode={"row"}
                               processRowUpdate={handleProcessRowUpdate}
+                              isCellEditable={(params) => params.row.type == 3}
                     />
                     <Button size="small" onClick={handleClick} sx={{position: "absolute", right: 10, top: 15}}>
                         Dodaj
@@ -345,9 +354,9 @@ function Step1({data, setData, props, formNameRef}) {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={addColumn}>Pusty</MenuItem>
-                        <MenuItem disabled={true}>Wygeneruj wewnętrzny</MenuItem>
-                        <MenuItem disabled={true}>Wygeneruj z GS1</MenuItem>
+                        <MenuItem onClick={addColumnEmpty}>Pusty</MenuItem>
+                        <MenuItem disabled={Boolean(data.barcodes.filter(e=>e.type==2).length)} onClick={addColumnWew}>Wygeneruj wewnętrzny</MenuItem>
+                        <MenuItem disabled={true} onClick={addColumnGS1}>Wygeneruj z GS1</MenuItem>
                     </Menu>
                 </Box>
 
