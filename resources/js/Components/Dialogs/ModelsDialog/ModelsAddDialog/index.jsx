@@ -139,7 +139,7 @@ export default function ModelsAddDialog({open, setOpen, reloadData}) {
 function Step1({data, register, errors}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-            <Typography variant="body2" color={"error"} textAlign={"center"}>
+            <Typography sx={{mb: 1}} variant="body2" color="error" textAlign="center">
                 Pamiętaj! Symbolu nie można później zmienić
             </Typography>
             <TextField
@@ -152,7 +152,7 @@ function Step1({data, register, errors}) {
                 sx={{width: "30ch", my: 1}}
             />
             {errors.symbol?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.symbol?.message.toString()}
                 </Typography>
             )}
@@ -166,7 +166,7 @@ function Step1({data, register, errors}) {
                 sx={{width: "30ch", my: 1}}
             />
             {errors.name?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.name?.message.toString()}
                 </Typography>
             )}

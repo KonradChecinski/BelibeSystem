@@ -178,7 +178,7 @@ function Step1({register, errors, data, roles, setData}) {
                 sx={{width: "30ch", my: 1}}
             />
             {errors.name?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.name?.message.toString()}
                 </Typography>
             )}
@@ -190,10 +190,10 @@ function Step1({register, errors, data, roles, setData}) {
                 color={errors.email?.message && "error"}
                 {...register("email")}
                 defaultValue={data.email}
-                sx={{width: "30ch", my: 1}}
+                sx={{width: "30ch", my: 1, mt: 2}}
             />
             {errors.email?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.email?.message.toString()}
                 </Typography>
             )}
@@ -205,15 +205,15 @@ function Step1({register, errors, data, roles, setData}) {
                 color={errors.password?.message && "error"}
                 {...register("password")}
                 defaultValue={data.password}
-                sx={{width: "30ch", my: 1}}
+                sx={{width: "30ch", my: 1, mt: 2}}
             />
             {errors.password?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.password?.message.toString()}
                 </Typography>
             )}
 
-            <FormControl sx={{width: "30ch", my: 1}}>
+            <FormControl sx={{width: "30ch", mt: 2}}>
                 <InputLabel>Role</InputLabel>
                 <Select
                     id="role"
@@ -236,7 +236,7 @@ function Step1({register, errors, data, roles, setData}) {
                     })}
                 </Select>
                 {errors.roles?.message && (
-                    <Typography variant="caption" color="error" sx={{ml: 1}}>
+                    <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
                         {errors.roles?.message.toString()}
                     </Typography>
                 )}
@@ -291,7 +291,7 @@ function Step2({data, roles, errors}) {
                 })}
             </TextField>
             {Object.keys(errors).map((key, index) => {
-                return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
+                return (<Typography variant="body2" color={"error"} align={"center"} gutterBottom key={index}>
                     {errors[key]}
                 </Typography>)
 

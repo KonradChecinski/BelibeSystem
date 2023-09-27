@@ -136,7 +136,7 @@ function Step1({name, register, errors}) {
                 sx={{width: "30ch"}}
             />
             {errors.name?.message && (
-                <Typography variant="caption" color="error" sx={{ml: 1}}>
+                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
                     {errors.name?.message.toString()}
                 </Typography>
             )}
