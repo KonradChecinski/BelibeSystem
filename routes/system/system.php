@@ -35,28 +35,11 @@ Route::get("/", function () {
     return Inertia::render("Dashboard");
 })->middleware(["auth:user", "verified"])->name("system.dashboard");;
 
-//Route::get("/dashboard", function () {
-//    return Inertia::render("Dashboard");
-//})
-//    ->middleware(["auth:user", "verified"])
-//    ->name("system.dashboard");
-//
-//Route::get("/dashboard2", function () {
-//    return Inertia::render("Dashboard2");
-//})
-//    ->middleware(["auth:user", "verified"])
-//    ->name("system.dashboard2");
-//
-//Route::get("/dashboard3", function () {
-//    return Inertia::render("Dashboard3");
-//})
-//    ->middleware(["auth:user", "verified"])
-//    ->name("system.dashboard3");
-
 Route::middleware("auth:user")->group(function () {
     Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
     Route::get("/models/data", [ProductModelController::class, 'data']);
     Route::post("/models", [ProductModelController::class, 'store'])->name("system.products.models.create");
+    Route::post("/models/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
     Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
 
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
@@ -78,6 +61,7 @@ Route::middleware("auth:user")->group(function () {
 
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
+    Route::get("test", [\App\Http\Controllers\ClientController::class, 'index'])->name("system.test");
 
     Route::group(['prefix' => '/settings'], function () {
         Route::get("/", function () {

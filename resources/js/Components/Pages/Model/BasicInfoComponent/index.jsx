@@ -59,6 +59,7 @@ export default function BasicInfoComponent(props) {
                 enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
             },
             onError: params => {
+                console.error(params)
                 enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
             },
             preserveScroll: true

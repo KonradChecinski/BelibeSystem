@@ -19,7 +19,9 @@
         "laravel/tinker": "^2.8",
         "spatie/laravel-permission": "^5.9",
         "staudenmeir/eloquent-has-many-deep": "1.18",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+      "ext-com_dotnet": "*",
+        "ext-iconv": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

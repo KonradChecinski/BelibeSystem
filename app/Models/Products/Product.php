@@ -61,4 +61,9 @@ class Product extends Model
     {
         return $this->belongsTo(ProductUnit::class, "product_unit_id", "id");
     }
+
+    public function model(): BelongsTo
+    {
+        return $this->color->model();
+    }
 }

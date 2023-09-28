@@ -13,6 +13,8 @@ use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductUnit;
 use App\Models\SettingsDictionarySize;
+use App\Models\Subiekt\Towar;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -151,7 +153,20 @@ class ProductModelController extends Controller
 
         $model->prices()->create([]);
     }
+    /**
+     * Store a duplicate resource in storage.
+     */
+    public function copy(StoreProductModelRequest $request, ProductModel $productModel)
+    {
+        $model = $productModel->replicate();
+        $model->symbol = $request->symbol;
+        $model->name = $request->name;
+        $model->save();
 
+        $model->prices()->create($productModel->prices->replicate()->toArray());
+        $model->group()->associate($productModel->group);
+
+    }
     /**
      * Display the specified resource.
      */

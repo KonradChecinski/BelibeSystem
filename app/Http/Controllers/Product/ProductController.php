@@ -122,9 +122,18 @@ class ProductController extends Controller
     public function destroy(DeleteProductRequest $request, Product $product)
     {
         $deleteColorModel = $product->color->products()->count() == 1 ? true : false;
+        $deleteModel = $product->model->colors->count() == 1 ? true : false;
 
+        $product->barcodes()->delete();
         $product->delete();
 
-        if ($deleteColorModel) $product->color->delete();
+        if ($deleteColorModel) {
+            $product->color->delete();
+            if($deleteModel) {
+                $product->model->prices()->delete();
+                $product->model->delete();
+                return redirect()->route('system.products.models');
+            }
+        }
     }
 }

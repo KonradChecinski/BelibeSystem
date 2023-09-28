@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
 use App\Models\Client\Client;
+use App\Models\Subiekt\Cena;
+use App\Models\Subiekt\ModelTw;
+use App\Models\Subiekt\Towar;
 
 class ClientController extends Controller
 {
@@ -13,7 +16,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $towar = ModelTw::find(108);
+        dd($towar,$towar->towar(), $towar->towar);
+
     }
 
     /**

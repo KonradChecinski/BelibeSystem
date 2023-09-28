@@ -2,13 +2,14 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
 import {Box, Button, Fab, IconButton, Tooltip} from "@mui/material";
-import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
+import {Add, ContentCopy, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
 import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
 import ModelsDeleteDialog from "@/Components/Dialogs/ModelsDialog/ModelsDeleteDialog";
 import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
 import ModelsAddDialog from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog";
+import ModelsCopyDialog from "@/Components/Dialogs/ModelsDialog/ModelsCopyDialog";
 
 export default function ModelsTable(props) {
     const url = route(route().current()) + "/data";
@@ -83,11 +84,11 @@ export default function ModelsTable(props) {
                         route("system.products.model.edit", {id: params.row.id})
                     );
                 };
-                const [openDialogDelete, setOpenDialogDelete] = useState(false);
-                const onDeleteClick = (e) => {
+                const [openDialogCopy, setOpenDialogCopy] = useState(false);
+                const onCopyClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    setOpenDialogDelete(true);
+                    setOpenDialogCopy(true);
                 };
 
                 return (
@@ -107,6 +108,20 @@ export default function ModelsTable(props) {
                                 </IconButton>
                             </Tooltip>
                             : ""}
+
+                        {props.auth.permissions.includes("createModel") ?
+                            <>
+                                <Tooltip title="Duplikuj">
+                                    <IconButton aria-label="copy" onClick={onCopyClick}>
+                                        <ContentCopy/>
+                                    </IconButton>
+                                </Tooltip>
+                                <ModelsCopyDialog open={openDialogCopy} setOpen={setOpenDialogCopy} reloadData={reloadData} modelId={params.row.id}/>
+                            </>
+
+                            : ""}
+
+
                         {/*<Tooltip title="Usuń">*/}
                         {/*<IconButton aria-label="delete" onClick={onDeleteClick}>*/}
                         {/*    <Delete/>*/}

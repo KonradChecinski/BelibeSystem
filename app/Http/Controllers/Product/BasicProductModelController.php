@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateB2BProductModelRequest;
 use App\Http\Requests\Product\UpdateB2CProductModelRequest;
 use App\Http\Requests\Product\UpdateBasicProductModelRequest;
+use App\Jobs\ChangeBasicInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
@@ -59,6 +60,7 @@ class BasicProductModelController extends Controller
         $productModel->update($request->all());
         $productModel->group()->associate($request->product_group_id);
         $productModel->save();
+        ChangeBasicInModelInSubiekt::dispatch($productModel);
     }
 
     /**

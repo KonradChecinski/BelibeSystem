@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Extensions\CustomDatabaseSessionHandler;
+use App\Singleton\Subiekt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(Subiekt::class);
     }
 
     /**
