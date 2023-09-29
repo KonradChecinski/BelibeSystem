@@ -114,33 +114,20 @@ export default function UsersTable(props) {
             sortable: false,
             filterable: false,
             renderCell: (params) => {
-                const onShowClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-                    // router.get(
-                    //     route("system.products.model", {id: params.row.id})
-                    // );
-                };
+                const [openDialogAdd, setOpenDialogAdd] = useState(false);
+
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-
-                    // return alert(JSON.stringify(params.row, null, 4));
-                    // router.get(
-                    //     route("system.products.model.edit", {id: params.row.id})
-                    // );
+                    setOpenDialogAdd(true)
                 };
 
                 return (
                     <>
-                        {/*<IconButton aria-label="preview" onClick={onShowClick}>*/}
-                        {/*    /!*<Preview />*!/*/}
-                        {/*    <Visibility/>*/}
-                        {/*</IconButton>*/}
                         <IconButton aria-label="edit" onClick={onEditClick}>
                             <Edit/>
                         </IconButton>
-                        {/*<IconButton aria-label="delete">*/}
-                        {/*    <Delete/>*/}
-                        {/*</IconButton>*/}
+                        <UserAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} roles={props.roles} clickedUser={params.row}/>
+
                     </>
                 );
             }

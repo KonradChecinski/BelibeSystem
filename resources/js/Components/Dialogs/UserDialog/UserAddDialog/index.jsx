@@ -14,7 +14,7 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {useUserAddForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useUserAddForm";
 
-export default function UserAddDialog({open, setOpen, reloadData, roles}) {
+export default function UserAddDialog({open, setOpen, reloadData, roles, clickedUser}) {
     const {
         register,
         handleSubmit,
@@ -24,11 +24,13 @@ export default function UserAddDialog({open, setOpen, reloadData, roles}) {
     } = useUserAddForm()
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
-        name: '',
-        email: '',
+        name: clickedUser?.name ? clickedUser?.name : '',
+        email: clickedUser?.email ? clickedUser?.email : '',
         password: '',
-        roles: Array(),
+        roles: clickedUser?.roles ? clickedUser?.roles.map((role)=>role.id) : Array(),
     })
+
+
 
     useEffect(() => {
         // inicjacja wartości pól
@@ -160,7 +162,7 @@ function Step1({register, errors, data, roles, setData}) {
 
     const renderCell = (selected) => selected.map((value) => {
         return (<Typography key={value} variant="body1" gutterBottom>
-            {roles.find(e => e.id === value).name}
+            {roles.find(e => e.id === value)?.name}
         </Typography>);
     })
 
@@ -229,7 +231,7 @@ function Step1({register, errors, data, roles, setData}) {
                         return (
                             <MenuItem key={role.id} value={role.id}>
                                 <Checkbox
-                                    checked={data.roles.find(e => e === role.id) != null}/>
+                                    checked={Boolean(data.roles.find(e => e === role.id))}/>
                                 <ListItemText primary={role.name}/>
                             </MenuItem>
                         );
