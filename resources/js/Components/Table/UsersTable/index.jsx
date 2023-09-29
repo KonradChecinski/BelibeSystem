@@ -1,13 +1,9 @@
-import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
-import {router} from "@inertiajs/react";
-import {Box, Button, Checkbox, Fab, IconButton, Switch} from "@mui/material";
-import {Add, Delete, Edit, Preview, ToggleOff, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
+import {Box, Checkbox, Fab, IconButton, Switch, Tooltip} from "@mui/material";
+import {Add, Edit} from "@mui/icons-material";
 import RoleCell from "@/Components/Table/UsersTable/RoleCell";
 import UserAvatar from "@/Components/UserAvatar";
-import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
 import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
 
 export default function UsersTable(props) {
@@ -50,7 +46,7 @@ export default function UsersTable(props) {
                 return (
                     <Checkbox
                         disabled={true}
-                        checked={params.row.email_verified_at ? true : false}
+                        checked={!!params.row.email_verified_at}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
 
@@ -123,9 +119,11 @@ export default function UsersTable(props) {
 
                 return (
                     <>
-                        <IconButton aria-label="edit" onClick={onEditClick}>
-                            <Edit/>
-                        </IconButton>
+                        <Tooltip title={"Edycja"}>
+                            <IconButton aria-label="edit" onClick={onEditClick}>
+                                <Edit/>
+                            </IconButton>
+                        </Tooltip>
                         <UserAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} roles={props.roles} clickedUser={params.row}/>
 
                     </>
@@ -198,10 +196,10 @@ export default function UsersTable(props) {
                 (paginationModel.orderBy
                     ? `&orderBy=${paginationModel.orderBy}`
                     : "") +
-                (paginationModel.search.length != 0
+                (paginationModel.search.length !== 0
                     ? `&search=${JSON.stringify(paginationModel.search)}`
                     : "") +
-                (paginationModel.filter.length != 0
+                (paginationModel.filter.length !== 0
                     ? `&filter=${JSON.stringify(paginationModel.filter)}`
                     : "");
             let option = {headers: {Accept: "application/json"}};

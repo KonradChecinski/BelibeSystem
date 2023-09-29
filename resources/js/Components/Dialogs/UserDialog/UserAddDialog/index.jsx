@@ -13,6 +13,7 @@ import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {useUserAddForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useUserAddForm";
+import { addSchema, editSchema } from "@/Components/Dialogs/UserDialog/UserAddDialog/form/userAddFormSchema";
 
 export default function UserAddDialog({open, setOpen, reloadData, roles, clickedUser}) {
     const {
@@ -21,7 +22,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useUserAddForm()
+    } = useUserAddForm(clickedUser ? editSchema : addSchema)
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
         name: clickedUser?.name ? clickedUser?.name : '',
@@ -106,7 +107,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
                 <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                    Dodawanie użytkownika
+                    {clickedUser ? "Edytuj użytkownika" : "Dodaj użytkownika"}
                 </DialogTitle>
                 <DialogContent>
                     <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
@@ -124,6 +125,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
                             data={data}
                             setData={setData}
                             roles={roles}
+                            clickedUser={clickedUser}
                         />
                         : null}
                     {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : null}
@@ -155,7 +157,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
     );
 }
 
-function Step1({register, errors, data, roles, setData}) {
+function Step1({register, errors, data, roles, setData, clickedUser}) {
     const onChangeSelect = (value) => {
         setData('roles', value.target.value);
     }
@@ -200,14 +202,20 @@ function Step1({register, errors, data, roles, setData}) {
                 </Typography>
             )}
 
+            {clickedUser ? (
+                <Typography variant="body1" textAlign="center" color="error" sx={{width: "30ch", mb: -0.5, mt: 1, alignSelf: 'center'}}>
+                    * Pozostaw to pole puste, jeśli nie chcesz zmieniać hasła
+                </Typography>
+            ) : null }
+
             <TextField
                 type="text"
                 id="password"
-                label="Hasło"
+                label={clickedUser ? "* Hasło" : "Hasło"}
                 color={errors.password?.message && "error"}
                 {...register("password")}
                 defaultValue={data.password}
-                sx={{width: "30ch", my: 1, mt: 2}}
+                sx={{width: "30ch", my: 1}}
             />
             {errors.password?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>
