@@ -71,7 +71,8 @@ Route::middleware("auth:user")->group(function () {
         Route::get("/main", [SettingsMainController::class, 'index'])->name("system.settings.main");
 
         Route::get("/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
-        Route::post("/user", [SettingsUsersController::class, 'store']);
+        Route::post("/user", [SettingsUsersController::class, 'store'])->name("system.settings.users.create");
+        Route::patch("/user/{user}", [SettingsUsersController::class, 'update'])->name("system.settings.users.update");
         Route::get("/user/data", [SettingsUsersController::class, 'data']);
 
         Route::get("/permissions", [SettingsPermissionsController::class, 'index'])->name("system.settings.permissions");

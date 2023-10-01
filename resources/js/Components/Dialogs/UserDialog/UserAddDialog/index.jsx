@@ -24,7 +24,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
         clearErrors: clrErrors,
     } = useUserAddForm(clickedUser ? editSchema : addSchema)
 
-    const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
+    const {data, setData, post, patch,  processing, errors, clearErrors, reset} = useForm({
         name: clickedUser?.name ? clickedUser?.name : '',
         email: clickedUser?.email ? clickedUser?.email : '',
         password: '',
@@ -58,12 +58,12 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
     }
 
     const handleClose = () => {
-        setValue("name", "");
-        setValue("email", "");
+        // setValue("name", "");
+        // setValue("email", "");
         setValue("password", "");
-        setValue("roles", []);
-
-        setData("roles", Array());
+        // setValue("roles", []);
+        //
+        // setData("roles", Array());
 
         clrErrors("name")
         clrErrors("email")
@@ -76,22 +76,42 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
     };
 
     const save = () => {
-        post(route("system.settings.users"),
+        if (!clickedUser) {
 
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    reset();
-                    setActiveStep(0);
-                    enqueueSnackbar("Dodano użytkownika", {variant: 'success'})
-                    reloadData();
-                    handleClose();
-                },
-                onError: errors => {
-                    enqueueSnackbar("Błąd przy zapisywaniu użytkownika", {variant: 'error'})
-                    console.error(errors)
-                },
-            })
+            post(route("system.settings.users.create"),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano użytkownika", {variant: 'success'})
+                        reloadData();
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy zapisywaniu użytkownika", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else{
+            patch(route("system.settings.users.update", {user: clickedUser.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Zaktualizowano użytkownika", {variant: 'success'})
+                        reloadData();
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy aktualizacji użytkownika", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
     }
 
 
@@ -202,16 +222,16 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                 </Typography>
             )}
 
-            {clickedUser ? (
-                <Typography variant="body1" textAlign="center" color="error" sx={{width: "30ch", mb: -0.5, mt: 1, alignSelf: 'center'}}>
-                    * Pozostaw to pole puste, jeśli nie chcesz zmieniać hasła
-                </Typography>
-            ) : null }
+            {/*{clickedUser ? (*/}
+            {/*    <Typography variant="body1" textAlign="center" color="error" sx={{width: "30ch", mb: -0.5, mt: 1, alignSelf: 'center'}}>*/}
+            {/*        * Pozostaw to pole puste, jeśli nie chcesz zmieniać hasła*/}
+            {/*    </Typography>*/}
+            {/*) : null }*/}
 
             <TextField
                 type="text"
                 id="password"
-                label={clickedUser ? "* Hasło" : "Hasło"}
+                label={clickedUser ? "Hasło (uzupełnij w przypadku zmiany)" : "Hasło"}
                 color={errors.password?.message && "error"}
                 {...register("password")}
                 defaultValue={data.password}

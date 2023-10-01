@@ -6,12 +6,16 @@ use App\Helpers\Helper;
 use App\Helpers\SystemName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\StoreSettingsUsersRequest;
+use App\Http\Requests\Settings\UpdateSettingsUsersRequest;
 use App\Models\Client\ClientUser;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -147,19 +151,10 @@ class SettingsUsersController extends Controller
             "password" => Hash::make($request->password),
         ];
 
-        $systemName = Helper::getSystemNameFromDomain($request);
-        if ($systemName == SystemName::SYSTEM) {
-            $user = User::create($validatedUserCredential);
-            $user->assignRole($request->roles);
-        } elseif ($systemName == SystemName::B2B) {
-            $user = ClientUser::create($validatedUserCredential);
-        } else {
-            return back();
-        }
-
+        $user = User::create($validatedUserCredential);
+        $user->assignRole($request->roles);
 
         event(new Registered($user));
-
     }
 
     /**
@@ -181,9 +176,28 @@ class SettingsUsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSettingsUsersRequest $request, User $user)
     {
-        //
+        $validatedUserCredential = [
+            "name" => $request->name,
+            "email" => $request->email,
+        ];
+
+        $user->update($validatedUserCredential);
+        $user->assignRole($request->roles);
+        $user->save();
+
+        if(strlen($request->password)>0){
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60),
+            ])->save();
+            event(new PasswordReset($user));
+
+        }
+
+
+
     }
 
     /**
