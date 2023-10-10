@@ -7,14 +7,11 @@ use App\Http\Requests\Product\DataProductModelRequest;
 use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\StoreProductModelRequest;
 use App\Http\Requests\Product\UpdateProductModelRequest;
-use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
-use App\Models\SettingsDictionarySize;
-use App\Models\Subiekt\Towar;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -153,6 +150,7 @@ class ProductModelController extends Controller
 
         $model->prices()->create([]);
     }
+
     /**
      * Store a duplicate resource in storage.
      */
@@ -167,6 +165,7 @@ class ProductModelController extends Controller
         $model->group()->associate($productModel->group);
 
     }
+
     /**
      * Display the specified resource.
      */
@@ -176,7 +175,7 @@ class ProductModelController extends Controller
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
-        $sizes = SettingsDictionarySize::all();
+        $sizes = ProductSize::all();
 
 
         return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
@@ -191,7 +190,7 @@ class ProductModelController extends Controller
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
-        $sizes = SettingsDictionarySize::all();
+        $sizes = ProductSize::all();
 
         return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
     }

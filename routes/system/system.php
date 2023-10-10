@@ -4,10 +4,13 @@ use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductGroupController;
 use App\Http\Controllers\Product\ProductImageController;
 use App\Http\Controllers\Product\ProductModelColorController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductModelPriceController;
+use App\Http\Controllers\Product\ProductSizeController;
+use App\Http\Controllers\Product\ProductUnitController;
 use App\Http\Controllers\Product\ShowProductController;
 use App\Http\Controllers\ProductImageOrderController;
 use App\Http\Controllers\ProductImagePublishController;
@@ -16,8 +19,6 @@ use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
 use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
-use App\Http\Controllers\SettingsDictionarySizeController;
-use App\Models\SettingsDictionarySize;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -85,7 +86,22 @@ Route::middleware("auth:user")->group(function () {
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
 
-        Route::get("/dictionaries/sizes", [SettingsDictionarySizeController::class, 'index'])->name("system.settings.sizes");
+        Route::group(['prefix' => '/dictionaries'], function () {
+            Route::get("/sizes", [ProductSizeController::class, 'index'])->name("system.settings.sizes");
+            Route::get("/sizes/data", [ProductSizeController::class, 'data']);
+            Route::post("/sizes", [ProductSizeController::class, 'store'])->name("system.settings.sizes.create");
+            Route::patch("/sizes/{size}", [ProductSizeController::class, 'update'])->name("system.settings.sizes.update");
+
+            Route::get("/group", [ProductGroupController::class, 'index'])->name("system.settings.group");
+            Route::get("/group/data", [ProductGroupController::class, 'data']);
+            Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
+            Route::patch("/group/{group}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
+
+            Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
+            Route::get("/unit/data", [ProductUnitController::class, 'data']);
+            Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
+            Route::patch("/unit/{unit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
+        });
 
 
     });

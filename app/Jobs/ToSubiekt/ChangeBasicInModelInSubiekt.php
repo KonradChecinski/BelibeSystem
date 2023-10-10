@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\ToSubiekt;
 
 use App\Models\Products\ProductModel;
-use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeBasicInModelInSubiekt //implements ShouldQueue
+class ChangeBasicInModelInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -24,7 +22,7 @@ class ChangeBasicInModelInSubiekt //implements ShouldQueue
      */
     public function __construct(ProductModel $productModel)
     {
-        $this->productModel=$productModel;
+        $this->productModel = $productModel;
     }
 
     /**
@@ -43,25 +41,25 @@ class ChangeBasicInModelInSubiekt //implements ShouldQueue
 
 
         foreach ($products as $product) {
-            if(is_null($product->subiekt_id)) continue;
+            if (is_null($product->subiekt_id)) continue;
 
             $zablokowany = (bool)Towar::find($product->subiekt_id)->tw_Zablokowany;
             $subiektTowar = $subiekt->Towary->Wczytaj($product->subiekt_id);
 
-            if($zablokowany) {
+            if ($zablokowany) {
                 $subiektTowar->Aktywny = true;
                 $subiektTowar->zapisz();
             }
 
-            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name,0, 50));
-            $subiektTowar->Pole1 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_6_char,0, 50));
-            $subiektTowar->Pole2 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_11_char,0, 50));
+//            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name,0, 50));
+            $subiektTowar->Pole1 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_6_char, 0, 50));
+            $subiektTowar->Pole2 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_11_char, 0, 50));
             $subiektTowar->GrupaId = $this->productModel->group->id;
 
 
             $subiektTowar->zapisz();
 
-            if($zablokowany) {
+            if ($zablokowany) {
                 $subiektTowar->Aktywny = false;
                 $subiektTowar->zapisz();
             }

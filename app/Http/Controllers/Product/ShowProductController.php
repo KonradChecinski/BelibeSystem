@@ -7,6 +7,7 @@ use App\Http\Requests\Product\UpdateB2BProductModelRequest;
 use App\Http\Requests\Product\UpdateB2CProductModelRequest;
 use App\Http\Requests\Product\UpdateBasicProductModelRequest;
 use App\Http\Requests\Product\UpdateShowProductRequest;
+use App\Jobs\ToSubiekt\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
@@ -60,6 +61,7 @@ class ShowProductController extends Controller
     {
         $product->update($request->all());
         $product->save();
+        ChangeProductShowInSubiekt::dispatch($product);
     }
 
     /**

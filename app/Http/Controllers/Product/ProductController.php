@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Product;
 
 use App\Helpers\Barcodes\BarcodeInside;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Jobs\ToSubiekt\ChangeProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModelColor;
+use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
-use App\Models\SettingsDictionarySize;
 
 class ProductController extends Controller
 {
@@ -37,7 +37,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request, ProductModelColor $modelColor)
     {
-        $size = SettingsDictionarySize::find($request->size['id']);
+        $size = ProductSize::find($request->size['id']);
         $unit = ProductUnit::find($request->unit['id']);
 
         $product = new Product($request->all());
@@ -46,15 +46,14 @@ class ProductController extends Controller
 
         $product2 = $modelColor->products()->save($product);
 
-        if(collect($request->barcodes)->where("type", 2)->count()> 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+        if (collect($request->barcodes)->where("type", 2)->count() > 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
 
 
         foreach ($request->barcodes as $id => $barcodeValue) {
-            if($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW"){
+            if ($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW") {
                 $barcode = BarcodeInside::generate();
-                if($barcode ==null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
-            }
-            else{
+                if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            } else {
                 $barcode = new ProductBarcode($barcodeValue);
             }
             $barcode->main = $id == 0;
@@ -88,17 +87,16 @@ class ProductController extends Controller
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
         if ($request->color['id'] !== $product->color->id) $product->color()->associate($request->color['id']);
 
-        if(collect($request->barcodes)->where("type", 2)->count()> 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+        if (collect($request->barcodes)->where("type", 2)->count() > 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
 
 
         $barcodes = [];
         foreach ($request->barcodes as $id => $barcodeValue) {
 
-            if($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW"){
+            if ($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW") {
                 $barcode = BarcodeInside::generate();
-                if($barcode ==null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
-            }
-            else{
+                if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            } else {
                 $barcode = new ProductBarcode($barcodeValue);
             }
             $barcode->main = $id == 0;
@@ -113,6 +111,8 @@ class ProductController extends Controller
         $product->name = $request->name;
 
         $product->save();
+
+        ChangeProductInSubiekt::dispatch($product);
 //        dd($request, $product);
     }
 
@@ -129,7 +129,7 @@ class ProductController extends Controller
 
         if ($deleteColorModel) {
             $product->color->delete();
-            if($deleteModel) {
+            if ($deleteModel) {
                 $product->model->prices()->delete();
                 $product->model->delete();
                 return redirect()->route('system.products.models');

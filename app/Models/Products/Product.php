@@ -2,13 +2,11 @@
 
 namespace App\Models\Products;
 
-use App\Models\SettingsDictionarySize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -27,6 +25,7 @@ class Product extends Model
         'symbol',
         'name',
 //        'barcode',
+        'quantity',
         'product_unit_id',
         'product_size_id',
         'show_in_b2b',
@@ -43,7 +42,7 @@ class Product extends Model
 
     public function size(): BelongsTo
     {
-        return $this->belongsTo(SettingsDictionarySize::class, "product_size_id", "id");
+        return $this->belongsTo(ProductSize::class, "product_size_id", "id");
     }
 
     public function images(): hasManyThrough

@@ -2,17 +2,11 @@
 
 namespace App\Models\Subiekt;
 
-use App\Models\Products\ProductBarcode;
-use App\Models\Products\ProductImage;
-use App\Models\Products\ProductModelColor;
-use App\Models\Products\ProductUnit;
-use App\Models\SettingsDictionarySize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Towar extends Model
@@ -21,7 +15,7 @@ class Towar extends Model
 
     protected $primaryKey = 'tw_Id';
     protected $table = 'tw__Towar';
-    protected $connection= 'subiekt';
+    protected $connection = 'subiekt';
     public $timestamps = false;
 
     /**
@@ -55,16 +49,24 @@ class Towar extends Model
     ];
 
 
-
-
     public function cena(): HasOne
     {
         return $this->hasOne(Cena::class, "tc_IdTowar", "tw_Id");
     }
 
+    public function stany(): HasMany
+    {
+        return $this->hasMany(Stany::class, "st_TowId", "tw_Id")->whereIn("st_MagId", DaneDodatkowe::magazynyStanow());
+    }
+
+    public function stanyWszystkie(): HasMany
+    {
+        return $this->hasMany(Stany::class, "st_TowId", "tw_Id");
+    }
+
     public function grupa(): BelongsTo
     {
-        return $this->belongsTo(Grupa::class, "tw_IdGrupa", "grt_Id" );
+        return $this->belongsTo(Grupa::class, "tw_IdGrupa", "grt_Id");
     }
 
     public function model(): BelongsToMany

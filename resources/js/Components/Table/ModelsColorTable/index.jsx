@@ -162,7 +162,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                 return (
                     <Checkbox
-                        disabled={readOnly}
+                        disabled={true || readOnly}
                         checked={rowData.show_in_b2b}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
@@ -205,7 +205,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                 };
                 return (
                     <Checkbox
-                        disabled={true || readOnly}
+                        disabled={readOnly}
                         checked={rowData.show_in_b2c}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
@@ -373,17 +373,17 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                     }
                 }}
             />
-            {!readOnly?
+            {!readOnly ?
                 <>
-            <Box sx={{position: "absolute", bottom: -10, right: -10, zIndex: 20}}>
-                <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
-                    <Add/>
-                </Fab>
+                    <Box sx={{position: "absolute", bottom: -10, right: -10, zIndex: 20}}>
+                        <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
+                            <Add/>
+                        </Fab>
 
-            </Box>
+                    </Box>
 
-                <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}
-                                   props={props}/>
+                    <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}
+                                       props={props}/>
                 </>
                 : ""
             }

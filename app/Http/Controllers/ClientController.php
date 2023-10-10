@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
+use App\Jobs\FromSubiekt\UpdateQuantityFromSubiekt;
 use App\Models\Client\Client;
 use App\Models\Subiekt\Cena;
 use App\Models\Subiekt\ModelTw;
@@ -16,8 +17,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $towar = ModelTw::find(108);
-        dd($towar,$towar->towar(), $towar->towar);
+        UpdateQuantityFromSubiekt::dispatch();
 
     }
 

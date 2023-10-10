@@ -2,18 +2,9 @@
 
 namespace App\Models\Subiekt;
 
-use App\Models\Products\ProductBarcode;
-use App\Models\Products\ProductImage;
-use App\Models\Products\ProductModelColor;
-use App\Models\Products\ProductUnit;
-use App\Models\SettingsDictionarySize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ModelTw extends Model
 {
@@ -21,7 +12,7 @@ class ModelTw extends Model
 
     protected $primaryKey = 'mdt_Id';
     protected $table = 'sl_ModelTw';
-    protected $connection= 'subiekt';
+    protected $connection = 'subiekt';
     public $timestamps = false;
 
     /**
@@ -40,7 +31,8 @@ class ModelTw extends Model
     }
 
 
-    public static function findByName($name){
+    public static function findByName($name)
+    {
         return ModelTw::Where("mdt_Nazwa", "=", $name)->firstOrFail();
     }
 }

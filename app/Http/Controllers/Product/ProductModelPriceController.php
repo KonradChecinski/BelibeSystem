@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductModelPriceRequest;
 use App\Http\Requests\Product\UpdateProductModelPriceRequest;
-use App\Jobs\ChangePriceInModelInSubiekt;
+use App\Jobs\ToSubiekt\ChangePriceInModelInSubiekt;
 use App\Models\Products\Price\ProductModelPrice;
 
 class ProductModelPriceController extends Controller

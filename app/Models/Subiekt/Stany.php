@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Cena extends Model
+class Stany extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'tc_Id';
-    protected $table = 'tw_Cena';
+    protected $primaryKey = 'st_TowId';
+    protected $table = 'tw_Stan';
     protected $connection = 'subiekt';
     public $timestamps = false;
 
@@ -21,14 +21,14 @@ class Cena extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        "tc_CenaNetto2",
-        "tc_CenaBrutto2",
-        "tc_CenaNetto3",
-        "tc_CenaBrutto3",
+        "st_MagId",
+        "st_Stan",
+        "st_StanRez",
     ];
 
-    protected $guarded = [
-        "tc_IdTowar",
+    protected $hidden = [
+        "st_StanMin",
+        "st_StanMax"
     ];
 
 
@@ -37,10 +37,5 @@ class Cena extends Model
         return $this->belongsTo(Towar::class, "tc_IdTowar");
     }
 
-
-    public static function findByProductId($id)
-    {
-        return Cena::Where("tc_IdTowar", "=", $id)->firstOrFail();
-    }
 
 }
