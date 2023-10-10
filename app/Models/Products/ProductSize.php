@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 
-use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class SettingsDictionarySize extends Model
+class ProductSize extends Model
 {
     use HasFactory;
 

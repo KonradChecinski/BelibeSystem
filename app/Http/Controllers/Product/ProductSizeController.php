@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\StoreProductUnitRequest;
-use App\Http\Requests\Product\UpdateProductUnitRequest;
+use App\Http\Requests\StoreSettingsDictionarySizeRequest;
+use App\Http\Requests\UpdateSettingsDictionarySizeRequest;
 use App\Models\Products\ProductSize;
-use App\Models\Products\ProductUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ProductUnitController extends Controller
+class ProductSizeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render("Settings/Dictionaries/Unit");
+        return Inertia::render("Settings/Dictionaries/Sizes");
+
     }
 
     public function data(Request $request) //DataProductModelRequest
@@ -27,7 +27,7 @@ class ProductUnitController extends Controller
             'name',
         ];
 
-        $models = ProductUnit::query();
+        $models = ProductSize::query();
 //        dd($models->get()->toArray());
 
         if ($request->search) {
@@ -131,7 +131,7 @@ class ProductUnitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductUnitRequest $request)
+    public function store(StoreSettingsDictionarySizeRequest $request)
     {
         //
     }
@@ -139,7 +139,7 @@ class ProductUnitController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductUnit $productUnit)
+    public function show(ProductSize $settingsDictionarySize)
     {
         //
     }
@@ -147,7 +147,7 @@ class ProductUnitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductUnit $productUnit)
+    public function edit(ProductSize $settingsDictionarySize)
     {
         //
     }
@@ -155,7 +155,7 @@ class ProductUnitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductUnitRequest $request, ProductUnit $productUnit)
+    public function update(UpdateSettingsDictionarySizeRequest $request, ProductSize $settingsDictionarySize)
     {
         //
     }
@@ -163,7 +163,7 @@ class ProductUnitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductUnit $productUnit)
+    public function destroy(ProductSize $settingsDictionarySize)
     {
         //
     }
