@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\DeleteProductGroupRequest;
 use App\Http\Requests\Product\StoreProductGroupRequest;
 use App\Http\Requests\Product\UpdateProductGroupRequest;
 use App\Models\Products\ProductGroup;
@@ -133,7 +134,7 @@ class ProductGroupController extends Controller
      */
     public function store(StoreProductGroupRequest $request)
     {
-        //
+        ProductGroup::create(["name" => strtoupper($request->name)]);
     }
 
     /**
@@ -157,14 +158,14 @@ class ProductGroupController extends Controller
      */
     public function update(UpdateProductGroupRequest $request, ProductGroup $productGroup)
     {
-        //
+        $productGroup->update(["name" => strtoupper($request->name)]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductGroup $productGroup)
+    public function destroy(DeleteProductGroupRequest $request, ProductGroup $productGroup)
     {
-        //
+        $productGroup->delete();
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductUnitRequest extends FormRequest
+class DeleteProductSizeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class StoreProductUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|required|min:3'
+            //
         ];
     }
 }

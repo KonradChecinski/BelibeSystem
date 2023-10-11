@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreSettingsDictionarySizeRequest;
-use App\Http\Requests\UpdateSettingsDictionarySizeRequest;
+use App\Http\Requests\Product\DeleteProductSizeRequest;
+use App\Http\Requests\Product\StoreProductSizeRequest;
+use App\Http\Requests\Product\UpdateProductSizeRequest;
 use App\Models\Products\ProductSize;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -131,15 +132,15 @@ class ProductSizeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSettingsDictionarySizeRequest $request)
+    public function store(StoreProductSizeRequest $request)
     {
-        //
+        ProductSize::create(["name" => strtoupper($request->name)]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ProductSize $settingsDictionarySize)
+    public function show(ProductSize $productSize)
     {
         //
     }
@@ -147,7 +148,7 @@ class ProductSizeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductSize $settingsDictionarySize)
+    public function edit(ProductSize $productSize)
     {
         //
     }
@@ -155,16 +156,16 @@ class ProductSizeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSettingsDictionarySizeRequest $request, ProductSize $settingsDictionarySize)
+    public function update(UpdateProductSizeRequest $request, ProductSize $productSize)
     {
-        //
+        $productSize->update(["name" => strtoupper($request->name)]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductSize $settingsDictionarySize)
+    public function destroy(DeleteProductSizeRequest $request, ProductSize $productSize)
     {
-        //
+        $productSize->delete();
     }
 }

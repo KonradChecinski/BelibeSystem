@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\DeleteProductUnitRequest;
 use App\Http\Requests\Product\StoreProductUnitRequest;
 use App\Http\Requests\Product\UpdateProductUnitRequest;
 use App\Models\Products\ProductSize;
@@ -125,7 +126,7 @@ class ProductUnitController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -133,7 +134,7 @@ class ProductUnitController extends Controller
      */
     public function store(StoreProductUnitRequest $request)
     {
-        //
+        ProductUnit::create(["name" => strtoupper($request->name)]);
     }
 
     /**
@@ -157,14 +158,14 @@ class ProductUnitController extends Controller
      */
     public function update(UpdateProductUnitRequest $request, ProductUnit $productUnit)
     {
-        //
+        $productUnit->update(["name" => strtoupper($request->name)]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductUnit $productUnit)
+    public function destroy(DeleteProductUnitRequest $request, ProductUnit $productUnit)
     {
-        //
+        $productUnit->delete();
     }
 }

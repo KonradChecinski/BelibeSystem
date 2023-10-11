@@ -82,7 +82,6 @@ Route::middleware("auth:user")->group(function () {
         Route::post("/roles", [SettingsRolesController::class, 'store']);
         Route::get("/roles/{settingsRole}/edit", [SettingsRolesController::class, 'edit'])->name("system.settings.roles.edit");
         Route::post("/roles/{settingsRole}/edit", [SettingsRolesController::class, 'update']);
-
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
 
@@ -90,17 +89,21 @@ Route::middleware("auth:user")->group(function () {
             Route::get("/sizes", [ProductSizeController::class, 'index'])->name("system.settings.sizes");
             Route::get("/sizes/data", [ProductSizeController::class, 'data']);
             Route::post("/sizes", [ProductSizeController::class, 'store'])->name("system.settings.sizes.create");
-            Route::patch("/sizes/{size}", [ProductSizeController::class, 'update'])->name("system.settings.sizes.update");
+            Route::patch("/sizes/{productSize}", [ProductSizeController::class, 'update'])->name("system.settings.sizes.update");
+            Route::delete("/sizes/{productSize}", [ProductSizeController::class, 'destroy'])->name("system.settings.sizes.delete");
 
             Route::get("/group", [ProductGroupController::class, 'index'])->name("system.settings.group");
             Route::get("/group/data", [ProductGroupController::class, 'data']);
             Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
             Route::patch("/group/{group}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
+            Route::delete("/group/{size}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
 
             Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
             Route::get("/unit/data", [ProductUnitController::class, 'data']);
             Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
             Route::patch("/unit/{unit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
+            Route::delete("/unit/{unit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
+
         });
 
 
