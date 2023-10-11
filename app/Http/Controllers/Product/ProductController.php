@@ -50,7 +50,7 @@ class ProductController extends Controller
 
 
         foreach ($request->barcodes as $id => $barcodeValue) {
-            if ($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW") {
+            if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeInside::generate();
                 if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
             } else {
@@ -93,7 +93,7 @@ class ProductController extends Controller
         $barcodes = [];
         foreach ($request->barcodes as $id => $barcodeValue) {
 
-            if ($barcodeValue["type"] == 2 && $barcodeValue["barcode"] == "WEW") {
+            if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeInside::generate();
                 if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
             } else {

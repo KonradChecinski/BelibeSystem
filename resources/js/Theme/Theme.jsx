@@ -30,6 +30,12 @@ export default function Theme({children}) {
         },
         menuText: {
             main: "#ffffff",
+        },
+        barcodes: {
+            background: "rgba(243, 244, 246, 0.38)",
+        },
+        field: {
+            border: "rgb(229, 231, 235)"
         }
     };
 
@@ -54,6 +60,12 @@ export default function Theme({children}) {
         },
         menuText: {
             main: "#ffffff",
+        },
+        barcodes: {
+            background: "rgba(17, 24, 39, 0.38)",
+        },
+        field: {
+            border: "rgba(229, 231, 235, 0.3)"
         }
     };
 

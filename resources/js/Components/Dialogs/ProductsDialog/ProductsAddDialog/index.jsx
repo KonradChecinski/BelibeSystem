@@ -1,21 +1,22 @@
 import {
-    Autocomplete,
+    Autocomplete, Avatar,
     Box, Button, Dialog, DialogActions,
     DialogContent,
-    DialogTitle, Menu, MenuItem, Paper,
+    DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Menu, MenuItem, Paper,
     Step,
     StepLabel,
     Stepper,
     TextField, Typography
 } from "@mui/material";
 import {useState, useEffect} from "react";
-import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {DataGrid, GridActionsCellItem, useGridApiRef} from "@mui/x-data-grid";
 import validbarcode from "barcode-validator";
-import {Delete} from "@mui/icons-material";
+import ReactDraggable from "react-draggable";
+import {Delete, DragIndicator} from "@mui/icons-material";
 import {useProductsAddForm} from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog/form/useProductsAddForm";
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 
 export default function ProductsAddDialog({open, setOpen, method, color, actualState = null, props}) {
     const {
@@ -130,14 +131,21 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
             onClose={handleClose}
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
-            scroll="paper"
+            // scroll="paper"
+            sx={{
+                overflowX: "hidden",
+                overflowY: "hidden"
+            }}
         >
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
                 <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
                     {method === 'create' || method === "copy" ? "Dodawanie produktu" : "Edycja produktu"}
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{
+                    overflowX: "hidden",
+                    overflowY: "hidden"
+                }}>
                     <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
                         {steps.map((label) => (
                             <Step key={label}>
@@ -158,7 +166,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
+                    <Button onClick={handleClose}>
                         Zamknij
                     </Button>
 
@@ -183,28 +191,63 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
     );
 }
 
+function InboxIcon() {
+    return null;
+}
+
 function Step1({data, setData, props, register, errors}) {
     const apiRef = useGridApiRef();
     const addColumnEmpty = () => {
-        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "", type: "3"}])
+        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "", type: 3}])
         handleClose()
     }
     const addColumnWew = () => {
-        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "WEW", type: "2"}])
+        setData("barcodes", [...data.barcodes, {
+            id: Math.floor(Math.random() * 100000000),
+            barcode: "Wygeneruj",
+            type: 2
+        }])
         handleClose()
     }
     const addColumnGS1 = () => {
-        setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "GS1", type: "1"}])
+        setData("barcodes", [...data.barcodes, {
+            id: Math.floor(Math.random() * 100000000),
+            barcode: "Wygeneruj",
+            type: 1
+        }])
         handleClose()
     }
-    const handleProcessRowUpdate = (newRow, oldRow) => {
-        console.log(newRow)
-        if (!isNaN(newRow.barcode) && newRow.barcode.length === 13 && validbarcode(newRow.barcode)) {
-            setData("barcodes", data.barcodes.map((row) => (row.id === newRow.id ? newRow : row)))
-            return newRow;
+    const handleEndChangeBarcode = (e, id) => {
+        if (!isNaN(e.target.value) && e.target.value.length === 13 && validbarcode(e.target.value)) {
+
         } else {
+            setData("barcodes", data.barcodes.filter((row) => (row.id !== id)))
             enqueueSnackbar("Błędny EAN-13", {variant: 'error'})
         }
+    }
+
+    const handleChangeBarcode = (e, id) => {
+        if (!isNaN(e.target.value) && e.target.value.length <= 13) {
+
+
+            if (e.target.value.length < 13) {
+                let newRow = data.barcodes.find((row) => (row.id === id))
+                newRow.barcode = e.target.value;
+                setData("barcodes", data.barcodes.map((row) => (row.id === id ? newRow : row)))
+            }
+            if (e.target.value.length === 13) {
+                let newRow = data.barcodes.find((row) => (row.id === id))
+                newRow.barcode = e.target.value;
+                setData("barcodes", data.barcodes.map((row) => (row.id === id ? newRow : row)))
+
+                if (validbarcode(e.target.value)) {
+                    e.target.blur();
+                } else {
+                    enqueueSnackbar("Błędny EAN-13", {variant: 'error'})
+                }
+            }
+        }
+
     }
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -220,8 +263,32 @@ function Step1({data, setData, props, register, errors}) {
         setData("barcodes", data.barcodes.filter((row) => (row.id !== id)))
     }
 
+    const onDragEnd = (e) => {
+        if (!e.destination) return;
+        if (e.source.droppableId === e.destination.droppableId && e.source.index === e.destination.index) return;
+
+        const newBarcodesArray = [...data.barcodes]
+
+
+        const barcodeShortcut = e.draggableId.split("_")[0]
+        const barcodeType = e.draggableId.split("_")[1]
+
+        //Source
+        const sourceIndex = e.source.index
+
+        //Destination
+        const destinationIndex = e.destination.index
+
+        const dropElement = newBarcodesArray.splice(sourceIndex, 1)[0]
+        newBarcodesArray.splice(destinationIndex, 0, dropElement)
+        setData("barcodes", newBarcodesArray)
+    };
+
     return (
-        <Box sx={{display: "flex", flexDirection: "column"}}>
+        <Box sx={{
+            display: "flex", flexDirection: "column", overflowX: "hidden",
+            overflowY: "hidden"
+        }}>
 
             <Autocomplete
                 disablePortal
@@ -350,49 +417,172 @@ function Step1({data, setData, props, register, errors}) {
             )}
 
             <Box sx={{position: "relative", width: "30ch"}}>
-                <DataGrid apiRef={apiRef}
-                          rows={data.barcodes}
-                          columns={[{
-                              field: 'barcode',
-                              type: 'string',
-                              flex: 1,
-                              align: "left",
-                              headerName: "Kody kreskowe",
-                              headerAlign: "left",
-                              sortable: false,
-                              editable: true
-                          }, {
-                              field: 'actions', type: 'actions', headerName: "", width: 10,
-                              getActions: (params) => [
-                                  <GridActionsCellItem icon={<Delete/>} onClick={() => deleteBarcode(params.id)}
-                                                       label="Delete"/>,
-                              ]
-                          }]}
-                          disableColumnMenu
-                          autoHeight={true}
-                          hideFooter={true}
-                          pageSizeOptions={[100]}
-                          editMode={"row"}
-                          processRowUpdate={handleProcessRowUpdate}
-                          isCellEditable={(params) => params.row.type === 3}
-                />
-                <Button size="small" onClick={handleClick} sx={{position: "absolute", right: 10, top: 15}}>
-                    Dodaj
-                </Button>
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <MenuItem onClick={addColumnEmpty}>Pusty</MenuItem>
-                    <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 2).length)} onClick={addColumnWew}>Wygeneruj
-                        wewnętrzny</MenuItem>
-                    <MenuItem disabled={true} onClick={addColumnGS1}>Wygeneruj z GS1</MenuItem>
-                </Menu>
+                {/*<DataGrid apiRef={apiRef}*/}
+                {/*          rows={data.barcodes}*/}
+                {/*          columns={[{*/}
+                {/*              field: 'barcode',*/}
+                {/*              type: 'string',*/}
+                {/*              flex: 1,*/}
+                {/*              align: "left",*/}
+                {/*              headerName: "Kody kreskowe",*/}
+                {/*              headerAlign: "left",*/}
+                {/*              sortable: false,*/}
+                {/*              editable: true*/}
+                {/*          }, {*/}
+                {/*              field: 'actions', type: 'actions', headerName: "", width: 10,*/}
+                {/*              getActions: (params) => [*/}
+                {/*                  <GridActionsCellItem icon={<Delete/>} onClick={() => deleteBarcode(params.id)}*/}
+                {/*                                       label="Delete"/>,*/}
+                {/*              ]*/}
+                {/*          }]}*/}
+                {/*          disableColumnMenu*/}
+                {/*          autoHeight={true}*/}
+                {/*          hideFooter={true}*/}
+                {/*          pageSizeOptions={[100]}*/}
+                {/*          editMode={"row"}*/}
+                {/*          processRowUpdate={handleProcessRowUpdate}*/}
+                {/*          isCellEditable={(params) => params.row.type === 3}*/}
+                {/*/>*/}
+                <Box sx={{
+                    border: 1,
+                    borderRadius: 1,
+                    borderColor: "field.border",
+                    width: "30ch"
+                }}>
+                    <Box sx={{
+                        height: 50,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderRadius: 1,
+                        borderBottomLeftRadius: 0,
+                        borderBottomRightRadius: 0,
+                        p: "10px",
+                    }}>
+                        <Typography variant="body2" component="h5">
+                            Kody kreskowe
+                        </Typography>
+                        <Button size="small" onClick={handleClick}>
+                            Dodaj
+                        </Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={addColumnEmpty}>Zewnętrzny / Ręczny</MenuItem>
+                            <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 2).length)}
+                                      onClick={addColumnWew}>Wygeneruj wewnętrzny</MenuItem>
+                            <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 1).length)}
+                                      onClick={addColumnGS1}>Wygeneruj z GS1</MenuItem>
+                        </Menu>
+                    </Box>
+                    <Box sx={{
+                        minHeight: 50,
+                        bgcolor: "barcodes.background",
+                        borderRadius: 1,
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
+                        width: "30ch",
+                        overflow: "hidden"
+                    }}>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="barcodes">
+                                {provided => (
+                                    <Box
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        sx={{
+                                            width: "30ch",
+
+                                        }}
+                                    >
+                                        <List>
+                                            {data.barcodes.map((item, index) => (
+                                                <Draggable
+                                                    draggableId={"barcode_" + item.id}
+                                                    index={index}
+                                                    key={item.id}
+                                                    sx={{height: "50px"}}
+                                                >
+
+
+                                                    {(provided, snapshot) => {
+                                                        let secondText = "Typ: "
+
+                                                        switch (item.type) {
+                                                            case 1:
+                                                                secondText += "GS1"
+                                                                break;
+                                                            case 2:
+                                                                secondText += "Wewnętrzny"
+                                                                break;
+                                                        }
+
+                                                        return (
+                                                            <>
+                                                                <ListItem
+                                                                    ref={provided.innerRef}
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    sx={{
+                                                                        top: "auto !important",
+                                                                        left: "auto !important",
+                                                                        bgcolor: snapshot.isDragging ? "rgba(0,0,0,0.3)" : ""
+                                                                    }}
+                                                                    secondaryAction={
+                                                                        <IconButton edge="end" aria-label="delete"
+                                                                                    onClick={() => deleteBarcode(item.id)}>
+                                                                            <Delete/>
+                                                                        </IconButton>
+                                                                    }
+                                                                >
+
+                                                                    <ListItemIcon>
+                                                                        <DragIndicator/>
+                                                                    </ListItemIcon>
+                                                                    {item.type !== 3 ?
+                                                                        <ListItemText primary={item.barcode}
+                                                                                      secondary={secondText}/>
+
+                                                                        :
+                                                                        <TextField id="outlined-barcode"
+                                                                                   label="Kod kreskowy"
+                                                                                   variant="standard"
+                                                                                   onBlur={(e) => handleEndChangeBarcode(e, item.id)}
+                                                                                   value={item.barcode}
+                                                                                   onChange={(e) => handleChangeBarcode(e, item.id)}
+                                                                                   color={validbarcode(item.barcode) ? "success" : "error"}
+                                                                        />
+
+
+                                                                    }
+
+
+                                                                </ListItem>
+                                                                <Divider variant="inset" component="li"/></>
+                                                        )
+                                                    }
+
+                                                    }
+
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </List>
+                                    </Box>
+
+                                )}
+
+                            </Droppable>
+                        </DragDropContext>
+                    </Box>
+                </Box>
+
             </Box>
         </Box>
     );
@@ -454,12 +644,14 @@ function Step2({data, setData, errors}) {
 
 function PaperComponent(props) {
     return (
-        <Draggable
+        <ReactDraggable
             handle="#draggable-dialog-title"
             cancel={'[class*="MuiDialogContent-root"]'}
         >
-            <Paper {...props} />
-        </Draggable>
+            <Paper {...props} sx={{
+                overflowX: "hidden",
+            }}/>
+        </ReactDraggable>
     );
 }
 

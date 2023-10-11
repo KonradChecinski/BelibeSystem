@@ -22,7 +22,7 @@ class StoreProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules =  [
+        $rules = [
             'color.id' => 'required|numeric',
             'symbol' => 'required|string|min:5',
             'name' => 'required|string|min:5',
@@ -36,11 +36,11 @@ class StoreProductRequest extends FormRequest
 
         ];
 
-        foreach(request()->input('barcodes', []) as $index => $barcode) {
+        foreach (request()->input('barcodes', []) as $index => $barcode) {
             $rules["barcodes.{$index}.barcode"] = [
                 'required',
                 'string',
-                $barcode['type'] == 3 ? 'size:13' : 'size:3'
+                $barcode['type'] == 3 ? 'size:13' : ((strlen($barcode['barcode']) == 9) ? 'size:9' : 'size:13')
             ];
         }
 
