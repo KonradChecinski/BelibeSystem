@@ -98,13 +98,25 @@ export default function Menu({showContent, auth}) {
                             active={false}
                             text={"Słowniki"}
                         >
-                            {auth.permissions.includes("showRole") ?
-                                <SubMenuLink
-                                    href={route("system.settings.sizes")}
-                                    active={route().current("system.settings.sizes")}
-                                    text={"Rozmiary"}
-                                />
-                                : ""}
+
+                            <SubMenuLink
+                                href={route("system.settings.sizes")}
+                                active={route().current("system.settings.sizes")}
+                                text={"Rozmiary"}
+                            />
+
+                            <SubMenuLink
+                                href={route("system.settings.unit")}
+                                active={route().current("system.settings.unit")}
+                                text={"Jednostki"}
+                            />
+
+                            <SubMenuLink
+                                href={route("system.settings.group")}
+                                active={route().current("system.settings.group")}
+                                text={"Grupy"}
+                            />
+
                         </SubMenuLink>
                     </MainMenuLink>
                     : ""}

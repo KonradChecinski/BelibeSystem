@@ -1,133 +1,60 @@
 import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
-import {Box, Fab, IconButton, Tooltip} from "@mui/material";
-import {Add, ContentCopy, Edit, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
-import ModelsAddDialog from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog";
-import ModelsCopyDialog from "@/Components/Dialogs/ModelsDialog/ModelsCopyDialog";
+import {
+    Box,
+    Fab,
+    IconButton,
+} from "@mui/material";
+import {Add, Delete, Edit} from "@mui/icons-material";
+import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
 
-export default function ModelsTable(props) {
+;
+import SizesDeleteDialog from "@/Components/Dialogs/SizesDialog/SizesDeleteDialog";
+
+export default function SizesTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
         {field: "id", headerName: "Id"},
-        {
-            field: "img",
-            headerName: "Zdjęcie",
-            sortable: false,
-            filterable: false,
-            width: 80,
-            renderCell: (params) => {
-                return (
-                    (
-                        params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0 ?
-                            <img
-                                src={route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path})}
-                                alt={"Zdjęcie produktu"}
-                                className={"w-100 p-1.5"}
-                            />
-                            : ""
-                    )
-
-
-                );
-            }
-        },
-        {field: "symbol", headerName: "Symbol"},
 
         {
             field: "name",
-            headerName: "Name",
-            width: 400
+            headerName: "Nazwa",
+            flex: 1
         },
-        {
-            field: "group.name", headerName: "Grupa", renderCell: (params) => {
-                return <GroupCell key={params.row.id} group={params.row.group}/>;
-            },
-            sortable: false,
-            filterable: false
-        },
-        {
-            field: "colors",
-            headerName: "Kolory",
-            sortable: false,
-            renderCell: (params) => {
-                return <ColorsCell key={params.row.id} colors={params.row.colors}/>;
-            },
-            flex: 1,
-            filterable: false
-        },
-        {field: "quantity", headerName: "Stan", filterable: false},
+
         {
             field: "action",
             headerName: "Akcje",
             width: 120,
-            type: 'actions',
             sortable: false,
             filterable: false,
             renderCell: (params) => {
-                const onShowClick = (e) => {
+                const [openDialogDelete, setOpenDialogDelete] = useState(false);
+                const onDeleteClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-                    router.get(
-                        route("system.products.model", {id: params.row.id})
-                    );
+
+                    setOpenDialogDelete(true);
                 };
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    // return alert(JSON.stringify(params.row, null, 4));
                     router.get(
-                        route("system.products.model.edit", {id: params.row.id})
+                        route("system.settings.roles.edit", {id: params.row.id})
                     );
-                };
-                const [openDialogCopy, setOpenDialogCopy] = useState(false);
-                const onCopyClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setOpenDialogCopy(true);
                 };
 
                 return (
                     <>
-                        {props.auth.permissions.includes("showModel") ?
-                            <Tooltip title="Pokaż">
-                                <IconButton aria-label="preview" onClick={onShowClick}>
-                                    {/*<Preview />*/}
-                                    <Visibility/>
-                                </IconButton>
-                            </Tooltip>
-                            : ""}
-                        {props.auth.permissions.includes("editModel") ?
-                            <Tooltip title="Edycja">
-                                <IconButton aria-label="edit" onClick={onEditClick}>
-                                    <Edit/>
-                                </IconButton>
-                            </Tooltip>
-                            : ""}
+                        <IconButton aria-label="edit" onClick={onEditClick}>
+                            <Edit/>
+                        </IconButton>
 
-                        {props.auth.permissions.includes("createModel") ?
-                            <>
-                                <Tooltip title="Duplikuj">
-                                    <IconButton aria-label="copy" onClick={onCopyClick}>
-                                        <ContentCopy/>
-                                    </IconButton>
-                                </Tooltip>
-                                <ModelsCopyDialog open={openDialogCopy} setOpen={setOpenDialogCopy}
-                                                  reloadData={reloadData} modelId={params.row.id}/>
-                            </>
-
-                            : ""}
-
-
-                        {/*<Tooltip title="Usuń">*/}
-                        {/*<IconButton aria-label="delete" onClick={onDeleteClick}>*/}
-                        {/*    <Delete/>*/}
-                        {/*</IconButton>*/}
-                        {/*</Tooltip>*/}
-
-                        {/*<ModelsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                    reloadData={reloadData} model={params.row}/>*/}
+                        <IconButton aria-label="delete" onClick={onDeleteClick}>
+                            <Delete/>
+                        </IconButton>
+                        <SizesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                           reloadData={reloadData} size={params.row}/>
                     </>
                 );
             }
@@ -209,19 +136,10 @@ export default function ModelsTable(props) {
             const json = await response.json();
             setRowCountState(json[0].total);
             setPageData(json[0].data);
-            setIsLoading(false)
-
-            for (const model of json[0].data) {
-                console.log(model)
-                let quantity = 0;
-                for (const product of model.products) {
-                    quantity += product.quantity
-                }
-                model.quantity = quantity
-            }
-            ;
+            setIsLoading(false);
         };
         fetchData();
+
     }, [paginationModel]);
 
     const reloadData = () => {
@@ -281,6 +199,7 @@ export default function ModelsTable(props) {
                     }
                 }}
             />
+
             <Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20}}>
                 <Fab color="primary" aria-label="add" onClick={() => {
                     setOpenDialogAdd(true)
@@ -288,8 +207,9 @@ export default function ModelsTable(props) {
                     <Add/>
                 </Fab>
             </Box>
-            <ModelsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
+
+            <RolesAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
         </>
     );
-
 }
+

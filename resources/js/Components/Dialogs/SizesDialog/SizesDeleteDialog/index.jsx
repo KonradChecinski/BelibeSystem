@@ -8,10 +8,10 @@ import {
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 
-export default function RolesDeleteDialog({open, setOpen, reloadData, role, params}) {
+export default function SizesDeleteDialog({open, setOpen, reloadData, size, params}) {
 
     const {data, setData, delete: destroy, processing, errors, reset} = useForm({
-        role: role.id,
+        size: size.id,
     })
 
     const handleClose = () => {
@@ -19,7 +19,7 @@ export default function RolesDeleteDialog({open, setOpen, reloadData, role, para
     };
 
     const save = () => {
-        destroy(route("system.settings.roles") + "/" + data.role,
+        destroy(route("system.settings.sizes") + "/" + data.size,
 
             {
                 preserveScroll: true,
@@ -47,10 +47,10 @@ export default function RolesDeleteDialog({open, setOpen, reloadData, role, para
         >
 
             <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Usuwanie Roli systemowej
+                Usuwanie rozmiaru
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>Chcesz usunąć id:{role.id} "{role.name}"</DialogContentText>
+                <DialogContentText>Chcesz usunąć id:{size.id} "{size.name}"</DialogContentText>
 
             </DialogContent>
             <DialogActions>

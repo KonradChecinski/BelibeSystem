@@ -55,7 +55,6 @@ export default function RolesTable(props) {
                 return (
                     <>
 
-
                         {params.row.id !== 1 ? (
                             <>
                                 {props.auth.permissions.includes("editRole") ?
@@ -152,10 +151,10 @@ export default function RolesTable(props) {
                 (paginationModel.orderBy
                     ? `&orderBy=${paginationModel.orderBy}`
                     : "") +
-                (paginationModel.search.length != 0
+                (paginationModel.search.length !== 0
                     ? `&search=${JSON.stringify(paginationModel.search)}`
                     : "") +
-                (paginationModel.filter.length != 0
+                (paginationModel.filter.length !== 0
                     ? `&filter=${JSON.stringify(paginationModel.filter)}`
                     : "");
             let option = {headers: {Accept: "application/json"}};
@@ -164,7 +163,6 @@ export default function RolesTable(props) {
             setRowCountState(json[0].total);
             setPageData(json[0].data);
             setIsLoading(false);
-            // console.log(pageData)
         };
         fetchData();
 

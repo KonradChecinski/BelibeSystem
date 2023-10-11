@@ -2,9 +2,9 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import SizesTable from "@/Components/Table/SizesTable";
+import UnitsTable from "@/Components/Table/UnitsTable";
 
-export default function Sizes(props) {
+export default function Unit(props) {
     console.log(props)
     const {t} = useLaravelReactI18n();
 
@@ -13,12 +13,12 @@ export default function Sizes(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Sizes")
+                t("Units")
             }
         >
-            <Head title={t("Sizes")}/>
+            <Head title={t("Units")}/>
             <Card sx={{height: "100%", width: 1}}>
-                <SizesTable {...props} />
+                <UnitsTable {...props} />
             </Card>
         </UserLayout>
     );

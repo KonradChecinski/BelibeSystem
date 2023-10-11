@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import SizesTable from "@/Components/Table/SizesTable";
+import GroupsTable from "@/Components/Table/GroupsTable";
 
 export default function Sizes(props) {
     console.log(props)
@@ -13,12 +13,12 @@ export default function Sizes(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Sizes")
+                t("Groups")
             }
         >
-            <Head title={t("Sizes")}/>
+            <Head title={t("Groups")}/>
             <Card sx={{height: "100%", width: 1}}>
-                <SizesTable {...props} />
+                <GroupsTable {...props} />
             </Card>
         </UserLayout>
     );
