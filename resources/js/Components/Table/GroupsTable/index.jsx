@@ -1,21 +1,13 @@
-import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
-import {router} from "@inertiajs/react";
 import {
     Box,
-    Button,
-    Checkbox, Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Fab,
-    IconButton, Paper, Step, StepLabel, Stepper,
-    Switch, TextField
+    IconButton, Tooltip,
 } from "@mui/material";
-import {Add, Delete, Edit, Preview, ToggleOff, Visibility} from "@mui/icons-material";
-import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
-import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
-import GroupsDeleteDialog from "@/Components/Dialogs/GroupsDialog/GroupsDeleteDialog";
+import {Add, Delete, Edit} from "@mui/icons-material";
+import DictionariesDeleteDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesDeleteDialog";
+import DictionariesAddDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog";
 
 export default function GroupsTable(props) {
     const url = route(route().current()) + "/data";
@@ -38,28 +30,40 @@ export default function GroupsTable(props) {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const onDeleteClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-
                     setOpenDialogDelete(true);
                 };
+
+                const [openDialogEdit, setOpenDialogEdit] = useState(false);
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-
-                    router.get(
-                        route("system.settings.roles.edit", {id: params.row.id})
-                    );
+                    setOpenDialogEdit(true);
                 };
 
                 return (
                     <>
-                        <IconButton aria-label="edit" onClick={onEditClick}>
-                            <Edit/>
-                        </IconButton>
+                        <Tooltip title={"Edycja"}>
+                            <IconButton aria-label="edit" onClick={onEditClick}>
+                                <Edit/>
+                            </IconButton>
+                        </Tooltip>
 
-                        <IconButton aria-label="delete" onClick={onDeleteClick}>
-                            <Delete/>
-                        </IconButton>
-                        <GroupsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                            reloadData={reloadData} group={params.row}/>
+                        <Tooltip title={"Usuń"}>
+                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
+
+                        <DictionariesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                  reloadData={reloadData} clickedRow={params.row}
+                                                  dictionaryType={"group"}
+                                                  label={"Usuwanie grupy"}/>
+
+                        <DictionariesAddDialog open={openDialogEdit}
+                                               setOpen={setOpenDialogEdit}
+                                               reloadData={reloadData}
+                                               dictionaryType={"group"}
+                                               clickedRow={params.row}
+                        />
                     </>
                 );
             }
@@ -140,6 +144,7 @@ export default function GroupsTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
+            console.log("Groups data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };
@@ -213,7 +218,11 @@ export default function GroupsTable(props) {
                 </Fab>
             </Box>
 
-            <RolesAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
+            <DictionariesAddDialog open={openDialogAdd}
+                                   setOpen={setOpenDialogAdd}
+                                   reloadData={reloadData}
+                                   dictionaryType={"group"}
+            />
         </>
     );
 }

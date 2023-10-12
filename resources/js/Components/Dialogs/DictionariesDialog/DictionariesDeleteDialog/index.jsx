@@ -8,10 +8,10 @@ import {
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 
-export default function UnitsDeleteDialog({open, setOpen, reloadData, unit, params}) {
+export default function DictionariesDeleteDialog({open, setOpen, reloadData, clickedRow, dictionaryType, label}) {
 
     const {data, setData, delete: destroy, processing, errors, reset} = useForm({
-        unit: unit.id,
+        clickedRowId: clickedRow.id,
     })
 
     const handleClose = () => {
@@ -19,7 +19,7 @@ export default function UnitsDeleteDialog({open, setOpen, reloadData, unit, para
     };
 
     const save = () => {
-        destroy(route("system.settings.unit") + "/" + data.unit,
+        destroy(route(`system.settings.${dictionaryType}`) + "/" + data.clickedRowId,
 
             {
                 preserveScroll: true,
@@ -47,10 +47,10 @@ export default function UnitsDeleteDialog({open, setOpen, reloadData, unit, para
         >
 
             <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Usuwanie jednostki
+                {label}
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>Chcesz usunąć id:{unit.id} "{unit.name}"</DialogContentText>
+                <DialogContentText>Chcesz usunąć id:{clickedRow.id} "{clickedRow.name}"</DialogContentText>
 
             </DialogContent>
             <DialogActions>

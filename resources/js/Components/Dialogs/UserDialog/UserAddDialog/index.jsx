@@ -13,7 +13,7 @@ import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {useUserAddForm} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/useUserAddForm";
-import { addSchema, editSchema } from "@/Components/Dialogs/UserDialog/UserAddDialog/form/userAddFormSchema";
+import {addSchema, editSchema} from "@/Components/Dialogs/UserDialog/UserAddDialog/form/userAddFormSchema";
 
 export default function UserAddDialog({open, setOpen, reloadData, roles, clickedUser}) {
     const {
@@ -24,13 +24,12 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
         clearErrors: clrErrors,
     } = useUserAddForm(clickedUser ? editSchema : addSchema)
 
-    const {data, setData, post, patch,  processing, errors, clearErrors, reset} = useForm({
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         name: clickedUser?.name ? clickedUser?.name : '',
         email: clickedUser?.email ? clickedUser?.email : '',
         password: '',
-        roles: clickedUser?.roles ? clickedUser?.roles.map((role)=>role.id) : Array(),
+        roles: clickedUser?.roles ? clickedUser?.roles.map((role) => role.id) : Array(),
     })
-
 
 
     useEffect(() => {
@@ -94,7 +93,7 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
                         console.error(errors)
                     },
                 })
-        } else{
+        } else {
             patch(route("system.settings.users.update", {user: clickedUser.id}),
 
                 {
@@ -221,12 +220,6 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                     {errors.email?.message.toString()}
                 </Typography>
             )}
-
-            {/*{clickedUser ? (*/}
-            {/*    <Typography variant="body1" textAlign="center" color="error" sx={{width: "30ch", mb: -0.5, mt: 1, alignSelf: 'center'}}>*/}
-            {/*        * Pozostaw to pole puste, jeśli nie chcesz zmieniać hasła*/}
-            {/*    </Typography>*/}
-            {/*) : null }*/}
 
             <TextField
                 type="text"

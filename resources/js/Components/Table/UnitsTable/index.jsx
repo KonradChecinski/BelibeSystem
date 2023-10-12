@@ -1,21 +1,14 @@
-import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
-import {router} from "@inertiajs/react";
 import {
     Box,
-    Button,
-    Checkbox, Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Fab,
-    IconButton, Paper, Step, StepLabel, Stepper,
-    Switch, TextField
+    IconButton,
+    Tooltip
 } from "@mui/material";
-import {Add, Delete, Edit, Preview, ToggleOff, Visibility} from "@mui/icons-material";
-import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
-import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
-import UnitsDeleteDialog from "@/Components/Dialogs/UnitsDialog/UnitsDeleteDialog";
+import {Add, Delete, Edit} from "@mui/icons-material";
+import DictionariesDeleteDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesDeleteDialog";
+import DictionariesAddDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog";
 
 export default function UnitsTable(props) {
     const url = route(route().current()) + "/data";
@@ -38,28 +31,40 @@ export default function UnitsTable(props) {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const onDeleteClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-
                     setOpenDialogDelete(true);
                 };
+
+                const [openDialogEdit, setOpenDialogEdit] = useState(false);
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-
-                    router.get(
-                        route("system.settings.roles.edit", {id: params.row.id})
-                    );
+                    setOpenDialogEdit(true);
                 };
 
                 return (
                     <>
-                        <IconButton aria-label="edit" onClick={onEditClick}>
-                            <Edit/>
-                        </IconButton>
+                        <Tooltip title={"Edycja"}>
+                            <IconButton aria-label="edit" onClick={onEditClick}>
+                                <Edit/>
+                            </IconButton>
+                        </Tooltip>
 
-                        <IconButton aria-label="delete" onClick={onDeleteClick}>
-                            <Delete/>
-                        </IconButton>
-                        <UnitsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                           reloadData={reloadData} unit={params.row}/>
+                        <Tooltip title={"Usuń"}>
+                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
+
+                        <DictionariesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                  reloadData={reloadData} clickedRow={params.row}
+                                                  dictionaryType={"unit"}
+                                                  label={"Usuwanie jednostki"}/>
+
+                        <DictionariesAddDialog open={openDialogEdit}
+                                               setOpen={setOpenDialogEdit}
+                                               reloadData={reloadData}
+                                               dictionaryType={"unit"}
+                                               clickedRow={params.row}
+                        />
                     </>
                 );
             }
@@ -140,6 +145,7 @@ export default function UnitsTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
+            console.log("Units data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };
@@ -213,7 +219,11 @@ export default function UnitsTable(props) {
                 </Fab>
             </Box>
 
-            <RolesAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
+            <DictionariesAddDialog open={openDialogAdd}
+                                   setOpen={setOpenDialogAdd}
+                                   reloadData={reloadData}
+                                   dictionaryType={"unit"}
+            />
         </>
     );
 }
