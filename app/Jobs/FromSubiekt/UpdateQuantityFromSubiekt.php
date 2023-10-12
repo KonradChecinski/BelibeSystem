@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateQuantityFromSubiekt //implements ShouldQueue
+class UpdateQuantityFromSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,8 +33,10 @@ class UpdateQuantityFromSubiekt //implements ShouldQueue
         foreach ($products as $product) {
             $productSubiekt = Towar::find($product->subiekt_id);
             $stan = $productSubiekt->stany->sum("st_Stan");
+            $stanWszystkie = $productSubiekt->stanyWszystkie->sum("st_Stan");
             $product->update([
-                "quantity" => $stan
+                "quantity" => $stan,
+                "quantity_total" => $stanWszystkie,
             ]);
             $product->save();
         }

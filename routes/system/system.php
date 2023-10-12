@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GS1BrandController;
+use App\Http\Controllers\GS1GPCController;
 use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Product\ProductModelPriceController;
 use App\Http\Controllers\Product\ProductSizeController;
 use App\Http\Controllers\Product\ProductUnitController;
 use App\Http\Controllers\Product\ShowProductController;
+use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductImageOrderController;
 use App\Http\Controllers\ProductImagePublishController;
 use App\Http\Controllers\ProfileController;
@@ -103,6 +106,26 @@ Route::middleware("auth:user")->group(function () {
             Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
             Route::patch("/unit/{unit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
             Route::delete("/unit/{unit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
+
+            Route::get("/brand/", [ProductBrandController::class, 'index'])->name("system.settings.brand");
+            Route::get("/brand/data", [ProductBrandController::class, 'data']);
+            Route::post("/brand", [ProductBrandController::class, 'store'])->name("system.settings.brand.create");
+            Route::patch("/brand/{productBrand}", [ProductBrandController::class, 'update'])->name("system.settings.brand.update");
+            Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
+
+            Route::group(['prefix' => '/gs1'], function () {
+                Route::get("/gpc/", [GS1GPCController::class, 'index'])->name("system.settings.gs1.gpc");
+                Route::get("/gpc/data", [GS1GPCController::class, 'data']);
+                Route::post("/gpc", [GS1GPCController::class, 'store'])->name("system.settings.gs1.gpc.create");
+                Route::patch("/gpc/{GS1GPC}", [GS1GPCController::class, 'update'])->name("system.settings.gs1.gpc.update");
+                Route::delete("/gpc/{GS1GPC}", [GS1GPCController::class, 'destroy'])->name("system.settings.gs1.gpc.delete");
+
+                Route::get("/brand/", [GS1BrandController::class, 'index'])->name("system.settings.gs1.brand");
+                Route::get("/brand/data", [GS1BrandController::class, 'data']);
+                Route::post("/brand", [GS1BrandController::class, 'store'])->name("system.settings.gs1.brand.create");
+                Route::patch("/brand/{GS1Brand}", [GS1BrandController::class, 'update'])->name("system.settings.gs1.brand.update");
+                Route::delete("/brand/{GS1Brand}", [GS1BrandController::class, 'destroy'])->name("system.settings.gs1.brand.delete");
+            });
 
         });
 

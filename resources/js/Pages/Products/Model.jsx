@@ -11,6 +11,8 @@ import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent"
 import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
 import BasicInfoComponent from "@/Components/Pages/Model/BasicInfoComponent";
 import ModelB2CComponent from "@/Components/Pages/Model/ModelB2CComponent";
+import ModelSubiektComponent from "@/Components/Pages/Model/ModelSubiektComponent";
+import ModelGS1Component from "@/Components/Pages/Model/ModelGS1Component";
 
 export default function Model(props) {
 
@@ -41,10 +43,17 @@ export default function Model(props) {
                 <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"blue"}>
                     <ModelColorComponent {...props} />
                 </IconGrid>
+                <IconGrid xs={12} md={12} title={"Subiekt"} icon={<Palette/>} iconColor={"green"}>
+                    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}
+                                           props={{...props}}/>
+                </IconGrid>
+                <IconGrid xs={12} md={12} title={"GS1"} icon={<Palette/>} iconColor={"green"}>
+                    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}
+                                       props={{...props}}/>
+                </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2C"} icon={<Palette/>} iconColor={"green"}>
                     <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}
                                        props={{...props}}/>
-
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2B"} icon={<Palette/>} iconColor={"green"}>
                     <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}

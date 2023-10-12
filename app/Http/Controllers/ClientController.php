@@ -9,6 +9,7 @@ use App\Models\Client\Client;
 use App\Models\Subiekt\Cena;
 use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
+use Illuminate\Support\Facades\Http;
 
 class ClientController extends Controller
 {
@@ -18,7 +19,14 @@ class ClientController extends Controller
     public function index()
     {
         UpdateQuantityFromSubiekt::dispatch();
-
+//        $response = Http::withoutVerifying()
+//            ->withBasicAuth('149954', '768ecdf895146231afc11bc5514386e8')
+//            ->get('https://mojegs1.pl/api/v2/products', [
+//                "sort" => "-gtin",
+//                "page[limit]" => 1,
+//                "page[offset]" => 1,
+//            ]);
+//        dd($response->json()["data"][0]);
     }
 
     /**

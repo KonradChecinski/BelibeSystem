@@ -26,6 +26,7 @@ class Product extends Model
         'name',
 //        'barcode',
         'quantity',
+        'quantity_total',
         'product_unit_id',
         'product_size_id',
         'show_in_b2b',
