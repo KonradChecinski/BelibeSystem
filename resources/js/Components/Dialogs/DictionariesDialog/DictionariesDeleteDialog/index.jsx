@@ -11,7 +11,7 @@ import {useForm} from "@inertiajs/react";
 export default function DictionariesDeleteDialog({open, setOpen, reloadData, clickedRow, dictionaryType, label}) {
 
     const {data, setData, delete: destroy, processing, errors, reset} = useForm({
-        clickedRow: clickedRow.id,
+        clickedRowId: clickedRow.id,
     })
 
     const handleClose = () => {
@@ -19,7 +19,7 @@ export default function DictionariesDeleteDialog({open, setOpen, reloadData, cli
     };
 
     const save = () => {
-        destroy(route(`system.settings.${dictionaryType}`) + "/" + data.clickedRow,
+        destroy(route(`system.settings.${dictionaryType}`) + "/" + data.clickedRowId,
 
             {
                 preserveScroll: true,
