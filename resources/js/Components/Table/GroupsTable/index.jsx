@@ -1,21 +1,14 @@
-import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
 import {
     Box,
-    Button,
-    Checkbox, Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Fab,
-    IconButton, Paper, Step, StepLabel, Stepper,
-    Switch, TextField
+    IconButton,
 } from "@mui/material";
-import {Add, Delete, Edit, Preview, ToggleOff, Visibility} from "@mui/icons-material";
+import {Add, Delete, Edit} from "@mui/icons-material";
 import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
-import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
-import GroupsDeleteDialog from "@/Components/Dialogs/GroupsDialog/GroupsDeleteDialog";
+import DictionariesDeleteDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesDeleteDialog";
 
 export default function GroupsTable(props) {
     const url = route(route().current()) + "/data";
@@ -58,8 +51,10 @@ export default function GroupsTable(props) {
                         <IconButton aria-label="delete" onClick={onDeleteClick}>
                             <Delete/>
                         </IconButton>
-                        <GroupsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                            reloadData={reloadData} group={params.row}/>
+                        <DictionariesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                  reloadData={reloadData} clickedRow={params.row}
+                                                  dictionaryType={"group"}
+                                                  label={"Usuwanie grupy"}/>
                     </>
                 );
             }
@@ -140,6 +135,7 @@ export default function GroupsTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
+            console.log("Groups data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };

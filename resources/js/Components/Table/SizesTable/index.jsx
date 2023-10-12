@@ -8,9 +8,7 @@ import {
 } from "@mui/material";
 import {Add, Delete, Edit} from "@mui/icons-material";
 import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
-
-;
-import SizesDeleteDialog from "@/Components/Dialogs/SizesDialog/SizesDeleteDialog";
+import DictionariesDeleteDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesDeleteDialog";
 
 export default function SizesTable(props) {
     const url = route(route().current()) + "/data";
@@ -53,8 +51,10 @@ export default function SizesTable(props) {
                         <IconButton aria-label="delete" onClick={onDeleteClick}>
                             <Delete/>
                         </IconButton>
-                        <SizesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                           reloadData={reloadData} size={params.row}/>
+                        <DictionariesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                  reloadData={reloadData} clickedRow={params.row}
+                                                  dictionaryType={"sizes"}
+                                                  label={"Usuwanie rozmiaru"}/>
                     </>
                 );
             }
@@ -135,6 +135,7 @@ export default function SizesTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
+            console.log("Sizes data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };

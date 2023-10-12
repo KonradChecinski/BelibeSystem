@@ -15,7 +15,7 @@ import {
 import {Add, Delete, Edit, Preview, ToggleOff, Visibility} from "@mui/icons-material";
 import RolesAddDialog from "@/Components/Dialogs/RolesDialog/RolesAddDialog";
 import RolesDeleteDialog from "@/Components/Dialogs/RolesDialog/RolesDeleteDialog";
-import UnitsDeleteDialog from "@/Components/Dialogs/UnitsDialog/UnitsDeleteDialog";
+import DictionariesDeleteDialog from "@/Components/Dialogs/DictionariesDialog/DictionariesDeleteDialog";
 
 export default function UnitsTable(props) {
     const url = route(route().current()) + "/data";
@@ -58,8 +58,10 @@ export default function UnitsTable(props) {
                         <IconButton aria-label="delete" onClick={onDeleteClick}>
                             <Delete/>
                         </IconButton>
-                        <UnitsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                           reloadData={reloadData} unit={params.row}/>
+                        <DictionariesDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                  reloadData={reloadData} clickedRow={params.row}
+                                                  dictionaryType={"unit"}
+                                                  label={"Usuwanie jednostki"}/>
                     </>
                 );
             }
@@ -140,6 +142,7 @@ export default function UnitsTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
+            console.log("Units data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };
