@@ -23,7 +23,7 @@ class UpdateGS1GPCRequest extends FormRequest
     {
         return [
             'name' => 'string|required|min:3',
-            'value' => 'numeric|required|size:8'
+            'value' => 'numeric|required|digits:8'
         ];
     }
 }

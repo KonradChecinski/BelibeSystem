@@ -101,7 +101,7 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
                     },
                 })
         } else {
-            patch(route(`system.settings.${dictionaryType}.update`, {user: clickedRow.id}),
+            patch(route(`system.settings.${dictionaryType}.update`, {user: clickedRow.id}), //GS1Brand lub GS1GPC
 
                 {
                     preserveScroll: true,
