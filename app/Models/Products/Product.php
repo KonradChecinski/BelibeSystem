@@ -4,6 +4,7 @@ namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -65,5 +66,14 @@ class Product extends Model
     public function model(): BelongsTo
     {
         return $this->color->model();
+    }
+
+
+    public static function findBySubiektId($id)
+    {
+
+        if ($id == null) throw (new ModelNotFoundException)->setModel(Product::class);
+
+        return Product::Where("subiekt_id", "=", $id)->firstOrFail();
     }
 }

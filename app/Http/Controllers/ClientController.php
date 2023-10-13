@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
+use App\Jobs\FromSubiekt\UpdatePriceFromSubiekt;
 use App\Jobs\FromSubiekt\UpdateQuantityFromSubiekt;
 use App\Models\Client\Client;
+use App\Models\GS1Brand;
+use App\Models\GS1GPC;
+use App\Models\ProductBrand;
 use App\Models\Subiekt\Cena;
 use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
@@ -18,15 +22,36 @@ class ClientController extends Controller
      */
     public function index()
     {
-        UpdateQuantityFromSubiekt::dispatch();
+//        UpdatePriceFromSubiekt::dispatch();
 //        $response = Http::withoutVerifying()
-//            ->withBasicAuth('149954', '768ecdf895146231afc11bc5514386e8')
+//            ->withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
 //            ->get('https://mojegs1.pl/api/v2/products', [
 //                "sort" => "-gtin",
 //                "page[limit]" => 1,
 //                "page[offset]" => 1,
 //            ]);
 //        dd($response->json()["data"][0]);
+        
+
+        GS1Brand::create(["name" => "Belibe Sport"]);
+        GS1Brand::create(["name" => "SPIN"]);
+
+        GS1GPC::create([
+            'name' => "Strój kąpielowy - góra",
+            'value' => "10008065"
+        ]);
+        GS1GPC::create([
+            'name' => "Strój kąpielowy - dół",
+            'value' => "10008066"
+        ]);
+        GS1GPC::create([
+            'name' => "Strój kąpielowy - jednoczęściowy",
+            'value' => "10008067"
+        ]);
+        GS1GPC::create([
+            'name' => "Strój kąpielowy - dwuczęściowy",
+            'value' => "10008068"
+        ]);
     }
 
     /**
