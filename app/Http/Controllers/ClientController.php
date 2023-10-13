@@ -31,27 +31,7 @@ class ClientController extends Controller
 //                "page[offset]" => 1,
 //            ]);
 //        dd($response->json()["data"][0]);
-        
-
-        GS1Brand::create(["name" => "Belibe Sport"]);
-        GS1Brand::create(["name" => "SPIN"]);
-
-        GS1GPC::create([
-            'name' => "Strój kąpielowy - góra",
-            'value' => "10008065"
-        ]);
-        GS1GPC::create([
-            'name' => "Strój kąpielowy - dół",
-            'value' => "10008066"
-        ]);
-        GS1GPC::create([
-            'name' => "Strój kąpielowy - jednoczęściowy",
-            'value' => "10008067"
-        ]);
-        GS1GPC::create([
-            'name' => "Strój kąpielowy - dwuczęściowy",
-            'value' => "10008068"
-        ]);
+        dd(GS1GPC::all());
     }
 
     /**

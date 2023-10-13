@@ -119,7 +119,7 @@ class GS1GPCController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get()->toArray());
-        $models = $models->paginate($request->limit, ['id', 'name']);
+        $models = $models->paginate($request->limit, ['id', 'name', 'value']);
         return response()->json([$models]);
     }
 
