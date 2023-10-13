@@ -117,6 +117,24 @@ export default function Menu({showContent, auth}) {
                                 text={"Grupy"}
                             />
 
+                            <SubMenuLink
+                                href={route("system.settings.brand")}
+                                active={route().current("system.settings.brand")}
+                                text={"Marki"}
+                            />
+
+                            <SubMenuLink
+                                href={route("system.settings.gs1.brand")}
+                                active={route().current("system.settings.gs1.brand")}
+                                text={"Marki GS1"}
+                            />
+
+                            <SubMenuLink
+                                href={route("system.settings.gs1.gpc")}
+                                active={route().current("system.settings.gs1.gpc")}
+                                text={"Klasyfikacja GPC"}
+                            />
+
                         </SubMenuLink>
                     </MainMenuLink>
                     : ""}

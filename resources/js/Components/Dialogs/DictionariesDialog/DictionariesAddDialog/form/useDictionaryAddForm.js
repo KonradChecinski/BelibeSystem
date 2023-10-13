@@ -1,8 +1,7 @@
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
-import schema from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog/form/dictionaryAddFormSchema";
 
-export const useDictionaryAddForm = () => {
+export const useDictionaryAddForm = (schema) => {
     const {
         register,
         handleSubmit,

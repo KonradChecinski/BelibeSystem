@@ -15,21 +15,28 @@ import {enqueueSnackbar} from "notistack";
 import {
     useDictionaryAddForm
 } from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog/form/useDictionaryAddForm";
+import {
+    gpcSchema,
+    schema
+} from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog/form/dictionaryAddFormSchema";
 
-export default function DictionariesAddDialog({open, setOpen, reloadData, dictionaryType, clickedRow}) {
+export default function DictionariesAddDialog({open, setOpen, reloadData, dictionaryType, clickedRow, isGpc}) {
     const {
         register,
         handleSubmit,
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useDictionaryAddForm()
+    } = useDictionaryAddForm(isGpc ? gpcSchema : schema)
 
-    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm(!isGpc ? {
         clickedRowId: clickedRow ? clickedRow.id : null,
         clickedRowName: clickedRow ? clickedRow.name : null
+    } : {
+        clickedRowId: clickedRow ? clickedRow.id : null,
+        clickedRowName: clickedRow ? clickedRow.name : null,
+        clickedRowValue: clickedRow ? clickedRow.value : null
     })
-
 
     useEffect(() => {
         // inicjacja wartości pól
@@ -62,12 +69,16 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
     const currentDictionaryString = () => {
         if (dictionaryType === "sizes") return "rozmiar"
         else if (dictionaryType === "unit") return "jednostkę"
-        else return "grupę"
+        else if (dictionaryType === "group") return "grupę"
+        else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "markę"
+        else if (dictionaryType === "gs1.gpc") return "gpc"
     }
     const currentDictionaryString2 = () => {
         if (dictionaryType === "sizes") return "rozmiaru"
         else if (dictionaryType === "unit") return "jednostki"
-        else return "grupy"
+        else if (dictionaryType === "group") return "grupy"
+        else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "marki"
+        else if (dictionaryType === "gs1.gpc") return "gpc"
     }
 
     const save = () => {
@@ -139,6 +150,7 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
                             data={data}
                             setData={setData}
                             clickedRow={clickedRow}
+                            isGpc={isGpc}
                         />
                         : null}
                     {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
@@ -170,7 +182,7 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
     );
 }
 
-function Step1({register, errors, data}) {
+function Step1({register, errors, data, isGpc}) {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -189,16 +201,31 @@ function Step1({register, errors, data}) {
                     {errors.name?.message.toString()}
                 </Typography>
             )}
+
+            {isGpc ? (
+                <>
+                    <TextField
+                        type="text"
+                        id="value"
+                        label="Wartość"
+                        color={errors.value?.message && "error"}
+                        {...register("value")}
+                        defaultValue={data.clickedRowValue}
+                        sx={{width: "30ch", my: 1}}
+                    />
+                    {errors.value?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                            {errors.value?.message.toString()}
+                        </Typography>
+                    )}
+                </>
+            ) : null}
         </Box>
     );
 }
 
-function Step2({data, roles, errors}) {
-    const renderCell = (selected) => selected.map((value) => {
-        return (<Typography key={value} variant="body1" gutterBottom>
-            {roles.find(e => e.id === value).name}
-        </Typography>);
-    })
+function Step2({data, errors}) {
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="name" label="Nazwa" variant="outlined"

@@ -6,4 +6,13 @@ const schema = yup.object().shape({
         .required("Pole jest wymagane"),
 })
 
-export default schema
+const gpcSchema = yup.object().shape({
+    name: yup
+        .string()
+        .required("Pole jest wymagane"),
+    value: yup
+        .string()
+        .required("Pole jest wymagane"),
+})
+
+export {schema, gpcSchema}
