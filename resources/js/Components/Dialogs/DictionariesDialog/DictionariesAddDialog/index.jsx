@@ -20,7 +20,15 @@ import {
     schema
 } from "@/Components/Dialogs/DictionariesDialog/DictionariesAddDialog/form/dictionaryAddFormSchema";
 
-export default function DictionariesAddDialog({open, setOpen, reloadData, dictionaryType, clickedRow, isGpc}) {
+export default function DictionariesAddDialog({
+                                                  open,
+                                                  setOpen,
+                                                  reloadData,
+                                                  dictionaryType,
+                                                  clickedRow,
+                                                  isGpc,
+                                                  routeParam
+                                              }) {
     const {
         register,
         handleSubmit,
@@ -71,14 +79,14 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
         else if (dictionaryType === "unit") return "jednostkę"
         else if (dictionaryType === "group") return "grupę"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "markę"
-        else if (dictionaryType === "gs1.gpc") return "gpc"
+        else if (dictionaryType === "gs1.gpc") return "klasyfikację GPC"
     }
     const currentDictionaryString2 = () => {
         if (dictionaryType === "sizes") return "rozmiaru"
         else if (dictionaryType === "unit") return "jednostki"
         else if (dictionaryType === "group") return "grupy"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "marki"
-        else if (dictionaryType === "gs1.gpc") return "gpc"
+        else if (dictionaryType === "gs1.gpc") return "klasyfikacji GPC"
     }
 
     const save = () => {
@@ -101,7 +109,7 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
                     },
                 })
         } else {
-            patch(route(`system.settings.${dictionaryType}.update`, {user: clickedRow.id}), //GS1Brand lub GS1GPC
+            patch(route(`system.settings.${dictionaryType}.update`, routeParam),
 
                 {
                     preserveScroll: true,
@@ -153,7 +161,7 @@ export default function DictionariesAddDialog({open, setOpen, reloadData, dictio
                             isGpc={isGpc}
                         />
                         : null}
-                    {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors} isGpc={isGpc}/> : null}
 
                 </DialogContent>
                 <DialogActions>
@@ -224,7 +232,7 @@ function Step1({register, errors, data, isGpc}) {
     );
 }
 
-function Step2({data, errors}) {
+function Step2({data, errors, isGpc}) {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -232,6 +240,13 @@ function Step2({data, errors}) {
                        value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+
+            {isGpc ? (
+                <TextField id="value" label="Wartość" variant="outlined"
+                           value={data.value}
+                           disabled={true}
+                           sx={{width: "30ch", my: 1}}/>
+            ) : null}
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body2" color={"error"} align={"center"} gutterBottom key={index}>

@@ -64,6 +64,7 @@ export default function BrandsTable(props) {
                                                reloadData={reloadData}
                                                dictionaryType={"brand"}
                                                clickedRow={params.row}
+                                               routeParam={{productBrand: params.row.id}}
                         />
                     </>
                 );

@@ -63,6 +63,7 @@ export default function SizesTable(props) {
                                                reloadData={reloadData}
                                                dictionaryType={"sizes"}
                                                clickedRow={params.row}
+                                               routeParam={{productSize: params.row.id}}
                         />
                     </>
                 );

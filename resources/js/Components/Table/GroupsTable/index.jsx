@@ -63,6 +63,7 @@ export default function GroupsTable(props) {
                                                reloadData={reloadData}
                                                dictionaryType={"group"}
                                                clickedRow={params.row}
+                                               routeParam={{group: params.row.id}}
                         />
                     </>
                 );

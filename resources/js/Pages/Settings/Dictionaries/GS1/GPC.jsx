@@ -13,7 +13,7 @@ export default function GPC(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("GS1 GPC")
+                t("Klasyfikacja GPC")
             }
         >
             <Head title={t("GS1 Brands")}/>

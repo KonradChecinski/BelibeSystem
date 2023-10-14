@@ -11,7 +11,7 @@ import DictionariesAddDialog from "@/Components/Dialogs/DictionariesDialog/Dicti
 
 export default function GS1BrandsTable(props) {
     const url = route(route().current()) + "/data";
-    
+
     const column = [
         {field: "id", headerName: "Id"},
 
@@ -64,6 +64,7 @@ export default function GS1BrandsTable(props) {
                                                reloadData={reloadData}
                                                dictionaryType={"gs1.brand"}
                                                clickedRow={params.row}
+                                               routeParam={{GS1Brand: params.row.id}}
                         />
                     </>
                 );

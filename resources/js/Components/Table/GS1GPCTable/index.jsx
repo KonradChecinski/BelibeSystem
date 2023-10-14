@@ -65,6 +65,7 @@ export default function GS1GPCTable(props) {
                                                dictionaryType={"gs1.gpc"}
                                                clickedRow={params.row}
                                                isGpc={true}
+                                               routeParam={{GS1GPC: params.row.id}}
                         />
                     </>
                 );

@@ -64,6 +64,7 @@ export default function UnitsTable(props) {
                                                reloadData={reloadData}
                                                dictionaryType={"unit"}
                                                clickedRow={params.row}
+                                               routeParam={{unit: params.row.id}}
                         />
                     </>
                 );
