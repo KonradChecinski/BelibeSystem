@@ -22,7 +22,7 @@ class StoreProductSizeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|required|min:3'
+            'name' => 'string|required|min:1'
         ];
     }
 }

@@ -99,7 +99,7 @@ Route::middleware("auth:user")->group(function () {
             Route::get("/group/data", [ProductGroupController::class, 'data']);
             Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
             Route::patch("/group/{group}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
-            Route::delete("/group/{size}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
+            Route::delete("/group/{group}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
 
             Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
             Route::get("/unit/data", [ProductUnitController::class, 'data']);
