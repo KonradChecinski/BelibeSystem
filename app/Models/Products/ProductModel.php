@@ -2,6 +2,9 @@
 
 namespace App\Models\Products;
 
+use App\Models\GS1Brand;
+use App\Models\GS1GPC;
+use App\Models\ProductBrand;
 use App\Models\Products\Price\ProductModelPrice;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -60,14 +63,26 @@ class ProductModel extends Model
 
     public function images(): HasManyThrough
     {
-        return $this->hasManyThrough(
-            ProductImage::class,
-            ProductModelColor::class
-        );
+        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
     }
 
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(ProductCategory::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(ProductBrand::class, "product_brand_id");
+    }
+
+    public function gs1Brand(): BelongsTo
+    {
+        return $this->belongsTo(GS1Brand::class, "product_gs1_brand_id");
+    }
+
+    public function gs1Gpc(): BelongsTo
+    {
+        return $this->belongsTo(GS1GPC::class, "product_gs1_gpc_id");
     }
 }

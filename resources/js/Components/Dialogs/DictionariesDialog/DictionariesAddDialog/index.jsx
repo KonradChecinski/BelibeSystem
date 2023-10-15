@@ -74,6 +74,7 @@ export default function DictionariesAddDialog({
         setOpen(false);
     };
 
+
     const currentDictionaryString = () => {
         if (dictionaryType === "sizes") return "rozmiar"
         else if (dictionaryType === "unit") return "jednostkę"
@@ -109,6 +110,7 @@ export default function DictionariesAddDialog({
                     },
                 })
         } else {
+            console.log(route(`system.settings.${dictionaryType}.update`, routeParam));
             patch(route(`system.settings.${dictionaryType}.update`, routeParam),
 
                 {

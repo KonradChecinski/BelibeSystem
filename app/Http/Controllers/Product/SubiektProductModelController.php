@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\UpdateBasicProductModelRequest;
-use App\Jobs\ToSubiekt\ChangeBasicInModelInSubiekt;
+use App\Http\Requests\Product\UpdateB2BProductModelRequest;
+use App\Http\Requests\Product\UpdateSubiektProductModelRequest;
+use App\Jobs\ToSubiekt\ChangeSubiektInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
-class BasicProductModelController extends Controller
+class SubiektProductModelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -53,12 +54,12 @@ class BasicProductModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBasicProductModelRequest $request, ProductModel $productModel)
+    public function update(UpdateSubiektProductModelRequest $request, ProductModel $productModel)
     {
         $productModel->update($request->all());
-        $productModel->brand()->associate($request->product_brand_id);
+        $productModel->group()->associate($request->product_group_id);
         $productModel->save();
-        ChangeBasicInModelInSubiekt::dispatch($productModel);
+        ChangeSubiektInModelInSubiekt::dispatch($productModel);
     }
 
     /**

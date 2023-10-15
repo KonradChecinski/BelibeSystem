@@ -7,6 +7,9 @@ use App\Http\Requests\Product\DataProductModelRequest;
 use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\StoreProductModelRequest;
 use App\Http\Requests\Product\UpdateProductModelRequest;
+use App\Models\GS1Brand;
+use App\Models\GS1GPC;
+use App\Models\ProductBrand;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
@@ -171,14 +174,28 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
         $sizes = ProductSize::all();
+        $brand = ProductBrand::all();
+        $gs1Brand = GS1Brand::all();
+        $gs1GPC = GS1GPC::all();
 
 
-        return Inertia::render("Products/Model", ["productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
+        return Inertia::render("Products/Model", [
+            "productModel" => $productModel,
+            "groups" => $groups,
+            "categories" => $categories,
+            "units" => $units,
+            "sizes" => $sizes,
+            "brand" => $brand,
+            "gs1" => [
+                "brand" => $gs1Brand,
+                "gpc" => $gs1GPC,
+            ]
+        ]);
     }
 
     /**
@@ -186,13 +203,28 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images"])->find($id);
+        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc"])->find($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
         $sizes = ProductSize::all();
+        $brand = ProductBrand::all();
+        $gs1Brand = GS1Brand::all();
+        $gs1GPC = GS1GPC::all();
 
-        return Inertia::render("Products/Model", ["editing" => true, "productModel" => $productModel, "groups" => $groups, "categories" => $categories, "units" => $units, "sizes" => $sizes]);
+        return Inertia::render("Products/Model", [
+            "editing" => true,
+            "productModel" => $productModel,
+            "groups" => $groups,
+            "categories" => $categories,
+            "units" => $units,
+            "sizes" => $sizes,
+            "brand" => $brand,
+            "gs1" => [
+                "brand" => $gs1Brand,
+                "gpc" => $gs1GPC,
+            ]
+        ]);
     }
 
     /**

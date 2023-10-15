@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Helpers\Barcodes\BarcodeGS1;
 use App\Helpers\Barcodes\BarcodeInside;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\DeleteProductRequest;
@@ -46,13 +47,20 @@ class ProductController extends Controller
 
         $product2 = $modelColor->products()->save($product);
 
-        if (collect($request->barcodes)->where("type", 2)->count() > 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+        if (collect($request->barcodes)->where("type", 1)->count() > 1) return response("Nie można wygenerować nowego kodu GS1", 503);
+        if (collect($request->barcodes)->where("type", 2)->count() > 1) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
 
 
         foreach ($request->barcodes as $id => $barcodeValue) {
             if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
+
                 $barcode = BarcodeInside::generate();
-                if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+                if ($barcode == null) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            } else if ($barcodeValue["type"] == 1 && strlen($barcodeValue["barcode"]) !== 13) {
+                $barcode = BarcodeGS1::generate();
+                if ($barcode == null) return response("Nie można wygenerować nowego kodu GS1", 503);
+                $isGS1BarcodeGenerated = true;
+                $gs1BarcodeGenerated = $barcode;
             } else {
                 $barcode = new ProductBarcode($barcodeValue);
             }
@@ -87,15 +95,24 @@ class ProductController extends Controller
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
         if ($request->color['id'] !== $product->color->id) $product->color()->associate($request->color['id']);
 
-        if (collect($request->barcodes)->where("type", 2)->count() > 1) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+
+        if (collect($request->barcodes)->where("type", 1)->count() > 1) return response("Nie można wygenerować nowego kodu GS1", 503);
+        if (collect($request->barcodes)->where("type", 2)->count() > 1) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
 
 
         $barcodes = [];
+        $isGS1BarcodeGenerated = false;
+        $gs1BarcodeGenerated = "";
         foreach ($request->barcodes as $id => $barcodeValue) {
 
             if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeInside::generate();
-                if ($barcode == null) response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+                if ($barcode == null) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+            } else if ($barcodeValue["type"] == 1 && strlen($barcodeValue["barcode"]) !== 13) {
+                $barcode = BarcodeGS1::generate();
+                if ($barcode == null) return response("Nie można wygenerować nowego kodu GS1", 503);
+                $isGS1BarcodeGenerated = true;
+                $gs1BarcodeGenerated = $barcode;
             } else {
                 $barcode = new ProductBarcode($barcodeValue);
             }
@@ -103,8 +120,31 @@ class ProductController extends Controller
             array_push($barcodes, $barcode);
         }
 
+
         $product->barcodes()->delete();
         $product->barcodes()->saveMany($barcodes);
+
+        if ($isGS1BarcodeGenerated) {
+            $barcodeResult = BarcodeGS1::save($gs1BarcodeGenerated, $product->model, $product);
+            if ($barcodeResult == false) {
+                $tmpBarcodes = collect($barcodes);
+                $tmpBarcodes = $tmpBarcodes->filter(function ($barcode) {
+                    return $barcode->type !== 1;
+                });
+                $tmpBarcodes = $tmpBarcodes->map(function ($item, $key) {
+                    return new ProductBarcode([
+                        "barcode" => $item->barcode,
+                        "main" => $item->main,
+                        "type" => $item->type,
+                    ]);
+                });
+
+                $product->barcodes()->delete();
+                $product->barcodes()->saveMany($tmpBarcodes);
+
+                return response("Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu", 503);
+            }
+        }
 
 
         $product->symbol = $request->symbol;

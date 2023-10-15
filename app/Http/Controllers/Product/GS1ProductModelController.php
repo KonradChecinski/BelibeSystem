@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateBasicProductModelRequest;
+use App\Http\Requests\Product\UpdateGS1ProductModelRequest;
 use App\Jobs\ToSubiekt\ChangeBasicInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
-class BasicProductModelController extends Controller
+class GS1ProductModelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -53,12 +54,11 @@ class BasicProductModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBasicProductModelRequest $request, ProductModel $productModel)
+    public function update(UpdateGS1ProductModelRequest $request, ProductModel $productModel)
     {
-        $productModel->update($request->all());
-        $productModel->brand()->associate($request->product_brand_id);
+        $productModel->gs1Brand()->associate($request->product_gs1_brand_id);
+        $productModel->gs1Gpc()->associate($request->product_gs1_gpc_id);
         $productModel->save();
-        ChangeBasicInModelInSubiekt::dispatch($productModel);
     }
 
     /**

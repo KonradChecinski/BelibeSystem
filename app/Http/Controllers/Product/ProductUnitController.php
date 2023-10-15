@@ -134,7 +134,7 @@ class ProductUnitController extends Controller
      */
     public function store(StoreProductUnitRequest $request)
     {
-        ProductUnit::create(["name" => strtoupper($request->name)]);
+        ProductUnit::create(["name" => $request->name]);
     }
 
     /**
@@ -158,7 +158,7 @@ class ProductUnitController extends Controller
      */
     public function update(UpdateProductUnitRequest $request, ProductUnit $productUnit)
     {
-        $productUnit->update(["name" => strtoupper($request->name)]);
+        $productUnit->update(['name' => $request->name]);
     }
 
     /**

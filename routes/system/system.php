@@ -5,6 +5,7 @@ use App\Http\Controllers\GS1GPCController;
 use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
+use App\Http\Controllers\Product\GS1ProductModelController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductGroupController;
 use App\Http\Controllers\Product\ProductImageController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Product\ProductModelPriceController;
 use App\Http\Controllers\Product\ProductSizeController;
 use App\Http\Controllers\Product\ProductUnitController;
 use App\Http\Controllers\Product\ShowProductController;
+use App\Http\Controllers\Product\SubiektProductModelController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductImageOrderController;
 use App\Http\Controllers\ProductImagePublishController;
@@ -49,9 +51,12 @@ Route::middleware("auth:user")->group(function () {
     Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
     Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
     Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
-    Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
-    Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
+
     Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
+    Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
+    Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
+    Route::post("/models/model/{productModel}/update/subiekt", [SubiektProductModelController::class, 'update'])->name("system.products.model.update.subiekt");
+    Route::post("/models/model/{productModel}/update/gs1", [GS1ProductModelController::class, 'update'])->name("system.products.model.update.gs1");
 
     Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
     Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
@@ -98,14 +103,14 @@ Route::middleware("auth:user")->group(function () {
             Route::get("/group", [ProductGroupController::class, 'index'])->name("system.settings.group");
             Route::get("/group/data", [ProductGroupController::class, 'data']);
             Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
-            Route::patch("/group/{group}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
-            Route::delete("/group/{group}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
+            Route::patch("/group/{productGroup}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
+            Route::delete("/group/{productGroup}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
 
             Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
             Route::get("/unit/data", [ProductUnitController::class, 'data']);
             Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
-            Route::patch("/unit/{unit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
-            Route::delete("/unit/{unit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
+            Route::patch("/unit/{productUnit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
+            Route::delete("/unit/{productUnit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
 
             Route::get("/brand/", [ProductBrandController::class, 'index'])->name("system.settings.brand");
             Route::get("/brand/data", [ProductBrandController::class, 'data']);

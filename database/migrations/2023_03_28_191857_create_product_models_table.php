@@ -21,6 +21,7 @@ return new class extends Migration {
                 ->on("product_groups")
                 ->restrictOnDelete();
 
+
             $table->text("description_b2b");
             $table->text("description_b2c");
             $table->text("description_allegro");

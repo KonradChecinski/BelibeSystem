@@ -6,7 +6,7 @@ import {
     Step,
     StepLabel,
     Stepper,
-    TextField, Typography
+    TextField, Tooltip, Typography
 } from "@mui/material";
 import {useState, useEffect} from "react";
 import {useForm} from "@inertiajs/react";
@@ -459,9 +459,15 @@ function Step1({data, setData, props, register, errors}) {
                         borderBottomRightRadius: 0,
                         p: "10px",
                     }}>
-                        <Typography variant="body2" component="h5">
-                            Kody kreskowe
-                        </Typography>
+                        <Box>
+                            <Typography variant="body2" component="h5">
+                                Kody kreskowe
+                            </Typography>
+                            <Typography variant="caption" component="p">
+                                Pierwszy jest kodem głównym
+                            </Typography>
+                        </Box>
+
                         <Button size="small" onClick={handleClick}>
                             Dodaj
                         </Button>
@@ -475,11 +481,26 @@ function Step1({data, setData, props, register, errors}) {
                             }}
                         >
                             <MenuItem onClick={addColumnEmpty}>Zewnętrzny / Ręczny</MenuItem>
-                            <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 2).length)}
-                                      onClick={addColumnWew}>Wygeneruj wewnętrzny</MenuItem>
-                            <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 1).length)}
-                                      onClick={addColumnGS1}>Wygeneruj z GS1</MenuItem>
+                            <Tooltip
+                                title={Boolean(data.barcodes.filter(e => e.type === 2).length) ? "Jeżeli nie możesz wygenerować kodu: Sprawdź czy nie masz już wygenerowanego kodu kreskowego tego typu" : null}
+                                arrow>
+                                <span>
+                                    <MenuItem disabled={Boolean(data.barcodes.filter(e => e.type === 2).length)}
+                                              onClick={addColumnWew}>Wygeneruj wewnętrzny</MenuItem>
+                                </span>
+                            </Tooltip>
+                            <Tooltip
+                                title={Boolean(data.barcodes.filter(e => e.type === 1).length || (props.productModel.gs1_gpc === null || props.productModel.gs1_brand === null)) ? "Jeżeli nie możesz wygenerować kodu: Sprawdź czy masz zaznaczona pola marka lub klasyfikacja GPC w sekcji GS1 lub nie masz już wygenerowanego kodu kreskowego tego typu" : null}
+                                arrow>
+                                <span>
+                            <MenuItem
+                                disabled={Boolean(data.barcodes.filter(e => e.type === 1).length || (props.productModel.gs1_gpc === null || props.productModel.gs1_brand === null))}
+                                onClick={addColumnGS1}>Wygeneruj z GS1</MenuItem>
+                                    </span>
+                            </Tooltip>
+
                         </Menu>
+
                     </Box>
                     <Box sx={{
                         minHeight: 50,

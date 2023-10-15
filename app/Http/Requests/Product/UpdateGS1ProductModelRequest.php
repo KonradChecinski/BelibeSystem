@@ -4,7 +4,7 @@ namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBasicProductModelRequest extends FormRequest
+class UpdateGS1ProductModelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class UpdateBasicProductModelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'symbol' => 'required|string',
-            'name' => 'required|string',
-            'product_brand_id' => 'required|numeric',
+            'product_gs1_brand_id' => 'required|numeric',
+            'product_gs1_gpc_id' => 'required|numeric',
         ];
     }
 }

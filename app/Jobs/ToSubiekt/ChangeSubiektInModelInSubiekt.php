@@ -11,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeBasicInModelInSubiekt implements ShouldQueue
+class ChangeSubiektInModelInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -51,7 +51,10 @@ class ChangeBasicInModelInSubiekt implements ShouldQueue
                 $subiektTowar->zapisz();
             }
 
-//            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name, 0, 50));
+//            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name,0, 50));
+            $subiektTowar->Pole1 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_6_char, 0, 50));
+            $subiektTowar->Pole2 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_11_char, 0, 50));
+            $subiektTowar->GrupaId = $this->productModel->group->id;
 
 
             $subiektTowar->zapisz();

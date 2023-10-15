@@ -23,15 +23,7 @@ class ClientController extends Controller
     public function index()
     {
 //        UpdatePriceFromSubiekt::dispatch();
-//        $response = Http::withoutVerifying()
-//            ->withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
-//            ->get('https://mojegs1.pl/api/v2/products', [
-//                "sort" => "-gtin",
-//                "page[limit]" => 1,
-//                "page[offset]" => 1,
-//            ]);
-//        dd($response->json()["data"][0]);
-        dd(GS1GPC::all());
+
     }
 
     /**
