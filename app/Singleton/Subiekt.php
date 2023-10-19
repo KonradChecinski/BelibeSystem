@@ -45,7 +45,7 @@ class Subiekt
                 $this->subiekt = $connS->Uruchom(0, 1);
                 $this->subiekt->MagazynId = 1;
             } catch (Exception $e) {
-                $this->subiekt->Zakoncz();
+                if ($this->subiekt != null) $this->subiekt->Zakoncz();
                 die($e);
             }
         }
