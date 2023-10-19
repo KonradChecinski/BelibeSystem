@@ -556,7 +556,7 @@ function Step1({data, setData, props, register, errors}) {
                                                                         bgcolor: snapshot.isDragging ? "rgba(0,0,0,0.3)" : ""
                                                                     }}
                                                                     secondaryAction={
-                                                                        item.type === 3 ?
+                                                                        (item.type === 3) || (item.type !== 3 && item.barcode.length !== 13) ?
                                                                             <IconButton edge="end" aria-label="delete"
                                                                                         onClick={() => deleteBarcode(item.id)}>
                                                                                 <Delete/>

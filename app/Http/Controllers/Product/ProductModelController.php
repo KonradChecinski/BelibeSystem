@@ -7,6 +7,7 @@ use App\Http\Requests\Product\DataProductModelRequest;
 use App\Http\Requests\Product\DeleteProductModelRequest;
 use App\Http\Requests\Product\StoreProductModelRequest;
 use App\Http\Requests\Product\UpdateProductModelRequest;
+use App\Jobs\ToSubiekt\ModelTw\CreateModelInSubiekt;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
@@ -143,8 +144,6 @@ class ProductModelController extends Controller
      */
     public function store(StoreProductModelRequest $request)
     {
-
-
         $model = new ProductModel($request->all());
         $model->description_b2b = "";
         $model->description_b2c = "";
@@ -152,6 +151,8 @@ class ProductModelController extends Controller
         $model->save();
 
         $model->prices()->create([]);
+
+        CreateModelInSubiekt::dispatch($model);
     }
 
     /**
@@ -166,7 +167,10 @@ class ProductModelController extends Controller
 
         $model->prices()->create($productModel->prices->replicate()->toArray());
         $model->group()->associate($productModel->group);
-
+        $model->brand()->associate($productModel->brand);
+        $model->gs1Brand()->associate($productModel->gs1Brand);
+        $model->gs1Gpc()->associate($productModel->gs1Gpc);
+        CreateModelInSubiekt::dispatch($model);
     }
 
     /**

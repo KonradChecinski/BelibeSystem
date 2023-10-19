@@ -21,11 +21,9 @@ class Product extends Model
      */
     protected $fillable = [
         'product_model_color_id',
-//        'product_group_id',
         'subiekt_id',
         'symbol',
         'name',
-//        'barcode',
         'quantity',
         'quantity_total',
         'product_unit_id',
@@ -34,7 +32,6 @@ class Product extends Model
         'show_in_b2c',
         'show_in_allegro',
         'show_in_subiekt',
-
     ];
 
     public function color(): BelongsTo
@@ -74,6 +71,8 @@ class Product extends Model
 
         if ($id == null) throw (new ModelNotFoundException)->setModel(Product::class);
 
-        return Product::Where("subiekt_id", "=", $id)->firstOrFail();
+//        return Product::Where("subiekt_id", "=", $id)->firstOrFail();
+        return Product::Where("subiekt_id", "=", $id)->first();
+
     }
 }

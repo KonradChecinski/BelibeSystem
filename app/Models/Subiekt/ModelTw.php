@@ -21,6 +21,7 @@ class ModelTw extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        "mdt_Id",
         "mdt_Nazwa"
     ];
 

@@ -4,16 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
-use App\Jobs\FromSubiekt\UpdatePriceFromSubiekt;
-use App\Jobs\FromSubiekt\UpdateQuantityFromSubiekt;
+use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
+use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
+use App\Jobs\UpdateSubiektIdWhereNull;
 use App\Models\Client\Client;
-use App\Models\GS1Brand;
-use App\Models\GS1GPC;
-use App\Models\ProductBrand;
-use App\Models\Subiekt\Cena;
-use App\Models\Subiekt\ModelTw;
+use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -23,7 +21,12 @@ class ClientController extends Controller
     public function index()
     {
 //        UpdatePriceFromSubiekt::dispatch();
+//        UpdateSubiektIdWhereNull::dispatchSync();
 
+//        ChangeProductInSubiekt::dispatchSync(Product::find(2));
+//        $towar = Towar::find(7597);
+//        $cena = $towar->cena;
+//        dd($towar, $cena);
     }
 
     /**

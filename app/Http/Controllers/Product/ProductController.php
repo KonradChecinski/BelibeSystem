@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
-use App\Jobs\ToSubiekt\ChangeProductInSubiekt;
+use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
+use App\Jobs\ToSubiekt\Towar\DisableProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModelColor;
@@ -45,7 +47,7 @@ class ProductController extends Controller
         $product->size()->associate($size);
         $product->unit()->associate($unit);
 
-        $product2 = $modelColor->products()->save($product);
+        $modelColor->products()->save($product);
 
         if (collect($request->barcodes)->where("type", 1)->count() > 1) return response("Nie można wygenerować nowego kodu GS1", 503);
         if (collect($request->barcodes)->where("type", 2)->count() > 1) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
@@ -65,9 +67,10 @@ class ProductController extends Controller
                 $barcode = new ProductBarcode($barcodeValue);
             }
             $barcode->main = $id == 0;
-            $barcode->product()->associate($product2);
+            $barcode->product()->associate($product);
             $barcode->save();
         }
+        CreateTowarInSubiekt::dispatch($product);
     }
 
     /**
@@ -153,7 +156,6 @@ class ProductController extends Controller
         $product->save();
 
         ChangeProductInSubiekt::dispatch($product);
-//        dd($request, $product);
     }
 
     /**
@@ -175,5 +177,7 @@ class ProductController extends Controller
                 return redirect()->route('system.products.models');
             }
         }
+
+        DisableProductInSubiekt::dispatch($product);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateB2BProductModelRequest;
 use App\Http\Requests\Product\UpdateB2CProductModelRequest;
+use App\Jobs\ToSubiekt\Towar\ChangeB2CInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
@@ -56,6 +57,7 @@ class B2CProductModelController extends Controller
     public function update(UpdateB2CProductModelRequest $request, ProductModel $productModel)
     {
         $productModel->update(["description_b2c" => $request->description_b2c]);
+        ChangeB2CInModelInSubiekt::dispatch($productModel);
     }
 
     /**

@@ -11,6 +11,7 @@ import {Save} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {useModelSubiektForm} from "@/Components/Pages/Model/ModelSubiektComponent/form/useModelSubiektForm";
+import {enqueueSnackbar} from "notistack";
 
 
 export default function ModelSubiektComponent({props}) {
@@ -37,7 +38,7 @@ export default function ModelSubiektComponent({props}) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("Subiekt dane: ", {...formData, symbol: data.symbol, id: data.id})
+        console.log("Subiekt dane: ", {...formData})
         console.log("data z Inertia: ", data)
         saveSubiekt()
     }
@@ -57,17 +58,17 @@ export default function ModelSubiektComponent({props}) {
         return quantity;
     }
     const saveSubiekt = () => {
-        // post(route("system.products.model.update.basic", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+        post(route("system.products.model.update.subiekt", {productModel: props.productModel.id}), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
     }
 
     return (
@@ -157,7 +158,7 @@ export default function ModelSubiektComponent({props}) {
                             sx={{
                                 position: "absolute",
                                 top: 7,
-                                right: 230,
+                                right: 120,
                             }}>
                         Zapisz
                     </Button>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\ToSubiekt;
+namespace App\Jobs\ToSubiekt\Towar;
 
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
@@ -11,17 +11,20 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeBasicInModelInSubiekt implements ShouldQueue
+class ChangeB2CInModelInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $productModel;
+    public $tries = 0;
+    public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
     public function __construct(ProductModel $productModel)
     {
+        $this->onQueue('sfera');
         $this->productModel = $productModel;
     }
 
@@ -52,7 +55,11 @@ class ChangeBasicInModelInSubiekt implements ShouldQueue
             }
 
 //            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name, 0, 50));
+            $description_b2c = $this->productModel->description_b2c;
+            $description_b2c = str_replace('[{$color$}]', $product->color->name, $description_b2c);
+            $description_b2c = str_replace('[{$size$}]', $product->size->name, $description_b2c);
 
+            $subiektTowar->Charakterystyka = iconv("UTF-8", "Windows-1250//IGNORE", $description_b2c);
 
             $subiektTowar->zapisz();
 

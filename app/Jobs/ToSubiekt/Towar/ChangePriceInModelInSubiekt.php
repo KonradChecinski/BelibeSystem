@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\ToSubiekt;
+namespace App\Jobs\ToSubiekt\Towar;
 
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Cena;
@@ -16,12 +16,15 @@ class ChangePriceInModelInSubiekt implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $productModel;
+    public $tries = 0;
+    public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
     public function __construct(ProductModel $productModel)
     {
+        $this->onQueue('linux');
         $this->productModel = $productModel;
     }
 
@@ -45,7 +48,7 @@ class ChangePriceInModelInSubiekt implements ShouldQueue
                 "tc_CenaNetto3" => $prices->retail_net_price / 100,
                 "tc_CenaBrutto3" => $prices->retail_gross_price / 100,
             ]);
-            
+
             DB::connection("subiekt")->table("Belibe_System_Ceny_Updated")->where("id", $product->subiekt_id)->delete();
 
             $cena->save();

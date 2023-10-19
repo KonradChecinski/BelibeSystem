@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\UpdateB2BProductModelRequest;
 use App\Http\Requests\Product\UpdateSubiektProductModelRequest;
-use App\Jobs\ToSubiekt\ChangeSubiektInModelInSubiekt;
+use App\Jobs\ToSubiekt\Towar\ChangeSubiektInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 

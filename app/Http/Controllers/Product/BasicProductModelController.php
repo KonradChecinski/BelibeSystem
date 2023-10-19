@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateBasicProductModelRequest;
-use App\Jobs\ToSubiekt\ChangeBasicInModelInSubiekt;
+use App\Jobs\ToSubiekt\Towar\ChangeBasicInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\UpdateBasicProductModelRequest;
 use App\Http\Requests\Product\UpdateGS1ProductModelRequest;
-use App\Jobs\ToSubiekt\ChangeBasicInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 

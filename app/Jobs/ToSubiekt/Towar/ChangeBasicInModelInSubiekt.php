@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\ToSubiekt;
+namespace App\Jobs\ToSubiekt\Towar;
 
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
@@ -11,17 +11,20 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeSubiektInModelInSubiekt implements ShouldQueue
+class ChangeBasicInModelInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $productModel;
+    public $tries = 0;
+    public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
     public function __construct(ProductModel $productModel)
     {
+        $this->onQueue('sfera');
         $this->productModel = $productModel;
     }
 
@@ -51,10 +54,7 @@ class ChangeSubiektInModelInSubiekt implements ShouldQueue
                 $subiektTowar->zapisz();
             }
 
-//            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name,0, 50));
-            $subiektTowar->Pole1 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_6_char, 0, 50));
-            $subiektTowar->Pole2 = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name_11_char, 0, 50));
-            $subiektTowar->GrupaId = $this->productModel->group->id;
+//            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name, 0, 50));
 
 
             $subiektTowar->zapisz();

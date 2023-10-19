@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\UpdateB2BProductModelRequest;
-use App\Http\Requests\Product\UpdateB2CProductModelRequest;
-use App\Http\Requests\Product\UpdateBasicProductModelRequest;
 use App\Http\Requests\Product\UpdateShowProductRequest;
-use App\Jobs\ToSubiekt\ChangeProductShowInSubiekt;
+use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
 class ShowProductController extends Controller
