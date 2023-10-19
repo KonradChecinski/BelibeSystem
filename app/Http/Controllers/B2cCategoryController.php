@@ -1,51 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Product;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\DataProductModelRequest;
-use App\Http\Requests\Product\DeleteProductModelRequest;
-use App\Http\Requests\Product\StoreProductModelRequest;
-use App\Http\Requests\Product\UpdateProductModelRequest;
-use App\Jobs\ToSubiekt\ModelTw\CreateModelInSubiekt;
+use App\Http\Requests\DeleteB2cCategoryRequest;
 use App\Models\B2cCategory;
-use App\Models\B2cColor;
-use App\Models\GS1Brand;
-use App\Models\GS1GPC;
-use App\Models\ProductBrand;
-use App\Models\Products\ProductCategory;
-use App\Models\Products\ProductGroup;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductSize;
-use App\Models\Products\ProductUnit;
+use App\Http\Requests\StoreB2cCategoryRequest;
+use App\Http\Requests\UpdateB2cCategoryRequest;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ProductModelController extends Controller
+class B2cCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Inertia\Response
+    public function index()
     {
-
-        return Inertia::render("Products/ModelList");
+        return Inertia::render("Settings/Dictionaries/B2C/Category");
     }
 
-    public function data(DataProductModelRequest $request)
+
+    public function data(Request $request) //DataProductModelRequest
     {
         $mainColumn = [
             'id',
-            'symbol',
             'name',
         ];
 
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"]);
+        $models = B2cCategory::query();
 //        dd($models->get()->toArray());
 
         if ($request->search) {
             foreach (json_decode($request->search) as $word) {
                 $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
-                $models = $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
                 $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
             }
         }
@@ -128,8 +115,8 @@ class ProductModelController extends Controller
         }
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
-//        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
-        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
+//        dd($models->get()->toArray());
+        $models = $models->paginate($request->limit, ['id', 'name']);
         return response()->json([$models]);
     }
 
@@ -144,121 +131,41 @@ class ProductModelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductModelRequest $request)
+    public function store(StoreB2cCategoryRequest $request)
     {
-        $model = new ProductModel($request->all());
-        $model->description_b2b = "";
-        $model->description_b2c = "";
-        $model->description_allegro = "";
-        $model->save();
+        B2cCategory::create(["name" => $request->name]);
 
-        $model->prices()->create([]);
-
-        CreateModelInSubiekt::dispatch($model);
-    }
-
-    /**
-     * Store a duplicate resource in storage.
-     */
-    public function copy(StoreProductModelRequest $request, ProductModel $productModel)
-    {
-        $model = $productModel->replicate();
-        $model->symbol = $request->symbol;
-        $model->name = $request->name;
-        $model->save();
-
-        $model->prices()->create($productModel->prices->replicate()->toArray());
-        $model->group()->associate($productModel->group);
-        $model->brand()->associate($productModel->brand);
-        $model->gs1Brand()->associate($productModel->gs1Brand);
-        $model->gs1Gpc()->associate($productModel->gs1Gpc);
-        CreateModelInSubiekt::dispatch($model);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(B2cCategory $b2cCategory)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cColor", "b2cCategory"])->find($id);
-        $groups = ProductGroup::all();
-        $categories = ProductCategory::all();
-        $units = ProductUnit::all();
-        $sizes = ProductSize::all();
-        $brand = ProductBrand::all();
-        $gs1Brand = GS1Brand::all();
-        $gs1GPC = GS1GPC::all();
-        $b2cCategory = B2cCategory::all();
-        $b2cColor = B2cColor::all();
-
-
-        return Inertia::render("Products/Model", [
-            "productModel" => $productModel,
-            "groups" => $groups,
-            "categories" => $categories,
-            "units" => $units,
-            "sizes" => $sizes,
-            "brand" => $brand,
-            "gs1" => [
-                "brand" => $gs1Brand,
-                "gpc" => $gs1GPC,
-            ],
-            "b2c" => [
-                "category" => $b2cCategory,
-                "color" => $b2cColor,
-            ],
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id)
+    public function edit(B2cCategory $b2cCategory)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cColor", "b2cCategory"])->find($id);
-        $groups = ProductGroup::all();
-        $categories = ProductCategory::all();
-        $units = ProductUnit::all();
-        $sizes = ProductSize::all();
-        $brand = ProductBrand::all();
-        $gs1Brand = GS1Brand::all();
-        $gs1GPC = GS1GPC::all();
-        $b2cCategory = B2cCategory::all();
-        $b2cColor = B2cColor::all();
-
-        return Inertia::render("Products/Model", [
-            "editing" => true,
-            "productModel" => $productModel,
-            "groups" => $groups,
-            "categories" => $categories,
-            "units" => $units,
-            "sizes" => $sizes,
-            "brand" => $brand,
-            "gs1" => [
-                "brand" => $gs1Brand,
-                "gpc" => $gs1GPC,
-            ],
-            "b2c" => [
-                "category" => $b2cCategory,
-                "color" => $b2cColor,
-            ],
-        ]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductModelRequest $request, ProductModel $productModel)
+    public function update(UpdateB2cCategoryRequest $request, B2cCategory $b2cCategory)
     {
-        //
+        $b2cCategory->update(["name" => $request->name]);
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeleteProductModelRequest $request, ProductModel $productModel)
+    public function destroy(DeleteB2cCategoryRequest $request, B2cCategory $b2cCategory)
     {
-        $productModel->delete();
+        $b2cCategory->delete();
     }
 }

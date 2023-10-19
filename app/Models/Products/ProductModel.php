@@ -2,6 +2,8 @@
 
 namespace App\Models\Products;
 
+use App\Models\B2cCategory;
+use App\Models\B2cColor;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
@@ -84,5 +86,15 @@ class ProductModel extends Model
     public function gs1Gpc(): BelongsTo
     {
         return $this->belongsTo(GS1GPC::class, "product_gs1_gpc_id");
+    }
+
+    public function b2cCategory(): BelongsTo
+    {
+        return $this->belongsTo(B2cCategory::class, "product_b2c_category_id");
+    }
+
+    public function b2cColor(): BelongsTo
+    {
+        return $this->belongsTo(B2cColor::class, "product_b2c_color_id");
     }
 }

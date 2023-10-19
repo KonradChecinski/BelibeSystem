@@ -18,7 +18,6 @@ class GS1BrandController extends Controller
     public function index()
     {
         return Inertia::render("Settings/Dictionaries/GS1/Brand");
-
     }
 
     public function data(Request $request) //DataProductModelRequest

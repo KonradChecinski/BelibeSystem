@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('product_models', function (Blueprint $table) {
+            $table
+                ->foreignId("product_b2c_color_id")
+                ->nullable()
+                ->after("product_gs1_gpc_id")
+                ->references("id")
+                ->on("b2c_colors")
+                ->restrictOnDelete();
+
+            $table
+                ->foreignId("product_b2c_category_id")
+                ->nullable()
+                ->after("product_gs1_gpc_id")
+                ->references("id")
+                ->on("b2c_categories")
+                ->restrictOnDelete();
+
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('product_models', function (Blueprint $table) {
+            $table->dropConstrainedForeignId("product_b2c_color_id");
+            $table->dropConstrainedForeignId("product_b2c_category_id");
+        });
+    }
+};

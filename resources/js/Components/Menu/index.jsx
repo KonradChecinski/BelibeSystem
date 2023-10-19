@@ -141,6 +141,22 @@ export default function Menu({showContent, auth}) {
                                 />
                             </SubMenuLink>
 
+                            <SubMenuLink
+                                href={route("system.settings.b2c.category")}
+                                active={route().current("system.settings.b2c.category")}
+                                text={"B2C"}
+                            >
+                                <SubMenuLink
+                                    href={route("system.settings.b2c.category")}
+                                    active={route().current("system.settings.b2c.category")}
+                                    text={"Kategorie"}
+                                />
+                                <SubMenuLink
+                                    href={route("system.settings.b2c.color")}
+                                    active={route().current("system.settings.b2c.color")}
+                                    text={"Kolory"}
+                                />
+                            </SubMenuLink>
 
                         </SubMenuLink>
                     </MainMenuLink>

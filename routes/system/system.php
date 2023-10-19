@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\B2cCategoryController;
+use App\Http\Controllers\B2cColorController;
 use App\Http\Controllers\GS1BrandController;
 use App\Http\Controllers\GS1GPCController;
 use App\Http\Controllers\Product\B2BProductModelController;
@@ -130,6 +132,20 @@ Route::middleware("auth:user")->group(function () {
                 Route::post("/brand", [GS1BrandController::class, 'store'])->name("system.settings.gs1.brand.create");
                 Route::patch("/brand/{GS1Brand}", [GS1BrandController::class, 'update'])->name("system.settings.gs1.brand.update");
                 Route::delete("/brand/{GS1Brand}", [GS1BrandController::class, 'destroy'])->name("system.settings.gs1.brand.delete");
+            });
+
+            Route::group(['prefix' => '/b2c'], function () {
+                Route::get("/category/", [B2cCategoryController::class, 'index'])->name("system.settings.b2c.category");
+                Route::get("/category/data", [B2cCategoryController::class, 'data']);
+                Route::post("/category", [B2cCategoryController::class, 'store'])->name("system.settings.b2c.category.create");
+                Route::patch("/category/{b2cCategory}", [B2cCategoryController::class, 'update'])->name("system.settings.b2c.category.update");
+                Route::delete("/category/{b2cCategory}", [B2cCategoryController::class, 'destroy'])->name("system.settings.b2c.category.delete");
+
+                Route::get("/color/", [B2cColorController::class, 'index'])->name("system.settings.b2c.color");
+                Route::get("/color/data", [B2cColorController::class, 'data']);
+                Route::post("/color", [B2cColorController::class, 'store'])->name("system.settings.b2c.color.create");
+                Route::patch("/color/{b2cColor}", [B2cColorController::class, 'update'])->name("system.settings.b2c.color.update");
+                Route::delete("/color/{b2cColor}", [B2cColorController::class, 'destroy'])->name("system.settings.b2c.color.delete");
             });
 
         });
