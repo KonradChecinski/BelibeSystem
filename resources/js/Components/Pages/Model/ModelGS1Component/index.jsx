@@ -41,10 +41,10 @@ export default function ModelGS1Component({props}) {
     const onSubmit = (formData) => {
         console.log("GS1 form data: ", formData)
         console.log("GS1 data: ", data)
-        saveSubiekt()
+        saveGS1()
     }
 
-    const saveSubiekt = () => {
+    const saveGS1 = () => {
         post(route("system.products.model.update.gs1", {productModel: props.productModel.id}), {
             onSuccess: params => {
                 setEdited(false);

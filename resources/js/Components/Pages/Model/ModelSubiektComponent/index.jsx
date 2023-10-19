@@ -38,25 +38,11 @@ export default function ModelSubiektComponent({props}) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("Subiekt dane: ", {...formData})
-        console.log("data z Inertia: ", data)
+        console.log("Subiekt form data: ", formData)
+        console.log("Subiekt data: ", data)
         saveSubiekt()
     }
 
-    const [productModel, setProductModel] = useState({
-        ...props.productModel,
-        categories: props.productModel.categories.map((value) => {
-            // delete value.pivot;
-            return value.id;
-        })
-    });
-    const countQuantityInModel = () => {
-        let quantity = 0;
-        props.productModel.products.forEach((value) => {
-            quantity += value.quantity;
-        });
-        return quantity;
-    }
     const saveSubiekt = () => {
         post(route("system.products.model.update.subiekt", {productModel: props.productModel.id}), {
             onSuccess: params => {
@@ -110,7 +96,6 @@ export default function ModelSubiektComponent({props}) {
 
                     </FormControl>
                 </Box>
-
 
                 <Box sx={{display: "flex", flexDirection: "column"}}>
                     <TextField id="name_6_char" label="Wydruk 6 znaków" variant="outlined"

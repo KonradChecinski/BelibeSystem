@@ -17,6 +17,7 @@ export default function BasicInfoComponent(props) {
 
     const {data, setData, processing, post} = useForm({
         'id': props.productModel.id,
+        'product_brand_id': props.productModel.brand.id,
         'symbol': props.productModel.symbol,
         'name': props.productModel.name,
     })
@@ -24,6 +25,7 @@ export default function BasicInfoComponent(props) {
     useEffect(() => {
         // inicjacja wartości pól
         setValue("name", data.name)
+        setValue("brand", data.name)
     }, [setValue]);
 
     const onSubmit = (formData) => {
@@ -32,13 +34,6 @@ export default function BasicInfoComponent(props) {
         saveBasic()
     }
 
-    const [productModel, setProductModel] = useState({
-        ...props.productModel,
-        categories: props.productModel.categories.map((value) => {
-            // delete value.pivot;
-            return value.id;
-        })
-    });
     const countQuantityInModel = () => {
         let quantity = 0;
         props.productModel.products.forEach((value) => {
@@ -101,6 +96,42 @@ export default function BasicInfoComponent(props) {
                             {fieldErrors.name?.message.toString()}
                         </Typography>
                     )}
+                </Box>
+
+                <Box>
+                    <FormControl sx={{width: "30ch", display: "flex", flexDirection: "column"}}>
+                        <InputLabel id="brand-select-label">Marka</InputLabel>
+                        <Select
+                            labelId="brand-select-label"
+                            id="brand-select"
+                            label="Marka"
+                            value={data.product_brand_id}
+                            color={fieldErrors.brand?.message ? "error" : null}
+                            {...register("brand")}
+                            onChange={(value) => {
+                                // setProductModel({...productModel, product_group_id: value.target.value});
+                                setData("product_brand_id", value.target.value)
+                                setEdited(true)
+                            }}
+
+                            // disabled={!props.editing}
+                            inputProps={{readOnly: !props.editing}}
+                        >
+                            {props.brand.map((brand) => {
+                                return (
+                                    <MenuItem key={brand.id} value={brand.id}>
+                                        {brand.name}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                        {fieldErrors.brand?.message && (
+                            <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
+                                {fieldErrors.brand?.message.toString()}
+                            </Typography>
+                        )}
+
+                    </FormControl>
                 </Box>
 
                 <Fade in={edited}>
