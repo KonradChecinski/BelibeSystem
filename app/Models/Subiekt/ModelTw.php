@@ -34,6 +34,6 @@ class ModelTw extends Model
 
     public static function findByName($name)
     {
-        return ModelTw::Where("mdt_Nazwa", "=", $name)->firstOrFail();
+        return ModelTw::Where("mdt_Nazwa", "=", $name)->first();
     }
 }

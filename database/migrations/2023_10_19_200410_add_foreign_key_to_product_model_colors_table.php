@@ -10,15 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('product_models', function (Blueprint $table) {
+        Schema::table('product_model_colors', function (Blueprint $table) {
             $table
-                ->foreignId("product_b2c_category_id")
+                ->foreignId("product_b2c_color_id")
                 ->nullable()
-                ->after("product_gs1_gpc_id")
+                ->after("name")
                 ->references("id")
-                ->on("b2c_categories")
+                ->on("b2c_colors")
                 ->restrictOnDelete();
-
 
         });
     }
@@ -28,8 +27,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('product_models', function (Blueprint $table) {
-            $table->dropConstrainedForeignId("product_b2c_category_id");
+        Schema::table('product_model_colors', function (Blueprint $table) {
+            $table->dropConstrainedForeignId("product_b2c_color_id");
         });
     }
 };

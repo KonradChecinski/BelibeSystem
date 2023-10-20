@@ -70,6 +70,7 @@ class ProductController extends Controller
             $barcode->product()->associate($product);
             $barcode->save();
         }
+
         CreateTowarInSubiekt::dispatch($product);
     }
 
@@ -178,6 +179,6 @@ class ProductController extends Controller
             }
         }
 
-        DisableProductInSubiekt::dispatch($product);
+        DisableProductInSubiekt::dispatchSync($product->subiekt_id);
     }
 }

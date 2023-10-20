@@ -34,8 +34,8 @@ export default function ModelGS1Component({props}) {
 
     useEffect(() => {
         // inicjacja wartości pól
-        setValue("gs1_gpc", data.gs1_gpc.name)
-        setValue("gs1_brand", data.gs1_brand.name)
+        setValue("gs1_gpc", data.gs1_gpc?.name)
+        setValue("gs1_brand", data.gs1_brand?.name)
     }, [setValue]);
 
     const onSubmit = (formData) => {

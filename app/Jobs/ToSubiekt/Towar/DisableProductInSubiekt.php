@@ -15,17 +15,17 @@ class DisableProductInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $product;
-    public $tries = 0;
+    protected $subiekt_id;
+    public $tries = 5;
     public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Product $product)
+    public function __construct(int $subiekt_id)
     {
         $this->onQueue('sfera');
-        $this->product = $product;
+        $this->subiekt_id = $subiekt_id;
     }
 
     /**
@@ -37,10 +37,10 @@ class DisableProductInSubiekt implements ShouldQueue
         $subiekt = $subiekt->connect();
 
 
-        if (is_null($this->product->subiekt_id)) return;
+        if (is_null($this->subiekt_id)) return;
 
-        $zablokowany = (bool)Towar::find($this->product->subiekt_id)->tw_Zablokowany;
-        $subiektTowar = $subiekt->Towary->Wczytaj($this->product->subiekt_id);
+        $zablokowany = (bool)Towar::find($this->subiekt_id)->tw_Zablokowany;
+        $subiektTowar = $subiekt->Towary->Wczytaj($this->subiekt_id);
 
         if ($zablokowany) {
             $subiektTowar->Aktywny = true;

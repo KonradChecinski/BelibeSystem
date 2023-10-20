@@ -19,6 +19,9 @@ class UpdateSubiektIdWhereNull implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 5;
+    public $backoff = 20;
+
     /**
      * Create a new job instance.
      */

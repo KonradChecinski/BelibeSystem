@@ -23,6 +23,7 @@ class UpdateB2CProductModelRequest extends FormRequest
     {
         return [
             'description_b2c' => 'required|string',
+            'product_b2c_category_id' => 'required|numeric',
         ];
     }
 }

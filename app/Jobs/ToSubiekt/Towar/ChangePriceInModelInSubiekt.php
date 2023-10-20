@@ -16,7 +16,7 @@ class ChangePriceInModelInSubiekt implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $productModel;
-    public $tries = 0;
+    public $tries = 5;
     public $backoff = 20;
 
     /**

@@ -16,7 +16,7 @@ class ChangeBasicInModelInSubiekt implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $productModel;
-    public $tries = 0;
+    public $tries = 5;
     public $backoff = 20;
 
     /**
@@ -55,6 +55,7 @@ class ChangeBasicInModelInSubiekt implements ShouldQueue
             }
 
 //            $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->name, 0, 50));
+            $subiektTowar->PoleWlasne["Marka"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->brand->name, 0, 50));
 
 
             $subiektTowar->zapisz();
@@ -63,6 +64,8 @@ class ChangeBasicInModelInSubiekt implements ShouldQueue
                 $subiektTowar->Aktywny = false;
                 $subiektTowar->zapisz();
             }
+            DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $product->subiekt_id)->delete();
+
         }
 
     }

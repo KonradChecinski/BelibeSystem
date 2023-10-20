@@ -92,9 +92,4 @@ class ProductModel extends Model
     {
         return $this->belongsTo(B2cCategory::class, "product_b2c_category_id");
     }
-
-    public function b2cColor(): BelongsTo
-    {
-        return $this->belongsTo(B2cColor::class, "product_b2c_color_id");
-    }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
 use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
+use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
+use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
+use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
@@ -20,13 +23,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-//        UpdatePriceFromSubiekt::dispatch();
-//        UpdateSubiektIdWhereNull::dispatchSync();
-
-//        ChangeProductInSubiekt::dispatchSync(Product::find(2));
-//        $towar = Towar::find(7597);
-//        $cena = $towar->cena;
-//        dd($towar, $cena);
+//        CreateTwFromSubiekt::dispatchSync();
+//        UpdateTwFromSubiekt::dispatchSync();
+//        CreateTowarInSubiekt::dispatchSync(Product::findBySubiektId(2239));
+        ChangeProductInSubiekt::dispatchSync(Product::find(91));
     }
 
     /**

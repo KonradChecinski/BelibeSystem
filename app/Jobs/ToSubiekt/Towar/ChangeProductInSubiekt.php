@@ -10,13 +10,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ChangeProductInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $product;
-    public $tries = 0;
+    public $tries = 5;
     public $backoff = 20;
 
     /**
@@ -50,14 +52,17 @@ class ChangeProductInSubiekt implements ShouldQueue
         $subiektTowar->Symbol = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->symbol, 0, 50));
         $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->name, 0, 50));
         $subiektTowar->DoSklepuInternetowego = $this->product->show_in_b2c;
-//        $subiektTowar->PoleWlasne["Kolor"] = $this->product->color->shortcut;
-//        $subiektTowar->PoleWlasne["Rozmiar"] = $this->product->size->name;
-//        Jednostka
+        $subiektTowar->PoleWlasne["Kolor"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->shortcut, 0, 50));
+        $subiektTowar->PoleWlasne["KolorCRM"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
+        $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
+        $subiektTowar->PoleWlasne["Rozmiar"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->size->name, 0, 50));
+
 
         $subiektTowar->KodyKreskowe->Podstawowy = "";
         for ($i = 1; $i <= $subiektTowar->KodyKreskowe->Liczba; $i++) {
             $subiektTowar->KodyKreskowe[$i]->Usun();
         }
+        Log::debug($this->product->subiekt_id);
         $subiektTowar->zapisz();
 
         foreach ($this->product->barcodes as $id => $barcode) {
@@ -77,6 +82,7 @@ class ChangeProductInSubiekt implements ShouldQueue
             $subiektTowar->zapisz();
         }
 
+        DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $this->product->subiekt_id)->delete();
 
     }
 }

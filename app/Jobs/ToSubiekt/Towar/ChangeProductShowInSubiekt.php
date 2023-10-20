@@ -10,13 +10,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ChangeProductShowInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $product;
-    public $tries = 0;
+    public $tries = 5;
     public $backoff = 20;
 
     /**
@@ -57,6 +58,7 @@ class ChangeProductShowInSubiekt implements ShouldQueue
             $subiektTowar->Aktywny = false;
             $subiektTowar->zapisz();
         }
+        DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $this->product->subiekt_id)->delete();
 
 
     }

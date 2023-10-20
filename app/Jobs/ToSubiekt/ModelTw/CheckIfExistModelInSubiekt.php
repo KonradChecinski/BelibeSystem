@@ -12,21 +12,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class CreateModelInSubiekt implements ShouldQueue
+class CheckIfExistModelInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $productModel;
     public $tries = 5;
     public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(ProductModel $productModel)
+    public function __construct()
     {
         $this->onQueue('linux');
-        $this->productModel = $productModel;
     }
 
     /**
@@ -34,14 +32,12 @@ class CreateModelInSubiekt implements ShouldQueue
      */
     public function handle(): void
     {
-        $lastModel = ModelTw::orderBy('mdt_Id', 'desc')->first();
-
-        ModelTw::create([
-            "mdt_Id" => $lastModel->mdt_Id + 1,
-            "mdt_Nazwa" => $this->productModel->symbol
-        ]);
-
-        DB::connection("subiekt")->table("Belibe_System_ModelTw_Created")->where("id", $lastModel->mdt_Id + 1)->delete();
-
+        $models = ProductModel::all();
+        foreach ($models as $model) {
+            $modelTw = ModelTw::findByName($model->symbol);
+            if (is_null($modelTw)) {
+                CreateModelInSubiekt::dispatch($model);
+            }
+        }
     }
 }

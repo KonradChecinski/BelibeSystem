@@ -1,4 +1,5 @@
 import {
+    Autocomplete,
     Box, Button,
     Checkbox, Fade,
     FormControl,
@@ -6,7 +7,7 @@ import {
     ListItemText,
     MenuItem,
     OutlinedInput,
-    Select,
+    Select, TextField,
     Typography
 } from "@mui/material";
 import TextEditorB2B from "@/Components/TextEditor/B2B";
@@ -22,6 +23,9 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
     const {data, setData, processing, post} = useForm({
         'id': props.productModel.id,
         "description_b2c": props.productModel.description_b2c,
+
+        'product_b2c_category_id': props.productModel.product_b2c_category_id,
+        'b2c_category': props.productModel.b2c_category,
     })
 
     const ITEM_HEIGHT = 48;
@@ -49,6 +53,43 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
 
     return (
         <>
+            <Box sx={{display: "flex", flexDirection: "column"}}>
+                <Autocomplete
+                    disablePortal
+                    id="b2c_category"
+                    options={props.b2c.category.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        label: e.name
+                    }))}
+                    sx={{width: "30ch"}}
+                    value={data.b2c_category}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={(e, value) => {
+                        setData({
+                            ...data,
+                            b2c_category: value,
+                            product_b2c_category_id: value?.id,
+                        })
+                        setEdited(true)
+                    }}
+                    renderInput={(params) =>
+                        <TextField
+                            {...params}
+                            label="Kategoria"
+                            sx={{my: 1}}
+                            value={data.b2c_category}
+                            //{...register("gs1_gpc")}
+                            // color={fieldErrors.gs1_gpc?.message && "error"}
+                        />}
+                />
+                {/*{fieldErrors.gs1_gpc?.message && (*/}
+                {/*    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>*/}
+                {/*        {fieldErrors.gs1_gpc?.message.toString()}*/}
+                {/*    </Typography>*/}
+                {/*)}*/}
+            </Box>
             <Box sx={{my: 1}}>
                 <TextEditorWebsite
                     value={data.description_b2c}

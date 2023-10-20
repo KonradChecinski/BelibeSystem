@@ -17,7 +17,7 @@ export default function BasicInfoComponent(props) {
 
     const {data, setData, processing, post} = useForm({
         'id': props.productModel.id,
-        'product_brand_id': props.productModel.brand.id,
+        'product_brand_id': props.productModel?.brand?.id,
         'symbol': props.productModel.symbol,
         'name': props.productModel.name,
     })
