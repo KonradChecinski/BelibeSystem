@@ -15,8 +15,6 @@ import {useModelGS1Form} from "@/Components/Pages/Model/ModelGS1Component/form/u
 export default function ModelGS1Component({props}) {
     const [edited, setEdited] = useState(false);
 
-    console.log("Props: ", props)
-
     const {
         register,
         handleSubmit,
