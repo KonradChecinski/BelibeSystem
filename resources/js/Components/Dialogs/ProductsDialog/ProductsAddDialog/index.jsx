@@ -1,8 +1,8 @@
 import {
-    Autocomplete, Avatar,
+    Autocomplete,
     Box, Button, Dialog, DialogActions,
     DialogContent,
-    DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Menu, MenuItem, Paper,
+    DialogTitle, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper,
     Step,
     StepLabel,
     Stepper,
@@ -11,7 +11,6 @@ import {
 import {useState, useEffect} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
-import {DataGrid, GridActionsCellItem, useGridApiRef} from "@mui/x-data-grid";
 import validbarcode from "barcode-validator";
 import ReactDraggable from "react-draggable";
 import {Delete, DragIndicator} from "@mui/icons-material";
@@ -27,7 +26,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
         clearErrors: clrErrors,
     } = useProductsAddForm()
 
-    const initialData = {
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         color: {
             id: color?.id,
             shortcut: color?.shortcut,
@@ -41,9 +40,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
         } : null) : null,
         unit: actualState?.unit ? {...actualState?.unit, label: actualState?.unit?.name} : null,
         barcodes: method !== "copy" ? (actualState?.barcodes ? actualState?.barcodes : []) : []
-    }
-
-    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm(initialData)
+    })
 
     useEffect(() => {
         // inicjacja wartości pól
@@ -52,7 +49,21 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
         setValue("unit", data.unit)
         setValue("color", data.color)
 
-        setData(initialData)
+        setData({
+            color: {
+                id: color?.id,
+                shortcut: color?.shortcut,
+                label: color?.shortcut + " - " + color?.name
+            },
+            symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
+            name: actualState?.name ? actualState?.name : '',
+            size: method !== "copy" ? (actualState?.size ? {
+                ...actualState?.size,
+                label: actualState?.size?.name
+            } : null) : null,
+            unit: actualState?.unit ? {...actualState?.unit, label: actualState?.unit?.name} : null,
+            barcodes: method !== "copy" ? (actualState?.barcodes ? actualState?.barcodes : []) : []
+        })
     }, [actualState, color, setValue]);
 
     const onSubmit = (submitData) => {
@@ -191,12 +202,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
     );
 }
 
-function InboxIcon() {
-    return null;
-}
-
 function Step1({data, setData, props, register, errors}) {
-    const apiRef = useGridApiRef();
     const addColumnEmpty = () => {
         setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "", type: 3}])
         handleClose()
@@ -268,10 +274,6 @@ function Step1({data, setData, props, register, errors}) {
         if (e.source.droppableId === e.destination.droppableId && e.source.index === e.destination.index) return;
 
         const newBarcodesArray = [...data.barcodes]
-
-
-        const barcodeShortcut = e.draggableId.split("_")[0]
-        const barcodeType = e.draggableId.split("_")[1]
 
         //Source
         const sourceIndex = e.source.index
@@ -611,8 +613,7 @@ function Step1({data, setData, props, register, errors}) {
     );
 }
 
-function Step2({data, setData, errors}) {
-    console.log(data)
+function Step2({data, errors}) {
     const barcodeValue = () => {
         let barcodes = ""
         for (const barcodeElement of data.barcodes) {
