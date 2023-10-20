@@ -68,7 +68,6 @@ export default function DictionariesAddDialog({
     }
 
     const handleClose = () => {
-        setValue("name", null);
         clrErrors("name")
         setActiveStep(0);
         setOpen(false);
