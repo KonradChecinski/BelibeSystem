@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Install\InstallController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -60,4 +61,10 @@ Route::get('assets/{path}', function ($path) {
 Route::get('images/{path}', function ($path) {
     return Storage::get('images/' . str_replace('\\', '/', $path));
 })->name("images");
+
+
+Route::get("install", [InstallController::class, 'install'])->name("install");
+
+
+
 require __DIR__ . "/auth.php";
