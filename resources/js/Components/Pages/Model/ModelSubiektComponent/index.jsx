@@ -47,11 +47,11 @@ export default function ModelSubiektComponent({props}) {
         post(route("system.products.model.update.subiekt", {productModel: props.productModel.id}), {
             onSuccess: params => {
                 setEdited(false);
-                enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
+                enqueueSnackbar("Zapisano Subiekta", {variant: 'success'})
             },
             onError: params => {
                 console.error(params)
-                enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
+                enqueueSnackbar("Błąd przy zapisywaniu Subiekta", {variant: 'error'})
             },
             preserveScroll: true
         })
