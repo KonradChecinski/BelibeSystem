@@ -44,6 +44,7 @@ class UpdateTwFromSubiekt implements ShouldQueue
 
         foreach ($createdTws as $createdTw) {
             $product = Product::findBySubiektId($createdTw->id);
+            if (is_null($product)) DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $createdTw->id)->delete();
 
             $towar = Towar::find($createdTw->id);
             if (is_null($towar)) {

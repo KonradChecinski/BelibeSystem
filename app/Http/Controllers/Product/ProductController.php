@@ -16,6 +16,7 @@ use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModelColor;
 use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
+use Illuminate\Support\Carbon;
 
 class ProductController extends Controller
 {
@@ -179,6 +180,6 @@ class ProductController extends Controller
             }
         }
 
-        DisableProductInSubiekt::dispatchSync($product->subiekt_id);
+        DisableProductInSubiekt::dispatch($product->subiekt_id);
     }
 }

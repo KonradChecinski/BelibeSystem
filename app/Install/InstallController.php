@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Install;
-ini_set('max_execution_time', 180);
+ini_set('max_execution_time', 600);
 
 use App\Http\Controllers\Controller;
 use App\Models\B2cCategory;
@@ -37,7 +37,7 @@ class InstallController extends Controller
 //        ]);
 //
 //        Artisan::call("db:seed");
-
+//
 //        //Rozmiary
 //        $sizes = DB::connection("subiekt")->table("sl_Wlasny")->where("sw_SlownikId", 10003)->get();
 //        foreach ($sizes as $size) {
@@ -45,8 +45,8 @@ class InstallController extends Controller
 //                'name' => $size->sw_Nazwa
 //            ]);
 //        }
-
-
+//
+//
 //        //Jednostki
 //        ProductUnit::create([
 //            'name' => "szt"
@@ -54,8 +54,8 @@ class InstallController extends Controller
 //        ProductUnit::create([
 //            'name' => "opak"
 //        ]);
-
-
+//
+//
 //        //Grupy
 //        $groups = DB::connection("subiekt")->table("sl_GrupaTw")->get();
 //        foreach ($groups as $group) {
@@ -64,7 +64,7 @@ class InstallController extends Controller
 //                'name' => $group->grt_Nazwa
 //            ]);
 //        }
-
+//
 //        //Marki
 //        $brands = DB::connection("subiekt")->table("sl_Wlasny")->where("sw_SlownikId", 10007)->get();
 //        foreach ($brands as $brand) {
@@ -72,7 +72,7 @@ class InstallController extends Controller
 //                'name' => $brand->sw_Nazwa
 //            ]);
 //        }
-
+//
 //        //Marki GS1
 //        GS1Brand::create([
 //            'name' => "SPIN"
@@ -80,8 +80,8 @@ class InstallController extends Controller
 //        GS1Brand::create([
 //            'name' => "Belibe Sport"
 //        ]);
-
-
+//
+//
 //        //GPC GS1
 //        GS1GPC::create([
 //            'name' => "Strój kąpielowy - góra",
@@ -107,17 +107,18 @@ class InstallController extends Controller
 //            'name' => "Stroje plażowe/okrycia",
 //            "value" => 10006964
 //        ]);
-
-
+//
+//
 //        //Kategorie B2C
 //        $categories = DB::connection("subiekt")->table("sl_Wlasny")->where("sw_SlownikId", 10006)->get();
 //        foreach ($categories as $category) {
 //            B2cCategory::create([
+//                'id' => $category->sw_Id,
 //                'name' => $category->sw_Nazwa
 //            ]);
 //        }
-
-
+//
+//
 //        //Kolory B2C
 //        $colors = DB::connection("subiekt")->table("sl_Wlasny")->where("sw_SlownikId", 10014)->get();
 //        foreach ($colors as $color) {
@@ -127,7 +128,8 @@ class InstallController extends Controller
 //        }
 
         //Modele
-        $modelsTw = ModelTw::limit(150)->offset(150)->get();
+//        $modelsTw = ModelTw::limit(150)->offset(150)->get();
+        $modelsTw = ModelTw::all();
         foreach ($modelsTw as $modelTw) {
 //            dd($modelTw, $modelTw->towar);
 
@@ -158,15 +160,27 @@ class InstallController extends Controller
                 $productModel->colors()->save($productColor);
             }
 
+
             //Cena
-            $cena = Cena::findByProductId($modelTw->towar[0]->tw_Id);
-            $productModel->prices()->create([
-                'vat_rate' => 23,
-                'wholesale_net_price' => $cena->tc_CenaNetto2 * 100,
-                'wholesale_gross_price' => $cena->tc_CenaBrutto2 * 100,
-                'retail_net_price' => $cena->tc_CenaNetto3 * 100,
-                'retail_gross_price' => $cena->tc_CenaBrutto3 * 100,
-            ]);
+            if ($modelTw->towar->count() == 0) {
+                $productModel->prices()->create([
+                    'vat_rate' => 23,
+                    'wholesale_net_price' => 0,
+                    'wholesale_gross_price' => 0,
+                    'retail_net_price' => 0,
+                    'retail_gross_price' => 0,
+                ]);
+            } else {
+                $cena = Cena::findByProductId($modelTw->towar[0]->tw_Id);
+                $productModel->prices()->create([
+                    'vat_rate' => 23,
+                    'wholesale_net_price' => $cena->tc_CenaNetto2 * 100,
+                    'wholesale_gross_price' => $cena->tc_CenaBrutto2 * 100,
+                    'retail_net_price' => $cena->tc_CenaNetto3 * 100,
+                    'retail_gross_price' => $cena->tc_CenaBrutto3 * 100,
+                ]);
+            }
+
 
             //Subiekt
             $productModel->update([
@@ -209,6 +223,7 @@ class InstallController extends Controller
                 $sizeTw = DaneDodatkowe::where("pwd_TypObiektu", -14)->where("pwd_IdObiektu", $towar->tw_Id)->first()->pwd_Tekst04;
 
                 $size = ProductSize::where("name", $sizeTw)->first();
+                if (is_null($sizeTw)) $size = ProductSize::find(28);
                 $unit = ProductUnit::where("name", "szt")->first();
 
                 $product->size()->associate($size);
@@ -225,7 +240,7 @@ class InstallController extends Controller
                 }
 
                 foreach ($barcodes as $id => $barcodeValue) {
-                    if (is_null($barcodeValue) || $barcodeValue = "" || $barcodeValue = " ") continue;
+                    if (is_null($barcodeValue) || $barcodeValue == "" || $barcodeValue == " ") continue;
 
                     if (substr($barcodeValue, 0, 9) == "590185425" || substr($barcodeValue, 0, 8) == "59032053") {
                         $barcode = new ProductBarcode([

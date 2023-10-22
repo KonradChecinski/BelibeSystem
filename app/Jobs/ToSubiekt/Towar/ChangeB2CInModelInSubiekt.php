@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ToSubiekt\Towar;
 
+use App\Models\B2cCategory;
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
@@ -61,7 +62,7 @@ class ChangeB2CInModelInSubiekt implements ShouldQueue
             $description_b2c = str_replace('[{$size$}]', $product->size->name, $description_b2c);
 
             $subiektTowar->Charakterystyka = iconv("UTF-8", "Windows-1250//IGNORE", $description_b2c);
-            $subiektTowar->PoleWlasne["Kategoria główna"] = $this->productModel->b2cCategory->id;
+            $subiektTowar->PoleWlasne["KategoriaGlowna"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->b2cCategory->name, 0, 255));
 
             $subiektTowar->zapisz();
 
@@ -69,6 +70,7 @@ class ChangeB2CInModelInSubiekt implements ShouldQueue
                 $subiektTowar->Aktywny = false;
                 $subiektTowar->zapisz();
             }
+
             DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $product->subiekt_id)->delete();
 
         }

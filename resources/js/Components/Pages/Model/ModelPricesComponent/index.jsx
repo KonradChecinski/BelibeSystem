@@ -106,6 +106,7 @@ function ModelPricesComponentEdit(props) {
                 enqueueSnackbar("Zapisano ceny", {variant: 'success'})
             },
             onError: params => {
+                console.error(params);
                 enqueueSnackbar("Błąd", {variant: 'error'})
             },
         })

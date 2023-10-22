@@ -17,6 +17,7 @@ class ProductGroup extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
     ];
 

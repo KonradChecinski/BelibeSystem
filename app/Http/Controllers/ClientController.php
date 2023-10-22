@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
 use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
 use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
+use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
@@ -26,7 +27,9 @@ class ClientController extends Controller
 //        CreateTwFromSubiekt::dispatchSync();
 //        UpdateTwFromSubiekt::dispatchSync();
 //        CreateTowarInSubiekt::dispatchSync(Product::findBySubiektId(2239));
-        ChangeProductInSubiekt::dispatchSync(Product::find(91));
+//        ChangeProductInSubiekt::dispatchSync(Product::find(91));
+        UpdateTwFromSubiekt::dispatchSync();
+//        UpdateQuantityFromSubiekt::dispatchSync();
     }
 
     /**

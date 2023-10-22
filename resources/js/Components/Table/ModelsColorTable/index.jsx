@@ -110,6 +110,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                             },
                             onError: params => {
+                                console.error(params);
                                 enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
                             },
                             preserveScroll: true
@@ -154,6 +155,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                             },
                             onError: params => {
+                                console.error(params);
                                 enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
                             },
                             preserveScroll: true
@@ -198,6 +200,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                             },
                             onError: params => {
+                                console.error(params);
                                 enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
                             },
                             preserveScroll: true

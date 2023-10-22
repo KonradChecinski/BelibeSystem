@@ -43,6 +43,7 @@ export default function ModelB2BComponent({productModel, setProductModel, props}
                 enqueueSnackbar("Zapisano B2B", {variant: 'success'})
             },
             onError: params => {
+                console.error(params);
                 enqueueSnackbar("Błąd przy zapisywaniu B2B", {variant: 'error'})
             },
             preserveScroll: true

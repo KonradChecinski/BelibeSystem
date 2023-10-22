@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class UpdateQuantityFromSubiekt implements ShouldQueue
 {
@@ -30,16 +31,22 @@ class UpdateQuantityFromSubiekt implements ShouldQueue
      */
     public function handle(): void
     {
-        $products = Product::where("subiekt_id", "!=", null)->get();
-        foreach ($products as $product) {
-            $productSubiekt = Towar::find($product->subiekt_id);
+        $updatedStany = DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->get();
+
+        foreach ($updatedStany as $updatedStan) {
+            $productSubiekt = Towar::find($updatedStan->id);
             $stan = $productSubiekt->stany->sum("st_Stan");
             $stanWszystkie = $productSubiekt->stanyWszystkie->sum("st_Stan");
+            $product = Product::findBySubiektId($updatedStan->id);
+            if (is_null($product)) DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
+
             $product->update([
                 "quantity" => $stan,
                 "quantity_total" => $stanWszystkie,
             ]);
             $product->save();
+            DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
+
         }
     }
 }

@@ -94,6 +94,7 @@ export default function ImagesComponent(props) {
                 enqueueSnackbar("Zapisano kolejność zdjęć", {variant: 'success'})
             },
             onError: params => {
+                console.error(params);
                 enqueueSnackbar("Błąd przy zapisywaniu kolejności zdjęć", {variant: 'error'})
             },
             preserveScroll: true
@@ -241,30 +242,30 @@ export default function ImagesComponent(props) {
             </DragDropContext>
             {props.editing ?
                 <>
-            <Button variant="outlined" startIcon={<Add/>}
-                    onClick={() => setOpenAddDialog(true)}
-                    sx={{
-                        position: "absolute",
-                        top: 7,
-                        right: 100,
-                    }}>
-                Dodaj
-            </Button>
-            <DropzoneImagesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} props={props}/>
-
-
-                <Fade in={edited}>
-                    <Button variant="outlined" startIcon={<Save/>}
-                            disabled={processing}
-                            onClick={saveImages}
+                    <Button variant="outlined" startIcon={<Add/>}
+                            onClick={() => setOpenAddDialog(true)}
                             sx={{
                                 position: "absolute",
                                 top: 7,
-                                right: 200,
+                                right: 100,
                             }}>
-                        Zapisz
+                        Dodaj
                     </Button>
-                </Fade>
+                    <DropzoneImagesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} props={props}/>
+
+
+                    <Fade in={edited}>
+                        <Button variant="outlined" startIcon={<Save/>}
+                                disabled={processing}
+                                onClick={saveImages}
+                                sx={{
+                                    position: "absolute",
+                                    top: 7,
+                                    right: 200,
+                                }}>
+                            Zapisz
+                        </Button>
+                    </Fade>
                 </>
                 : ""}
 

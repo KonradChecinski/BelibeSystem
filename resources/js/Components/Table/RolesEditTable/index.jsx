@@ -29,6 +29,7 @@ export default function RolesEditTable(props) {
                 enqueueSnackbar("Zmieniono uprawnienia", {variant: 'success'})
             },
             onError: params => {
+                console.error(params);
                 enqueueSnackbar("Błąd przy zmianie uprawnień", {variant: 'error'})
             },
             preserveScroll: true

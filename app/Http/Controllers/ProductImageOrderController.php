@@ -57,12 +57,13 @@ class ProductImageOrderController extends Controller
     public function update(UpdateProductImageOrderRequest $request, ProductModel $productModel)
     {
         foreach ($request->all() as $item) {
-//            $productModelColor = ProductModelColor::find($item["id"]);
-            foreach ($item['images'] as $type=>$images) {
-                foreach ($images as $id=>$image) {
+            $productModelColor = ProductModelColor::find($item["id"]);
+            foreach ($item['images'] as $type => $images) {
+                foreach ($images as $id => $image) {
                     $productImage = ProductImage::find($image["id"]);
-                    $productImage->order=$id;
-                    $productImage->save();
+                    $productImage->order = $id;
+//                    $productImage->save();
+                    $productModelColor->images()->save($productImage);
                 }
 
             }

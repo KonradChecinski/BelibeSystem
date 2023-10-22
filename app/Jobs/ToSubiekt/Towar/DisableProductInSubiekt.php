@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class DisableProductInSubiekt implements ShouldQueue
 {
@@ -50,6 +51,7 @@ class DisableProductInSubiekt implements ShouldQueue
 
         $subiektTowar->Aktywny = false;
         $subiektTowar->zapisz();
+        DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $this->subiekt_id)->delete();
 
 
     }

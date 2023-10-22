@@ -1,4 +1,4 @@
-import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
+import {DataGrid, GridFooter, GridFooterContainer, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
 import {Box, Fab, IconButton, Tooltip} from "@mui/material";
@@ -260,7 +260,7 @@ export default function ModelsTable(props) {
                 //disableColumnSelector
                 disableDensitySelector
                 // autoHeight
-                rowHeight={80}
+                rowHeight={100}
                 pagination
                 localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
                 sx={{
@@ -278,6 +278,9 @@ export default function ModelsTable(props) {
                     },
                     "& .MuiDataGrid-row:hover": {
                         bgcolor: "primary"
+                    },
+                    "& .MuiTablePagination-root": {
+                        mr: 10
                     }
                 }}
             />
