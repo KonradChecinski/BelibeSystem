@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Jobs\ToSubiekt\Images;
+
+use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
+use App\Models\Subiekt\Cena;
+use App\Models\Subiekt\ModelTw;
+use App\Models\Subiekt\Towar;
+use App\Singleton\Subiekt;
+use App\Singleton\SubiektDodatki;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Nette\Utils\Image;
+
+class AddImagesToSubiekt implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $productModel;
+    public $tries = 5;
+    public $backoff = 20;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(ProductModel $productModel)
+    {
+        $this->onQueue('sfera');
+        $this->productModel = $productModel;
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+
+//        dd($this->productModel);
+
+        $subiekt = app(Subiekt::class)->getInstance();
+        $subiekt = $subiekt->connect();
+        $subiektDodatki = app(SubiektDodatki::class)->getInstance();
+        $subiektDodatki = $subiektDodatki->create();
+
+        $products = $this->productModel->products;
+
+
+        foreach ($products as $product) {
+            if (is_null($product->subiekt_id)) continue;
+
+            $zablokowany = (bool)Towar::find($product->subiekt_id)->tw_Zablokowany;
+            $subiektTowar = $subiekt->Towary->Wczytaj($product->subiekt_id);
+
+            if ($zablokowany) {
+                $subiektTowar->Aktywny = true;
+                $subiektTowar->zapisz();
+            }
+
+
+            for ($i = $subiektTowar->Zdjecia->Liczba; $i >= 1; $i--) {
+                $image = $subiektTowar->Zdjecia[$i];
+                $image->usun();
+            }
+            $subiektTowar->zapisz();
+
+            foreach ($product->color->images->sortBy("order")->values() as $id => $image) {
+                if ($id > 1) continue;
+//                dd(route('images', ['path' => $image->path]));
+//                $imageTmp = new Image("https://system.belibe.test/images/S-0100-0104%5C1%5C1%5C%5C6536654269317.jpg")
+                $imageTmp = Storage::path('images/' . str_replace('\\', '/', $image->path));
+//                $imageBin = file_get_contents('D:/PICS/Pexels/photo-814194.jpeg');
+//                $subiektDodatki.ZmienZdjecieNaBinaria()($imageTmp)
+                $imageSubiekt = $subiektTowar->Zdjecia->Dodaj($imageTmp);
+                $imageSubiekt->Glowne = (bool)$id == 0;
+            }
+
+            $subiektTowar->zapisz();
+
+            if ($zablokowany) {
+                $subiektTowar->Aktywny = false;
+                $subiektTowar->zapisz();
+            }
+
+            DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $product->subiekt_id1)->delete();
+            DB::connection("subiekt")->table("Belibe_System_Zdjecia_Zmienione")->truncate();
+
+        }
+    }
+}

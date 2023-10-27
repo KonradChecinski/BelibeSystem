@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Install\ClearDBController;
+use App\Install\Install2Controller;
 use App\Install\InstallController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -64,7 +66,8 @@ Route::get('images/{path}', function ($path) {
 
 
 Route::get("install", [InstallController::class, 'install'])->name("install");
-
+Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
+Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 
 
 require __DIR__ . "/auth.php";

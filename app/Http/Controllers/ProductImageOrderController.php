@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\ProductImageOrder;
 use App\Http\Requests\StoreProductImageOrderRequest;
 use App\Http\Requests\UpdateProductImageOrderRequest;
@@ -68,6 +69,7 @@ class ProductImageOrderController extends Controller
 
             }
         }
+        AddImagesToSubiekt::dispatch($productModel);
     }
 
     /**

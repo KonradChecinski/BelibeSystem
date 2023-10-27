@@ -19,6 +19,7 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import WorkIcon from '@mui/icons-material/Work';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 
 export default function Model(props) {
 

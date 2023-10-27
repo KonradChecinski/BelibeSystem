@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductImageRequest;
 use App\Http\Requests\Product\UpdateProductImageRequest;
+use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
@@ -54,6 +55,8 @@ class ProductImageController extends Controller
             }
 
         }
+        AddImagesToSubiekt::dispatch($modelColor->model);
+
     }
 
     /**
@@ -91,10 +94,12 @@ class ProductImageController extends Controller
             $imageOrder = $image->order;
             $imagesToChangeOrder = $modelColor->images()->where('type', $imageType)->where('order', '>', $imageOrder)->orderBy('order')->get();
             $image->delete();
-            foreach ($imagesToChangeOrder as $id=>$imageToOrder) {
-                $imageToOrder->order= $imageOrder + $id;
+            foreach ($imagesToChangeOrder as $id => $imageToOrder) {
+                $imageToOrder->order = $imageOrder + $id;
                 $imageToOrder->save();
             }
+            AddImagesToSubiekt::dispatch($image->color->model);
+
 
         } else {
             abort(403);
