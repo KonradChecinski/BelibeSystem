@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Intervention\Image\Facades\Image;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,12 +58,29 @@ Route::domain("b2b." . config("app.domain"))->group(function () {
 
 
 Route::get('assets/{path}', function ($path) {
-//    return response()->file(public_path("assets/$path"));
+//    return response()->file(public_path("$path"));
 })->name("assets");
+
+Route::get('storage/{path}', function ($path) {
+    return Storage::get('public/' . str_replace('>', '/', $path));
+})->name("storage");
 
 Route::get('images/{path}', function ($path) {
     return Storage::get('images/' . str_replace('\\', '/', $path));
 })->name("images");
+
+Route::get('images1x1/{path}', function ($path) {
+    return Storage::get('images/' . str_replace('\\', '/', $path));
+    $image = ProductImage::query()->where();
+    $path = $image->path;
+    $img = Storage::get('images/' . str_replace('\\', '/', $path));
+
+    $size = max($image->width, $image->height);
+    $img = Image::canvas($size, $size, '#ffffff')->insert($img, 'center');
+
+    header("Content-Type: image/jpeg");
+    return $img->response('jpg', 100);
+})->name("images1x1");
 
 
 Route::get("install", [InstallController::class, 'install'])->name("install");

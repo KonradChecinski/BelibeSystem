@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" href="{{ asset("/storage/favicons/B.ico") }}" type="image/x-icon">
-    <link rel="apple-touch-icon" href="{{ asset("/storage/favicons/B.png") }}">
+    <link rel="shortcut icon" href="{{ asset("/storage/favicons>B.ico") }}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{ asset("/storage/favicons>B.png") }}">
 
     <meta name="author" content="Konrad Checinski">
 

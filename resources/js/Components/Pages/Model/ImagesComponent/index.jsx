@@ -39,11 +39,13 @@ export default function ImagesComponent(props) {
     const [openAddDialog, setOpenAddDialog] = useState(false);
 
     const [accordion, setAccordion] = useState(
-        props.productModel.colors_with_images.map((color) => {
-                const {shortcut} = color
-                return {shortcut: shortcut, '2': false, '3': false}
-            }
-        ))
+        props.productModel.colors_with_images
+            .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
+            .map((color) => {
+                    const {id, shortcut} = color
+                    return {id: id, shortcut: shortcut, '2': false, '3': false}
+                }
+            ))
 
     const makeDataStructure = () => {
         let newData = [...props.productModel.colors_with_images.map(({id, shortcut, images}) => ({
@@ -65,7 +67,6 @@ export default function ImagesComponent(props) {
             }
         }
 
-
         return newData
     }
 
@@ -74,15 +75,16 @@ export default function ImagesComponent(props) {
 
 
     useEffect(() => {
-        console.log("zmieniam", data)
 
         setData(makeDataStructure())
 
-        setAccordion([props.productModel.colors_with_images.map((color) => {
-                const {shortcut} = color
-                return {shortcut: shortcut, '2': false, '3': false}
-            }
-        ), ...accordion])
+        setAccordion(props.productModel.colors_with_images
+            .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
+            .map((color) => {
+                    const {id, shortcut} = color
+                    return {id: id, shortcut: shortcut, '2': false, '3': false}
+                }
+            ))
     }, [props]);
 
 
@@ -113,16 +115,16 @@ export default function ImagesComponent(props) {
         const newImageArray = [...data]
 
         //Source
-        const sourceShortcut = e.source.droppableId.split("_")[0]
+        const sourceId = e.source.droppableId.split("_")[0]
         const sourceType = e.source.droppableId.split("_")[1]
         const sourceIndex = e.source.index
-        let sourceImageRow = newImageArray.find(e => e.shortcut === sourceShortcut).images[sourceType]
+        let sourceImageRow = newImageArray.find(e => e.id === Number(sourceId)).images[sourceType]
 
         //Destination
-        const destinationShortcut = e.destination.droppableId.split("_")[0]
+        const destinationId = e.destination.droppableId.split("_")[0]
         const destinationType = e.destination.droppableId.split("_")[1]
         const destinationIndex = e.destination.index
-        let destinationImageRow = newImageArray.find(e => e.shortcut === destinationShortcut).images[destinationType]
+        let destinationImageRow = newImageArray.find(e => e.id === Number(destinationId)).images[destinationType]
 
         const dropElement = sourceImageRow.splice(sourceIndex, 1)[0]
         destinationImageRow.splice(destinationIndex, 0, dropElement)
@@ -131,7 +133,7 @@ export default function ImagesComponent(props) {
         <>
             <DragDropContext onDragEnd={onDragEnd}>
                 {props.productModel.colors_with_images.map((color) => {
-                    if (accordion.find(e => e.shortcut === color.shortcut)) {
+                    if (accordion.find(e => e.id === color.id)) {
                         return (
                             <Paper elevation={4} key={color.id} sx={{my: 1}}>
 
@@ -144,15 +146,15 @@ export default function ImagesComponent(props) {
                                         <Typography>{color.shortcut} - {color.name}</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Droppable droppableId={color.shortcut + "_1"} type={"group"}
+                                        <Droppable droppableId={color.id + "_1"} type={"group"}
                                                    direction="horizontal">
                                             {(provided) => (
                                                 <Box {...provided.droppableProps} ref={provided.innerRef}
                                                      sx={{height: 270}}>
-                                                    <ImageColorList props={props} dropId={color.shortcut + "_1"}
+                                                    <ImageColorList props={props} dropId={color.id + "_1"}
 
-                                                                    imageArray={data.find(e => e.shortcut === color.shortcut).images[1] ?
-                                                                        data.find(e => e.shortcut === color.shortcut).images[1] : []}/>
+                                                                    imageArray={data.find(e => e.id === color.id).images[1] ?
+                                                                        data.find(e => e.id === color.id).images[1] : []}/>
 
                                                     {provided.placeholder}
                                                 </Box>
@@ -161,9 +163,9 @@ export default function ImagesComponent(props) {
                                         </Droppable>
 
                                         <Paper elevation={4}>
-                                            <Accordion expanded={accordion.find(e => e.shortcut === color.shortcut)[2]}
+                                            <Accordion expanded={accordion.find(e => e.id === color.id)[2]}
                                                        onChange={() => {
-                                                           let object = accordion.find(e => e.shortcut === color.shortcut)
+                                                           let object = accordion.find(e => e.id === color.id)
                                                            object[2] = !object[2]
 
                                                            setAccordion([...accordion, object])
@@ -177,16 +179,16 @@ export default function ImagesComponent(props) {
                                                     <Typography>Duży format</Typography>
                                                 </AccordionSummary>
                                                 <AccordionDetails>
-                                                    <Droppable droppableId={color.shortcut + "_2"} type={"group"}
+                                                    <Droppable droppableId={color.id + "_2"} type={"group"}
                                                                direction="horizontal">
                                                         {(provided) => (
                                                             <Box {...provided.droppableProps} ref={provided.innerRef}
-                                                                 sx={{height: accordion.find(e => e.shortcut === color.shortcut)[2] ? 270 : 0}}>
+                                                                 sx={{height: accordion.find(e => e.id === color.id)[2] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
-                                                                                dropId={color.shortcut + "_2"}
+                                                                                dropId={color.id + "_2"}
 
-                                                                                imageArray={data.find(e => e.shortcut === color.shortcut).images[2] ?
-                                                                                    data.find(e => e.shortcut === color.shortcut).images[2] : []}/>
+                                                                                imageArray={data.find(e => e.id === color.id).images[2] ?
+                                                                                    data.find(e => e.id === color.id).images[2] : []}/>
                                                                 {provided.placeholder}
                                                             </Box>
 
@@ -197,9 +199,9 @@ export default function ImagesComponent(props) {
                                             </Accordion>
 
                                             {}
-                                            <Accordion expanded={accordion.find(e => e.shortcut === color.shortcut)[3]}
+                                            <Accordion expanded={accordion.find(e => e.id === color.id)[3]}
                                                        onChange={() => {
-                                                           let object = accordion.find(e => e.shortcut === color.shortcut)
+                                                           let object = accordion.find(e => e.id === color.id)
                                                            object[3] = !object[3]
 
                                                            setAccordion([...accordion, object])
@@ -215,16 +217,16 @@ export default function ImagesComponent(props) {
                                                         używać</Typography>
                                                 </AccordionSummary>
                                                 <AccordionDetails>
-                                                    <Droppable droppableId={color.shortcut + "_3"} type={"group"}
+                                                    <Droppable droppableId={color.id + "_3"} type={"group"}
                                                                direction="horizontal" style="overflow-y: scroll;">
                                                         {(provided) => (
                                                             <Box {...provided.droppableProps} ref={provided.innerRef}
-                                                                 sx={{height: accordion.find(e => e.shortcut === color.shortcut)[3] ? 270 : 0}}>
+                                                                 sx={{height: accordion.find(e => e.id === color.id)[3] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
-                                                                                dropId={color.shortcut + "_3"}
+                                                                                dropId={color.id + "_3"}
 
-                                                                                imageArray={data.find(e => e.shortcut === color.shortcut).images[3] ?
-                                                                                    data.find(e => e.shortcut === color.shortcut).images[3] : []}/>
+                                                                                imageArray={data.find(e => e.id === color.id).images[3] ?
+                                                                                    data.find(e => e.id === color.id).images[3] : []}/>
                                                                 {provided.placeholder}
                                                             </Box>
 
