@@ -40,7 +40,7 @@ class ProductImageController extends Controller
         $model = $modelColor->model;
         $path = "images/" . $model->symbol . "/" . $modelColor->shortcut . "/" . $type . "/";
         foreach ($request->allFiles()['files'] as $id => $file) {
-            $pathImage = Storage::disk('local')->putFileAs($path, $file, uniqid() . "." . $file->getClientOriginalExtension());
+            $pathImage = Storage::putFileAs($path, $file, uniqid() . "." . $file->getClientOriginalExtension());
             $image = Image::make($file);
             if ($pathImage) {
                 $image = new ProductImage([

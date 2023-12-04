@@ -26,6 +26,7 @@ use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
 use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
+use App\Http\Controllers\XmlGeneratorController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -161,5 +162,6 @@ Route::middleware("auth:user")->group(function () {
 
 
 });
+
 
 require __DIR__ . "/auth.php";

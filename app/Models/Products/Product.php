@@ -46,8 +46,8 @@ class Product extends Model
 
     public function images(): hasManyThrough
     {
-        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
-        //Może nie działać
+        return $this->hasManyThrough(ProductImage::class, ProductModelColor::class, "id",
+            "product_model_color_id", "product_model_color_id", "id");
     }
 
     public function barcodes(): HasMany

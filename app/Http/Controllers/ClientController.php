@@ -38,8 +38,8 @@ class ClientController extends Controller
     {
 //        CreateTwFromSubiekt::dispatchSync();
 //
-        CreateModelFromSubiekt::dispatchSync();
-        UpdateTwFromSubiekt::dispatchSync();
+//        CreateModelFromSubiekt::dispatchSync();
+//        UpdateTwFromSubiekt::dispatchSync();
 //
 //        $updatedStany = Product::query()->whereNotNull("subiekt_id")->get();
 //
@@ -69,17 +69,7 @@ class ClientController extends Controller
 //        ProductCategory::create([
 //            "name" => "Brak"
 //        ]);
-
-//        $image = ProductImage::find(1);
-//        $path = $image->path;
-//        $img = Storage::get('images/' . str_replace('\\', '/', $path));
-//
-//        $size = max($image->width, $image->height);
-//        $img = Image::canvas($size, $size, '#ffffff')->insert($img, 'center');
-//
-//        header("Content-Type: image/jpeg");
-//        return $img->response('jpg', 100);
-
+        
 
     }
 

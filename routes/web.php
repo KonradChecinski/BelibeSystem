@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StorageController;
+use App\Http\Controllers\XmlGeneratorController;
 use App\Install\ClearDBController;
 use App\Install\Install2Controller;
 use App\Install\InstallController;
+use App\Models\Products\ProductImage;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -61,26 +64,15 @@ Route::get('assets/{path}', function ($path) {
 //    return response()->file(public_path("$path"));
 })->name("assets");
 
-Route::get('storage/{path}', function ($path) {
-    return Storage::get('public/' . str_replace('>', '/', $path));
-})->name("storage");
+Route::get('storage/{path}', [StorageController::class, 'storage'])->name("storage");
+Route::get('images/{path}', [StorageController::class, 'images'])->name("images");
+Route::get('images1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images1x1");
 
-Route::get('images/{path}', function ($path) {
-    return Storage::get('images/' . str_replace('\\', '/', $path));
-})->name("images");
 
-Route::get('images1x1/{path}', function ($path) {
-    return Storage::get('images/' . str_replace('\\', '/', $path));
-    $image = ProductImage::query()->where();
-    $path = $image->path;
-    $img = Storage::get('images/' . str_replace('\\', '/', $path));
-
-    $size = max($image->width, $image->height);
-    $img = Image::canvas($size, $size, '#ffffff')->insert($img, 'center');
-
-    header("Content-Type: image/jpeg");
-    return $img->response('jpg', 100);
-})->name("images1x1");
+Route::group(['prefix' => '/xml'], function () {
+    Route::get("merkandi", [XmlGeneratorController::class, "merkandiGenerateProductsXML"])->name("xml.merkandi");
+}
+);
 
 
 Route::get("install", [InstallController::class, 'install'])->name("install");
