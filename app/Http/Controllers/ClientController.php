@@ -10,6 +10,7 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
@@ -37,9 +38,23 @@ class ClientController extends Controller
     public function index()
     {
 //        CreateTwFromSubiekt::dispatchSync();
-//
+
+//        $productModel = ProductModel::find(5);
+//        $productModel->prices()->delete();
+//        $productModel->delete();
+
+
+        CreateModelFromSubiekt::dispatch();
+        CreateTwFromSubiekt::dispatch();
+        UpdateTwFromSubiekt::dispatch();
+
+
+//        CreateTwFromSubiekt::dispatchSync();
+
+//        CheckIfExistModelInSubiekt::dispatch();
 //        CreateModelFromSubiekt::dispatchSync();
 //        UpdateTwFromSubiekt::dispatchSync();
+//        UpdatePriceFromSubiekt::dispatchSync();
 //
 //        $updatedStany = Product::query()->whereNotNull("subiekt_id")->get();
 //
@@ -69,7 +84,7 @@ class ClientController extends Controller
 //        ProductCategory::create([
 //            "name" => "Brak"
 //        ]);
-        
+
 
     }
 

@@ -66,8 +66,19 @@ class CreateTwFromSubiekt implements ShouldQueue
                 continue;
             }
 
-            $colorTw = DaneDodatkowe::where("pwd_TypObiektu", -14)->where("pwd_IdObiektu", $createdTw->id)->first()->pwd_Tekst02;
-            $sizeTw = DaneDodatkowe::where("pwd_TypObiektu", -14)->where("pwd_IdObiektu", $createdTw->id)->first()->pwd_Tekst04;
+            $dane = DaneDodatkowe::where("pwd_TypObiektu", -14)->where("pwd_IdObiektu", $createdTw->id)->first();
+            if (is_null($dane)) continue;
+
+            $colorTw = $dane->pwd_Tekst02;
+            if (is_null($colorTw)) continue;
+
+
+            $colorNazwaTw = $dane->pwd_Tekst01;
+            if (is_null($colorNazwaTw)) continue;
+
+            $sizeTw = $dane->pwd_Tekst04;
+            if (is_null($sizeTw)) continue;
+
             $color = $model->colors()->where("shortcut", $colorTw)->first();
 
             if (is_null($product)) {
