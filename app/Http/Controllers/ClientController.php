@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 ini_set('max_execution_time', 600);
 
+use App\Helpers\Shoper\Shoper;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
 use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
@@ -20,6 +21,7 @@ use App\Models\Products\Product;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
 use App\Models\Subiekt\Towar;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -44,9 +46,14 @@ class ClientController extends Controller
 //        $productModel->delete();
 
 
-        CreateModelFromSubiekt::dispatch();
-        CreateTwFromSubiekt::dispatch();
-        UpdateTwFromSubiekt::dispatch();
+//        CreateModelFromSubiekt::dispatch();
+//        CreateTwFromSubiekt::dispatch();
+//        UpdateTwFromSubiekt::dispatch();
+
+//        Shoper::getImages(814);
+//        Shoper::deleteImages(814);
+//        Shoper::addImages(814, ProductModelColor::find(167));
+//        Shoper::changePrice(814, ProductModelColor::find(167));
 
 
 //        CreateTwFromSubiekt::dispatchSync();

@@ -6,7 +6,7 @@
 /public/storage
 /storage/*.key
 /vendor
-.env.belibetest
+.env
 .env.backup
 .env.production
 .phpunit.result.cache
@@ -19,5 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 lang/php_*.json
-/.env
-/.env
+/.env.belibe
+/.env.belibe
