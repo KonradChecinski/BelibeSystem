@@ -3,9 +3,11 @@
 namespace App\Helpers\Shoper;
 
 use App\Models\Products\ProductModelColor;
+use App\Models\ShoperOrder;
 use App\Models\ShoperToken;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Shoper
 {
@@ -33,38 +35,33 @@ class Shoper
         return $token->access_token;
     }
 
-    public static function getOrder(): bool
+    public static function findIdColor(ProductModelColor $productModelColor): int|null
     {
+
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
-            ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/orders', [
-                "order" => ["order_id"],
-                "limit" => 50,
+            ->get(env('SHOPER_URL') . '/webapi/rest/products', [
+                "limit" => 1,
                 "filters" => json_encode([
-                    "order_id" => ['>' => '1310'],
+                    "stock.code" => ['=' => $productModelColor->model->symbol . "-" . $productModelColor->shortcut],
                 ])
             ]);
         if ($response->status() === 401) {
             self::login();
-            return false;
+            return null;
         }
-
-        $orderId = $response->json()["list"][1]["order_id"];
-        $response2 = Http::withoutVerifying()
-            ->withToken(self::getAccessToken())
-            ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/order-products', [
-                "limit" => 50,
-                "filters" => json_encode([
-                    "order_id" => ['=' => $orderId],
-                ]),
-
-            ]);
-
-        dd($response, $response->status(), $response->body(), $response->json(), $response2->status(), $response2->body(), $response2->json());
-
-
+        if ($response->json()["count"] == 0) {
+            Log::alert($productModelColor->model->symbol . "-" . $productModelColor->shortcut . " not find in shoper");
+            return null;
+        }
+        return $response->json()["list"][0]["product_id"];
     }
 
+
+//    Funkcje zmieniające w shoperze
+
+
+//    Zdjęcia
     public static function getImages($productId): array
     {
         $response = Http::withoutVerifying()
@@ -125,6 +122,8 @@ class Shoper
         return true;
     }
 
+
+//    Zmiana ceny
     public static function changePrice(int $productId, ProductModelColor $productModelColor): bool
     {
 
@@ -142,4 +141,133 @@ class Shoper
 
         return true;
     }
+
+
+//    Zmiana opisu
+    public static function changeDescription(int $productId, ProductModelColor $productModelColor, string $description): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
+                "translations" => [
+                    "pl_PL" => [
+                        "description" => $description
+                    ]
+                ]
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+
+        return true;
+    }
+
+//    Zamówienia
+
+    public static function getOrder(): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/orders', [
+                "limit" => 10,
+                "filters" => json_encode([
+                    "is_paid" => true,
+                    "status.status_id" => 1
+                ])
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        $shoperOrders = $response->json()["list"];
+
+        foreach ($shoperOrders as $shoperOrder) {
+            $responseProducts = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/order-products/', [
+                    "limit" => 50,
+                    "filters" => json_encode([
+                        "order_id" => ['=' => $shoperOrder["order_id"]],
+                    ]),
+                ]);
+            if ($responseProducts->status() === 401) {
+                self::login();
+                return false;
+            }
+
+            if (!isset($shoperOrder["payment_additional_fields"])) {
+                $responsePayment = Http::withoutVerifying()
+                    ->withToken(self::getAccessToken())
+                    ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/payments/' . $shoperOrder["payment_id"]);
+                if ($responseProducts->status() === 401) {
+                    self::login();
+                    return false;
+                }
+
+                $paymentName = $responsePayment->json()["translations"]["pl_PL"]["title"];
+            } else {
+                $paymentName = $shoperOrder["payment_additional_fields"]["external_payment"];
+
+            }
+
+
+            $responseShipping = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/shippings/' . $shoperOrder["shipping_id"]);
+            if ($responseProducts->status() === 401) {
+                self::login();
+                return false;
+            }
+            $shippingName = $responseShipping->json()["name"];
+
+            $shoperOrderProducts = $responseProducts->json()["list"];
+
+            $shoperOrderModel = ShoperOrder::create([
+                "order_id" => $shoperOrder["order_id"],
+                "ordered_at" => $shoperOrder["date"],
+                "sum" => $shoperOrder["sum"],
+                "payment_name" => $paymentName,
+                "shiping_name" => $shippingName,
+                "shipping_cost" => $shoperOrder["shipping_cost"],
+                "promo_code" => $shoperOrder["promo_code"],
+                "email" => $shoperOrder["email"],
+                "firstname" => $shoperOrder["billing_address"]["firstname"],
+                "lastname" => $shoperOrder["billing_address"]["lastname"],
+                "company" => $shoperOrder["billing_address"]["company"],
+                "city" => $shoperOrder["billing_address"]["city"],
+                "postcode" => $shoperOrder["billing_address"]["postcode"],
+                "street1" => $shoperOrder["billing_address"]["street1"],
+                "country" => $shoperOrder["billing_address"]["country"],
+                "phone" => $shoperOrder["billing_address"]["phone"],
+                "tax_id" => $shoperOrder["billing_address"]["tax_identification_number"],
+                "subiekt_number" => "",
+                "subiekt_added_at" => null
+            ]);
+            foreach ($shoperOrderProducts as $shoperOrderProduct) {
+                $shoperOrderModel->shoperOrderProducts()->create([
+                    'code' => $shoperOrderProduct["code"],
+                    'quantity' => $shoperOrderProduct["quantity"],
+                    'price' => $shoperOrderProduct["price"],
+                ]);
+            }
+
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->put(env('SHOPER_URL') . '/webapi/rest/orders/' . $shoperOrder["order_id"], [
+                    "status_id" => 2
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+
+
+        }
+
+        return true;
+
+
+    }
+
 }

@@ -58,7 +58,7 @@ class ProductModelPriceController extends Controller
     {
         $productModelPrice->update($request->all());
         ChangePriceInModelInSubiekt::dispatch($productModelPrice->model);
-//        ShoperChangePrice::dispatch();
+        ShoperChangePrice::dispatch($productModelPrice->model);
     }
 
     /**

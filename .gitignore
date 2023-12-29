@@ -6,7 +6,7 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
+.env.belibe
 .env.backup
 .env.production
 .phpunit.result.cache

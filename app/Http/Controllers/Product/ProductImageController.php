@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductImageRequest;
 use App\Http\Requests\Product\UpdateProductImageRequest;
+use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
@@ -56,6 +57,7 @@ class ProductImageController extends Controller
 
         }
         AddImagesToSubiekt::dispatch($modelColor->model);
+        ShoperChangeImages::dispatch($modelColor);
 
     }
 
