@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\ProductImageOrder;
 use App\Http\Requests\StoreProductImageOrderRequest;
@@ -70,6 +71,10 @@ class ProductImageOrderController extends Controller
             }
         }
         AddImagesToSubiekt::dispatch($productModel);
+        foreach ($productModel->colors as $productModelColor) {
+            ShoperChangeImages::dispatch($productModelColor);
+        }
+
     }
 
     /**

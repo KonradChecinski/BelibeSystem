@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateB2BProductModelRequest;
+use App\Jobs\Shoper\ShoperChangeDescription;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 

@@ -13,22 +13,20 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperChangePrice implements ShouldQueue
+class ShoperGetOrder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 5;
     public $backoff = 20;
 
-    private ProductModel $productModel;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(ProductModel $productModel)
+    public function __construct()
     {
         $this->onQueue('linux');
-        $this->productModel = $productModel;
     }
 
     /**
@@ -36,12 +34,12 @@ class ShoperChangePrice implements ShouldQueue
      */
     public function handle(): void
     {
-        foreach ($this->productModel->colors as $productModelColor) {
-            $result = Shoper::changePrice(Shoper::findIdColor($productModelColor), $productModelColor);
-            if (!$result) {
-                $this->fail('Change price failed');
-            }
+
+        $result = Shoper::getOrder();
+        if (!$result) {
+            $this->fail('getting orders failed');
         }
+        ShoperOrderCreateInSubiekt::dispatch();
 
     }
 }

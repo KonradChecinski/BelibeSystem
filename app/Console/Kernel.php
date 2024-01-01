@@ -7,6 +7,7 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
@@ -22,14 +23,17 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->job(new UpdateQuantityFromSubiekt)->everyMinute();
-        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
+//        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
         $schedule->job(new UpdateSubiektIdWhereNull)->everyFiveMinutes();
         $schedule->job(new CreateModelFromSubiekt)->everyMinute();
         $schedule->job(new CheckIfExistModelInSubiekt)->everyFiveMinutes();
         $schedule->job(new CreateTwFromSubiekt)->everyMinute();
         $schedule->job(new UpdateTwFromSubiekt)->everyMinute();
 
+
+        // Shoper
         $schedule->job(new ShoperLogin)->MonthlyOn(1);
+        $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
     }
 
     /**

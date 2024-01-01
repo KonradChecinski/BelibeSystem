@@ -27,7 +27,7 @@ class UpdateSubiektIdWhereNull implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->onQueue('linux');
     }
 
     /**

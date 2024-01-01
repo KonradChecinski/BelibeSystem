@@ -11,6 +11,7 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
@@ -53,8 +54,8 @@ class ClientController extends Controller
 //        Shoper::getImages(814);
 //        Shoper::deleteImages(814);
 //        Shoper::addImages(814, ProductModelColor::find(167));
-//        Shoper::changePrice(814, ProductModelColor::find(167));
-
+//        Shoper::getOrder();
+        ShoperOrderCreateInSubiekt::dispatchSync();
 
 //        CreateTwFromSubiekt::dispatchSync();
 

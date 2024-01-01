@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProductImagePublishRequest;
+use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\ProductImageOrder;
 use App\Http\Requests\StoreProductImageOrderRequest;
@@ -62,6 +63,7 @@ class ProductImagePublishController extends Controller
         $productImage->save();
 
         AddImagesToSubiekt::dispatch($productImage->color->model);
+        ShoperChangeImages::dispatch($productImage->color);
     }
 
     /**

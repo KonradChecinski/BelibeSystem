@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperChangePrice implements ShouldQueue
+class ShoperChangeDescription implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,7 +37,7 @@ class ShoperChangePrice implements ShouldQueue
     public function handle(): void
     {
         foreach ($this->productModel->colors as $productModelColor) {
-            $result = Shoper::changePrice(Shoper::findIdColor($productModelColor), $productModelColor);
+            $result = Shoper::changeDescription(Shoper::findIdColor($productModelColor), $productModelColor, $this->productModel->description_b2c);
             if (!$result) {
                 $this->fail('Change price failed');
             }
