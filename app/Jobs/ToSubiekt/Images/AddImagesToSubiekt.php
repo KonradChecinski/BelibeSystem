@@ -16,6 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Nette\Utils\Image;
 
@@ -72,12 +73,9 @@ class AddImagesToSubiekt implements ShouldQueue
 
             foreach ($product->color->images->sortBy("order")->values() as $id => $image) {
                 if ($id > 1) continue;
-//                dd(route('images', ['path' => $image->path]));
-//                $imageTmp = new Image("https://system.belibe.test/images/S-0100-0104%5C1%5C1%5C%5C6536654269317.jpg")
-                $imageTmp = Storage::path('images/' . str_replace('\\', '/', $image->path));
-//                $imageBin = file_get_contents('D:/PICS/Pexels/photo-814194.jpeg');
-//                $subiektDodatki.ZmienZdjecieNaBinaria()($imageTmp)
-                $imageSubiekt = $subiektTowar->Zdjecia->Dodaj($imageTmp);
+
+                Storage::disk("local")->put("temp/temp", Storage::get('images/' . str_replace('\\', '/', $image->path)));
+                $imageSubiekt = $subiektTowar->Zdjecia->Dodaj(Storage::disk("local")->path("temp/temp"));
                 $imageSubiekt->Glowne = (bool)$id == 0;
             }
 
