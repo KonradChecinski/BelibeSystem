@@ -38,7 +38,10 @@ class UpdateQuantityFromSubiekt implements ShouldQueue
             $stan = $productSubiekt->stany->sum("st_Stan");
             $stanWszystkie = $productSubiekt->stanyWszystkie->sum("st_Stan");
             $product = Product::findBySubiektId($updatedStan->id);
-            if (is_null($product)) DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
+            if (is_null($product)) {
+                DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
+                continue;
+            }
 
             $product->update([
                 "quantity" => $stan,
