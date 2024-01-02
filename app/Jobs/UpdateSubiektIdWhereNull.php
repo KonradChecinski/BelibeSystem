@@ -43,8 +43,8 @@ class UpdateSubiektIdWhereNull implements ShouldQueue
                 "subiekt_id" => $subiektTowar->tw_Id,
                 "show_in_subiekt" => !(bool)$subiektTowar->Zablokowany
             ]);
-            ChangeProductInSubiekt::dispatch($product);
-            ChangeProductShowInSubiekt::dispatch($product);
+            ChangeProductInSubiekt::dispatch($product->id);
+            ChangeProductShowInSubiekt::dispatch($product->id);
             ChangePriceInModelInSubiekt::dispatch($product->model);
         }
 

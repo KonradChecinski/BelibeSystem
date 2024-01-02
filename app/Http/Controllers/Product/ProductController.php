@@ -157,7 +157,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        ChangeProductInSubiekt::dispatch($product);
+        ChangeProductInSubiekt::dispatch($product->id);
     }
 
     /**

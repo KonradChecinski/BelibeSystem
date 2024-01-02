@@ -57,7 +57,7 @@ class ShowProductController extends Controller
     {
         $product->update($request->all());
         $product->save();
-        ChangeProductShowInSubiekt::dispatch($product);
+        ChangeProductShowInSubiekt::dispatch($product->id);
     }
 
     /**

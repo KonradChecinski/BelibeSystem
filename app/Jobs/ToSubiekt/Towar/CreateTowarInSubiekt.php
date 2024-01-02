@@ -73,7 +73,7 @@ class CreateTowarInSubiekt implements ShouldQueue
 
         DB::connection("subiekt")->table("Belibe_System_Tw_Created")->where("id", $productSubiekt->tw_Id)->delete();
 
-        ChangeProductInSubiekt::dispatch(Product::find($this->product->id))->delay(now()->addSeconds(5));
+        ChangeProductInSubiekt::dispatch($this->product->id)->delay(now()->addSeconds(5));
         ChangePriceInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));
         ChangeB2CInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));
         ChangeBasicInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));

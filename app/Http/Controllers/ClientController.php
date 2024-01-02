@@ -55,7 +55,8 @@ class ClientController extends Controller
 //        Shoper::deleteImages(814);
 //        Shoper::addImages(814, ProductModelColor::find(167));
 //        Shoper::getOrder();
-        ShoperOrderCreateInSubiekt::dispatchSync();
+//        ShoperOrderCreateInSubiekt::dispatchSync();
+
 
 //        CreateTwFromSubiekt::dispatchSync();
 
@@ -88,7 +89,7 @@ class ClientController extends Controller
 //        CreateTowarInSubiekt::dispatchSync(Product::findBySubiektId(2239));
 //        ChangeProductInSubiekt::dispatchSync(Product::find(91));
 //        UpdateTwFromSubiekt::dispatchSync();
-//        UpdateQuantityFromSubiekt::dispatchSync();
+        UpdateQuantityFromSubiekt::dispatchSync();
 //        ProductCategory::create([
 //            "name" => "Brak"
 //        ]);

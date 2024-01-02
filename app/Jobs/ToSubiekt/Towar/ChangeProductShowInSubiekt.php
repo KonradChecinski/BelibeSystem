@@ -16,17 +16,17 @@ class ChangeProductShowInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $product;
+    protected Product $product;
     public $tries = 5;
     public $backoff = 20;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Product $product)
+    public function __construct(int $productId)
     {
         $this->onQueue('sfera');
-        $this->product = $product;
+        $this->product = Product::find($productId);
     }
 
     /**
