@@ -142,6 +142,45 @@ class Shoper
         return true;
     }
 
+    //Stocki
+    public static function getProductStock(): array|null
+    {
+//        (float)$productModelColor->model->prices->retail_gross_price / 100
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
+                "limit" => 50,
+
+                "filters" => json_encode([
+//                    "product_id" => ['=' => 402],
+                    "extended" => 1,
+                    "price_type" => ["!=" => 0]
+                ])
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json());
+        return $response->json()["list"];
+    }
+
+    public static function changeStockPrice(int $productId): bool
+    {
+//        (float)$productModelColor->model->prices->retail_gross_price / 100
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productId, [
+                "price_type" => 0
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        sleep(1);
+        return true;
+    }
+
 
 //    Zmiana opisu
     public static function changeDescription(int $productId, ProductModelColor $productModelColor, string $description): bool

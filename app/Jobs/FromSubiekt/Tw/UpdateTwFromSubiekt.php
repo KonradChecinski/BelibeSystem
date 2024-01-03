@@ -156,7 +156,7 @@ class UpdateTwFromSubiekt implements ShouldQueue
 
             ChangeProductInSubiekt::dispatch($product->id);
             ChangeProductShowInSubiekt::dispatch($product->id);
-            ChangePriceInModelInSubiekt::dispatch($product->model);
+//            ChangePriceInModelInSubiekt::dispatch($product->model);
         }
     }
 }
