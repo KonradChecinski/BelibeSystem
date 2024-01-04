@@ -2,6 +2,7 @@
 
 namespace App\Jobs\FromSubiekt\Stan;
 
+use App\Jobs\Shoper\ShoperChangeQuantity;
 use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
@@ -48,8 +49,10 @@ class UpdateQuantityFromSubiekt implements ShouldQueue
                 "quantity_total" => $stanWszystkie,
             ]);
             $product->save();
+
             DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
 
+            ShoperChangeQuantity::dispatch($product);
         }
     }
 }

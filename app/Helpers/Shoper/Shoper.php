@@ -2,6 +2,8 @@
 
 namespace App\Helpers\Shoper;
 
+use App\Models\Products\Product;
+use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 use App\Models\ShoperOrder;
 use App\Models\ShoperToken;
@@ -54,6 +56,7 @@ class Shoper
             Log::alert($productModelColor->model->symbol . "-" . $productModelColor->shortcut . " not find in shoper");
             return null;
         }
+//        dd($response->json()["list"]);
         return $response->json()["list"][0]["product_id"];
     }
 
@@ -145,14 +148,12 @@ class Shoper
     //Stocki
     public static function getProductStock(): array|null
     {
-//        (float)$productModelColor->model->prices->retail_gross_price / 100
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
                 "limit" => 50,
 
                 "filters" => json_encode([
-//                    "product_id" => ['=' => 402],
                     "extended" => 1,
                     "price_type" => ["!=" => 0]
                 ])
@@ -165,12 +166,30 @@ class Shoper
         return $response->json()["list"];
     }
 
-    public static function changeStockPrice(int $productId): bool
+    public static function getProductStockBySymbol(Product $product): array|null
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
+                "filters" => json_encode([
+                    "extended" => 1,
+                    "code" => $product->symbol
+                ])
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+        dd($response->json());
+        return $response->json()["list"];
+    }
+
+    public static function changeStockPrice(int $productStockId): bool
     {
 //        (float)$productModelColor->model->prices->retail_gross_price / 100
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
-            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productId, [
+            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
                 "price_type" => 0
             ]);
         if ($response->status() === 401) {
@@ -178,6 +197,37 @@ class Shoper
             return false;
         }
         sleep(1);
+        return true;
+    }
+
+    public static function changeProductStockQuantity(int $productStockId, Product $product): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
+                "stock" => $product->quantity
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        sleep(1);
+        return true;
+    }
+
+    //Zmiana stanu produktu
+    public static function changeProductQuantity(int $productId, ProductModelColor $productModelColor): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
+                "stock" => ["stock" => $productModelColor->products->sum("quantity")]
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+
         return true;
     }
 
