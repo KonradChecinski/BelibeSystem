@@ -162,7 +162,7 @@ class Shoper
             self::login();
             return null;
         }
-//        dd($response->json());
+//        dd($response->json(), $response);
         return $response->json()["list"];
     }
 
@@ -180,7 +180,7 @@ class Shoper
             self::login();
             return null;
         }
-        dd($response->json());
+//        dd($response->json());
         return $response->json()["list"];
     }
 
