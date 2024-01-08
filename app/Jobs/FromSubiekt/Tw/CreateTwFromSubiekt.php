@@ -8,6 +8,7 @@ use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
 use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
 use App\Models\Subiekt\DaneDodatkowe;
@@ -80,6 +81,15 @@ class CreateTwFromSubiekt implements ShouldQueue
             if (is_null($sizeTw)) continue;
 
             $color = $model->colors()->where("shortcut", $colorTw)->first();
+
+            if (is_null($color)) {
+                $color = new ProductModelColor([
+                    'shortcut' => $colorTw,
+                    'name' => $colorNazwaTw,
+                    'b2c_shortcut' => $colorTw
+                ]);
+                $model->colors()->save($color);
+            }
 
             if (is_null($product)) {
                 $product = new Product([

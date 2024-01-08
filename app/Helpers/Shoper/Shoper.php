@@ -45,7 +45,7 @@ class Shoper
             ->get(env('SHOPER_URL') . '/webapi/rest/products', [
                 "limit" => 1,
                 "filters" => json_encode([
-                    "stock.code" => ['=' => $productModelColor->model->symbol . "-" . $productModelColor->shortcut],
+                    "stock.code" => ['=' => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut],
                 ])
             ]);
         if ($response->status() === 401) {
@@ -53,7 +53,7 @@ class Shoper
             return null;
         }
         if ($response->json()["count"] == 0) {
-            Log::alert($productModelColor->model->symbol . "-" . $productModelColor->shortcut . " not find in shoper");
+            Log::alert($productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut . " not find in shoper");
             return null;
         }
 //        dd($response->json()["list"]);

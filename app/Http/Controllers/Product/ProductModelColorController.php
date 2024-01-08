@@ -31,7 +31,7 @@ class ProductModelColorController extends Controller
      */
     public function store(StoreProductModelColorRequest $request, ProductModel $model)
     {
-        $model->colors()->create($request->all());
+        $model->colors()->create(array_merge($request->all(), ["b2c_shortcut" => $request->shortcut]));
     }
 
     /**

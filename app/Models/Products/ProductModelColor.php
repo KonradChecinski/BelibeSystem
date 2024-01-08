@@ -20,6 +20,7 @@ class ProductModelColor extends Model
     protected $fillable = [
         'product_model_color_id',
         'shortcut',
+        'b2c_shortcut',
         'name',
         'product_b2c_color_id'
     ];

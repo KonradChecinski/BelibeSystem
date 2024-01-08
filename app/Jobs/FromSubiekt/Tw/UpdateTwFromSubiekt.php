@@ -90,6 +90,7 @@ class UpdateTwFromSubiekt implements ShouldQueue
                 $color = new ProductModelColor([
                     'shortcut' => $colorTw,
                     'name' => $colorNazwaTw,
+                    'b2c_shortcut' => $colorTw
                 ]);
                 $model->colors()->save($color);
             }
