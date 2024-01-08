@@ -34,6 +34,9 @@ class Kernel extends ConsoleKernel
         // Shoper
         $schedule->job(new ShoperLogin)->MonthlyOn(1);
         $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
+
+        //Telescope
+        $schedule->command('telescope:prune')->daily();
     }
 
     /**
