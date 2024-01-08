@@ -254,6 +254,7 @@ class Shoper
 
 //    Zamówienia
 
+
     public static function getOrder(): bool
     {
         $response = Http::withoutVerifying()
@@ -262,14 +263,33 @@ class Shoper
                 "limit" => 10,
                 "filters" => json_encode([
                     "is_paid" => true,
-                    "status.status_id" => 1
+                    "status.status_id" => 1,
+                    "payment_id" => ["!=" => 2],
                 ])
             ]);
         if ($response->status() === 401) {
             self::login();
             return false;
         }
-        $shoperOrders = $response->json()["list"];
+
+
+        $responseCashOnDelivery = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/orders', [
+                "limit" => 10,
+                "order" => "order_id",
+                "filters" => json_encode([
+                    "is_paid" => false,
+                    "status.status_id" => 1,
+                    "payment_id" => ["=" => 2],
+                ])
+            ]);
+        if ($responseCashOnDelivery->status() === 401) {
+            self::login();
+            return false;
+        }
+
+        $shoperOrders = array_merge($response->json()["list"], $responseCashOnDelivery->json()["list"]);
 
         foreach ($shoperOrders as $shoperOrder) {
             $responseProducts = Http::withoutVerifying()
