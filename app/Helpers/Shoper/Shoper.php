@@ -67,19 +67,25 @@ class Shoper
 //    Zdjęcia
     public static function getImages($productId): array
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getAccessToken())
-            ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/product-images', [
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->asForm()->get(env('SHOPER_URL') . '/webapi/rest/product-images', [
 //                "order" => ["order_id"],
-                "limit" => 50,
-                "filters" => json_encode([
-                    "product_id" => ['=' => $productId],
-                ])
-            ]);
-        if ($response->status() === 401) {
-            self::login();
+                    "limit" => 50,
+                    "filters" => json_encode([
+                        "product_id" => ['=' => $productId],
+                    ])
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return self::getImages($productId);
+            }
+        } catch (\Exception $e) {
+            sleep(5);
             return self::getImages($productId);
         }
+
 
         return $response->json();
     }
@@ -92,11 +98,17 @@ class Shoper
         }
 
         foreach ($productImages["list"] as $productImage) {
-            $response = Http::withoutVerifying()
-                ->withToken(self::getAccessToken())
-                ->asForm()->delete(env('SHOPER_URL') . '/webapi/rest/product-images/' . $productImage["gfx_id"]);
-            if ($response->status() === 401) {
-                self::login();
+            try {
+                $response = Http::withoutVerifying()
+                    ->withToken(self::getAccessToken())
+                    ->asForm()->delete(env('SHOPER_URL') . '/webapi/rest/product-images/' . $productImage["gfx_id"]);
+                if ($response->status() === 401) {
+                    self::login();
+                    return false;
+                }
+
+            } catch (\Exception $e) {
+                sleep(5);
                 return false;
             }
         }
@@ -106,19 +118,24 @@ class Shoper
     public static function addImages(int $productShoperId, ProductModelColor $productModelColor): bool
     {
         foreach ($productModelColor->images->sortBy("order")->values() as $image) {
-            $response = Http::withoutVerifying()
-                ->withToken(self::getAccessToken())
-                ->post(env('SHOPER_URL') . '/webapi/rest/product-images', [
-                    "product_id" => $productShoperId,
-                    "url" => str_replace("test", "pl", url("images", ['path' => $image->path])),
-                    "translations" => [
-                        "pl_PL" => [
-                            "name" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut
+            try {
+                $response = Http::withoutVerifying()
+                    ->withToken(self::getAccessToken())
+                    ->post(env('SHOPER_URL') . '/webapi/rest/product-images', [
+                        "product_id" => $productShoperId,
+                        "url" => str_replace("test", "pl", url("images", ['path' => $image->path])),
+                        "translations" => [
+                            "pl_PL" => [
+                                "name" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut
+                            ]
                         ]
-                    ]
-                ]);
-            if ($response->status() === 401) {
-                self::login();
+                    ]);
+                if ($response->status() === 401) {
+                    self::login();
+                    return false;
+                }
+            } catch (\Exception $e) {
+                sleep(5);
                 return false;
             }
         }
@@ -142,6 +159,30 @@ class Shoper
             return false;
         }
 
+        return true;
+    }
+
+    public static function AddProduct(ProductModelColor $productModelColor): bool
+    {
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->post(env('SHOPER_URL') . '/webapi/rest/products/', [
+                "category_id",
+                "code",
+                "pkwiu",
+                "stock",
+                "stock.price",
+                "translations",
+                "translations.(locale).name",
+                "translations.(locale).active"
+
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        dd($response, $response->body(), $response->json());
         return true;
     }
 
@@ -175,6 +216,41 @@ class Shoper
                     "extended" => 1,
                     "code" => $product->symbol
                 ])
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json());
+        return $response->json()["list"];
+    }
+
+    public static function getProductStockAll(int $page): array|null
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
+                "page" => $page,
+                "limit" => 50,
+                "filters" => json_encode([
+                    "extended" => 1,
+                ])
+            ]);
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+        dd($response->json());
+        return $response->json()["list"];
+    }
+
+    public static function getProductAll(int $page): array|null
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
+                "page" => $page,
+                "limit" => 50,
             ]);
         if ($response->status() === 401) {
             self::login();
