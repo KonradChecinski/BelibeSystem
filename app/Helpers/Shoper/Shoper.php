@@ -7,6 +7,7 @@ use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 use App\Models\ShoperOrder;
 use App\Models\ShoperToken;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -162,29 +163,183 @@ class Shoper
         return true;
     }
 
-    public static function AddProduct(ProductModelColor $productModelColor): bool
+    public static function getCategory(string $category): int|null
     {
+        $categories = collect(explode("#", $category));
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->get(env('SHOPER_URL') . '/webapi/rest/categories/', [
+                    "filters" => json_encode([
+                        "translations.pl_PL.name" => ['=' => $categories->last()],
+                        "root" => $categories->count() == 1
+                    ])
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+        } catch (Exception $e) {
+            sleep(5);
+            return self::getCategory($category);
+        }
 
-        $response = Http::withoutVerifying()
-            ->withToken(self::getAccessToken())
-            ->post(env('SHOPER_URL') . '/webapi/rest/products/', [
-                "category_id",
-                "code",
-                "pkwiu",
-                "stock",
-                "stock.price",
-                "translations",
-                "translations.(locale).name",
-                "translations.(locale).active"
+        if (count($response->json()["list"]) == 0) {
+            Log::alert("Cannot find category: " . $category);
+            return null;
+        }
+//        dd($response, $category, $response->body(), $response->json());
 
-            ]);
-        if ($response->status() === 401) {
-            self::login();
+        return (int)$response->json()["list"][0]["category_id"];
+    }
+
+    public static function getProducer(string $producer): int|null
+    {
+//        $categories = collect(explode("#", $category));
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->get(env('SHOPER_URL') . '/webapi/rest/producers/', [
+                    "filters" => json_encode([
+                        "name" => ['=' => $producer],
+
+                    ])
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+        } catch (Exception $e) {
+            sleep(5);
+            return self::getProducer($producer);
+        }
+        if (count($response->json()["list"]) == 0) {
+            Log::alert("Cannot find producer: " . $producer);
+            return null;
+        }
+//        dd($response, $producer, $response->body(), $response->json());
+        return (int)$response->json()["list"][0]["producer_id"];
+    }
+
+    public static function getOptions(string $option): int|null
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->get(env('SHOPER_URL') . '/webapi/rest/options/', [
+//                    "filters" => json_encode([
+//                        "name" => ['=' => $producer],
+//
+//                    ])
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+        } catch (Exception $e) {
+            sleep(5);
+//            return self::getProducer($producer);
+        }
+//        if (count($response->json()["list"]) == 0) {
+//            Log::alert("Cannot find producer: " . $producer);
+//            return null;
+//        }
+        dd($response, $response->body(), $response->json());
+        return (int)$response->json()["list"][0]["producer_id"];
+    }
+
+    public static function getOptionsValues(int $optionValue): int|null
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->get(env('SHOPER_URL') . '/webapi/rest/option-values/', [
+                    "filters" => json_encode([
+                        "option_id" => ['=' => $optionValue],
+
+                    ])
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+        } catch (Exception $e) {
+            sleep(5);
+//            return self::getProducer($producer);
+        }
+//        if (count($response->json()["list"]) == 0) {
+//            Log::alert("Cannot find producer: " . $producer);
+//            return null;
+//        }
+        dd($response, $response->body(), $response->json());
+        return (int)$response->json()["list"][0]["producer_id"];
+    }
+
+    public static function AddProduct(ProductModelColor $productModelColor, int $categoryId, int $producerId): int|null
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->post(env('SHOPER_URL') . '/webapi/rest/products/', [
+                    "category_id" => $categoryId,
+                    "code" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut,
+                    "producer_id" => $producerId,
+                    "stock" => [
+                        "price" => $productModelColor->model->prices->retail_gross_price / 100,
+                        "stock" => $productModelColor->products()->where("show_in_b2c", true)->sum("quantity"),
+                        "delivery_id" => 1 //24h
+                    ],
+                    "translations" => [
+                        "pl_PL" => [
+                            "name" => $productModelColor->b2c_name,
+                            "active" => true, //true
+                        ]
+                    ],
+
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return self::AddProduct($productModelColor, $categoryId, $producerId);
+            }
+        } catch (Exception $e) {
+            sleep(5);
+            return self::AddProduct($productModelColor, $categoryId, $producerId);
+        }
+
+//        dd($response, $response->body(), $response->json());
+        return $response->json();
+    }
+
+    public static function AddProductStock(Product $product, int $shoperProductId): bool
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->post(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
+                    "product_id" => $shoperProductId,
+                    "price_type" => 0,
+                    "active" => true,
+                    "code" => $product->symbol,
+                    "ean" => $product->barcodes()->where("main", true)->first(),
+                    "stock" => $product->quantity,
+                    "options" => [
+                        "9" => 0,//Rozmiar
+                        "16" => 0,//Kolor
+                    ]
+                ]);
+            if ($response->status() === 401) {
+                self::login();
+                return false;
+            }
+        } catch (Exception $e) {
+            sleep(5);
             return false;
         }
+
         dd($response, $response->body(), $response->json());
         return true;
     }
+
 
     //Stocki
     public static function getProductStock(): array|null
@@ -297,7 +452,7 @@ class Shoper
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
-                "stock" => ["stock" => $productModelColor->products->sum("quantity")]
+                "stock" => ["stock" => $productModelColor->products()->where("show_in_b2c", true)]
             ]);
         if ($response->status() === 401) {
             self::login();

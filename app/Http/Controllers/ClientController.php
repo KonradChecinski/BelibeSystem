@@ -11,6 +11,8 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\Shoper\ShoperChangeImages;
+use App\Jobs\Shoper\ShoperChangePrice;
 use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
@@ -56,44 +58,25 @@ class ClientController extends Controller
 //        Shoper::addImages(814, ProductModelColor::find(167));
 //        Shoper::getOrder();
 //        ShoperOrderCreateInSubiekt::dispatchSync();
-
-
-//        CreateTwFromSubiekt::dispatchSync();
-
-//        CheckIfExistModelInSubiekt::dispatch();
-//        CreateModelFromSubiekt::dispatchSync();
-//        UpdateTwFromSubiekt::dispatchSync();
-//        UpdatePriceFromSubiekt::dispatchSync();
+//        Shoper::changeStockPrice();
+//        dd();
+//        foreach (Product::query()->orWhereNotNull("subiekt_id")->get() as $product) {
+//            DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->insert(["id" => $product->subiekt_id]);
 //
-//        $updatedStany = Product::query()->whereNotNull("subiekt_id")->get();
-//
-//        foreach ($updatedStany as $updatedStan) {
-////            dd($updatedStan);
-//            $productSubiekt = Towar::find($updatedStan->subiekt_id);
-//            $stan = $productSubiekt->stany->sum("st_Stan");
-//            $stanWszystkie = $productSubiekt->stanyWszystkie->sum("st_Stan");
-//            $product = Product::findBySubiektId($updatedStan->subiekt_id);
-////            if (is_null($product)) DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->subiekt_id)->delete();
-//
-//            $product->update([
-//                "quantity" => $stan,
-//                "quantity_total" => $stanWszystkie,
-//            ]);
-//            $product->save();
-//            DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->subiekt_id)->delete();
-
 //        }
-//        ChangePriceInModelInSubiekt::dispatchSync(ProductModel::find(272));
-//        dd(ProductModel::find(272));
+//        Shoper::getOrder();
+//        ShoperChangePrice::dispatchSync(ProductModel::find(129));
 
-//        CreateTowarInSubiekt::dispatchSync(Product::findBySubiektId(2239));
-//        ChangeProductInSubiekt::dispatchSync(Product::find(91));
-//        UpdateTwFromSubiekt::dispatchSync();
-        UpdateQuantityFromSubiekt::dispatchSync();
-//        ProductCategory::create([
-//            "name" => "Brak"
-//        ]);
+//        Shoper::getProductStockBySymbol(Product::find(120));
+//        Shoper::getOptions("cos");
+        Shoper::getOptionsValues(16);
 
+
+        $producerId = Shoper::getProducer(ProductModelColor::find(524)->model->brand->name);
+        $categoryId = Shoper::getCategory(ProductModelColor::find(524)->model->b2cCategory->name);
+        $idProduct = Shoper::AddProduct(ProductModelColor::find(524), $categoryId, $producerId);
+        $idProductS = Shoper::AddProductStock(Product::find(2652), $idProduct);
+        dd($idProduct);
 
     }
 
