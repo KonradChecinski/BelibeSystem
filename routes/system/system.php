@@ -44,6 +44,7 @@ Route::get("/", function () {
     return Inertia::render("Dashboard");
 })->middleware(["auth:user", "verified"])->name("system.dashboard");;
 
+
 Route::middleware("auth:user")->group(function () {
     Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
     Route::get("/models/data", [ProductModelController::class, 'data']);
@@ -73,7 +74,7 @@ Route::middleware("auth:user")->group(function () {
 
 
     Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
-    Route::get("test", [\App\Http\Controllers\ClientController::class, 'index'])->name("system.test");
+
 
     Route::group(['prefix' => '/settings'], function () {
         Route::get("/", function () {
@@ -161,6 +162,14 @@ Route::middleware("auth:user")->group(function () {
     });
 
 
+});
+
+Route::middleware("auth:user")->group(function () {
+
+    Route::get("phpinfo", function () {
+        phpinfo();
+    })->name("system.phpinfo");
+    Route::get("test", [\App\Http\Controllers\ClientController::class, 'index'])->name("system.test");
 });
 
 
