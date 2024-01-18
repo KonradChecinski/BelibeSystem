@@ -37,6 +37,7 @@ class ShoperChangeImages implements ShouldQueue
     public function handle(): void
     {
         $shoperProductId = Shoper::findIdColor($this->productModelColor);
+        if (is_null($shoperProductId)) return;
         $resultDeleting = Shoper::deleteImages($shoperProductId);
         $resultAdding = Shoper::addImages($shoperProductId, $this->productModelColor);
         if (!$resultDeleting || !$resultAdding) {

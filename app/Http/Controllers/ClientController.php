@@ -14,6 +14,7 @@ use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\Shoper\ShoperChangePrice;
 use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
+use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
@@ -69,14 +70,16 @@ class ClientController extends Controller
 
 //        Shoper::getProductStockBySymbol(Product::find(120));
 //        Shoper::getOptions("cos");
-        Shoper::getOptionsValues(16);
+//        Shoper::getOptionsValues(16);
 
 
-        $producerId = Shoper::getProducer(ProductModelColor::find(524)->model->brand->name);
-        $categoryId = Shoper::getCategory(ProductModelColor::find(524)->model->b2cCategory->name);
-        $idProduct = Shoper::AddProduct(ProductModelColor::find(524), $categoryId, $producerId);
-        $idProductS = Shoper::AddProductStock(Product::find(2652), $idProduct);
-        dd($idProduct);
+//        $producerId = Shoper::getProducer(ProductModelColor::find(524)->model->brand->name);
+//        $categoryId = Shoper::getCategory(ProductModelColor::find(524)->model->b2cCategory->name);
+//        $idProduct = Shoper::AddProduct(ProductModelColor::find(524), $categoryId, $producerId);
+//        $idProductS = Shoper::AddProductStock(Product::find(2652), $idProduct);
+//        dd($idProduct);
+
+        AddImagesToSubiekt::dispatchSync(ProductModel::find(270));
 
     }
 

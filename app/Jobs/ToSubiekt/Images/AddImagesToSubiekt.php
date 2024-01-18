@@ -27,6 +27,7 @@ class AddImagesToSubiekt implements ShouldQueue
     protected $productModel;
     public $tries = 5;
     public $backoff = 20;
+    public $timeout = 60;
 
     /**
      * Create a new job instance.
