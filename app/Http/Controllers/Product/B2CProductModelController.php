@@ -57,7 +57,7 @@ class B2CProductModelController extends Controller
      */
     public function update(UpdateB2CProductModelRequest $request, ProductModel $productModel)
     {
-        $productModel->update(["description_b2c" => $request->description_b2c]);
+        $productModel->update(["description_b2c" => $request->description_b2c, "b2c_variant" => $request->b2c_variant]);
         $productModel->b2cCategory()->associate($request->product_b2c_category_id);
         $productModel->save();
         ChangeB2CInModelInSubiekt::dispatch($productModel);

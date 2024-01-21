@@ -34,7 +34,8 @@ class ProductModel extends Model
         'description_b2c',
         'description_allegro',
         'name_11_char',
-        'name_6_char'
+        'name_6_char',
+        'b2c_variant'
     ];
 
     public function colors(): HasMany

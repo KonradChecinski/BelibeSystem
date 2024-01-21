@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateShowProductRequest;
+use App\Jobs\Shoper\ShoperChangeShow;
 use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
 use Illuminate\Http\Request;
@@ -58,6 +59,7 @@ class ShowProductController extends Controller
         $product->update($request->all());
         $product->save();
         ChangeProductShowInSubiekt::dispatch($product->id);
+        ShoperChangeShow::dispatch($product);
     }
 
     /**

@@ -11,8 +11,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('product_model_colors', function (Blueprint $table) {
+
             $table
-                ->string("b2c_name", 100)
+                ->string("b2c_product_name", 100)
+                ->after("product_b2c_color_id");
+            $table
+                ->string("b2c_name")
                 ->after("product_b2c_color_id");
         });
     }
@@ -24,6 +28,7 @@ return new class extends Migration {
     {
         Schema::table('product_model_colors', function (Blueprint $table) {
             $table->dropColumn("b2c_name");
+            $table->dropColumn("b2c_product_name");
 
         });
     }

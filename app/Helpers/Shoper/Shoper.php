@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Arr;
 
 class Shoper
 {
@@ -49,6 +50,10 @@ class Shoper
                     "stock.code" => ['=' => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut],
                 ])
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::findIdColor($productModelColor);
+        }
         if ($response->status() === 401) {
             self::login();
             return null;
@@ -78,6 +83,10 @@ class Shoper
                         "product_id" => ['=' => $productId],
                     ])
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::getImages($productId);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return self::getImages($productId);
@@ -103,6 +112,10 @@ class Shoper
                 $response = Http::withoutVerifying()
                     ->withToken(self::getAccessToken())
                     ->asForm()->delete(env('SHOPER_URL') . '/webapi/rest/product-images/' . $productImage["gfx_id"]);
+                if ($response->status() === 429) {
+                    sleep(1);
+                    return self::deleteImages($productId);
+                }
                 if ($response->status() === 401) {
                     self::login();
                     return false;
@@ -131,6 +144,11 @@ class Shoper
                             ]
                         ]
                     ]);
+                if ($response->status() === 429) {
+                    sleep(1);
+                    self::deleteImages($productShoperId);
+                    return self::addImages($productShoperId, $productModelColor);
+                }
                 if ($response->status() === 401) {
                     self::login();
                     return false;
@@ -155,6 +173,10 @@ class Shoper
                     "price" => (float)$productModelColor->model->prices->retail_gross_price / 100,
                 ]
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changePrice($productId, $productModelColor);
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -175,6 +197,10 @@ class Shoper
                         "root" => $categories->count() == 1
                     ])
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::getCategory($category);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return false;
@@ -205,6 +231,10 @@ class Shoper
 
                     ])
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::getProducer($producer);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return false;
@@ -232,6 +262,10 @@ class Shoper
 //
 //                    ])
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::getOptions($option);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return false;
@@ -248,17 +282,22 @@ class Shoper
         return (int)$response->json()["list"][0]["producer_id"];
     }
 
-    public static function getOptionsValues(int $optionValue): int|null
+    public static function getOptionsValues(int $optionValue, int $page): array
     {
         try {
             $response = Http::withoutVerifying()
                 ->withToken(self::getAccessToken())
                 ->get(env('SHOPER_URL') . '/webapi/rest/option-values/', [
+                    "limit" => 50,
+                    "page" => $page,
                     "filters" => json_encode([
                         "option_id" => ['=' => $optionValue],
-
                     ])
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::getOptionsValues($optionValue);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return false;
@@ -271,8 +310,54 @@ class Shoper
 //            Log::alert("Cannot find producer: " . $producer);
 //            return null;
 //        }
-        dd($response, $response->body(), $response->json());
-        return (int)$response->json()["list"][0]["producer_id"];
+//        dd($response, $response->body(), $response->json(), $response->status());
+        return $response->json()["list"];
+    }
+
+    public static function getOptionsValue(int $optionValue, string $name): int|null
+    {
+        $values = collect();
+        $page = 1;
+        while (count($optionsValues = self::getOptionsValues($optionValue, $page++)) != 0) {
+            $values = $values->merge($optionsValues);
+        }
+        $optionsValue = $values->where("translations.pl_PL.value", $name);
+        if ($optionsValue->count() == 0) {
+            return null;
+        }
+        $optionsValueId = $optionsValue->first()["ovalue_id"];
+
+        return (int)$optionsValueId;
+    }
+
+    public static function AddOptionsValue(int $optionValue, string $name): int|null
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->post(env('SHOPER_URL') . '/webapi/rest/option-values/', [
+                    'option_id' => $optionValue,
+                    'translations' => [
+                        'pl_PL' => [
+                            'value' => $name
+                        ]
+                    ],
+                ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::AddOptionsValue($optionValue, $name);
+            }
+            if ($response->status() === 401) {
+                self::login();
+                return self::AddOptionsValue($optionValue, $name);
+            }
+        } catch (Exception $e) {
+            sleep(5);
+            return self::AddOptionsValue($optionValue, $name);
+        }
+
+//        dd($response, $response->body(), $response->json());
+        return (int)$response->json();
     }
 
     public static function AddProduct(ProductModelColor $productModelColor, int $categoryId, int $producerId): int|null
@@ -291,12 +376,16 @@ class Shoper
                     ],
                     "translations" => [
                         "pl_PL" => [
-                            "name" => $productModelColor->b2c_name,
+                            "name" => $productModelColor->b2c_product_name,
                             "active" => true, //true
                         ]
                     ],
 
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::AddProduct($productModelColor, $categoryId, $producerId);
+            }
             if ($response->status() === 401) {
                 self::login();
                 return self::AddProduct($productModelColor, $categoryId, $producerId);
@@ -305,12 +394,12 @@ class Shoper
             sleep(5);
             return self::AddProduct($productModelColor, $categoryId, $producerId);
         }
-
+        self::addImages($response->json(), $productModelColor);
 //        dd($response, $response->body(), $response->json());
         return $response->json();
     }
 
-    public static function AddProductStock(Product $product, int $shoperProductId): bool
+    public static function AddProductStock(Product $product, int $shoperProductId, array $options): int|null
     {
         try {
             $response = Http::withoutVerifying()
@@ -320,24 +409,61 @@ class Shoper
                     "price_type" => 0,
                     "active" => true,
                     "code" => $product->symbol,
-                    "ean" => $product->barcodes()->where("main", true)->first(),
+                    "ean" => $product->barcodes()->where("main", true)->first()->barcode,
                     "stock" => $product->quantity,
-                    "options" => [
-                        "9" => 0,//Rozmiar
-                        "16" => 0,//Kolor
-                    ]
+                    "delivery_id" => 1, //24h
+                    "options" => $options
                 ]);
+            if ($response->status() === 429) {
+                sleep(1);
+                return self::AddProductStock($product, $shoperProductId, $options);
+            }
             if ($response->status() === 401) {
                 self::login();
-                return false;
+                return null;
             }
         } catch (Exception $e) {
             sleep(5);
-            return false;
+            return self::AddProductStock($product, $shoperProductId, $options);
         }
 
-        dd($response, $response->body(), $response->json());
-        return true;
+        return (int)$response->json();
+    }
+
+    public static function AddProductVariant(Product $product, int $shoperProductId): int|null
+    {
+//        dd($product->size->name, $product->color->b2c_name);
+        $shoperSize = 0;
+        $shoperColor = 0;
+
+        if ($product->model->b2c_variant == 1) {
+
+            //dla 6 - Zestaw rozmiar
+            $shoperSize = self::getOptionsValue(9, $product->size->name); //Rozmiar
+            if (is_null($shoperSize)) $shoperSize = self::addOptionsValue(9, $product->size->name);
+
+            $shoperColor = self::getOptionsValue(16, $product->color->b2c_name); //Kolor
+            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
+
+            $options = [
+                "9" => $shoperSize,//Rozmiar
+                "16" => $shoperColor,//Kolor
+            ];
+        } else if ($product->model->b2c_variant == 2) {
+
+            //dla 5 - Zestaw kolor
+            $shoperColor = self::getOptionsValue(8, $product->color->b2c_name); //Kolor
+            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
+
+            $options = [
+                "8" => $shoperColor,//Kolor
+            ];
+
+        } else {
+            return null;
+        }
+
+        return (int)self::AddProductStock($product, $shoperProductId, $options);
     }
 
 
@@ -354,6 +480,10 @@ class Shoper
                     "price_type" => ["!=" => 0]
                 ])
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductStock();
+        }
         if ($response->status() === 401) {
             self::login();
             return null;
@@ -372,6 +502,10 @@ class Shoper
                     "code" => $product->symbol
                 ])
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductStockBySymbol($product);
+        }
         if ($response->status() === 401) {
             self::login();
             return null;
@@ -391,6 +525,10 @@ class Shoper
                     "extended" => 1,
                 ])
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductStockAll($page);
+        }
         if ($response->status() === 401) {
             self::login();
             return null;
@@ -407,12 +545,57 @@ class Shoper
                 "page" => $page,
                 "limit" => 50,
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductAll($page);
+        }
         if ($response->status() === 401) {
             self::login();
             return null;
         }
 //        dd($response->json());
         return $response->json()["list"];
+    }
+
+    public static function getProductBySymbol(ProductModelColor $productModelColor): array|null
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
+                "limit" => 50,
+                "filters" => json_encode([
+                    "stock.code" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut,
+                ])
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductBySymbol($productModelColor);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json());
+        return $response->json()["list"];
+    }
+
+    public static function changeStockActive(int $productStockId, bool $active): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
+                "active" => $active
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeStockActive($productStockId, $active);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        sleep(1);
+        return true;
     }
 
     public static function changeStockPrice(int $productStockId): bool
@@ -423,6 +606,10 @@ class Shoper
             ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
                 "price_type" => 0
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeStockPrice($productStockId);
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -438,6 +625,10 @@ class Shoper
             ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
                 "stock" => $product->quantity
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeProductStockQuantity($productStockId, $product);
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -454,6 +645,10 @@ class Shoper
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
                 "stock" => ["stock" => $productModelColor->products()->where("show_in_b2c", true)]
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeProductQuantity($productId, $productModelColor);
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -475,6 +670,10 @@ class Shoper
                     ]
                 ]
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeDescription($productId, $productModelColor, $description);
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -485,6 +684,23 @@ class Shoper
 
 //    Zamówienia
 
+    public static function changeOrderStatus($shoperOrderId): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/orders/' . $shoperOrderId, [
+                "status_id" => 2
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeOrderStatus($shoperOrderId);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        return true;
+    }
 
     public static function getOrder(): bool
     {
@@ -498,6 +714,10 @@ class Shoper
                     "payment_id" => ["!=" => 2],
                 ])
             ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getOrder();
+        }
         if ($response->status() === 401) {
             self::login();
             return false;
@@ -592,15 +812,7 @@ class Shoper
                 ]);
             }
 
-            $response = Http::withoutVerifying()
-                ->withToken(self::getAccessToken())
-                ->put(env('SHOPER_URL') . '/webapi/rest/orders/' . $shoperOrder["order_id"], [
-                    "status_id" => 2
-                ]);
-            if ($response->status() === 401) {
-                self::login();
-                return false;
-            }
+            self::changeOrderStatus($shoperOrder["order_id"]);
 
 
         }

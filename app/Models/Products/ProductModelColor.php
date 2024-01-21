@@ -23,6 +23,7 @@ class ProductModelColor extends Model
         'b2c_shortcut',
         'name',
         'b2c_name',
+        'b2c_product_name',
         'product_b2c_color_id'
     ];
 

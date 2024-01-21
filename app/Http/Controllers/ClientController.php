@@ -26,6 +26,7 @@ use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
+use App\Models\Subiekt\DaneDodatkowe;
 use App\Models\Subiekt\Towar;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -70,16 +71,10 @@ class ClientController extends Controller
 
 //        Shoper::getProductStockBySymbol(Product::find(120));
 //        Shoper::getOptions("cos");
-//        Shoper::getOptionsValues(16);
 
+//        dd(Shoper::getProductStockBySymbol(Product::find(2652)));
+//        $idProductS = Shoper::AddProductVariant(Product::find(2652), $idProduct);
 
-//        $producerId = Shoper::getProducer(ProductModelColor::find(524)->model->brand->name);
-//        $categoryId = Shoper::getCategory(ProductModelColor::find(524)->model->b2cCategory->name);
-//        $idProduct = Shoper::AddProduct(ProductModelColor::find(524), $categoryId, $producerId);
-//        $idProductS = Shoper::AddProductStock(Product::find(2652), $idProduct);
-//        dd($idProduct);
-
-        AddImagesToSubiekt::dispatchSync(ProductModel::find(270));
 
     }
 

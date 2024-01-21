@@ -24,6 +24,8 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
         'id': props.productModel.id,
         "description_b2c": props.productModel.description_b2c,
 
+        "b2c_variant": props.productModel.b2c_variant,
+
         'product_b2c_category_id': props.productModel.product_b2c_category_id,
         'b2c_category': props.productModel.b2c_category,
     })
@@ -51,6 +53,17 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
             preserveScroll: true
         })
     }
+
+    const variants = [
+        {
+            id: 1,
+            label: "Zestaw rozmiar"
+        },
+        {
+            id: 2,
+            label: "Zestaw kolor"
+        }
+    ]
 
     return (
         <>
@@ -81,6 +94,30 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
                             label="Kategoria"
                             sx={{my: 1}}
                             value={data.b2c_category}
+                            //{...register("gs1_gpc")}
+                            // color={fieldErrors.gs1_gpc?.message && "error"}
+                        />}
+                />
+                <Autocomplete
+                    disablePortal
+                    id="b2c_variant"
+                    options={variants}
+                    sx={{width: "30ch"}}
+                    value={variants.find(o => o.id === data.b2c_variant)}
+                    getOptionLabel={(option) => option.label}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={(e, value) => {
+                        console.log(value)
+                        setData("b2c_variant", value?.id)
+                        setEdited(true)
+                        console.log(data)
+                    }}
+                    renderInput={(params) =>
+                        <TextField
+                            {...params}
+                            label="Wariant"
+                            sx={{my: 1}}
+                            value={variants.find(o => o.id === data.b2c_variant)}
                             //{...register("gs1_gpc")}
                             // color={fieldErrors.gs1_gpc?.message && "error"}
                         />}

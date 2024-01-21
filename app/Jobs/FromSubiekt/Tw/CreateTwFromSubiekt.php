@@ -90,7 +90,7 @@ class CreateTwFromSubiekt implements ShouldQueue
                 ]);
                 $model->colors()->save($color);
             }
-            $color->b2c_name = $towar->tw_Opis;
+            $color->b2c_product_name = $towar->tw_Opis;
             $color->save();
 
             if (is_null($product)) {
@@ -102,6 +102,11 @@ class CreateTwFromSubiekt implements ShouldQueue
                 ]);
 
                 $size = ProductSize::where("name", $sizeTw)->first();
+                if (is_null($size)) {
+                    $size = ProductSize::create([
+                        "name" => $sizeTw
+                    ]);
+                }
                 $unit = ProductUnit::where("name", "szt")->first();
 
                 $product->size()->associate($size);

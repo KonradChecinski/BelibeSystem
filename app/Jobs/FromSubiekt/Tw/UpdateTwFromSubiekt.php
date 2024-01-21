@@ -95,7 +95,7 @@ class UpdateTwFromSubiekt implements ShouldQueue
                 $model->colors()->save($color);
             }
 
-            $color->b2c_name = $towar->tw_Opis;
+            $color->b2c_product_name = $towar->tw_Opis;
             $color->save();
 
             if (is_null($product)) {
