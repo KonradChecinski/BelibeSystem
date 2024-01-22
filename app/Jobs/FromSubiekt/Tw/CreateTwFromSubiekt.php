@@ -73,6 +73,8 @@ class CreateTwFromSubiekt implements ShouldQueue
             $colorTw = $dane->pwd_Tekst02;
             if (is_null($colorTw)) continue;
 
+            $colorB2cTw = $dane->pwd_Tekst05;
+            if (is_null($colorB2cTw)) continue;
 
             $colorNazwaTw = $dane->pwd_Tekst01;
             if (is_null($colorNazwaTw)) continue;
@@ -86,6 +88,7 @@ class CreateTwFromSubiekt implements ShouldQueue
                 $color = new ProductModelColor([
                     'shortcut' => $colorTw,
                     'name' => $colorNazwaTw,
+                    'b2c_name' => $colorB2cTw,
                     'b2c_shortcut' => $colorTw
                 ]);
                 $model->colors()->save($color);
@@ -132,6 +135,7 @@ class CreateTwFromSubiekt implements ShouldQueue
             }
 
             foreach ($barcodes as $id => $barcodeValue) {
+                if (strlen($barcodeValue) == 0) continue;
                 if (substr($barcodeValue, 0, 9) == "590185425" || substr($barcodeValue, 0, 8) == "59032053") {
                     $barcode = new ProductBarcode([
                         'barcode' => $barcodeValue,

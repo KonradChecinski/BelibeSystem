@@ -54,7 +54,7 @@ class ChangeProductInSubiekt implements ShouldQueue
         $subiektTowar->DoSklepuInternetowego = (bool)$this->product->show_in_b2c;
         $subiektTowar->PoleWlasne["Kolor"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->shortcut, 0, 50));
         $subiektTowar->PoleWlasne["KolorCRM"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
-        $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
+        $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->b2c_name, 0, 50));
         $subiektTowar->PoleWlasne["Rozmiar"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->size->name, 0, 50));
 
 
