@@ -140,7 +140,7 @@ class Shoper
                         "url" => str_replace("test", "pl", url("images", ['path' => $image->path])),
                         "translations" => [
                             "pl_PL" => [
-                                "name" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut
+                                "name" => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut
                             ]
                         ]
                     ]);
@@ -367,7 +367,7 @@ class Shoper
                 ->withToken(self::getAccessToken())
                 ->post(env('SHOPER_URL') . '/webapi/rest/products/', [
                     "category_id" => $categoryId,
-                    "code" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut,
+                    "code" => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut,
                     "producer_id" => $producerId,
                     "stock" => [
                         "price" => $productModelColor->model->prices->retail_gross_price / 100,
@@ -564,7 +564,7 @@ class Shoper
             ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
                 "limit" => 50,
                 "filters" => json_encode([
-                    "stock.code" => $productModelColor->model->symbol . "-" . $productModelColor->shortcut,
+                    "stock.code" => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut,
                 ])
             ]);
         if ($response->status() === 429) {
