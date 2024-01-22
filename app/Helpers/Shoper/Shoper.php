@@ -151,7 +151,12 @@ class Shoper
                 }
                 if ($response->status() === 401) {
                     self::login();
-                    return false;
+                    return self::addImages($productShoperId, $productModelColor);
+                }
+                if ($response->status() !== 200) {
+                    sleep(1);
+                    self::deleteImages($productShoperId);
+                    return self::addImages($productShoperId, $productModelColor);
                 }
             } catch (\Exception $e) {
                 sleep(5);
