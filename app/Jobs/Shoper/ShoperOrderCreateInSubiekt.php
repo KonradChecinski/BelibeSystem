@@ -46,9 +46,9 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
 
         foreach ($orders as $order) {
             $orderProducts = $order->shoperOrderProducts;
-
+//            dd(mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30));
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
-            $zamowienie->NumerOryginalny = "SHP " . $order['order_id'] . " - " . $order['firstname'] . " " . $order['lastname'];
+            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30);
             $zamowienie->LiczonyOdCenBrutto = true;
             $zamowienie->PoziomCenyId = 3;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
