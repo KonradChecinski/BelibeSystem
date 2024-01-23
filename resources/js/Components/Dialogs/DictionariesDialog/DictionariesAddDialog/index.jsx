@@ -87,6 +87,7 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "group") return "grupy"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "marki"
         else if (dictionaryType === "gs1.gpc") return "klasyfikacji GPC"
+        else if (dictionaryType === "b2c.color") return "kolor"
     }
 
     const save = () => {
