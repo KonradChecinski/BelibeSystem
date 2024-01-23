@@ -80,7 +80,6 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "group") return "grupę"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "markę"
         else if (dictionaryType === "gs1.gpc") return "klasyfikację GPC"
-        else if (dictionaryType === "b2c.color") return "kolor"
     }
     const currentDictionaryString2 = () => {
         if (dictionaryType === "sizes") return "rozmiaru"
