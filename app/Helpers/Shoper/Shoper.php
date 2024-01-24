@@ -618,6 +618,29 @@ class Shoper
         return true;
     }
 
+    public static function changeProductActive(int $productId, bool $active): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
+                "translations" => [
+                    "pl_PL" => [
+                        "active" => $active
+                    ]
+                ]
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeStockActive($productId, $active);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+
+        return true;
+    }
+
     public static function changeStockPrice(int $productStockId): bool
     {
 //        (float)$productModelColor->model->prices->retail_gross_price / 100

@@ -38,20 +38,34 @@ class ShoperChangeShow implements ShouldQueue
     public function handle(): void
     {
         $shoperStock = Shoper::getProductStockBySymbol($this->product);
+        $shoperProduct = Shoper::getProductBySymbol($this->product->color);
 
         if (count($shoperStock) > 0) {
             //istnieje wariant
             $shoperStockId = $shoperStock[0]["stock_id"];
+
             Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
+            $shoperProductId = $shoperProduct[0]["product_id"];
+
+            if ($this->product->show_in_b2c == true) {
+                Shoper::changeProductActive($shoperProductId, true);
+            } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                Shoper::changeProductActive($shoperProductId, false);
+            }
         } else {
             //nieistnieje wariant
-            $shoperProduct = Shoper::getProductBySymbol($this->product->color);
 
             if (count($shoperProduct) > 0) {
                 //Istnieje product
                 $shoperProductId = $shoperProduct[0]["product_id"];
                 $shoperStockId = Shoper::AddProductVariant($this->product, $shoperProductId);
                 Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
+
+                if ($this->product->show_in_b2c == true) {
+                    Shoper::changeProductActive($shoperProductId, true);
+                } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                    Shoper::changeProductActive($shoperProductId, false);
+                }
 
             } else {
                 //Nie istnieje product
@@ -70,7 +84,11 @@ class ShoperChangeShow implements ShouldQueue
                 }
                 $shoperStockId = Shoper::AddProductVariant($this->product, $shoperProductId);
                 Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
-
+                if ($this->product->show_in_b2c == true) {
+                    Shoper::changeProductActive($shoperProductId, true);
+                } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                    Shoper::changeProductActive($shoperProductId, false);
+                }
             }
 
 //            return $result;
