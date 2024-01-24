@@ -59,7 +59,7 @@ class ShowProductController extends Controller
         $product->update($request->all());
         $product->save();
         if ($request->show_in_subiekt) ChangeProductShowInSubiekt::dispatch($product->id);
-        if ($request->show_in_b2c) ShoperChangeShow::dispatch($product);
+        if ($request->show_in_b2c) ShoperChangeShow::dispatch($product->id);
 
 
     }

@@ -26,10 +26,10 @@ class ShoperChangeShow implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(Product $product)
+    public function __construct(int $productId)
     {
         $this->onQueue('linux');
-        $this->product = $product;
+        $this->product = Product::find($productId);
     }
 
     /**
