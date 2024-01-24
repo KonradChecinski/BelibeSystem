@@ -49,8 +49,10 @@ class ShoperChangeShow implements ShouldQueue
 
             if ($this->product->show_in_b2c == true) {
                 Shoper::changeProductActive($shoperProductId, true);
-            } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
-                Shoper::changeProductActive($shoperProductId, false);
+            } else {
+                if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                    Shoper::changeProductActive($shoperProductId, false);
+                }
             }
         } else {
             //nieistnieje wariant
@@ -63,8 +65,10 @@ class ShoperChangeShow implements ShouldQueue
 
                 if ($this->product->show_in_b2c == true) {
                     Shoper::changeProductActive($shoperProductId, true);
-                } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
-                    Shoper::changeProductActive($shoperProductId, false);
+                } else {
+                    if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                        Shoper::changeProductActive($shoperProductId, false);
+                    }
                 }
 
             } else {
@@ -86,8 +90,10 @@ class ShoperChangeShow implements ShouldQueue
                 Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
                 if ($this->product->show_in_b2c == true) {
                     Shoper::changeProductActive($shoperProductId, true);
-                } else if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
-                    Shoper::changeProductActive($shoperProductId, false);
+                } else {
+                    if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
+                        Shoper::changeProductActive($shoperProductId, false);
+                    }
                 }
             }
 
