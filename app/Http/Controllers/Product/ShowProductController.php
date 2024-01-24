@@ -56,7 +56,6 @@ class ShowProductController extends Controller
      */
     public function update(UpdateShowProductRequest $request, Product $product)
     {
-        dd($request->all());
         $product->update($request->all());
         $product->save();
         if ($request->show_in_subiekt) ChangeProductShowInSubiekt::dispatch($product->id);
