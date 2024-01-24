@@ -48,13 +48,11 @@ class ShoperChangeShow implements ShouldQueue
             Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
 
             $shoperProductId = $shoperProduct[0]["product_id"];
-            Log::alert("czy (bool)$this->product->show_in_b2c == true ? " . (bool)$this->product->show_in_b2c == true);
+
             if ((bool)$this->product->show_in_b2c == true) {
                 Shoper::changeProductActive($shoperProductId, true);
             } else {
                 if ($this->product->color->products()->where("show_in_b2c", true)->count() == 0) {
-                    Log::alert("czy $this->product->color->products()->where(\"show_in_b2c\", true)->count() == 0 ? " . $this->product->color->products()->where("show_in_b2c", true)->count() == 0);
-
                     Shoper::changeProductActive($shoperProductId, false);
                 }
             }
