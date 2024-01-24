@@ -338,16 +338,29 @@ class Shoper
     public static function AddOptionsValue(int $optionValue, string $name): int|null
     {
         try {
-            $response = Http::withoutVerifying()
-                ->withToken(self::getAccessToken())
-                ->post(env('SHOPER_URL') . '/webapi/rest/option-values/', [
+            if ($optionValue == 16 || $optionValue == 8) {
+                $option = [
+                    'option_id' => $optionValue,
+                    'color' => 'transparent',
+                    'translations' => [
+                        'pl_PL' => [
+                            'value' => $name
+                        ]
+                    ],
+                ];
+            } else {
+                $option = [
                     'option_id' => $optionValue,
                     'translations' => [
                         'pl_PL' => [
                             'value' => $name
                         ]
                     ],
-                ]);
+                ];
+            }
+            $response = Http::withoutVerifying()
+                ->withToken(self::getAccessToken())
+                ->post(env('SHOPER_URL') . '/webapi/rest/option-values/', $option);
             if ($response->status() === 429) {
                 sleep(1);
                 return self::AddOptionsValue($optionValue, $name);
@@ -449,7 +462,7 @@ class Shoper
             if (is_null($shoperSize)) $shoperSize = self::addOptionsValue(9, $product->size->name);
 
             $shoperColor = self::getOptionsValue(16, $product->color->b2c_name); //Kolor
-            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
+            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
 
             $options = [
                 "9" => $shoperSize,//Rozmiar
@@ -459,7 +472,7 @@ class Shoper
 
             //dla 5 - Zestaw kolor
             $shoperColor = self::getOptionsValue(8, $product->color->b2c_name); //Kolor
-            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(8, $product->color->b2c_name);
+            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(8, $product->color->b2c_name);
 
             $options = [
                 "8" => $shoperColor,//Kolor
