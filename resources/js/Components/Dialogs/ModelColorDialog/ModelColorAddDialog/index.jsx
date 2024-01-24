@@ -1,33 +1,79 @@
 import {
-    Box, Button, Checkbox,
+    Autocomplete,
+    Box, Button,
     Dialog, DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle, ListItemText, MenuItem, Paper,
+    DialogTitle, Paper,
     Step,
     StepLabel,
     Stepper,
     TextField, Typography
 } from "@mui/material";
-import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
-import {useState, useRef} from "react";
+import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
-import {router, useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
+import {useColorAddForm} from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog/form/useColorAddForm"
 
-export default function ModelColorAddDialog({open, setOpen, reloadData, roles, params}) {
-    const form = useRef();
-    const formName = useRef();
-    const formShortcut = useRef();
+export default function ModelColorAddDialog({open, setOpen, reloadData, roles, params, clickedColor, setClickedColor}) {
+    const {
+        register,
+        handleSubmit,
+        errors: fieldErrors,
+        setValue,
+        clearErrors: clrErrors,
+    } = useColorAddForm();
 
     const [color, setColor] = useState({});
 
     const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
-        name: '',
-        shortcut: '',
+        shortcut: clickedColor ? clickedColor.shortcut : '',
+        b2c_shortcut: clickedColor ? clickedColor.b2c_shortcut : '',
+
+        name: clickedColor ? clickedColor.name : '',
+        b2c_product_name: clickedColor ? clickedColor.b2c_product_name : '',
+
+        b2c_name: clickedColor ? {
+            id: clickedColor.id,
+            name: clickedColor.b2c_name,
+            label: clickedColor.b2c_name
+        } : null,
     })
 
+    useEffect(() => {
+        console.log("Clicked color w useEffect: ", clickedColor);
+
+        // inicjacja wartości pól
+        setValue('shortcut', clickedColor?.shortcut);
+        setValue('b2c_shortcut', clickedColor?.b2c_shortcut);
+        setValue('name', clickedColor?.name);
+        setValue('b2c_product_name', clickedColor?.b2c_product_name);
+        setValue('b2c_name', clickedColor?.b2c_name);
+
+        setData({
+            shortcut: clickedColor ? clickedColor.shortcut : '',
+            b2c_shortcut: clickedColor ? clickedColor.b2c_shortcut : '',
+
+            name: clickedColor ? clickedColor.name : '',
+            b2c_product_name: clickedColor ? clickedColor.b2c_product_name : '',
+
+            b2c_name: clickedColor ? {
+                id: clickedColor.id,
+                name: clickedColor.b2c_name,
+                label: clickedColor.b2c_name
+            } : null,
+        })
+
+        console.log("data w useEffect: ", data);
+    }, [setValue, clickedColor]);
+
+    const onSubmit = (submitData) => {
+        console.log("Dane z submit: ", submitData)
+        console.log("Dane z InertiaJS: ", data)
+
+        setActiveStep(activeStep + 1)
+    }
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = [
@@ -35,49 +81,52 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         "Podsumowanie"
     ];
 
-
-    const nextStep = () => {
-        if (activeStep == 0) {
-            if (!formName.current.isValid() || data.name === "") return;
-            if (!formShortcut.current.isValid() || data.name === "") return;
-        }
-        setActiveStep(activeStep + 1)
-
-    }
     const previousStep = () => {
         setActiveStep(activeStep - 1);
         clearErrors()
     }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
     const handleClose = () => {
+        clearErrors()
+        clrErrors("shortcut")
+        clrErrors("name")
+        clrErrors("b2c_shortcut")
+        clrErrors("b2c_product_name")
+        clrErrors("b2c_name")
+
+        setClickedColor(null)
+
+        setActiveStep(0);
         setOpen(false);
-    };
+    }
 
     const save = () => {
-        post(route("system.products.model.color", {model: params.productModel.id}),
+        if (clickedColor) {
+            console.log("Aktualizacja koloru");
+            // update color
+        } else {
+            post(route("system.products.model.color", {model: params.productModel.id}),
 
-            {
-                preserveScroll: true,
-                onSuccess: (e) => {
-                    setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-                    reset();
-                    setActiveStep(0);
-                    enqueueSnackbar("Dodano kolor", {variant: 'success'})
-                    handleClose();
-                    setOpenDialogAdd(true);
-                },
-                onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-                    console.error(errors)
-                },
-            })
-
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano kolor", {variant: 'success'})
+                        handleClose();
+                        setOpenDialogAdd(true);
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
+
+
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
@@ -90,50 +139,52 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
                 aria-labelledby="draggable-dialog-title"
                 scroll="paper"
             >
+                <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
-                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                    Dodawanie koloru
-                </DialogTitle>
-                <DialogContent>
-                    <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                    <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                        {clickedColor ? "Edytuj kolor" : "Dodaj kolor"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
 
-                    {activeStep === 0 ?
-                        <Step1
-                            data={data}
-                            setData={setData}
-                            formRef={form}
-                            formNameRef={formName}
-                            formShortcutRef={formShortcut}
-                        /> : ""}
-                    {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : ""}
+                        {activeStep === 0 ?
+                            <Step1
+                                data={data}
+                                setData={setData}
+                                register={register}
+                                errors={fieldErrors}
+                                params={params}
+                            /> : null}
+                        {activeStep === 1 ? <Step2 data={data} setData={setData} roles={roles} errors={errors}/> : null}
 
-                </DialogContent>
-                <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Zamknij
-                    </Button>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button autoFocus onClick={handleClose}>
+                            Zamknij
+                        </Button>
 
-                    <Button onClick={previousStep} disabled={activeStep === 0}>
-                        Wstecz
-                    </Button>
+                        <Button onClick={previousStep} disabled={activeStep === 0}>
+                            Wstecz
+                        </Button>
 
-                    <Button onClick={nextStep} disabled={activeStep === 1}
-                            sx={{display: activeStep === 1 ? "none" : "block"}}>
-                        Następne
-                    </Button>
+                        <Button type="submit" disabled={activeStep === 1}
+                                sx={{display: activeStep === 1 ? "none" : "block"}}>
+                            Następne
+                        </Button>
 
-                    <Button onClick={save} disabled={processing}
-                            sx={{display: activeStep === 0 ? "none" : "block"}}>
-                        Zapisz
-                    </Button>
-                </DialogActions>
+                        <Button onClick={save} disabled={processing}
+                                sx={{display: activeStep === 0 ? "none" : "block"}}>
+                            Zapisz
+                        </Button>
+                    </DialogActions>
 
+                </form>
             </Dialog>
 
             <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}
@@ -142,46 +193,121 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     );
 }
 
-function Step1({data, setData, formRef, formNameRef, formShortcutRef}) {
-
+function Step1({data, setData, register, errors, params}) {
     return (
-        <Box>
-            <ValidatorForm instantValidate ref={formRef} onSubmit={() => {
-            }}>
-                <TextValidator
-                    id="shortcut"
-                    label="Symbol"
-                    ref={formShortcutRef}
-                    onChange={(value) => {
-                        setData('shortcut', value.target.value);
-                    }}
-                    validators={['required', 'maxStringLength:10', 'minStringLength:1']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 20', 'Minimalna długość nazwy to 2']}
-                    value={data.shortcut}
-                    sx={{width: "30ch", my: 1}}
-                />
+        <Box sx={{
+            display: "flex", flexDirection: "column", overflowX: "hidden",
+            overflowY: "hidden"
+        }}>
+            <TextField
+                type="text"
+                id="shortcut"
+                label="Symbol"
+                color={errors.shortcut?.message && "error"}
+                {...register("shortcut")}
+                onChange={(value) => {
+                    setData('shortcut', value.target.value);
+                }}
+                defaultValue={data.shortcut}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.name?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.shortcut?.message.toString()}
+                </Typography>
+            )}
 
-                <TextValidator
-                    id="name"
-                    label="Nazwa"
-                    ref={formNameRef}
-                    onChange={(value) => {
-                        setData('name', value.target.value);
-                    }}
-                    validators={['required', 'minStringLength:3']}
-                    errorMessages={['Pole wymagane', 'Minimalna długość nazwy to 3']}
-                    // errorMessages={['this field is required']}
-                    value={data.name}
-                    sx={{width: "30ch", my: 1}}
-                />
+            <TextField
+                type="text"
+                id="b2c_shortcut"
+                label="Symbol koloru do sklepu"
+                color={errors.b2c_shortcut?.message && "error"}
+                {...register("b2c_shortcut")}
+                onChange={(value) => {
+                    setData('b2c_shortcut', value.target.value);
+                }}
+                defaultValue={data.b2c_shortcut}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.b2c_shortcut?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.b2c_shortcut?.message.toString()}
+                </Typography>
+            )}
 
+            <TextField
+                type="text"
+                id="name"
+                label="Nazwa"
+                color={errors.name?.message && "error"}
+                {...register("name")}
+                onChange={(value) => {
+                    setData('name', value.target.value);
+                }}
+                defaultValue={data.name}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.name?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.name?.message.toString()}
+                </Typography>
+            )}
 
-            </ValidatorForm>
+            <TextField
+                type="text"
+                id="b2c_product_name"
+                label="Nazwa produktu do sklepu"
+                color={errors.b2c_product_name?.message && "error"}
+                {...register("b2c_product_name")}
+                onChange={(value) => {
+                    setData('b2c_product_name', value.target.value);
+                }}
+                defaultValue={data.b2c_product_name}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.b2c_product_name?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.b2c_product_name?.message.toString()}
+                </Typography>
+            )}
+
+            <Autocomplete
+                id="b2c_name"
+                options={params.b2c.color.map(e => ({
+                    id: e.id,
+                    name: e.name,
+                    label: e.name
+                }))}
+                sx={{width: "30ch"}}
+                value={data.b2c_name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(e, value) => {
+                    setData({
+                        ...data,
+                        b2c_name: value,
+                    })
+                }}
+                renderInput={(params) =>
+                    <TextField
+                        {...params}
+                        label="Kolor do sklepu"
+                        sx={{my: 1}}
+                        {...register("b2c_name")}
+                        value={data.b2c_name}
+                        color={errors.size?.message && "error"}
+                    />
+                }
+            />
+            {errors.b2c_name?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                    {errors.b2c_name?.message.toString()}
+                </Typography>
+            )}
         </Box>
     );
 }
 
-function Step2({data, setData, errors}) {
+function Step2({data, errors}) {
     const renderCell = (selected) => selected.map((value) => {
         return (<Typography key={value} variant="body1" gutterBottom>
             {roles.find(e => e.id == value).name}
@@ -194,11 +320,26 @@ function Step2({data, setData, errors}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
+            <TextField id="b2c_shortcut" label="Symbol koloru do sklepu" variant="outlined"
+                       value={data.b2c_shortcut}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+
             <TextField id="name" label="Nazwa" variant="outlined"
                        value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
+            <TextField id="b2c_product_name" label="Nazwa produktu do sklepu" variant="outlined"
+                       value={data.b2c_product_name}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+            <TextField id={"b2c_name"} label={"Kolor do sklepu"} variant="outlined"
+                       value={data.b2c_name.name}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
@@ -206,8 +347,6 @@ function Step2({data, setData, errors}) {
                 </Typography>)
 
             })}
-
-
         </Box>
     );
 }

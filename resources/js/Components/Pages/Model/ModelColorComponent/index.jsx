@@ -8,9 +8,9 @@ import {
     Typography
 } from "@mui/material";
 import ModelsColorTable from "@/Components/Table/ModelsColorTable";
-import {ExpandMore} from "@mui/icons-material";
+import {Edit, ExpandMore} from "@mui/icons-material";
 import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
-import {useState} from "react";
+import {useRef, useState} from "react";
 
 export default function ModelColorComponent(props) {
     const countQuantityInColor = (color_id) => {
@@ -24,6 +24,8 @@ export default function ModelColorComponent(props) {
     }
 
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
+    const [openDialogEdit, setOpenDialogEdit] = useState(false);
+    const [clickedColor, setClickedColor] = useState(null);
     const reloadData = () => {
         // setPaginationModel({...paginationModel})
     }
@@ -55,9 +57,30 @@ export default function ModelColorComponent(props) {
                                         <Chip label={`${color.shortcut} - ${color.name}`} color="primary"
                                               variant="outlined"
                                               sx={{fontSize: 15, height: 35}}/>
+                                        <Chip label={`Kolor w sklepie: ${color.b2c_shortcut} - ${color.b2c_name}`}
+                                              color="primary"
+                                              variant="outlined"
+                                              sx={{fontSize: 15, height: 35}}/>
+                                        <Chip label={`Nazwa w sklepie - ${color.b2c_product_name}`} color="primary"
+                                              variant="outlined"
+                                              sx={{fontSize: 15, height: 35}}/>
                                         <Chip label={`Stan koloru - ${countQuantityInColor(color.id)}`} color="primary"
                                               variant="outlined"
                                               sx={{fontSize: 15, height: 35}}/>
+                                        {props.editing ?
+                                            (
+
+                                                <Chip icon={<Edit/>}
+                                                      label={"Edytuj kolor"}
+                                                      color="secondary"
+                                                      sx={{fontSize: 15, fontWeight: 'bold', height: 35}}
+                                                      onClick={(event) => {
+                                                          event.stopPropagation();
+                                                          setClickedColor(color);
+                                                          setOpenDialogEdit(true);
+                                                      }}
+                                                />
+                                            ) : null}
                                     </Box>
 
                                 </AccordionSummary>
@@ -78,7 +101,6 @@ export default function ModelColorComponent(props) {
                                 </AccordionDetails>
                             </Accordion>
                         </Paper>
-
                     );
                 })}
             {props.editing ?
@@ -96,7 +118,12 @@ export default function ModelColorComponent(props) {
                     }} onClick={() => setOpenDialogAdd(true)}><Typography variant={"body1"}>Dodaj
                         kolor</Typography></Button>
                     <ModelColorAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}
-                                         params={props}
+                                         params={props} clickedColor={null} setClickedColor={setClickedColor}
+                    />
+                    <ModelColorAddDialog open={openDialogEdit}
+                                         setOpen={setOpenDialogEdit}
+                                         reloadData={reloadData}
+                                         params={props} clickedColor={clickedColor} setClickedColor={setClickedColor}
                     />
                 </> : ""}
 

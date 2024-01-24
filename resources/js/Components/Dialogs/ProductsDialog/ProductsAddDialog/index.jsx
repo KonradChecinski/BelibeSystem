@@ -419,32 +419,6 @@ function Step1({data, setData, props, register, errors}) {
             )}
 
             <Box sx={{position: "relative", width: "30ch"}}>
-                {/*<DataGrid apiRef={apiRef}*/}
-                {/*          rows={data.barcodes}*/}
-                {/*          columns={[{*/}
-                {/*              field: 'barcode',*/}
-                {/*              type: 'string',*/}
-                {/*              flex: 1,*/}
-                {/*              align: "left",*/}
-                {/*              headerName: "Kody kreskowe",*/}
-                {/*              headerAlign: "left",*/}
-                {/*              sortable: false,*/}
-                {/*              editable: true*/}
-                {/*          }, {*/}
-                {/*              field: 'actions', type: 'actions', headerName: "", width: 10,*/}
-                {/*              getActions: (params) => [*/}
-                {/*                  <GridActionsCellItem icon={<Delete/>} onClick={() => deleteBarcode(params.id)}*/}
-                {/*                                       label="Delete"/>,*/}
-                {/*              ]*/}
-                {/*          }]}*/}
-                {/*          disableColumnMenu*/}
-                {/*          autoHeight={true}*/}
-                {/*          hideFooter={true}*/}
-                {/*          pageSizeOptions={[100]}*/}
-                {/*          editMode={"row"}*/}
-                {/*          processRowUpdate={handleProcessRowUpdate}*/}
-                {/*          isCellEditable={(params) => params.row.type === 3}*/}
-                {/*/>*/}
                 <Box sx={{
                     border: 1,
                     borderRadius: 1,
