@@ -13,6 +13,7 @@ use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\Shoper\ShoperChangePrice;
+use App\Jobs\Shoper\ShoperChangeShow;
 use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
@@ -75,7 +76,7 @@ class ClientController extends Controller
 //        dd(Shoper::getProductStockBySymbol(Product::find(2652)));
 //        $idProductS = Shoper::AddProductVariant(Product::find(2652), $idProduct);
 
-
+        ShoperChangeShow::dispatchSync(Product::find(3116));
     }
 
     /**
