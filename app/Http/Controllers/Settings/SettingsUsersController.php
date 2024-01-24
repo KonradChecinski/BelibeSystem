@@ -184,10 +184,10 @@ class SettingsUsersController extends Controller
         ];
 
         $user->update($validatedUserCredential);
-        $user->assignRole($request->roles);
+        if ($user->id != 1) $user->syncRoles($request->roles);
         $user->save();
 
-        if(strlen($request->password)>0){
+        if (strlen($request->password) > 0) {
             $user->forceFill([
                 'password' => Hash::make($request->password),
                 'remember_token' => Str::random(60),
@@ -195,7 +195,6 @@ class SettingsUsersController extends Controller
             event(new PasswordReset($user));
 
         }
-
 
 
     }

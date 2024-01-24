@@ -406,6 +406,7 @@ class Shoper
 
     public static function AddProductStock(Product $product, int $shoperProductId, array $options): int|null
     {
+        $productSymbol = $product->symbol == $product->color->model->symbol . "-" . $product->color->b2c_shortcut ? $product->symbol . "." : $product->symbol;
         try {
             $response = Http::withoutVerifying()
                 ->withToken(self::getAccessToken())
@@ -413,7 +414,7 @@ class Shoper
                     "product_id" => $shoperProductId,
                     "price_type" => 0,
                     "active" => true,
-                    "code" => $product->symbol,
+                    "code" => $productSymbol,
                     "ean" => $product->barcodes()->where("main", true)->first()->barcode,
                     "stock" => $product->quantity,
                     "delivery_id" => 1, //24h

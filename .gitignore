@@ -20,4 +20,5 @@ yarn-error.log
 /.vscode
 lang/php_*.json
 /.env.belibe
+.env.belibetest
 .env
