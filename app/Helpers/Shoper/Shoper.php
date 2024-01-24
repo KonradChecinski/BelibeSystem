@@ -459,7 +459,7 @@ class Shoper
 
             //dla 5 - Zestaw kolor
             $shoperColor = self::getOptionsValue(8, $product->color->b2c_name); //Kolor
-            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
+            if (is_null($shoperSize)) $shoperColor = self::addOptionsValue(8, $product->color->b2c_name);
 
             $options = [
                 "8" => $shoperColor,//Kolor
@@ -468,7 +468,7 @@ class Shoper
         } else {
             return null;
         }
-
+//        dd($options, $product->color->b2c_name);
         return (int)self::AddProductStock($product, $shoperProductId, $options);
     }
 
