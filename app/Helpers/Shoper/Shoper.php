@@ -505,7 +505,8 @@ class Shoper
             ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
                 "filters" => json_encode([
                     "extended" => 1,
-                    "code" => $product->symbol
+                    "code" => $product->symbol == $product->color->model->symbol . "-" . $product->color->b2c_shortcut ? $product->symbol . "." : $product->symbol,
+
                 ])
             ]);
         if ($response->status() === 429) {
