@@ -451,7 +451,7 @@ class Shoper
 
     public static function AddProductVariant(Product $product, int $shoperProductId): int|null
     {
-//        dd($product->size->name, $product->color->b2c_name);
+//        dd($product->size->name, $product->color->b2cColor->name);
         $shoperSize = 0;
         $shoperColor = 0;
 
@@ -461,8 +461,8 @@ class Shoper
             $shoperSize = self::getOptionsValue(9, $product->size->name); //Rozmiar
             if (is_null($shoperSize)) $shoperSize = self::addOptionsValue(9, $product->size->name);
 
-            $shoperColor = self::getOptionsValue(16, $product->color->b2c_name); //Kolor
-            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(16, $product->color->b2c_name);
+            $shoperColor = self::getOptionsValue(16, $product->color->b2cColor->name); //Kolor
+            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(16, $product->color->b2cColor->name);
 
             $options = [
                 "9" => $shoperSize,//Rozmiar
@@ -471,8 +471,8 @@ class Shoper
         } else if ($product->model->b2c_variant == 2) {
 
             //dla 5 - Zestaw kolor
-            $shoperColor = self::getOptionsValue(8, $product->color->b2c_name); //Kolor
-            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(8, $product->color->b2c_name);
+            $shoperColor = self::getOptionsValue(8, $product->color->b2cColor->name); //Kolor
+            if (is_null($shoperColor)) $shoperColor = self::addOptionsValue(8, $product->color->b2cColor->name);
 
             $options = [
                 "8" => $shoperColor,//Kolor
@@ -481,7 +481,7 @@ class Shoper
         } else {
             return null;
         }
-//        dd($options, $product->color->b2c_name);
+//        dd($options, $product->color->b2cColor->name);
         return (int)self::AddProductStock($product, $shoperProductId, $options);
     }
 

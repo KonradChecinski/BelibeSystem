@@ -31,7 +31,14 @@ class ProductModelColorController extends Controller
      */
     public function store(StoreProductModelColorRequest $request, ProductModel $model)
     {
-        $model->colors()->create(array_merge($request->all(), ["b2c_shortcut" => $request->shortcut]));
+        $color = new ProductModelColor([
+            "shortcut" => $request->shortcut,
+            "name" => $request->name,
+            "b2c_shortcut" => $request->b2c_shortcut,
+            "b2c_product_name" => $request->b2c_product_name,
+        ]);
+        $color->b2cColor()->associate($request->b2c_name["id"]);
+        $model->colors()->save($color);
     }
 
     /**
@@ -53,9 +60,16 @@ class ProductModelColorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductModelColorRequest $request, ProductModelColor $productModelColor)
+    public function update(UpdateProductModelColorRequest $request, ProductModel $model, ProductModelColor $productModelColor)
     {
-        //
+        $productModelColor->update([
+//            "shortcut" => $request->shortcut,
+            "name" => $request->name,
+            "b2c_shortcut" => $request->b2c_shortcut,
+            "b2c_product_name" => $request->b2c_product_name,
+        ]);
+        $productModelColor->b2cColor()->associate($request->b2c_name["id"]);
+        $productModelColor->save();
     }
 
     /**

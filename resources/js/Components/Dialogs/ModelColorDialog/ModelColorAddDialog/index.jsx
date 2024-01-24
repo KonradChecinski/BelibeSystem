@@ -27,7 +27,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
     const [color, setColor] = useState({});
 
-    const {data, setData, post, processing, errors, clearErrors, reset} = useForm({
+    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         shortcut: clickedColor ? clickedColor.shortcut : '',
         b2c_shortcut: clickedColor ? clickedColor.b2c_shortcut : '',
 
@@ -49,7 +49,15 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         setValue('b2c_shortcut', clickedColor?.b2c_shortcut);
         setValue('name', clickedColor?.name);
         setValue('b2c_product_name', clickedColor?.b2c_product_name);
-        setValue('b2c_name', clickedColor?.b2c_name);
+        setValue('b2c_name', clickedColor?.b2c_color_id ? {
+            id: clickedColor?.b2c_color_id,
+            name: params.b2c.color.find((color) => {
+                return color.id === clickedColor.b2c_color_id
+            })?.name,
+            label: params.b2c.color.find((color) => {
+                return color.id === clickedColor.b2c_color_id
+            })?.name
+        } : null);
 
         setData({
             shortcut: clickedColor ? clickedColor.shortcut : '',
@@ -58,10 +66,14 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
             name: clickedColor ? clickedColor.name : '',
             b2c_product_name: clickedColor ? clickedColor.b2c_product_name : '',
 
-            b2c_name: clickedColor ? {
-                id: clickedColor.id,
-                name: clickedColor.b2c_name,
-                label: clickedColor.b2c_name
+            b2c_name: clickedColor?.b2c_color_id ? {
+                id: clickedColor?.b2c_color_id,
+                name: params.b2c.color.find((color) => {
+                    return color.id === clickedColor.b2c_color_id
+                })?.name,
+                label: params.b2c.color.find((color) => {
+                    return color.id === clickedColor.b2c_color_id
+                })?.name
             } : null,
         })
 
@@ -102,8 +114,26 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
     const save = () => {
         if (clickedColor) {
-            console.log("Aktualizacja koloru");
-            // update color
+            console.log(clickedColor.id)
+            patch(route("system.products.model.color.update", {
+                    model: params.productModel.id,
+                    productModelColor: clickedColor.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano kolor", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
         } else {
             post(route("system.products.model.color", {model: params.productModel.id}),
 
@@ -194,6 +224,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 }
 
 function Step1({data, setData, register, errors, params}) {
+    console.log(data)
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
@@ -219,24 +250,6 @@ function Step1({data, setData, register, errors, params}) {
 
             <TextField
                 type="text"
-                id="b2c_shortcut"
-                label="Symbol koloru do sklepu"
-                color={errors.b2c_shortcut?.message && "error"}
-                {...register("b2c_shortcut")}
-                onChange={(value) => {
-                    setData('b2c_shortcut', value.target.value);
-                }}
-                defaultValue={data.b2c_shortcut}
-                sx={{width: "30ch", my: 1}}
-            />
-            {errors.b2c_shortcut?.message && (
-                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                    {errors.b2c_shortcut?.message.toString()}
-                </Typography>
-            )}
-
-            <TextField
-                type="text"
                 id="name"
                 label="Nazwa"
                 color={errors.name?.message && "error"}
@@ -250,6 +263,29 @@ function Step1({data, setData, register, errors, params}) {
             {errors.name?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>
                     {errors.name?.message.toString()}
+                </Typography>
+            )}
+
+
+            <Typography variant="body1" sx={{mt: 2, mb: 2}}>
+                Sklep Internetowy
+            </Typography>
+
+            <TextField
+                type="text"
+                id="b2c_shortcut"
+                label="Symbol koloru do sklepu"
+                color={errors.b2c_shortcut?.message && "error"}
+                {...register("b2c_shortcut")}
+                onChange={(value) => {
+                    setData('b2c_shortcut', value.target.value);
+                }}
+                defaultValue={data.b2c_shortcut}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.b2c_shortcut?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.b2c_shortcut?.message.toString()}
                 </Typography>
             )}
 

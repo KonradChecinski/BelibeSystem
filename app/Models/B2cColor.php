@@ -16,7 +16,7 @@ class B2cColor extends Model
         'name',
     ];
 
-    public function models(): HasMany
+    public function colors(): HasMany
     {
         return $this->hasMany(ProductModelColor::class);
     }

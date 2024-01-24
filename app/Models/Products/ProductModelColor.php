@@ -22,9 +22,7 @@ class ProductModelColor extends Model
         'shortcut',
         'b2c_shortcut',
         'name',
-        'b2c_name',
         'b2c_product_name',
-        'product_b2c_color_id'
     ];
 
 
@@ -45,6 +43,6 @@ class ProductModelColor extends Model
 
     public function b2cColor(): BelongsTo
     {
-        return $this->belongsTo(B2cColor::class, "product_b2c_color_id");
+        return $this->belongsTo(B2cColor::class, "b2c_color_id");
     }
 }

@@ -35,6 +35,9 @@ export default function ModelColorComponent(props) {
             {props.productModel.colors_with_images
                 .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
                 .map((color) => {
+                    const colorName = props.b2c.color.find((b2cColor) => {
+                        return b2cColor.id === color.b2c_color_id
+                    })?.name
                     return (
                         <Paper elevation={12} key={color.id}>
                             <Accordion defaultExpanded={true} disableGutters={true}>
@@ -57,10 +60,13 @@ export default function ModelColorComponent(props) {
                                         <Chip label={`${color.shortcut} - ${color.name}`} color="primary"
                                               variant="outlined"
                                               sx={{fontSize: 15, height: 35}}/>
-                                        <Chip label={`Kolor w sklepie: ${color.b2c_shortcut} - ${color.b2c_name}`}
-                                              color="primary"
-                                              variant="outlined"
-                                              sx={{fontSize: 15, height: 35}}/>
+                                        <Chip
+                                            label={`Kolor w sklepie: ${color.b2c_shortcut} - ${colorName === undefined ? " " : colorName}
+                                        `}
+                                            // color.b2c_color_id
+                                            color="primary"
+                                            variant="outlined"
+                                            sx={{fontSize: 15, height: 35}}/>
                                         <Chip label={`Nazwa w sklepie - ${color.b2c_product_name}`} color="primary"
                                               variant="outlined"
                                               sx={{fontSize: 15, height: 35}}/>

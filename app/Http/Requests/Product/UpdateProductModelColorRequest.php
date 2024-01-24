@@ -11,7 +11,7 @@ class UpdateProductModelColorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editModel", "user");
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateProductModelColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|min:3',
+            'b2c_name' => 'array|required',
+            'b2c_shortcut' => 'string|required|min:1|max:10',
+            'b2c_product_name' => 'string|required|min:3',
         ];
     }
 }
