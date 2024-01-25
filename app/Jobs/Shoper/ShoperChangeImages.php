@@ -19,6 +19,7 @@ class ShoperChangeImages implements ShouldQueue
 
     public $tries = 5;
     public $backoff = 20;
+    public $timeout = 60;
 
     private ProductModelColor $productModelColor;
 

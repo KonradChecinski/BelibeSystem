@@ -123,6 +123,7 @@ class Shoper
 
             } catch (\Exception $e) {
                 sleep(5);
+                self::deleteImages($productId);
                 return false;
             }
         }
