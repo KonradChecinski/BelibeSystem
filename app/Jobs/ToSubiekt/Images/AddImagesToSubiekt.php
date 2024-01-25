@@ -24,7 +24,7 @@ class AddImagesToSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $productModel;
+    protected ProductModelColor $productModelColor;
     public $tries = 5;
     public $backoff = 20;
     public $timeout = 60;
@@ -32,10 +32,10 @@ class AddImagesToSubiekt implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(ProductModel $productModel)
+    public function __construct(ProductModelColor $productModelColor)
     {
         $this->onQueue('sfera');
-        $this->productModel = $productModel;
+        $this->productModelColor = $productModelColor;
     }
 
     /**
@@ -51,7 +51,7 @@ class AddImagesToSubiekt implements ShouldQueue
         $subiektDodatki = app(SubiektDodatki::class)->getInstance();
         $subiektDodatki = $subiektDodatki->create();
 
-        $products = $this->productModel->products;
+        $products = $this->productModelColor->products;
 
 
         foreach ($products as $product) {

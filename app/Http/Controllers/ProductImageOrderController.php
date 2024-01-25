@@ -58,20 +58,29 @@ class ProductImageOrderController extends Controller
      */
     public function update(UpdateProductImageOrderRequest $request, ProductModel $productModel)
     {
+        $changedColors = collect();
         foreach ($request->all() as $item) {
             $productModelColor = ProductModelColor::find($item["id"]);
+
             foreach ($item['images'] as $type => $images) {
                 foreach ($images as $id => $image) {
                     $productImage = ProductImage::find($image["id"]);
-                    $productImage->order = $id;
+                    if ($productImage->order != $id) {
+                        $productImage->order = $id;
 //                    $productImage->save();
-                    $productModelColor->images()->save($productImage);
+                        $productModelColor->images()->save($productImage);
+                        $changedColors->add($productModelColor);
+                    }
+
                 }
 
             }
         }
-        AddImagesToSubiekt::dispatch($productModel);
-        foreach ($productModel->colors as $productModelColor) {
+        $changedColorsUnique = $changedColors->unique("id");
+
+
+        foreach ($changedColorsUnique as $productModelColor) {
+            AddImagesToSubiekt::dispatch($productModelColor);
             ShoperChangeImages::dispatch($productModelColor);
         }
 

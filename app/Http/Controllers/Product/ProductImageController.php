@@ -56,7 +56,7 @@ class ProductImageController extends Controller
             }
 
         }
-        AddImagesToSubiekt::dispatch($modelColor->model);
+        AddImagesToSubiekt::dispatch($modelColor);
         ShoperChangeImages::dispatch($modelColor);
 
     }
@@ -100,7 +100,7 @@ class ProductImageController extends Controller
                 $imageToOrder->order = $imageOrder + $id;
                 $imageToOrder->save();
             }
-            AddImagesToSubiekt::dispatch($image->color->model);
+            AddImagesToSubiekt::dispatch($image->color);
 
 
         } else {

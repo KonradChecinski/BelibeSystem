@@ -62,8 +62,8 @@ class ProductImagePublishController extends Controller
         $productImage->publish = $request->publish;
         $productImage->save();
 
-        AddImagesToSubiekt::dispatch($productImage->color->model);
-        ShoperChangeImages::dispatch($productImage->color);
+//        AddImagesToSubiekt::dispatch($productImage->color->model);
+//        ShoperChangeImages::dispatch($productImage->color);
     }
 
     /**
