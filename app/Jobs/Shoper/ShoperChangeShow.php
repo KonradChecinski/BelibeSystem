@@ -88,6 +88,8 @@ class ShoperChangeShow implements ShouldQueue
                 if (is_null($shoperProductId)) {
                     $this->fail('Cannot add product');
                 }
+                Shoper::changeDescription($shoperProductId, $this->product->color, $this->product->model->description_b2c);
+                
                 $shoperStockId = Shoper::AddProductVariant($this->product, $shoperProductId);
                 Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
                 if ((bool)$this->product->show_in_b2c == true) {
