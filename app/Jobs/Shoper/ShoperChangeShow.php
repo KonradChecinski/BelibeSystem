@@ -72,6 +72,7 @@ class ShoperChangeShow implements ShouldQueue
                         Shoper::changeProductActive($shoperProductId, false);
                     }
                 }
+                Shoper::changeProductQuantity($shoperProductId, $this->product->color);
 
             } else {
                 //Nie istnieje product
@@ -89,7 +90,8 @@ class ShoperChangeShow implements ShouldQueue
                     $this->fail('Cannot add product');
                 }
                 Shoper::changeDescription($shoperProductId, $this->product->color, $this->product->model->description_b2c);
-                
+                Shoper::changeProductQuantity($shoperProductId, $this->product->color);
+
                 $shoperStockId = Shoper::AddProductVariant($this->product, $shoperProductId);
                 Shoper::changeStockActive($shoperStockId, $this->product->show_in_b2c);
                 if ((bool)$this->product->show_in_b2c == true) {
