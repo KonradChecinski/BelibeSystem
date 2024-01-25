@@ -212,7 +212,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                         !Boolean(props.productModel.b2c_variant) ||
                         !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
                             return colorWithImages.id === color.id;
-                        }).b2c_name) ||
+                        }).b2c_color_id) ||
                         !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
                             return colorWithImages.id === color.id;
                         }).b2c_product_name) ||

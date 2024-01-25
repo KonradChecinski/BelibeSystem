@@ -725,6 +725,30 @@ class Shoper
         return true;
     }
 
+    //    Zmiana nazwy
+    public static function changeName(int $productId, string $name): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
+                "translations" => [
+                    "pl_PL" => [
+                        "name" => $name
+                    ]
+                ]
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeName($productId, $name);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+
+        return true;
+    }
+
 //    Zamówienia
 
     public static function changeOrderStatus($shoperOrderId): bool

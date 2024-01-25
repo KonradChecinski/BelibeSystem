@@ -187,6 +187,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
                             <Step1
                                 data={data}
                                 setData={setData}
+                                clickedColor={clickedColor}
                                 register={register}
                                 errors={fieldErrors}
                                 params={params}
@@ -223,7 +224,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     );
 }
 
-function Step1({data, setData, register, errors, params}) {
+function Step1({data, setData, clickedColor = null, register, errors, params}) {
     console.log(data)
     return (
         <Box sx={{
@@ -241,6 +242,7 @@ function Step1({data, setData, register, errors, params}) {
                 }}
                 defaultValue={data.shortcut}
                 sx={{width: "30ch", my: 1}}
+                disabled={Boolean(clickedColor)}
             />
             {errors.name?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>

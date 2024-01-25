@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductModelColorRequest;
 use App\Http\Requests\Product\UpdateProductModelColorRequest;
+use App\Jobs\Shoper\ShoperChangeName;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 
@@ -70,6 +71,8 @@ class ProductModelColorController extends Controller
         ]);
         $productModelColor->b2cColor()->associate($request->b2c_name["id"]);
         $productModelColor->save();
+
+        ShoperChangeName::dispatch($productModelColor);
     }
 
     /**
