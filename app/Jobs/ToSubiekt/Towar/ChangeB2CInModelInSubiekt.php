@@ -62,7 +62,7 @@ class ChangeB2CInModelInSubiekt implements ShouldQueue
             $description_b2c = str_replace('[{$size$}]', $product->size->name, $description_b2c);
 
             $subiektTowar->Charakterystyka = iconv("UTF-8", "Windows-1250//IGNORE", $description_b2c);
-            $subiektTowar->PoleWlasne["KategoriaGlowna"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->b2cCategory->name, 0, 255));
+//            $subiektTowar->PoleWlasne["KategoriaGlowna"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->productModel->b2cCategory->name, 0, 255));
 
             $subiektTowar->zapisz();
 

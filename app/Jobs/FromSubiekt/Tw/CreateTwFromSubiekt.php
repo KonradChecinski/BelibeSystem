@@ -5,6 +5,7 @@ namespace App\Jobs\FromSubiekt\Tw;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
+use App\Models\B2cColor;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModel;
@@ -75,6 +76,7 @@ class CreateTwFromSubiekt implements ShouldQueue
 
             $colorB2cTw = $dane->pwd_Tekst05;
             if (is_null($colorB2cTw)) continue;
+            $colorB2cTwDict = B2cColor::query()->where("name", $colorB2cTw)->first();
 
             $colorNazwaTw = $dane->pwd_Tekst01;
             if (is_null($colorNazwaTw)) continue;
@@ -88,9 +90,11 @@ class CreateTwFromSubiekt implements ShouldQueue
                 $color = new ProductModelColor([
                     'shortcut' => $colorTw,
                     'name' => $colorNazwaTw,
-                    'b2c_name' => $colorB2cTw,
+//                    'b2c_name' => $colorB2cTw,
                     'b2c_shortcut' => $colorTw
                 ]);
+                if (!is_null($colorB2cTwDict)) $color->b2cColor()->associate($colorB2cTwDict);
+
                 $model->colors()->save($color);
             }
             $color->b2c_product_name = $towar->tw_Opis;
