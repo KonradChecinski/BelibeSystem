@@ -217,7 +217,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                             return colorWithImages.id === color.id;
                         }).b2c_product_name) ||
                         !Boolean(params.row.size) ||
-                        !Boolean(params.row.barcodes)
+                        !Boolean(params.row.barcodes.length)
                 }
 
                 return (
