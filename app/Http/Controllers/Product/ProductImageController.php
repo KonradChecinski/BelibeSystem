@@ -56,8 +56,11 @@ class ProductImageController extends Controller
             }
 
         }
-        AddImagesToSubiekt::dispatch($modelColor);
-        ShoperChangeImages::dispatch($modelColor);
+        if ($type === 1) {
+            AddImagesToSubiekt::dispatch($modelColor);
+            ShoperChangeImages::dispatch($modelColor);
+        }
+
 
     }
 
