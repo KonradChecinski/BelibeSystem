@@ -65,12 +65,26 @@ class ProductImageOrderController extends Controller
             foreach ($item['images'] as $type => $images) {
                 foreach ($images as $id => $image) {
                     $productImage = ProductImage::find($image["id"]);
-//                    dd($productImage, $id, $productModelColor);
-                    if ($productImage->order != $id || $productImage->product_model_color_id != $productModelColor->id) {
+                    $oldType = $productImage->type;
+
+//                    dd($productImage, $id, $productModelColor, $type, $oldType,
+//                        $productImage->order != $id ||
+//                        $productImage->product_model_color_id != $productModelColor->id ||
+//                        $productImage->type != $type
+//                    );
+
+                    if ($productImage->order != $id ||
+                        $productImage->product_model_color_id != $productModelColor->id ||
+                        $productImage->type != $type
+                    ) {
                         $productImage->order = $id;
+                        $productImage->type = $type;
 //                    $productImage->save();
                         $productModelColor->images()->save($productImage);
-                        $changedColors->add($productModelColor);
+                        if ($type == 1) {
+                            $changedColors->add($productModelColor);
+                        }
+
                     }
 
                 }
