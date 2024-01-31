@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\B2cCategoryController;
 use App\Http\Controllers\B2cColorController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\GS1BrandController;
 use App\Http\Controllers\GS1GPCController;
 use App\Http\Controllers\Product\B2BProductModelController;
@@ -46,35 +47,51 @@ Route::get("/", function () {
 
 
 Route::middleware("auth:user")->group(function () {
-    Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
-    Route::get("/models/data", [ProductModelController::class, 'data']);
-    Route::post("/models", [ProductModelController::class, 'store'])->name("system.products.models.create");
-    Route::post("/models/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
-    Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
+    Route::group([], function () {
+        Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
+        Route::get("/models/data", [ProductModelController::class, 'data']);
+        Route::post("/models", [ProductModelController::class, 'store'])->name("system.products.models.create");
+        Route::post("/models/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
+        Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
 
-    Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
-    Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
-    Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
-    Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
+        Route::get("/models/model/{id}", [ProductModelController::class, 'show'])->name("system.products.model");
+        Route::get("/models/model/{id}/edit", [ProductModelController::class, 'edit'])->name("system.products.model.edit");
+        Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
+        Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
 
-    Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
-    Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
-    Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
-    Route::post("/models/model/{productModel}/update/subiekt", [SubiektProductModelController::class, 'update'])->name("system.products.model.update.subiekt");
-    Route::post("/models/model/{productModel}/update/gs1", [GS1ProductModelController::class, 'update'])->name("system.products.model.update.gs1");
+        Route::post("/models/model/{productModel}/update/basic", [BasicProductModelController::class, 'update'])->name("system.products.model.update.basic");
+        Route::post("/models/model/{productModel}/update/b2c", [B2CProductModelController::class, 'update'])->name("system.products.model.update.b2c");
+        Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
+        Route::post("/models/model/{productModel}/update/subiekt", [SubiektProductModelController::class, 'update'])->name("system.products.model.update.subiekt");
+        Route::post("/models/model/{productModel}/update/gs1", [GS1ProductModelController::class, 'update'])->name("system.products.model.update.gs1");
 
-    Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
-    Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
-    Route::patch("/product/{product}", [ProductController::class, 'update'])->name("system.products.update");
-    Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
+        Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
+        Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
+        Route::patch("/product/{product}", [ProductController::class, 'update'])->name("system.products.update");
+        Route::delete("/product/{product}", [ProductController::class, 'destroy'])->name("system.products.delete");
 
-    Route::post("/models/images/{modelColor}", [ProductImageController::class, 'store'])->name("system.products.images.create");
-    Route::put("/models/images/{productModel}/order", [ProductImageOrderController::class, 'update'])->name("system.products.images.update.order");
-    Route::patch("/models/images/{productImage}/publish", [ProductImagePublishController::class, 'update'])->name("system.products.images.update.publish");
-    Route::delete("/models/images/{image}", [ProductImageController::class, 'destroy'])->name("system.products.images.delete");
+        Route::post("/models/images/{modelColor}", [ProductImageController::class, 'store'])->name("system.products.images.create");
+        Route::put("/models/images/{productModel}/order", [ProductImageOrderController::class, 'update'])->name("system.products.images.update.order");
+        Route::patch("/models/images/{productImage}/publish", [ProductImagePublishController::class, 'update'])->name("system.products.images.update.publish");
+        Route::delete("/models/images/{image}", [ProductImageController::class, 'destroy'])->name("system.products.images.delete");
 
 
-    Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
+        Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
+    });
+    Route::group([], function () {
+        Route::get("/clients", [ClientController::class, 'index'])->name("system.clients");
+        Route::get("/clients/data", [ClientController::class, 'data']);
+//        Route::post("/clients", [ProductModelController::class, 'store'])->name("system.products.models.create");
+//        Route::post("/clients/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
+//        Route::delete("/clients/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
+
+
+        Route::get("/clients/client/{id}", [ClientController::class, 'show'])->name("system.clients.client");
+        Route::get("/clients/client/{id}/edit", [ClientController::class, 'edit'])->name("system.clients.client.edit");
+//        Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
+//        Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
+
+    });
 
 
     Route::group(['prefix' => '/settings'], function () {

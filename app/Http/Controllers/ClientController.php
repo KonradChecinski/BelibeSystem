@@ -21,6 +21,12 @@ use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
+use App\Models\B2bActivityType;
+use App\Models\B2bCountry;
+use App\Models\B2bPayment;
+use App\Models\B2bSourceOfAcquisition;
+use App\Models\B2bStatus;
+use App\Models\B2cColor;
 use App\Models\Client\Client;
 use App\Models\Products\Product;
 use App\Models\Products\ProductCategory;
@@ -36,6 +42,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
 
 class ClientController extends Controller
@@ -45,38 +52,16 @@ class ClientController extends Controller
      */
     public function index()
     {
-//        CreateTwFromSubiekt::dispatchSync();
-
-//        $productModel = ProductModel::find(5);
-//        $productModel->prices()->delete();
-//        $productModel->delete();
-
-
-//        CreateModelFromSubiekt::dispatch();
-//        CreateTwFromSubiekt::dispatch();
-//        UpdateTwFromSubiekt::dispatch();
-
-//        Shoper::getImages(814);
-//        Shoper::deleteImages(814);
-//        Shoper::addImages(814, ProductModelColor::find(167));
-//        Shoper::getOrder();
-//        ShoperOrderCreateInSubiekt::dispatchSync();
-//        Shoper::changeStockPrice();
-//        dd();
-//        foreach (Product::query()->orWhereNotNull("subiekt_id")->get() as $product) {
-//            DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->insert(["id" => $product->subiekt_id]);
+//        foreach (ProductModelColor::query()->whereNull("b2c_color_id")->get() as $productModelColor) {
+//            $b2cColor = B2cColor::query()->where("name", $productModelColor->b2c_name)->first();
+//            if (is_null($b2cColor)) continue;
 //
+//            $productModelColor->b2cColor()->associate($b2cColor);
+//            $productModelColor->save();
+////            dd($productModelColor, $b2cColor);
 //        }
-//        Shoper::getOrder();
-//        ShoperChangePrice::dispatchSync(ProductModel::find(129));
+        return Inertia::render("Clients/ClientList");
 
-//        Shoper::getProductStockBySymbol(Product::find(120));
-//        Shoper::getOptions("cos");
-
-//        dd(Shoper::getProductStockBySymbol(Product::find(2652)));
-//        $idProductS = Shoper::AddProductVariant(Product::find(2652), $idProduct);
-
-        ShoperChangeShow::dispatchSync(Product::find(3116));
     }
 
     /**
@@ -100,7 +85,21 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+//        $client
+        $b2bActivityType = B2bActivityType::all();
+        $b2bCountry = B2bCountry::all();
+        $b2bPayment = B2bPayment::all();
+        $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
+        $b2bStatus = B2bStatus::all();
+        return Inertia::render("Clients/Client", [
+            "client" => $client,
+            "activityType" => $b2bActivityType,
+            "country" => $b2bCountry,
+            "payment" => $b2bPayment,
+            "sourceOfAcquisition" => $b2bSourceOfAcquisition,
+            "status" => $b2bStatus
+        ]);
+
     }
 
     /**
@@ -108,7 +107,20 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        $b2bActivityType = B2bActivityType::all();
+        $b2bCountry = B2bCountry::all();
+        $b2bPayment = B2bPayment::all();
+        $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
+        $b2bStatus = B2bStatus::all();
+        return Inertia::render("Clients/Client", [
+            "editing" => true,
+            "client" => $client,
+            "activityType" => $b2bActivityType,
+            "country" => $b2bCountry,
+            "payment" => $b2bPayment,
+            "sourceOfAcquisition" => $b2bSourceOfAcquisition,
+            "status" => $b2bStatus
+        ]);
     }
 
     /**
