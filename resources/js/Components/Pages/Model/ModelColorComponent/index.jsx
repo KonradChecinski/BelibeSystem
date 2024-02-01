@@ -10,7 +10,7 @@ import {
 import ModelsColorTable from "@/Components/Table/ModelsColorTable";
 import {Edit, ExpandMore} from "@mui/icons-material";
 import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
-import {useRef, useState} from "react";
+import {useState} from "react";
 
 export default function ModelColorComponent(props) {
     const countQuantityInColor = (color_id) => {
@@ -56,7 +56,7 @@ export default function ModelColorComponent(props) {
                                         />
                                     </Box>
 
-                                    <Box sx={{display: "flex", gap: 1}}>
+                                    <Box sx={{display: "flex", gap: 1, flexWrap: "wrap"}}>
                                         <Chip label={`${color.shortcut} - ${color.name}`} color="primary"
                                               variant="outlined"
                                               sx={{fontSize: 15, height: 35}}/>
