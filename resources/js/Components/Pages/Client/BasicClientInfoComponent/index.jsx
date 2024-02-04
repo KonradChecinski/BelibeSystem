@@ -27,6 +27,7 @@ export default function BasicClientInfoComponent(props) {
         handleSubmit,
         errors: fieldErrors,
         setValue,
+        clearErrors,
     } = useBasicClientInfoForm()
 
     const {data, setData, processing, post} = useForm({
@@ -86,6 +87,17 @@ export default function BasicClientInfoComponent(props) {
 
         initializeFieldValues()
         setEdited(false);
+
+        clearErrors('nip')
+        clearErrors('name')
+        clearErrors('country')
+        clearErrors('city')
+        clearErrors('zip_code')
+        clearErrors('street')
+        clearErrors('house_number')
+        clearErrors('apartment_number')
+        clearErrors('phone')
+        clearErrors('email')
     };
     const saveBasic = () => {
         // post(route("system.products.model.update.basic", {productModel: data.id}), {

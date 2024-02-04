@@ -1,26 +1,12 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Grid} from "@mui/material";
-import {Palette} from "@mui/icons-material";
 import IconGrid from "@/Components/IconGrid";
-import {useState} from "react";
-import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
-import ImagesComponent from "@/Components/Pages/Model/ImagesComponent";
-import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent";
-import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
-import BasicInfoComponent from "@/Components/Pages/Model/BasicInfoComponent";
-import ModelB2CComponent from "@/Components/Pages/Model/ModelB2CComponent";
-import ModelSubiektComponent from "@/Components/Pages/Model/ModelSubiektComponent";
-import ModelGS1Component from "@/Components/Pages/Model/ModelGS1Component";
 import InfoIcon from '@mui/icons-material/Info';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import QrCodeIcon from '@mui/icons-material/QrCode';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import WorkIcon from '@mui/icons-material/Work';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
+import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalClientInfoComponent";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 export default function Client(props) {
 
@@ -38,14 +24,14 @@ export default function Client(props) {
         <UserLayout auth={props.auth} errors={props.errors} header={"Klient: " + "test"}>
             <Head title={"test"}/>
             <Grid container spacing={3} sx={{pb: 1}}>
-                <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<InfoIcon/>} iconColor={"darkblue"}>
+                <IconGrid xs={12} md={12} title={"Informacje podstawowe"} icon={<InfoIcon/>} iconColor={"darkblue"}>
                     <BasicClientInfoComponent {...props}/>
                 </IconGrid>
 
-                {/*<IconGrid xs={12} md={12} title={"Ceny"} icon={<MonetizationOnIcon/>}*/}
-                {/*          iconColor={"green"}>*/}
-                {/*    <ModelPricesComponent {...props} />*/}
-                {/*</IconGrid>*/}
+                <IconGrid xs={12} md={12} title={"Informacje dodatkowe"} icon={<AddBoxIcon/>}
+                          iconColor={"green"}>
+                    <AdditionalClientInfoComponent {...props} />
+                </IconGrid>
 
                 {/*<IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"magenta"}>*/}
                 {/*    <ModelColorComponent {...props} />*/}
