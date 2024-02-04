@@ -121,7 +121,7 @@ export default function BasicClientInfoComponent(props) {
                 <Button
                     variant="outlined"
                     startIcon={<PersonSearchIcon/>}
-                    sx={{mt: 1}}
+                    sx={{mt: 1, height: 40}}
                     onClick={() => {
                         setDialogOpen(true)
                     }}

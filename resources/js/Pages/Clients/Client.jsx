@@ -3,10 +3,12 @@ import UserLayout from "@/Layouts/UserLayout";
 import {Grid} from "@mui/material";
 import IconGrid from "@/Components/IconGrid";
 import InfoIcon from '@mui/icons-material/Info';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
 import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalClientInfoComponent";
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import NotesClientComponent from "@/Components/Pages/Client/NotesClientComponent";
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+
 
 export default function Client(props) {
 
@@ -33,9 +35,9 @@ export default function Client(props) {
                     <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
-                {/*<IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"magenta"}>*/}
-                {/*    <ModelColorComponent {...props} />*/}
-                {/*</IconGrid>*/}
+                <IconGrid xs={12} md={12} title={"Notatki do klienta"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
+                    <NotesClientComponent {...props} />
+                </IconGrid>
                 {/*<IconGrid xs={12} md={12} title={"Subiekt"} icon={<TextSnippetIcon/>} iconColor={"gray"}>*/}
                 {/*    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}*/}
                 {/*                           props={{...props}}/>*/}
