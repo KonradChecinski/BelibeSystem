@@ -14,9 +14,11 @@ import InfoIcon from "@mui/icons-material/Info";
 import HomeIcon from '@mui/icons-material/Home';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import ClientFindGusDialog from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog";
 
 export default function BasicClientInfoComponent(props) {
     const [edited, setEdited] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     console.log("Propsy: ", props)
 
@@ -101,12 +103,16 @@ export default function BasicClientInfoComponent(props) {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+            <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen}/>
 
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
                 <Button
                     variant="outlined"
                     startIcon={<PersonSearchIcon/>}
                     sx={{mt: 1}}
+                    onClick={() => {
+                        setDialogOpen(true)
+                    }}
                 >
                     Uzupełnij dane adresowe z GUS
                 </Button>
