@@ -52,16 +52,111 @@ class ClientController extends Controller
      */
     public function index()
     {
-//        foreach (ProductModelColor::query()->whereNull("b2c_color_id")->get() as $productModelColor) {
-//            $b2cColor = B2cColor::query()->where("name", $productModelColor->b2c_name)->first();
-//            if (is_null($b2cColor)) continue;
-//
-//            $productModelColor->b2cColor()->associate($b2cColor);
-//            $productModelColor->save();
-////            dd($productModelColor, $b2cColor);
-//        }
+
         return Inertia::render("Clients/ClientList");
 
+    }
+
+    public function data(DataProductModelRequest $request)
+    {
+        $mainColumn = [
+            'id',
+            'symbol',
+            'name',
+        ];
+
+        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"]);
+//        dd($models->get()->toArray());
+
+        if ($request->search) {
+            foreach (json_decode($request->search) as $word) {
+                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
+            }
+        }
+
+        if ($request->filter) {
+            foreach (json_decode($request->filter) as $filter) {
+                if (in_array($filter->field, $mainColumn)) {
+                    switch ($filter->operator) {
+                        case "contains":
+                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value . '%');
+                            break;
+                        case "equals":
+                            $models = $models->Where($filter->field, 'LIKE', $filter->value);
+                            break;
+                        case "startsWith":
+                            $models = $models->Where($filter->field, 'LIKE', $filter->value . '%');
+                            break;
+                        case "endsWith":
+                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value);
+                            break;
+                        case "isEmpty":
+                            $models = $models->Where($filter->field, 'LIKE', '');
+                            break;
+                        case "isNotEmpty":
+                            $models = $models->Where($filter->field, 'NOT LIKE', '');
+                            break;
+                        case "isAnyOf":
+                            foreach ($filter->value as $value) {
+                                $models = $models->Where($filter->field, 'LIKE', $value);
+                            }
+                            break;
+                    }
+                } else {
+                    switch ($filter->operator) {
+                        case "contains":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', '%' . $filter->value . '%');
+                            });
+                            break;
+                        case "equals":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', $filter->value);
+                            });
+
+                            break;
+                        case "startsWith":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', $filter->value . '%');
+                            });
+
+                            break;
+                        case "endsWith":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', '%' . $filter->value);
+                            });
+                            break;
+                        case "isEmpty":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'LIKE', '');
+                            });
+                            break;
+                        case "isNotEmpty":
+                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                return $query->Where("name", 'NOT LIKE', '');
+                            });
+                            break;
+                        case "isAnyOf":
+                            foreach ($filter->value as $value) {
+                                $models = $models->WhereHas($filter->field, function ($query) use ($value) {
+                                    return $query->Where("name", 'LIKE', $value);
+                                });
+                            }
+                            break;
+                    }
+                }
+
+
+            }
+
+        }
+        $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
+
+//        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
+        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
+        return response()->json([$models]);
     }
 
     /**
@@ -77,7 +172,15 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
-        //
+        $model = new Client($request->all());
+//        $model->description_b2b = "";
+//        $model->description_b2c = "";
+//        $model->description_allegro = "";
+        $model->save();
+
+//        $model->prices()->create([]);
+
+//        CreateModelInSubiekt::dispatch($model);
     }
 
     /**

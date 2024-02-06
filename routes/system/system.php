@@ -27,6 +27,7 @@ use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
 use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\XmlGeneratorController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -81,7 +82,7 @@ Route::middleware("auth:user")->group(function () {
     Route::group([], function () {
         Route::get("/clients", [ClientController::class, 'index'])->name("system.clients");
         Route::get("/clients/data", [ClientController::class, 'data']);
-//        Route::post("/clients", [ProductModelController::class, 'store'])->name("system.products.models.create");
+        Route::post("/clients", [ClientController::class, 'store'])->name("system.clients.create");
 //        Route::post("/clients/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
 //        Route::delete("/clients/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");
 
@@ -187,7 +188,7 @@ Route::middleware("auth:user")->group(function () {
     Route::get("phpinfo", function () {
         phpinfo();
     })->name("system.phpinfo");
-    Route::get("test", [\App\Http\Controllers\ClientController::class, 'index'])->name("system.test");
+    Route::get("test", [TestController::class, 'index'])->name("system.test");
 });
 
 
