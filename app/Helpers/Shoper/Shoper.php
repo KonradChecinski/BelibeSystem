@@ -687,7 +687,7 @@ class Shoper
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
-                "stock" => ["stock" => $productModelColor->products()->where("show_in_b2c", true)]
+                "stock" => ["stock" => $productModelColor->products()->where("show_in_b2c", true)->sum("quantity")]
             ]);
         if ($response->status() === 429) {
             sleep(1);
@@ -697,7 +697,6 @@ class Shoper
             self::login();
             return false;
         }
-
         return true;
     }
 
