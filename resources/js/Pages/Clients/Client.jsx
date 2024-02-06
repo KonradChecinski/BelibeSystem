@@ -1,81 +1,70 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Grid} from "@mui/material";
-import {Palette} from "@mui/icons-material";
 import IconGrid from "@/Components/IconGrid";
-import {useState} from "react";
-import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
-import ImagesComponent from "@/Components/Pages/Model/ImagesComponent";
-import ModelPricesComponent from "@/Components/Pages/Model/ModelPricesComponent";
-import ModelB2BComponent from "@/Components/Pages/Model/ModelB2BComponent";
-import BasicInfoComponent from "@/Components/Pages/Model/BasicInfoComponent";
-import ModelB2CComponent from "@/Components/Pages/Model/ModelB2CComponent";
-import ModelSubiektComponent from "@/Components/Pages/Model/ModelSubiektComponent";
-import ModelGS1Component from "@/Components/Pages/Model/ModelGS1Component";
 import InfoIcon from '@mui/icons-material/Info';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import QrCodeIcon from '@mui/icons-material/QrCode';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import WorkIcon from '@mui/icons-material/Work';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import TextEditorAllegro from "@/Components/TextEditor/Allegro";
+import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
+import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalClientInfoComponent";
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import NotesClientComponent from "@/Components/Pages/Client/NotesClientComponent";
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+
 
 export default function Client(props) {
 
-    const [productModel, setProductModel] = useState({
-        ...props.productModel,
-        categories: props.productModel.categories.map((value) => {
-            // delete value.pivot;
-            return value.id;
-        })
-    });
+    // const [productModel, setProductModel] = useState({
+    //     ...props.productModel,
+    //     categories: props.productModel.categories.map((value) => {
+    //         // delete value.pivot;
+    //         return value.id;
+    //     })
+    // });
     console.log(props);
 
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={"Model: " + props.productModel.name}>
-            <Head title={props.productModel.name}/>
+        <UserLayout auth={props.auth} errors={props.errors} header={"Klient: " + "test"}>
+            <Head title={"test"}/>
             <Grid container spacing={3} sx={{pb: 1}}>
-                <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<InfoIcon/>} iconColor={"darkblue"}>
-                    <BasicInfoComponent {...props}/>
+                <IconGrid xs={12} md={12} title={"Informacje podstawowe"} icon={<InfoIcon/>} iconColor={"darkblue"}>
+                    <BasicClientInfoComponent {...props}/>
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Ceny"} icon={<MonetizationOnIcon/>}
+                <IconGrid xs={12} md={12} title={"Informacje dodatkowe"} icon={<AddBoxIcon/>}
                           iconColor={"green"}>
-                    <ModelPricesComponent {...props} />
+                    <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Kolory"} icon={<Palette/>} iconColor={"magenta"}>
-                    <ModelColorComponent {...props} />
+                <IconGrid xs={12} md={12} title={"Notatki do klienta"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
+                    <NotesClientComponent {...props} />
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"Subiekt"} icon={<TextSnippetIcon/>} iconColor={"gray"}>
-                    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}
-                                           props={{...props}}/>
-                </IconGrid>
-                <IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>
-                    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
-                </IconGrid>
-                <IconGrid xs={12} md={12} title={"B2C"} icon={<PeopleAltIcon/>} iconColor={"indigo"}>
-                    <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
-                </IconGrid>
-                <IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"indigo"}>
-                    <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
-                </IconGrid>
-                {/*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*/}
-                {/*    <TextEditorAllegro/>*/}
+                {/*<IconGrid xs={12} md={12} title={"Subiekt"} icon={<TextSnippetIcon/>} iconColor={"gray"}>*/}
+                {/*    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}*/}
+                {/*                           props={{...props}}/>*/}
+                {/*</IconGrid>*/}
+                {/*<IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>*/}
+                {/*    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}*/}
+                {/*                       props={{...props}}/>*/}
+                {/*</IconGrid>*/}
+                {/*<IconGrid xs={12} md={12} title={"B2C"} icon={<PeopleAltIcon/>} iconColor={"indigo"}>*/}
+                {/*    <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}*/}
+                {/*                       props={{...props}}/>*/}
+                {/*</IconGrid>*/}
+                {/*<IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"indigo"}>*/}
+                {/*    <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}*/}
+                {/*                       props={{...props}}/>*/}
+                {/*</IconGrid>*/}
+                {/*/!*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*!/*/}
+                {/*/!*    <TextEditorAllegro/>*!/*/}
+                {/*/!*</IconGrid>*!/*/}
+
+                {/*<IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<PhotoSizeSelectActualIcon/>}*/}
+                {/*          iconColor={"cyan"}>*/}
+                {/*    <ImagesComponent {...props}/>*/}
                 {/*</IconGrid>*/}
 
-                <IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<PhotoSizeSelectActualIcon/>}
-                          iconColor={"cyan"}>
-                    <ImagesComponent {...props}/>
-                </IconGrid>
-
-                {/*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*/}
-                {/*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*/}
+                {/*/!*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*!/*/}
+                {/*/!*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*!/*/}
             </Grid>
 
         </UserLayout>
