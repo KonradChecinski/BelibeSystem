@@ -43,7 +43,7 @@ class ShoperChangeQuantity implements ShouldQueue
         if (!$result) {
             $this->fail('Change productStock stock failed');
         }
-        $shoperColorId = Shoper::findIdColor($this->product->color);
+        $shoperColorId = Shoper::getProductBySymbol($this->product->color);
         if (is_null($shoperColorId)) return;
         $result = Shoper::changeProductQuantity($shoperColorId, $this->product->color);
         if (!$result) {
