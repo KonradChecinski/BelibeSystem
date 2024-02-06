@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreClientTaskRequest;
+use App\Http\Requests\Client\UpdateClientTaskRequest;
 use App\Models\ClientTask;
-use App\Http\Requests\StoreClientTaskRequest;
-use App\Http\Requests\UpdateClientTaskRequest;
 
 class ClientTaskController extends Controller
 {

@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateProductImagePublishRequest;
-use App\Jobs\Shoper\ShoperChangeImages;
-use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
+use App\Http\Requests\Product\StoreProductImageOrderRequest;
+use App\Http\Requests\Product\UpdateProductImagePublishRequest;
 use App\Models\ProductImageOrder;
-use App\Http\Requests\StoreProductImageOrderRequest;
-use App\Http\Requests\UpdateProductImageOrderRequest;
 use App\Models\Products\ProductImage;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
 
 class ProductImagePublishController extends Controller
 {

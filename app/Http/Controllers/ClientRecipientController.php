@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreClientRecipientRequest;
+use App\Http\Requests\Client\UpdateClientRecipientRequest;
 use App\Models\ClientRecipient;
-use App\Http\Requests\StoreClientRecipientRequest;
-use App\Http\Requests\UpdateClientRecipientRequest;
 
 class ClientRecipientController extends Controller
 {

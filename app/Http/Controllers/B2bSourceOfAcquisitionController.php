@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreB2bSourceOfAcquisitionRequest;
+use App\Http\Requests\Client\UpdateB2bSourceOfAcquisitionRequest;
 use App\Models\B2bSourceOfAcquisition;
-use App\Http\Requests\StoreB2bSourceOfAcquisitionRequest;
-use App\Http\Requests\UpdateB2bSourceOfAcquisitionRequest;
 
 class B2bSourceOfAcquisitionController extends Controller
 {

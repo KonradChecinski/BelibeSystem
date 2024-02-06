@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteB2cCategoryRequest;
+use App\Http\Requests\Client\DeleteB2cCategoryRequest;
+use App\Http\Requests\Product\StoreB2cCategoryRequest;
+use App\Http\Requests\Product\UpdateB2cCategoryRequest;
 use App\Models\B2cCategory;
-use App\Http\Requests\StoreB2cCategoryRequest;
-use App\Http\Requests\UpdateB2cCategoryRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreClientNoteRequest;
+use App\Http\Requests\Client\UpdateClientNoteRequest;
 use App\Models\ClientNote;
-use App\Http\Requests\StoreClientNoteRequest;
-use App\Http\Requests\UpdateClientNoteRequest;
 
 class ClientNoteController extends Controller
 {

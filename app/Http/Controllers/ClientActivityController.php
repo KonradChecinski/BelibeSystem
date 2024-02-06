@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreClientActivityRequest;
+use App\Http\Requests\Client\UpdateClientActivityRequest;
 use App\Models\ClientActivity;
-use App\Http\Requests\StoreClientActivityRequest;
-use App\Http\Requests\UpdateClientActivityRequest;
 
 class ClientActivityController extends Controller
 {

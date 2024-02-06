@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteProductBrandRequest;
+use App\Http\Requests\Product\DeleteProductBrandRequest;
+use App\Http\Requests\Product\StoreProductBrandRequest;
+use App\Http\Requests\Product\UpdateProductBrandRequest;
 use App\Models\ProductBrand;
-use App\Http\Requests\StoreProductBrandRequest;
-use App\Http\Requests\UpdateProductBrandRequest;
-use App\Models\Products\ProductUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

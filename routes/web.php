@@ -5,6 +5,7 @@ use App\Http\Controllers\StorageController;
 use App\Http\Controllers\XmlGeneratorController;
 use App\Install\ClearDBController;
 use App\Install\Install2Controller;
+use App\Install\Install3Controller;
 use App\Install\InstallController;
 use App\Models\Products\ProductImage;
 use Illuminate\Foundation\Application;
@@ -77,6 +78,7 @@ Route::group(['prefix' => '/xml'], function () {
 
 Route::get("install", [InstallController::class, 'install'])->name("install");
 Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
+Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
 Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 
 

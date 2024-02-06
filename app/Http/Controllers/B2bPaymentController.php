@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreB2bPaymentRequest;
+use App\Http\Requests\Client\UpdateB2bPaymentRequest;
 use App\Models\B2bPayment;
-use App\Http\Requests\StoreB2bPaymentRequest;
-use App\Http\Requests\UpdateB2bPaymentRequest;
 
 class B2bPaymentController extends Controller
 {

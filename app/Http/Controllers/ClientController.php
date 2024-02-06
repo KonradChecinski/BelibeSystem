@@ -6,6 +6,7 @@ ini_set('max_execution_time', 600);
 use App\Helpers\Shoper\Shoper;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
+use App\Http\Requests\Client\DataClientRequest;
 use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
 use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
@@ -23,6 +24,7 @@ use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
 use App\Models\B2bActivityType;
 use App\Models\B2bCountry;
+use App\Models\B2bIndustry;
 use App\Models\B2bPayment;
 use App\Models\B2bSourceOfAcquisition;
 use App\Models\B2bStatus;
@@ -57,22 +59,34 @@ class ClientController extends Controller
 
     }
 
-    public function data(DataProductModelRequest $request)
+    public function data(DataClientRequest $request)
     {
         $mainColumn = [
             'id',
-            'symbol',
             'name',
+            'nip',
+            'city',
+            'street',
+            'building_number',
+            'apartment_number',
+            'postal_code',
+            'phone',
+            'email',
+            'priority',
+            'blacklist',
         ];
 
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"]);
+        $models = Client::with(["accountManager:name", /*"colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"*/]);
 //        dd($models->get()->toArray());
 
         if ($request->search) {
             foreach (json_decode($request->search) as $word) {
-                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
-                $models = $models->orWhere('symbol', 'LIKE', '%' . $word . '%');
-                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
+                foreach ($mainColumn as $item) {
+                    $models = $models->orWhere($item, 'LIKE', '%' . $word . '%');
+                }
+//                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
+//                $models = $models->orWhere('nip', 'LIKE', '%' . $word . '%');
+//                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
             }
         }
 
@@ -155,7 +169,7 @@ class ClientController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
-        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
+        $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist']);
         return response()->json([$models]);
     }
 
@@ -177,30 +191,29 @@ class ClientController extends Controller
 //        $model->description_b2c = "";
 //        $model->description_allegro = "";
         $model->save();
-
-//        $model->prices()->create([]);
-
-//        CreateModelInSubiekt::dispatch($model);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show(int $id)
     {
-//        $client
+        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry"])->findOrFail($id);
+
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
         $b2bPayment = B2bPayment::all();
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
+        $b2bIndustry = B2bIndustry::all();
         return Inertia::render("Clients/Client", [
             "client" => $client,
             "activityType" => $b2bActivityType,
             "country" => $b2bCountry,
             "payment" => $b2bPayment,
             "sourceOfAcquisition" => $b2bSourceOfAcquisition,
-            "status" => $b2bStatus
+            "status" => $b2bStatus,
+            "industry" => $b2bIndustry
         ]);
 
     }
@@ -208,13 +221,16 @@ class ClientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Client $client)
+    public function edit(int $id)
     {
+        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry"])->findOrFail($id);
+
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
         $b2bPayment = B2bPayment::all();
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
+        $b2bIndustry = B2bIndustry::all();
         return Inertia::render("Clients/Client", [
             "editing" => true,
             "client" => $client,
@@ -222,7 +238,8 @@ class ClientController extends Controller
             "country" => $b2bCountry,
             "payment" => $b2bPayment,
             "sourceOfAcquisition" => $b2bSourceOfAcquisition,
-            "status" => $b2bStatus
+            "status" => $b2bStatus,
+            "industry" => $b2bIndustry
         ]);
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Product\StoreShoperTokenRequest;
+use App\Http\Requests\Product\UpdateShoperTokenRequest;
 use App\Models\ShoperToken;
-use App\Http\Requests\StoreShoperTokenRequest;
-use App\Http\Requests\UpdateShoperTokenRequest;
 
 class ShoperTokenController extends Controller
 {

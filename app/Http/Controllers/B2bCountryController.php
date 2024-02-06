@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreB2bCountryRequest;
+use App\Http\Requests\Client\UpdateB2bCountryRequest;
 use App\Models\B2bCountry;
-use App\Http\Requests\StoreB2bCountryRequest;
-use App\Http\Requests\UpdateB2bCountryRequest;
 
 class B2bCountryController extends Controller
 {

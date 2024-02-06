@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreClientDiscountRequest;
+use App\Http\Requests\Client\UpdateClientDiscountRequest;
 use App\Models\ClientDiscount;
-use App\Http\Requests\StoreClientDiscountRequest;
-use App\Http\Requests\UpdateClientDiscountRequest;
 
 class ClientDiscountController extends Controller
 {

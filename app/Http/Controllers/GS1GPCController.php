@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteGS1GPCRequest;
+use App\Http\Requests\Product\DeleteGS1GPCRequest;
+use App\Http\Requests\Product\StoreGS1GPCRequest;
+use App\Http\Requests\Product\UpdateGS1GPCRequest;
 use App\Models\GS1GPC;
-use App\Http\Requests\StoreGS1GPCRequest;
-use App\Http\Requests\UpdateGS1GPCRequest;
-use App\Models\Products\ProductUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

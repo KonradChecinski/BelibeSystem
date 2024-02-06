@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteB2cColorRequest;
+use App\Http\Requests\Client\DeleteB2cColorRequest;
+use App\Http\Requests\Product\StoreB2cColorRequest;
+use App\Http\Requests\Product\UpdateB2cColorRequest;
 use App\Models\B2cColor;
-use App\Http\Requests\StoreB2cColorRequest;
-use App\Http\Requests\UpdateB2cColorRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

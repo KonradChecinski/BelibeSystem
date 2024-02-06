@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreB2bActivityTypeRequest;
+use App\Http\Requests\Client\UpdateB2bActivityTypeRequest;
 use App\Models\B2bActivityType;
-use App\Http\Requests\StoreB2bActivityTypeRequest;
-use App\Http\Requests\UpdateB2bActivityTypeRequest;
 
 class B2bActivityTypeController extends Controller
 {

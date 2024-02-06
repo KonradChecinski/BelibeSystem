@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Client\StoreB2bStatusRequest;
+use App\Http\Requests\Client\UpdateB2bStatusRequest;
 use App\Models\B2bStatus;
-use App\Http\Requests\StoreB2bStatusRequest;
-use App\Http\Requests\UpdateB2bStatusRequest;
 
 class B2bStatusController extends Controller
 {
