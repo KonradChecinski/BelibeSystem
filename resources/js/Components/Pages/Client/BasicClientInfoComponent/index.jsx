@@ -31,30 +31,30 @@ export default function BasicClientInfoComponent(props) {
     } = useBasicClientInfoForm()
 
     const {data, setData, processing, post} = useForm({
-        'id': 1,
-        'nip': "5914531171",
-        'name': "test",
+        'id': props.client.id,
+        'nip': props.client.nip,
+        'name': props.client.name,
 
-        "country": "test2",
-        "city": "test",
-        "zip_code": "44-122",
-        "street": "Szarych Szeregów",
-        "house_number": "2",
-        "apartment_number": "13",
+        "country": props.client.country,
+        "city": props.client.city,
+        "postal_code": props.client.postal_code,
+        "street": props.client.street,
+        "building_number": props.client.building_number,
+        "apartment_number": props.client.apartment_number,
 
-        "phone": "123456789",
-        "email": "test@gmail.com"
+        "phone": props.client.phone,
+        "email": props.client.email
     })
 
     const initializeFieldValues = () => {
         setValue("nip", data.nip)
         setValue("name", data.name)
 
-        setValue("country", data.country)
+        setValue("country", data.country.name)
         setValue("city", data.city)
-        setValue("zip_code", data.zip_code)
+        setValue("postal_code", data.postal_code)
         setValue("street", data.street)
-        setValue("house_number", data.house_number)
+        setValue("building_number", data.building_number)
         setValue("apartment_number", data.apartment_number)
 
         setValue("phone", data.phone)
@@ -72,17 +72,19 @@ export default function BasicClientInfoComponent(props) {
 
     const resetForm = () => {
         setData({
-            'id': 1,
-            'nip': "5914531171",
-            'name': "test",
-            "country": "test2",
-            "city": "test",
-            "zip_code": "44-122",
-            "street": "Szarych Szeregów",
-            "house_number": "2",
-            "apartment_number": "13",
-            "phone": "123456789",
-            "email": "test@gmail.com"
+            'id': props.client.id,
+            'nip': props.client.nip,
+            'name': props.client.name,
+
+            "country": props.client.country,
+            "city": props.client.city,
+            "postal_code": props.client.postal_code,
+            "street": props.client.street,
+            "building_number": props.client.building_number,
+            "apartment_number": props.client.apartment_number,
+
+            "phone": props.client.phone,
+            "email": props.client.email
         });
 
         initializeFieldValues()
@@ -92,9 +94,9 @@ export default function BasicClientInfoComponent(props) {
         clearErrors('name')
         clearErrors('country')
         clearErrors('city')
-        clearErrors('zip_code')
+        clearErrors('postal_code')
         clearErrors('street')
-        clearErrors('house_number')
+        clearErrors('building_number')
         clearErrors('apartment_number')
         clearErrors('phone')
         clearErrors('email')
@@ -118,16 +120,19 @@ export default function BasicClientInfoComponent(props) {
             <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen}/>
 
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
-                <Button
-                    variant="outlined"
-                    startIcon={<PersonSearchIcon/>}
-                    sx={{mt: 1, height: 40}}
-                    onClick={() => {
-                        setDialogOpen(true)
-                    }}
-                >
-                    Uzupełnij dane adresowe z GUS
-                </Button>
+                {props.editing ? (
+                    <Button
+                        variant="outlined"
+                        startIcon={<PersonSearchIcon/>}
+                        sx={{mt: 1, height: 40}}
+                        onClick={() => {
+                            setDialogOpen(true)
+                        }}
+                    >
+                        Uzupełnij dane adresowe z GUS
+                    </Button>
+                ) : null
+                }
 
                 <Box>
                     <Typography
@@ -147,7 +152,7 @@ export default function BasicClientInfoComponent(props) {
                                            setData("nip", value.target.value)
                                            setEdited(true)
                                        }}
-                                // inputProps={{readOnly: !props.editing}}
+                                       inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
                             {fieldErrors.nip?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -166,7 +171,7 @@ export default function BasicClientInfoComponent(props) {
                                            setData("name", value.target.value)
                                            setEdited(true)
                                        }}
-                                // inputProps={{readOnly: !props.editing}}
+                                       inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
                             {fieldErrors.name?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -186,57 +191,67 @@ export default function BasicClientInfoComponent(props) {
 
                     <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
 
-                        <Autocomplete
-                            id="country"
-                            // options={params.b2c.color.map(e => ({
-                            //     id: e.id,
-                            //     name: e.name,
-                            //     label: e.name
-                            // }))}
-                            options={["test1", "test2", "test3"]}
-                            sx={{width: "30ch"}}
-                            value={data.country}
-                            // isOptionEqualToValue={(option, value) => option.id === value.id}
-                            onChange={(e, value) => {
-                                setData({
-                                    ...data,
-                                    country: value,
-                                })
-                                setEdited(true)
-                            }}
-                            renderInput={(params) =>
-                                <TextField
-                                    {...params}
-                                    label="Kraj"
-                                    sx={{my: 1}}
-                                    {...register("country")}
-                                    value={data.country}
-                                    color={fieldErrors.country?.message && "error"}
+                        {props.editing ? (
+                            <>
+                                <Autocomplete
+                                    id="country"
+                                    options={props.country.map(e => ({
+                                        id: e.id,
+                                        name: e.name,
+                                        label: e.name
+                                    }))}
+                                    // options={["test1", "test2", "test3"]}
+                                    sx={{width: "30ch"}}
+                                    value={data.country.name}
+                                    isOptionEqualToValue={(option, value) => option.name === value}
+                                    onChange={(e, value) => {
+                                        setData({
+                                            ...data,
+                                            country: value,
+                                        })
+                                        setEdited(true)
+                                    }}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            {...params}
+                                            label="Kraj"
+                                            sx={{my: 1}}
+                                            {...register("country")}
+                                            value={data.country}
+                                            color={fieldErrors.country?.message && "error"}
+                                        />
+                                    }
                                 />
-                            }
-                        />
-                        {fieldErrors.country?.message && (
-                            <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
-                                {fieldErrors.country?.message.toString()}
-                            </Typography>
+                                {fieldErrors.country?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                                        {fieldErrors.country?.message.toString()}
+                                    </Typography>
+                                )}
+                            </>
+                        ) : (
+                            <TextField id="country" label="Kraj" variant="outlined"
+                                       {...register("country")}
+                                       inputProps={{readOnly: true}}
+                                       sx={{width: "30ch"}}/>
                         )}
+
 
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
                             <Box>
-                                <TextField id="zip_code" label="Kod pocztowy" variant="outlined"
-                                           value={data.zip_code}
-                                           {...register("zip_code")}
-                                           color={fieldErrors.zip_code?.message ? "error" : null}
+                                <TextField id="postal_code" label="Kod pocztowy" variant="outlined"
+                                           value={data.postal_code}
+                                           {...register("postal_code")}
+                                           color={fieldErrors.postal_code?.message ? "error" : null}
                                            onChange={(value) => {
                                                // setProductModel({...productModel, name: value.target.value});
-                                               setData("zip_code", value.target.value)
+                                               setData("postal_code", value.target.value)
                                                setEdited(true)
                                            }}
-                                    // inputProps={{readOnly: !props.editing}}
+                                           inputProps={{readOnly: !props.editing}}
                                            sx={{width: "30ch"}}/>
-                                {fieldErrors.zip_code?.message && (
+                                {fieldErrors.postal_code?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.zip_code?.message.toString()}
+                                        {fieldErrors.postal_code?.message.toString()}
                                     </Typography>
                                 )}
                             </Box>
@@ -251,7 +266,7 @@ export default function BasicClientInfoComponent(props) {
                                                setData("city", value.target.value)
                                                setEdited(true)
                                            }}
-                                    // inputProps={{readOnly: !props.editing}}
+                                           inputProps={{readOnly: !props.editing}}
                                            sx={{width: "30ch"}}/>
                                 {fieldErrors.city?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -272,7 +287,7 @@ export default function BasicClientInfoComponent(props) {
                                                setData("street", value.target.value)
                                                setEdited(true)
                                            }}
-                                    // inputProps={{readOnly: !props.editing}}
+                                           inputProps={{readOnly: !props.editing}}
                                            sx={{width: "30ch"}}/>
                                 {fieldErrors.street?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -282,22 +297,21 @@ export default function BasicClientInfoComponent(props) {
                             </Box>
 
                             <Box>
-                                <TextField id="house_number" label="Numer budynku" variant="outlined"
+                                <TextField id="building_number" label="Numer budynku" variant="outlined"
                                            type={"number"}
-                                           value={data.house_number}
-                                           {...register("house_number")}
+                                           value={data.building_number}
+                                           {...register("building_number")}
                                            color={fieldErrors.city?.message ? "error" : null}
                                            onChange={(value) => {
                                                // setProductModel({...productModel, name: value.target.value});
-                                               setData("house_number", value.target.value)
+                                               setData("building_number", value.target.value)
                                                setEdited(true)
                                            }}
-                                    // inputProps={{readOnly: !props.editing}}
-                                           inputProps={{style: {textAlign: 'center'}}}
+                                           inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
                                            sx={{width: "12.5ch"}}/>
-                                {fieldErrors.house_number?.message && (
+                                {fieldErrors.building_number?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.house_number?.message.toString()}
+                                        {fieldErrors.building_number?.message.toString()}
                                     </Typography>
                                 )}
                             </Box>
@@ -305,7 +319,7 @@ export default function BasicClientInfoComponent(props) {
                             <Box>
                                 <TextField id="apartment_number" label="Numer lokalu" variant="outlined"
                                            type={"number"}
-                                           value={data.apartment_number}
+                                           value={data.apartment_number ? data.apartment_number : ""}
                                            {...register("apartment_number")}
                                            color={fieldErrors.city?.message ? "error" : null}
                                            onChange={(value) => {
@@ -313,8 +327,7 @@ export default function BasicClientInfoComponent(props) {
                                                setData("apartment_number", value.target.value)
                                                setEdited(true)
                                            }}
-                                    // inputProps={{readOnly: !props.editing}}
-                                           inputProps={{style: {textAlign: 'center'}}}
+                                           inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
                                            InputLabelProps={{shrink: true}}
                                            sx={{width: "12.5ch"}}/>
                                 {fieldErrors.apartment_number?.message && (
@@ -345,7 +358,7 @@ export default function BasicClientInfoComponent(props) {
                                            setData("phone", value.target.value)
                                            setEdited(true)
                                        }}
-                                // inputProps={{readOnly: !props.editing}}
+                                       inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
                             {fieldErrors.phone?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -355,8 +368,8 @@ export default function BasicClientInfoComponent(props) {
                         </Box>
 
                         <Box>
-                            <TextField id="email" label="Adresy Email" variant="outlined"
-                                       value={data.name}
+                            <TextField id="email" label="Adres Email" variant="outlined"
+                                       value={data.email}
                                        {...register("email")}
                                        color={fieldErrors.email?.message ? "error" : null}
                                        onChange={(value) => {
@@ -364,7 +377,7 @@ export default function BasicClientInfoComponent(props) {
                                            setData("email", value.target.value)
                                            setEdited(true)
                                        }}
-                                // inputProps={{readOnly: !props.editing}}
+                                       inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
                             {fieldErrors.name?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -401,95 +414,6 @@ export default function BasicClientInfoComponent(props) {
                     </Button>
                 </Fade>
             </Box>
-
-            {/*<Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>*/}
-            {/*    <Box>*/}
-            {/*        <TextField id="symbol" label="Symbol" variant="outlined"*/}
-            {/*                   value={data.symbol}*/}
-            {/*                   disabled={true}*/}
-            {/*                   inputProps={{readOnly: !props.editing}}*/}
-            {/*            // onChange={(value) => {*/}
-            {/*            //     setProductModel({...productModel, symbol: value.target.value});*/}
-            {/*            // }}*/}
-            {/*                   sx={{width: "30ch"}}/>*/}
-            {/*    </Box>*/}
-            {/*    <Box>*/}
-            {/*        <TextField id="quantity" label="Stan" variant="outlined"*/}
-            {/*                   value={countQuantityInModel()}*/}
-            {/*                   type="number"*/}
-            {/*                   inputProps={{readOnly: true}}*/}
-            {/*                   disabled={true}*/}
-            {/*                   sx={{width: "10ch"}}*/}
-            {/*        />*/}
-            {/*    </Box>*/}
-            {/*    <Box sx={{display: "flex", flexDirection: "column"}}>*/}
-            {/*        <TextField id="name" label="Nazwa" variant="outlined"*/}
-            {/*                   defaultValue={data.name}*/}
-            {/*                   {...register("name")}*/}
-            {/*                   color={fieldErrors.name?.message ? "error" : null}*/}
-            {/*                   onChange={(value) => {*/}
-            {/*                       // setProductModel({...productModel, name: value.target.value});*/}
-            {/*                       setData("name", value.target.value)*/}
-            {/*                       setEdited(true)*/}
-            {/*                   }}*/}
-            {/*                   inputProps={{readOnly: !props.editing}}*/}
-            {/*                   sx={{width: "30ch"}}/>*/}
-            {/*        {fieldErrors.name?.message && (*/}
-            {/*            <Typography variant="body2" color="error" sx={{ml: 1}}>*/}
-            {/*                {fieldErrors.name?.message.toString()}*/}
-            {/*            </Typography>*/}
-            {/*        )}*/}
-            {/*    </Box>*/}
-
-            {/*    <Box>*/}
-            {/*        <FormControl sx={{width: "30ch", display: "flex", flexDirection: "column"}}>*/}
-            {/*            <InputLabel id="brand-select-label">Marka</InputLabel>*/}
-            {/*            <Select*/}
-            {/*                labelId="brand-select-label"*/}
-            {/*                id="brand-select"*/}
-            {/*                label="Marka"*/}
-            {/*                value={data.product_brand_id}*/}
-            {/*                color={fieldErrors.brand?.message ? "error" : null}*/}
-            {/*                {...register("brand")}*/}
-            {/*                onChange={(value) => {*/}
-            {/*                    // setProductModel({...productModel, product_group_id: value.target.value});*/}
-            {/*                    setData("product_brand_id", value.target.value)*/}
-            {/*                    setEdited(true)*/}
-            {/*                }}*/}
-
-            {/*                // disabled={!props.editing}*/}
-            {/*                inputProps={{readOnly: !props.editing}}*/}
-            {/*            >*/}
-            {/*                {props.brand.map((brand) => {*/}
-            {/*                    return (*/}
-            {/*                        <MenuItem key={brand.id} value={brand.id}>*/}
-            {/*                            {brand.name}*/}
-            {/*                        </MenuItem>*/}
-            {/*                    );*/}
-            {/*                })}*/}
-            {/*            </Select>*/}
-            {/*            {fieldErrors.brand?.message && (*/}
-            {/*                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>*/}
-            {/*                    {fieldErrors.brand?.message.toString()}*/}
-            {/*                </Typography>*/}
-            {/*            )}*/}
-
-            {/*        </FormControl>*/}
-            {/*    </Box>*/}
-
-            {/*    <Fade in={edited}>*/}
-            {/*        <Button type="submit" variant="outlined" startIcon={<Save/>}*/}
-            {/*                disabled={processing}*/}
-            {/*                sx={{*/}
-            {/*                    position: "absolute",*/}
-            {/*                    top: 7,*/}
-            {/*                    right: 230,*/}
-            {/*                }}>*/}
-            {/*            Zapisz*/}
-            {/*        </Button>*/}
-            {/*    </Fade>*/}
-            {/*</Box>*/}
-
         </form>
     );
 }

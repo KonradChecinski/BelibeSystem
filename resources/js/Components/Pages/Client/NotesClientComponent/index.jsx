@@ -15,8 +15,6 @@ import TextEditorB2B from "@/Components/TextEditor/B2B";
 export default function NotesClientComponent(props) {
     const [edited, setEdited] = useState(false);
 
-    console.log("Propsy: ", props)
-
     const {
         register,
         handleSubmit,
@@ -82,7 +80,7 @@ export default function NotesClientComponent(props) {
                         setData("notes", value)
                     }}
                     setEdited={value => setEdited(value)}
-                    // readOnly={!props.editing}
+                    readOnly={!props.editing}
                 />
 
 

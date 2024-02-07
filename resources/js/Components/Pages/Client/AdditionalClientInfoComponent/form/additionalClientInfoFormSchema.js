@@ -5,16 +5,13 @@ const schema = yup.object().shape({
         .string()
         .required("Pole jest wymagane"),
     priority: yup
-        .number()
+        .string()
         .required("Pole jest wymagane"),
-    source: yup
+    source_of_acquisition: yup
         .string()
         .required("Pole jest wymagane"),
     payment: yup
         .string()
-        .required("Pole jest wymagane"),
-    blacklisted: yup
-        .boolean()
         .required("Pole jest wymagane"),
 })
 

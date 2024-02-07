@@ -15,14 +15,14 @@ const schema = yup.object().shape({
     city: yup
         .string()
         .required("Pole jest wymagane"),
-    zip_code: yup
+    postal_code: yup
         .string()
         .required("Pole jest wymagane")
         .matches(/^[0-9-]+$/, "Pole zawiera niedozwolone znaki"),
     street: yup
         .string()
         .required("Pole jest wymagane"),
-    house_number: yup
+    building_number: yup
         .number()
         .required("Pole jest wymagane"),
     apartment_number: yup
@@ -36,6 +36,7 @@ const schema = yup.object().shape({
     email: yup
         .string()
         .required("Pole jest wymagane")
+        .matches(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/, "Podaj poprawny adres email"),
 })
 
 export default schema
