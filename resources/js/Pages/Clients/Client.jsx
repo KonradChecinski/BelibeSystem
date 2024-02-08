@@ -8,6 +8,10 @@ import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalC
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import NotesClientComponent from "@/Components/Pages/Client/NotesClientComponent";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
+import ClientActivityComponent from "@/Components/Pages/Client/ClientActivityComponent";
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 
 export default function Client(props) {
@@ -35,13 +39,19 @@ export default function Client(props) {
                     <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
+                <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
+                    <ClientUsersComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
+                          iconColor={"darkcyan"}>
+                    <ClientActivityComponent {...props} />
+                </IconGrid>
+
                 <IconGrid xs={12} md={12} title={"Notatki do klienta"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
                     <NotesClientComponent {...props} />
                 </IconGrid>
-                {/*<IconGrid xs={12} md={12} title={"Subiekt"} icon={<TextSnippetIcon/>} iconColor={"gray"}>*/}
-                {/*    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}*/}
-                {/*                           props={{...props}}/>*/}
-                {/*</IconGrid>*/}
+
                 {/*<IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>*/}
                 {/*    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}*/}
                 {/*                       props={{...props}}/>*/}
