@@ -13,7 +13,7 @@ import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
-import {useModelsAddForm} from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog/form/useModelsAddForm";
+import {useClientsAddForm} from "@/Components/Dialogs/ClientsDialog/ClientsAddDialog/form/useClientsAddForm";
 
 export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
     const {
@@ -22,7 +22,7 @@ export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useModelsAddForm()
+    } = useClientsAddForm()
 
     const {data, setData, post, processing, reset} = useForm({
         country: {id: 0, name: '', label: ''},
