@@ -23,11 +23,12 @@ const schema = yup.object().shape({
         .string()
         .required("Pole jest wymagane"),
     building_number: yup
-        .number()
-        .required("Pole jest wymagane"),
+        .string()
+        .required("Pole jest wymagane")
+        .max(10, "Pole zawiera zbyt dużą ilość znaków"),
     apartment_number: yup
         .number()
-        .required("Pole jest wymagane"),
+        .nullable(),
 
     phone: yup
         .string()

@@ -65,6 +65,7 @@ export default function AdditionalClientInfoComponent(props) {
         });
 
         initializeFieldValues()
+        setChecked(props.client.blacklist !== 0)
         setEdited(false);
 
         clearErrors('status')

@@ -79,7 +79,7 @@ export default function NotesClientComponent(props) {
                     setValue={(value) => {
                         setData("notes", value)
                     }}
-                    setEdited={value => setEdited(value)}
+                    setEdited={setEdited}
                     readOnly={!props.editing}
                 />
 

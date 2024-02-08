@@ -298,10 +298,9 @@ export default function BasicClientInfoComponent(props) {
 
                             <Box>
                                 <TextField id="building_number" label="Numer budynku" variant="outlined"
-                                           type={"number"}
                                            value={data.building_number}
                                            {...register("building_number")}
-                                           color={fieldErrors.city?.message ? "error" : null}
+                                           color={fieldErrors.building_number?.message ? "error" : null}
                                            onChange={(value) => {
                                                // setProductModel({...productModel, name: value.target.value});
                                                setData("building_number", value.target.value)
