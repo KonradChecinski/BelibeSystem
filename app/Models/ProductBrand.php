@@ -20,4 +20,9 @@ class ProductBrand extends Model
     {
         return $this->hasMany(ProductModel::class);
     }
+
+    public function clientsDiscounts(): HasMany
+    {
+        return $this->hasMany(ClientDiscount::class);
+    }
 }

@@ -64,7 +64,7 @@ export default function ClientActivityComponent(props) {
         //     preserveScroll: true
         // })
     }
-
+    console.log("")
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -76,7 +76,7 @@ export default function ClientActivityComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientActivityTable activities={props.activityType} readOnly={!props.editing}/>
+                <ClientActivityTable activities={props.client.activities} readOnly={!props.editing}/>
             </Box>
         </Box>
 

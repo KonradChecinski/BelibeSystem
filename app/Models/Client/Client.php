@@ -7,10 +7,18 @@ use App\Models\B2bIndustry;
 use App\Models\B2bPayment;
 use App\Models\B2bSourceOfAcquisition;
 use App\Models\B2bStatus;
+use App\Models\ClientActivity;
+use App\Models\ClientDiscount;
+use App\Models\ClientLocation;
+use App\Models\ClientNote;
+use App\Models\ClientRecipient;
+use App\Models\ClientTask;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Client extends Model
 {
@@ -65,6 +73,42 @@ class Client extends Model
     public function industry(): BelongsTo
     {
         return $this->belongsTo(B2bIndustry::class);
+    }
+
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(ClientActivity::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(ClientTask::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(ClientNote::class);
+    }
+
+    public function locations(): HasMany
+    {
+        return $this->hasMany(ClientLocation::class);
+    }
+
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(ClientDiscount::class);
+    }
+
+    public function clientUsers(): HasMany
+    {
+        return $this->hasMany(ClientUser::class);
+    }
+
+    public function recipient(): HasOne
+    {
+        return $this->hasOne(ClientRecipient::class);
     }
 
 

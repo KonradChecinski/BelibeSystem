@@ -209,7 +209,9 @@ class ClientController extends Controller
      */
     public function show(int $id)
     {
-        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry"])->findOrFail($id);
+        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
+            "activities", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
+        ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
@@ -234,7 +236,9 @@ class ClientController extends Controller
      */
     public function edit(int $id)
     {
-        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry"])->findOrFail($id);
+        $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
+            "activities", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
+        ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();

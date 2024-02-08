@@ -201,11 +201,11 @@ function Step2({data}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="country" label="Kraj" variant="outlined"
-                       value={data.country.name}
-                       inputProps={{readOnly: true}}
-                       sx={{width: "30ch"}}/>
+                       value={data.country}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
             <TextField id="nip" label="Nip" variant="outlined"
-                       value={data.symbol}
+                       value={data.nip}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

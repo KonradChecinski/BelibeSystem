@@ -19,4 +19,14 @@ class B2bCountry extends Model
     {
         return $this->hasMany(Client::class, "country_id");
     }
+
+    public function clientsLocations(): HasMany
+    {
+        return $this->hasMany(ClientLocation::class, "country_id");
+    }
+
+    public function clientsRecipients(): HasMany
+    {
+        return $this->hasMany(ClientRecipient::class, "country_id");
+    }
 }

@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('client_recipients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("client_id")->references("id")->on("clients")->restrictOnDelete();
+            $table->foreignId("client_id")->unique()->references("id")->on("clients")->restrictOnDelete();
             $table->foreignId("country_id")->references("id")->on("b2b_countries")->restrictOnDelete();
-            $table->bigInteger("subiekt_id");
+            $table->bigInteger("subiekt_id")->nullable();
             $table->string("name");
             $table->string("city", 50);
             $table->string("street", 50);
