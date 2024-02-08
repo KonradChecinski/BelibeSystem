@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
 
@@ -54,8 +55,9 @@ class ClientController extends Controller
      */
     public function index()
     {
+        $b2bCountry = B2bCountry::all();
 
-        return Inertia::render("Clients/ClientList");
+        return Inertia::render("Clients/ClientList", ["country" => $b2bCountry]);
 
     }
 
@@ -84,90 +86,99 @@ class ClientController extends Controller
                 foreach ($mainColumn as $item) {
                     $models = $models->orWhere($item, 'LIKE', '%' . $word . '%');
                 }
-//                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
-//                $models = $models->orWhere('nip', 'LIKE', '%' . $word . '%');
-//                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
             }
         }
 
         if ($request->filter) {
             foreach (json_decode($request->filter) as $filter) {
-                if (in_array($filter->field, $mainColumn)) {
-                    switch ($filter->operator) {
-                        case "contains":
-                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value . '%');
-                            break;
-                        case "equals":
-                            $models = $models->Where($filter->field, 'LIKE', $filter->value);
-                            break;
-                        case "startsWith":
-                            $models = $models->Where($filter->field, 'LIKE', $filter->value . '%');
-                            break;
-                        case "endsWith":
-                            $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value);
-                            break;
-                        case "isEmpty":
-                            $models = $models->Where($filter->field, 'LIKE', '');
-                            break;
-                        case "isNotEmpty":
-                            $models = $models->Where($filter->field, 'NOT LIKE', '');
-                            break;
-                        case "isAnyOf":
-                            foreach ($filter->value as $value) {
-                                $models = $models->Where($filter->field, 'LIKE', $value);
-                            }
-                            break;
-                    }
-                } else {
-                    switch ($filter->operator) {
-                        case "contains":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'LIKE', '%' . $filter->value . '%');
-                            });
-                            break;
-                        case "equals":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'LIKE', $filter->value);
-                            });
-
-                            break;
-                        case "startsWith":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'LIKE', $filter->value . '%');
-                            });
-
-                            break;
-                        case "endsWith":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'LIKE', '%' . $filter->value);
-                            });
-                            break;
-                        case "isEmpty":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'LIKE', '');
-                            });
-                            break;
-                        case "isNotEmpty":
-                            $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
-                                return $query->Where("name", 'NOT LIKE', '');
-                            });
-                            break;
-                        case "isAnyOf":
-                            foreach ($filter->value as $value) {
-                                $models = $models->WhereHas($filter->field, function ($query) use ($value) {
-                                    return $query->Where("name", 'LIKE', $value);
+                if ($filter->value != "") {
+                    if (in_array($filter->field, $mainColumn)) {
+                        switch ($filter->operator) {
+                            case "contains":
+                                $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value . '%');
+                                break;
+                            case "equals":
+                                $models = $models->Where($filter->field, 'LIKE', $filter->value);
+                                break;
+                            case "startsWith":
+                                $models = $models->Where($filter->field, 'LIKE', $filter->value . '%');
+                                break;
+                            case "endsWith":
+                                $models = $models->Where($filter->field, 'LIKE', '%' . $filter->value);
+                                break;
+                            case "isEmpty":
+                                $models = $models->Where($filter->field, 'LIKE', '');
+                                break;
+                            case "isNotEmpty":
+                                $models = $models->Where($filter->field, 'NOT LIKE', '');
+                                break;
+                            case "is":
+                                $models = $models->Where($filter->field, '=', $filter->value === "true" ? true : false);
+                                break;
+                            case "isAnyOf":
+                                foreach ($filter->value as $value) {
+                                    $models = $models->Where($filter->field, 'LIKE', $value);
+                                }
+                                break;
+                        }
+                    } else {
+                        switch ($filter->operator) {
+                            case "contains":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'LIKE', '%' . $filter->value . '%');
                                 });
-                            }
-                            break;
+                                break;
+                            case "equals":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'LIKE', $filter->value);
+                                });
+
+                                break;
+                            case "startsWith":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'LIKE', $filter->value . '%');
+                                });
+
+                                break;
+                            case "endsWith":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'LIKE', '%' . $filter->value);
+                                });
+                                break;
+                            case "isEmpty":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'LIKE', '');
+                                });
+                                break;
+                            case "isNotEmpty":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", 'NOT LIKE', '');
+                                });
+                                break;
+                            case "is":
+                                $models = $models->WhereHas($filter->field, function ($query) use ($filter) {
+                                    return $query->Where("name", '=', $filter->value === "true" ? true : false);
+                                });
+
+                                break;
+                            case "isAnyOf":
+                                foreach ($filter->value as $value) {
+                                    $models = $models->WhereHas($filter->field, function ($query) use ($value) {
+                                        return $query->Where("name", 'LIKE', $value);
+                                    });
+                                }
+                                break;
+                        }
                     }
                 }
-
 
             }
 
         }
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
+//        $sql = Str::replaceArray('?', $models->getBindings(), $models->toSql());
+//        dd($sql);
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
         $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist']);
         return response()->json([$models]);

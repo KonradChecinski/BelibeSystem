@@ -7,6 +7,7 @@ import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
 import ModelsAddDialog from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog";
 import ModelsCopyDialog from "@/Components/Dialogs/ModelsDialog/ModelsCopyDialog";
+import ClientsAddDialog from "@/Components/Dialogs/ClientsDialog/ClientsAddDialog";
 
 export default function ClientsTable(props) {
     const url = route(route().current()) + "/data";
@@ -58,14 +59,14 @@ export default function ClientsTable(props) {
         //     flex: 1,
         //     filterable: false
         // },
-        {field: "nip", headerName: "NIP", filterable: true},
-        {field: "city", headerName: "Miasto", filterable: true},
-        {field: "street", headerName: "Ulica", filterable: true},
-        {field: "building_number", headerName: "Numer budynku", filterable: true},
-        {field: "apartment_number", headerName: "Numer mieszkania", filterable: true},
-        {field: "email", headerName: "Email", filterable: true},
+        {field: "nip", headerName: "NIP", filterable: true, width: 120},
+        {field: "city", headerName: "Miasto", filterable: true, width: 150},
+        {field: "street", headerName: "Ulica", filterable: true, width: 200},
+        {field: "building_number", headerName: "Numer budynku", filterable: true, width: 80},
+        {field: "apartment_number", headerName: "Numer mieszkania", filterable: true, width: 80},
+        {field: "email", headerName: "Email", filterable: true, width: 200},
         {field: "phone", headerName: "Telefon", filterable: true},
-        {field: "blacklist", headerName: "Czarna lista", type: 'boolean', filterable: true},
+        {field: "blacklist", headerName: "Czarna lista", type: 'boolean', filterable: true, flex: true},
         {
             field: "action",
             headerName: "Akcje",
@@ -88,16 +89,10 @@ export default function ClientsTable(props) {
                         route("system.clients.client.edit", {id: params.row.id})
                     );
                 };
-                const [openDialogCopy, setOpenDialogCopy] = useState(false);
-                const onCopyClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    // setOpenDialogCopy(true);
-                };
 
                 return (
                     <>
-                        {props.auth.permissions.includes("showModel") ?
+                        {props.auth.permissions.includes("showClient") ?
                             <Tooltip title="Pokaż">
                                 <IconButton aria-label="preview" onClick={onShowClick}>
                                     {/*<Preview />*/}
@@ -105,26 +100,13 @@ export default function ClientsTable(props) {
                                 </IconButton>
                             </Tooltip>
                             : ""}
-                        {props.auth.permissions.includes("editModel") ?
+                        {props.auth.permissions.includes("editClient") ?
                             <Tooltip title="Edycja">
                                 <IconButton aria-label="edit" onClick={onEditClick}>
                                     <Edit/>
                                 </IconButton>
                             </Tooltip>
                             : ""}
-
-                        {/*{props.auth.permissions.includes("createModel") ?*/}
-                        {/*    <>*/}
-                        {/*        <Tooltip title="Duplikuj">*/}
-                        {/*            <IconButton aria-label="copy" onClick={onCopyClick}>*/}
-                        {/*                <ContentCopy/>*/}
-                        {/*            </IconButton>*/}
-                        {/*        </Tooltip>*/}
-                        {/*        <ModelsCopyDialog open={openDialogCopy} setOpen={setOpenDialogCopy}*/}
-                        {/*                          reloadData={reloadData} modelId={params.row.id}/>*/}
-                        {/*    </>*/}
-
-                        {/*    : ""}*/}
 
 
                         {/*<Tooltip title="Usuń">*/}
@@ -218,15 +200,7 @@ export default function ClientsTable(props) {
             setPageData(json[0].data);
             setIsLoading(false)
 
-            for (const model of json[0].data) {
-                console.log(model)
-                let quantity = 0;
-                for (const product of model.products) {
-                    quantity += product.quantity
-                }
-                model.quantity = quantity
-            }
-            ;
+
         };
         fetchData();
     }, [paginationModel]);
@@ -298,7 +272,8 @@ export default function ClientsTable(props) {
                     <Add/>
                 </Fab>
             </Box>
-            {/*<ModelsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>*/}
+            <ClientsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}
+                              country={props.country}/>
         </>
     );
 

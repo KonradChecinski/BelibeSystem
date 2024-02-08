@@ -33,6 +33,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('editImages', "user", 'Zdjęcia - edycja', 'Zdjęcia');
         Permission::findOrCreate('deleteImages', "user", 'Zdjęcia - usuwanie', 'Zdjęcia');
 
+        Permission::findOrCreate('showClient', 'user', 'Klient - wyświetlanie', 'Klient');
+        Permission::findOrCreate('createClient', 'user', 'Klient - tworzenie', 'Klient');
+        Permission::findOrCreate('editClient', 'user', 'Klient - edycja', 'Klient');
+        Permission::findOrCreate('deleteClient', 'user', 'Klient - usuwanie', 'Klient');
+
         Permission::findOrCreate('showRole', "user", 'Role - wyświetlanie', 'Admin');
         Permission::findOrCreate('createRole', "user", 'Role - tworzenie', 'Admin');
         Permission::findOrCreate('editRole', "user", 'Role - edycja', 'Admin');
@@ -71,7 +76,7 @@ class RolesAndPermissionsSeeder extends Seeder
 //        $role->givePermissionTo(Permission::all());
 
         $admin->syncPermissions(Permission::all());
-        $user=User::find(1);
+        $user = User::find(1);
         $user->assignRole("Administrator");
     }
 }
