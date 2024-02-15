@@ -12,6 +12,8 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
 import ClientActivityComponent from "@/Components/Pages/Client/ClientActivityComponent";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ClientDiscountsComponent from "@/Components/Pages/Client/ClientDiscountsComponent";
+import DiscountIcon from '@mui/icons-material/Discount';
 
 
 export default function Client(props) {
@@ -41,6 +43,10 @@ export default function Client(props) {
 
                 <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
                     <ClientUsersComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Rabaty klienta"} icon={<DiscountIcon/>} iconColor={"green"}>
+                    <ClientDiscountsComponent {...props} />
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
