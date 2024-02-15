@@ -14,6 +14,8 @@ import ClientActivityComponent from "@/Components/Pages/Client/ClientActivityCom
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ClientDiscountsComponent from "@/Components/Pages/Client/ClientDiscountsComponent";
 import DiscountIcon from '@mui/icons-material/Discount';
+import TaskIcon from "@mui/icons-material/Task";
+import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
 
 
 export default function Client(props) {
@@ -52,6 +54,11 @@ export default function Client(props) {
                 <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
                           iconColor={"darkcyan"}>
                     <ClientActivityComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Zadania klienta"} icon={<TaskIcon/>}
+                          iconColor={"indigo"}>
+                    <ClientTasksComponent {...props} />
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Notatki do klienta"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
