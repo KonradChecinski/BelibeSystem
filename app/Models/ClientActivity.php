@@ -29,4 +29,9 @@ class ClientActivity extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function activityType(): BelongsTo
+    {
+        return $this->belongsTo(B2bActivityType::class);
+    }
 }

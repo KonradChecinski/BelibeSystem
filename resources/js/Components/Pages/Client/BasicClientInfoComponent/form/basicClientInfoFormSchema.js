@@ -18,7 +18,7 @@ const schema = yup.object().shape({
     postal_code: yup
         .string()
         .required("Pole jest wymagane")
-        .matches(/^[0-9-]+$/, "Pole zawiera niedozwolone znaki"),
+        .matches(/^[0-9]{2}-[0-9]{3}$/, "Kod powienien być w formacie xx-xxx"),
     street: yup
         .string()
         .required("Pole jest wymagane"),

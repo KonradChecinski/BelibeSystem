@@ -67,7 +67,7 @@ export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
     };
 
     const save = () => {
-        post(route("system.products.client"),
+        post(route("system.clients.create"),
 
             {
                 preserveScroll: true,

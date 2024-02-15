@@ -16,6 +16,7 @@ import {useClientFindGusForm} from "@/Components/Dialogs/ClientDialog/ClientFind
 export default function ClientFindGusDialog({
                                                 open,
                                                 setOpen,
+                                                nip = ''
                                             }) {
     const {
         register,
@@ -26,7 +27,7 @@ export default function ClientFindGusDialog({
     } = useClientFindGusForm()
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
-        nip: '',
+        nip: nip,
     })
 
     useEffect(() => {
@@ -184,7 +185,7 @@ function Step2({data, errors}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="nip" label="NIP" variant="outlined"
-                       value={data.nip}
+                       value={data?.nip}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

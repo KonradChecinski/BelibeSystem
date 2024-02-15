@@ -554,7 +554,7 @@ class Shoper
             self::login();
             return null;
         }
-        dd($response->json());
+//        dd($response->json());
         return $response->json()["list"];
     }
 
@@ -566,6 +566,7 @@ class Shoper
                 "page" => $page,
                 "limit" => 50,
             ]);
+
         if ($response->status() === 429) {
             sleep(1);
             return self::getProductAll($page);
@@ -574,7 +575,7 @@ class Shoper
             self::login();
             return null;
         }
-//        dd($response->json());
+//        dd($response->json(), $response->status());
         return $response->json()["list"];
     }
 

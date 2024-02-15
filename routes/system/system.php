@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdditionalClientController;
 use App\Http\Controllers\B2cCategoryController;
 use App\Http\Controllers\B2cColorController;
+use App\Http\Controllers\BasicClientController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\GS1BrandController;
 use App\Http\Controllers\GS1GPCController;
@@ -91,6 +93,8 @@ Route::middleware("auth:user")->group(function () {
         Route::get("/clients/client/{id}/edit", [ClientController::class, 'edit'])->name("system.clients.client.edit");
 //        Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
 //        Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
+        Route::post("/clients/client/{client}/update/basic", [BasicClientController::class, 'update'])->name("system.clients.client.update.basic");
+        Route::post("/clients/client/{client}/update/additional", [AdditionalClientController::class, 'update'])->name("system.clients.client.update.additional");
 
     });
 
@@ -189,6 +193,7 @@ Route::middleware("auth:user")->group(function () {
         phpinfo();
     })->name("system.phpinfo");
     Route::get("test", [TestController::class, 'index'])->name("system.test");
+    Route::get("barcode", [TestController::class, 'store'])->name("system.test.barcodes");
 });
 
 

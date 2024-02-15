@@ -1,6 +1,7 @@
 export function sortBySizes(array) {
 
-    const ORDER = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"];
+    const ORDER = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
+        "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3"];
 
     array.sort((a, b) => {
         a = a.toLowerCase();

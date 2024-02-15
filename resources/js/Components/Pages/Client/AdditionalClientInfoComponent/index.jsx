@@ -14,6 +14,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import {
     useAdditionalClientInfoForm
 } from "@/Components/Pages/Client/AdditionalClientInfoComponent/form/useAdditionalClientInfoForm";
+import {enqueueSnackbar} from "notistack";
 
 
 export default function AdditionalClientInfoComponent(props) {
@@ -28,20 +29,24 @@ export default function AdditionalClientInfoComponent(props) {
     } = useAdditionalClientInfoForm()
 
     const {data, setData, processing, post} = useForm({
+        'id': props.client.id,
         'status': props.client.status,
         'priority': props.client.priority,
         'source_of_acquisition': props.client.source_of_acquisition,
         'payment': props.client.payment,
+        'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
     })
 
     const [checked, setChecked] = useState(props.client.blacklist !== 0);
 
     const initializeFieldValues = () => {
+        setValue('id', data.id)
         setValue('status', data.status.name)
         setValue('priority', data.priority === 1 ? "Niski" : data.priority === 2 ? "Średni" : "Wysoki")
         setValue('source_of_acquisition', data.source_of_acquisition.name)
         setValue('payment', data.payment.name)
+        setValue('account_manager', data.account_manager.name)
     }
 
     useEffect(() => {
@@ -57,10 +62,12 @@ export default function AdditionalClientInfoComponent(props) {
 
     const resetForm = () => {
         setData({
+            'id': props.client.id,
             'status': props.client.status,
             'priority': props.client.priority,
             'source_of_acquisition': props.client.source_of_acquisition,
             'payment': props.client.payment,
+            'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
         });
 
@@ -72,20 +79,21 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('priority')
         clearErrors('source_of_acquisition')
         clearErrors('payment')
+        clearErrors('account_manager')
         clearErrors('blacklist')
     };
     const saveBasic = () => {
-        // post(route("system.products.model.update.basic", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+        post(route("system.clients.client.update.additional", {client: data.id}), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano dodatkowe informację", {variant: 'success'})
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy zapisywaniu dodatkowych informacji", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
     }
 
     return (
@@ -280,6 +288,53 @@ export default function AdditionalClientInfoComponent(props) {
                                 {fieldErrors.payment?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
                                         {fieldErrors.payment?.message.toString()}
+                                    </Typography>
+                                )}
+                            </>
+                        ) : (
+                            <TextField
+                                id="payment"
+                                label="Płatność"
+                                sx={{my: 1, width: "30ch"}}
+                                {...register("payment")}
+                                color={fieldErrors.payment?.message && "error"}
+                                inputProps={{readOnly: true}}
+                            />
+                        )}
+                        {/*lskakk*/}
+                        {props.editing ? (
+                            <>
+                                <Autocomplete
+                                    id="account_manager"
+                                    options={props.user.map(e => ({
+                                        id: e.id,
+                                        name: e.name,
+                                        label: e.name
+                                    }))}
+                                    sx={{width: "30ch"}}
+                                    value={data.account_manager.name}
+                                    isOptionEqualToValue={(option, value) => option.name === value}
+                                    onChange={(e, value) => {
+                                        setData({
+                                            ...data,
+                                            account_manager: value,
+                                        })
+                                        setEdited(true)
+                                    }}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            {...params}
+                                            label="Opiekun klienta"
+                                            sx={{my: 1}}
+                                            {...register("account_manager")}
+                                            value={data.account_manager.name}
+                                            color={fieldErrors.account_manager?.message && "error"}
+                                        />
+                                    }
+                                />
+                                {fieldErrors.account_manager?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                                        {fieldErrors.account_manager?.message.toString()}
                                     </Typography>
                                 )}
                             </>

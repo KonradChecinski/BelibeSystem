@@ -64,6 +64,8 @@ class ChangeProductInSubiekt implements ShouldQueue
         }
         Log::debug($this->product->subiekt_id);
         $subiektTowar->zapisz();
+        DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $this->product->subiekt_id)->delete();
+
 
         foreach ($this->product->barcodes as $id => $barcode) {
             if ($id == 0) {

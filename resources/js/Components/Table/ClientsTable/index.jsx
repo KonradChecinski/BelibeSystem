@@ -1,7 +1,7 @@
 import {DataGrid, GridFooter, GridFooterContainer, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
-import {Box, Fab, IconButton, Tooltip} from "@mui/material";
+import {Box, Fab, IconButton, Tooltip, Typography} from "@mui/material";
 import {Add, ContentCopy, Edit, Visibility} from "@mui/icons-material";
 import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
 import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
@@ -13,60 +13,32 @@ export default function ClientsTable(props) {
     const url = route(route().current()) + "/data";
     const column = [
         {field: "id", headerName: "Id"},
-        // {
-        //     field: "img",
-        //     headerName: "Zdjęcie",
-        //     sortable: false,
-        //     filterable: false,
-        //     width: 80,
-        //     renderCell: (params) => {
-        //         return (
-        //             (
-        //                 params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0 ?
-        //                     <img
-        //                         src={route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path})}
-        //                         alt={"Zdjęcie produktu"}
-        //                         className={"w-100 p-1.5"}
-        //                     />
-        //                     : ""
-        //             )
-        //
-        //
-        //         );
-        //     }
-        // },
-        // {field: "symbol", headerName: "Symbol"},
+        {field: "symbol", headerName: "Symbol"},
 
         {
             field: "name",
             headerName: "Name",
-            width: 400
+            width: 350
         },
-        // {
-        //     field: "group.name", headerName: "Grupa", renderCell: (params) => {
-        //         return <GroupCell key={params.row.id} group={params.row.group}/>;
-        //     },
-        //     sortable: false,
-        //     filterable: false
-        // },
-        // {
-        //     field: "colors",
-        //     headerName: "Kolory",
-        //     sortable: false,
-        //     renderCell: (params) => {
-        //         return <ColorsCell key={params.row.id} colors={params.row.colors}/>;
-        //     },
-        //     flex: 1,
-        //     filterable: false
-        // },
-        {field: "nip", headerName: "NIP", filterable: true, width: 120},
+        {field: "nip", headerName: "NIP", filterable: true, width: 110},
         {field: "city", headerName: "Miasto", filterable: true, width: 150},
         {field: "street", headerName: "Ulica", filterable: true, width: 200},
         {field: "building_number", headerName: "Numer budynku", filterable: true, width: 80},
         {field: "apartment_number", headerName: "Numer mieszkania", filterable: true, width: 80},
         {field: "email", headerName: "Email", filterable: true, width: 200},
         {field: "phone", headerName: "Telefon", filterable: true},
-        {field: "blacklist", headerName: "Czarna lista", type: 'boolean', filterable: true, flex: true},
+        {field: "blacklist", headerName: "Czarna lista", type: 'boolean', filterable: true, width: 80},
+        {
+            field: "user_id", headerName: "Opiekun", filterable: false, flex: true,
+            renderCell: (params) => {
+                console.log(params)
+                return (
+                    <Box>
+                        <Typography>{params.row?.account_manager?.name}</Typography>
+                    </Box>
+                )
+            }
+        },
         {
             field: "action",
             headerName: "Akcje",
@@ -123,7 +95,8 @@ export default function ClientsTable(props) {
         }
     ];
     const columnVisibility = {
-        id: false
+        id: false,
+        symbol: false
     };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -200,7 +173,7 @@ export default function ClientsTable(props) {
             setPageData(json[0].data);
             setIsLoading(false)
 
-
+            console.log(json[0].data)
         };
         fetchData();
     }, [paginationModel]);

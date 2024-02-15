@@ -78,7 +78,7 @@ class ClientController extends Controller
             'blacklist',
         ];
 
-        $models = Client::with(["accountManager:name", /*"colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"*/]);
+        $models = Client::with(["accountManager:id,name", /*"colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"*/]);
 //        dd($models->get()->toArray());
 
         if ($request->search) {
@@ -180,7 +180,8 @@ class ClientController extends Controller
 //        $sql = Str::replaceArray('?', $models->getBindings(), $models->toSql());
 //        dd($sql);
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
-        $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist']);
+//        dd($models->get()->toArray());
+        $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist', 'user_id']);
         return response()->json([$models]);
     }
 
@@ -197,11 +198,30 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
-        $model = new Client($request->all());
-//        $model->description_b2b = "";
-//        $model->description_b2c = "";
-//        $model->description_allegro = "";
-        $model->save();
+        $country = B2bCountry::query()->where("name", $request->country)->first();
+        if (is_null($country)) return abort(500);
+
+        $client = new Client($request->all());
+
+        $client->country()->associate($country);
+        $client->status()->associate(2);
+        $client->sourceOfAcquisition()->associate(1);
+        $client->accountManager()->associate(auth()->user());
+        $client->payment()->associate(1);
+        $client->industry()->associate(1);
+
+
+        $client->name = "";
+        $client->city = "";
+        $client->street = "";
+        $client->building_number = "";
+        $client->postal_code = "";
+        $client->phone = "";
+        $client->email = "";
+        $client->save();
+//        dd($request->all(), $client);
+//        return to_route();
+        return redirect()->route('system.clients.client.edit', ["id" => $client->id]);
     }
 
     /**
@@ -219,6 +239,7 @@ class ClientController extends Controller
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
         $b2bIndustry = B2bIndustry::all();
+        $users = User::query()->whereNotNull("email_verified_at")->get();
         return Inertia::render("Clients/Client", [
             "client" => $client,
             "activityType" => $b2bActivityType,
@@ -226,7 +247,8 @@ class ClientController extends Controller
             "payment" => $b2bPayment,
             "sourceOfAcquisition" => $b2bSourceOfAcquisition,
             "status" => $b2bStatus,
-            "industry" => $b2bIndustry
+            "industry" => $b2bIndustry,
+            "user" => $users,
         ]);
 
     }
@@ -237,7 +259,7 @@ class ClientController extends Controller
     public function edit(int $id)
     {
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
-            "activities", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
+            "activities.user", "activities.activityType", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
@@ -246,6 +268,8 @@ class ClientController extends Controller
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
         $b2bIndustry = B2bIndustry::all();
+        $users = User::query()->whereNotNull("email_verified_at")->get();
+
         return Inertia::render("Clients/Client", [
             "editing" => true,
             "client" => $client,
@@ -254,7 +278,8 @@ class ClientController extends Controller
             "payment" => $b2bPayment,
             "sourceOfAcquisition" => $b2bSourceOfAcquisition,
             "status" => $b2bStatus,
-            "industry" => $b2bIndustry
+            "industry" => $b2bIndustry,
+            "user" => $users,
         ]);
     }
 

@@ -11,6 +11,7 @@ import {enqueueSnackbar} from "notistack";
 import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
+import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 
 export default function ClientActivityTable({activities, readOnly, color, props}) {
     const theme = useTheme();
@@ -26,7 +27,18 @@ export default function ClientActivityTable({activities, readOnly, color, props}
 
     const column = [
         {field: "id", headerName: "Id"},
-        {field: "activity_name", headerName: "Aktywność"},
+        {
+            field: "activity_type_id",
+            headerName: "Typ",
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.activity_type?.name}</Typography>
+                    </Box>
+                );
+            }
+        },
+        {field: "description", headerName: "Opis", width: 350},
         {
             field: "date",
             headerName: "Data",
@@ -35,9 +47,23 @@ export default function ClientActivityTable({activities, readOnly, color, props}
             // width: 160
         },
         {
-            field: "user",
+            field: "time",
+            headerName: "Godzina",
+            sortable: false,
+            filterable: false,
+            // width: 160
+        },
+        {
+            field: "user_id",
             headerName: "Kto", sortable: false,
             filterable: false,
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.user?.name}</Typography>
+                    </Box>
+                );
+            }
             // width: 300
         },
     ];
@@ -53,7 +79,6 @@ export default function ClientActivityTable({activities, readOnly, color, props}
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const [openDialogAdd, setOpenDialogAdd] = useState(false);
-                const [openDialogCopy, setOpenDialogCopy] = useState(false);
 
 
                 const onEditClick = (e) => {
@@ -92,19 +117,26 @@ export default function ClientActivityTable({activities, readOnly, color, props}
             }
         }
     ];
+    const columnVisibility = {
+        id: false,
+    };
+    const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+        ...columnVisibility
+    });
+    const [rowCountState, setRowCountState] = useState(data.length);
 
 
     return (
         <>
             <DataGrid
-                rows={data}
-                // rows={sortBySizesModelColorObject(data)}
+                // rows={data}
+                rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
-                // columnVisibilityModel={columnVisibilityModel}
+                columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
                     setColumnVisibilityModel(newModel)
                 }
-                // rowCount={rowCountState}
+                rowCount={rowCountState}
                 pageSizeOptions={[5, 20, 50, 100]}
                 editMode="row"
 
@@ -112,7 +144,7 @@ export default function ClientActivityTable({activities, readOnly, color, props}
                 // slotProps={{
                 //     toolbar: {
                 //         showQuickFilter: true,
-                //         quickFilterProps: { debounceMs: 500 }
+                //         quickFilterProps: {debounceMs: 500}
                 //     }
                 // }}
                 disableColumnFilter

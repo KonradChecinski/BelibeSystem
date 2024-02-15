@@ -15,6 +15,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ClientFindGusDialog from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog";
+import {enqueueSnackbar} from "notistack";
 
 export default function BasicClientInfoComponent(props) {
     const [edited, setEdited] = useState(false);
@@ -102,37 +103,37 @@ export default function BasicClientInfoComponent(props) {
         clearErrors('email')
     };
     const saveBasic = () => {
-        // post(route("system.products.model.update.basic", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+        post(route("system.clients.client.update.basic", {client: data.id}), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen}/>
+            <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen} nip={data.nip}/>
 
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
-                {props.editing ? (
-                    <Button
-                        variant="outlined"
-                        startIcon={<PersonSearchIcon/>}
-                        sx={{mt: 1, height: 40}}
-                        onClick={() => {
-                            setDialogOpen(true)
-                        }}
-                    >
-                        Uzupełnij dane adresowe z GUS
-                    </Button>
-                ) : null
-                }
+                {/*    {props.editing ? (*/}
+                {/*        <Button*/}
+                {/*            variant="outlined"*/}
+                {/*            startIcon={<PersonSearchIcon/>}*/}
+                {/*            sx={{mt: 1, height: 40}}*/}
+                {/*            onClick={() => {*/}
+                {/*                setDialogOpen(true)*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            Uzupełnij dane adresowe z GUS*/}
+                {/*        </Button>*/}
+                {/*    ) : null*/}
+                {/*    }*/}
 
                 <Box>
                     <Typography
@@ -378,7 +379,7 @@ export default function BasicClientInfoComponent(props) {
                                        }}
                                        inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
-                            {fieldErrors.name?.message && (
+                            {fieldErrors.email?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
                                     {fieldErrors.email?.message.toString()}
                                 </Typography>

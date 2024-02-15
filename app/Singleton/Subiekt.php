@@ -44,6 +44,7 @@ class Subiekt
                 $connS->OperatorHaslo = $dodatki->Szyfruj(env('SUBIEKT_OPERATOR_PASSWORD'));
                 $this->subiekt = $connS->Uruchom(0, 1);
                 $this->subiekt->MagazynId = 1;
+//                $this->subiekt->Okno->Widoczne = True;
             } catch (Exception $e) {
                 if ($this->subiekt != null) $this->subiekt->Zakoncz();
                 die($e);

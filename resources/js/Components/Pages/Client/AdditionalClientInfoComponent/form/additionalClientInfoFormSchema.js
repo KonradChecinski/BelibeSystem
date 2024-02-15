@@ -13,6 +13,9 @@ const schema = yup.object().shape({
     payment: yup
         .string()
         .required("Pole jest wymagane"),
+    account_manager: yup
+        .string()
+        .required("Pole jest wymagane"),
 })
 
 export default schema
