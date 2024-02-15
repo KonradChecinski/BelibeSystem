@@ -33,7 +33,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography>{params.row?.country_id}</Typography>
+                        <Typography>{params.row?.country?.name}</Typography>
                     </Box>
                 );
             }

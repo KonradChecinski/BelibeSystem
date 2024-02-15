@@ -28,39 +28,13 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
     const column = [
         {field: "id", headerName: "Id"},
         {
-            field: "client_id",
-            headerName: "Id Klienta",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.client_id}</Typography>
-                    </Box>
-                );
-            }
-        },
-        // {field: "description", headerName: "Opis", width: 350},
-        // {
-        //     field: "date",
-        //     headerName: "Data",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "time",
-        //     headerName: "Godzina",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        {
-            field: "product_model_id",
-            headerName: "Id Modelu", sortable: false,
+            field: "product_model",
+            headerName: "Model", sortable: false,
             filterable: false,
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography>{params.row?.product_model_id}</Typography>
+                        <Typography>{params.row?.product_model?.name}</Typography>
                     </Box>
                 );
             }
