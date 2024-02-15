@@ -230,7 +230,7 @@ class ClientController extends Controller
     public function show(int $id)
     {
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
-            "activities", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
+            "activities.user", "activities.activityType", "tasks.user", "notes.user", "locations.country", "discounts", "clientUsers", "recipient"
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
@@ -259,7 +259,9 @@ class ClientController extends Controller
     public function edit(int $id)
     {
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
-            "activities.user", "activities.activityType", "tasks", "notes", "locations", "discounts", "clientUsers", "recipient"
+            "activities.user:id,name", "activities.activityType:id,name", "tasks.user:id,name", "notes.user:id,name", "locations.country:id,name",
+            "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name", "discounts.productGroup:id,name", "discounts.productBrand:id,name",
+            "clientUsers", "recipient.country:id,name"
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
