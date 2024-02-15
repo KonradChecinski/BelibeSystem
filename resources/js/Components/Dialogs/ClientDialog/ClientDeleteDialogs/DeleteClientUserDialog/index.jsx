@@ -26,20 +26,20 @@ export default function DeleteClientUserDialog({open, setOpen, user, last, param
     };
 
     const save = () => {
-        // destroy(route("system.products.delete", {product: product.id}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             // deleteRow(product.id)
-        //             enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
+        destroy(route("system.clients.client.user.delete", {clientUser: user}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // deleteRow(product.id)
+                    enqueueSnackbar(`Usunięto użytkownika klienta ${user.id} - ${user.name}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu użytkownika klienta ${user.id} - ${user.name}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
 
 
     }

@@ -47,6 +47,7 @@ export default function Client(props) {
                     <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
+                {/*To dopiero jak będą zamówienia*/}
                 <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
                     <ClientUsersComponent {...props} />
                 </IconGrid>

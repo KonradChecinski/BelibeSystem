@@ -61,6 +61,6 @@ class ClientActivityController extends Controller
      */
     public function destroy(ClientActivity $clientActivity)
     {
-        //
+        $clientActivity->delete();
     }
 }

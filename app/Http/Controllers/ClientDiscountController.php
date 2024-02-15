@@ -61,6 +61,6 @@ class ClientDiscountController extends Controller
      */
     public function destroy(ClientDiscount $clientDiscount)
     {
-        //
+        $clientDiscount->delete();
     }
 }

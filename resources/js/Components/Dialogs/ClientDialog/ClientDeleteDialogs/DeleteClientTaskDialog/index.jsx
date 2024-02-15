@@ -26,20 +26,20 @@ export default function DeleteClientTaskDialog({open, setOpen, task, last, param
     };
 
     const save = () => {
-        // destroy(route("system.products.delete", {product: product.id}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             // deleteRow(product.id)
-        //             enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
+        console.log(task)
+        destroy(route("system.clients.client.task.delete", {clientTask: task}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    enqueueSnackbar(`Usunięto zadanie ${task.id} - ${task.title}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu zadania ${task.id} - ${task.title}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
 
 
     }

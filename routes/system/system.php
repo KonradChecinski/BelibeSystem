@@ -4,7 +4,12 @@ use App\Http\Controllers\AdditionalClientController;
 use App\Http\Controllers\B2cCategoryController;
 use App\Http\Controllers\B2cColorController;
 use App\Http\Controllers\BasicClientController;
+use App\Http\Controllers\ClientActivityController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientDiscountController;
+use App\Http\Controllers\ClientLocationController;
+use App\Http\Controllers\ClientTaskController;
+use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\GS1BrandController;
 use App\Http\Controllers\GS1GPCController;
 use App\Http\Controllers\Product\B2BProductModelController;
@@ -31,6 +36,7 @@ use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\XmlGeneratorController;
+use App\Models\ClientLocation;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -95,6 +101,12 @@ Route::middleware("auth:user")->group(function () {
 //        Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
         Route::post("/clients/client/{client}/update/basic", [BasicClientController::class, 'update'])->name("system.clients.client.update.basic");
         Route::post("/clients/client/{client}/update/additional", [AdditionalClientController::class, 'update'])->name("system.clients.client.update.additional");
+
+        Route::delete("/clients/client/user/{clientUser}", [ClientUserController::class, 'destroy'])->name("system.clients.client.user.delete");
+        Route::delete("/clients/client/location/{clientLocation}", [ClientLocationController::class, 'destroy'])->name("system.clients.client.location.delete");
+        Route::delete("/clients/client/discount/{clientDiscount}", [ClientDiscountController::class, 'destroy'])->name("system.clients.client.discount.delete");
+        Route::delete("/clients/client/activity/{clientActivity}", [ClientActivityController::class, 'destroy'])->name("system.clients.client.activity.delete");
+        Route::delete("/clients/client/task/{clientTask}", [ClientTaskController::class, 'destroy'])->name("system.clients.client.task.delete");
 
     });
 

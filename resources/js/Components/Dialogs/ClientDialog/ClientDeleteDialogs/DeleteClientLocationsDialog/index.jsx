@@ -26,20 +26,20 @@ export default function DeleteClientLocationsDialog({open, setOpen, location, la
     };
 
     const save = () => {
-        // destroy(route("system.products.delete", {product: product.id}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             // deleteRow(product.id)
-        //             enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
+        destroy(route("system.clients.client.location.delete", {clientLocation: location}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // deleteRow(product.id)
+                    enqueueSnackbar(`Usunięto lokalizacje ${location.id} - ${location.name}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu lokalizacji ${location.id} - ${location.name}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
 
 
     }

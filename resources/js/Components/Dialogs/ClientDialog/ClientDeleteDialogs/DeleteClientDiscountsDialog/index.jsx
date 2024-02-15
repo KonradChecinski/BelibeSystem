@@ -58,20 +58,20 @@ export default function DeleteClientDiscountsDialog({open, setOpen, discount, la
     }
 
     const save = () => {
-        // destroy(route("system.products.delete", {product: product.id}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             // deleteRow(product.id)
-        //             enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
+        destroy(route("system.clients.client.discount.delete", {clientDiscount: discount}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // deleteRow(product.id)
+                    enqueueSnackbar(`Usunięto rabat ${type} - ${name}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu rabatu ${type} - ${name}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
 
 
     }

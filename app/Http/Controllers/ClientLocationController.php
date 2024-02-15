@@ -61,6 +61,6 @@ class ClientLocationController extends Controller
      */
     public function destroy(ClientLocation $clientLocation)
     {
-        //
+        $clientLocation->delete();
     }
 }

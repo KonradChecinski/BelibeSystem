@@ -61,6 +61,6 @@ class ClientTaskController extends Controller
      */
     public function destroy(ClientTask $clientTask)
     {
-        //
+        $clientTask->delete();
     }
 }

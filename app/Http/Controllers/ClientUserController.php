@@ -61,6 +61,7 @@ class ClientUserController extends Controller
      */
     public function destroy(ClientUser $clientUser)
     {
-        //
+        $clientUser->delete();
+//        dd($clientUser);
     }
 }

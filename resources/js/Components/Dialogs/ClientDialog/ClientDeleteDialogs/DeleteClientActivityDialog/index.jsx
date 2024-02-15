@@ -26,20 +26,21 @@ export default function DeleteClientActivityDialog({open, setOpen, activity, las
     };
 
     const save = () => {
-        // destroy(route("system.products.delete", {product: product.id}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             // deleteRow(product.id)
-        //             enqueueSnackbar(`Usunięto produkt ${product.id} - ${product.name}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu produktu ${product.id} - ${product.name}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
+        console.log(activity)
+        destroy(route("system.clients.client.activity.delete", {clientActivity: activity}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // deleteRow(product.id)
+                    enqueueSnackbar(`Usunięto aktywność ${activity.id} - ${activity.activity_type.name}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu aktywności ${activity.id} - ${activity.activity_type.name}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
 
 
     }
