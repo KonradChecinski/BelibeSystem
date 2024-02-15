@@ -16,6 +16,8 @@ import ClientDiscountsComponent from "@/Components/Pages/Client/ClientDiscountsC
 import DiscountIcon from '@mui/icons-material/Discount';
 import TaskIcon from "@mui/icons-material/Task";
 import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
 
 
 export default function Client(props) {
@@ -45,6 +47,10 @@ export default function Client(props) {
 
                 <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
                     <ClientUsersComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Lokacje klienta"} icon={<LocationOnIcon/>} iconColor={"blue"}>
+                    <ClientLocationsComponent {...props} />
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Rabaty klienta"} icon={<DiscountIcon/>} iconColor={"green"}>
