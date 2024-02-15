@@ -12,6 +12,7 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import moment from "moment";
 
 export default function ClientNotesTable({notes, readOnly, color, props}) {
     const theme = useTheme();
@@ -24,10 +25,12 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
         setData(notes)
     }, [notes]);
 
+    console.log(notes)
     const column = [
         {field: "id", headerName: "Id"},
+        {field: "text", headerName: "Treść", flex: 1},
         {
-            field: "user",
+            field: "user_id",
             headerName: "Dodana przez",
             renderCell: (params) => {
                 return (
@@ -38,17 +41,17 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
             }
         },
         {
-            field: "note",
-            headerName: "Treść",
+            field: "created_at", headerName: "O", width: 200,
             renderCell: (params) => {
+                let date = moment(params.value)
                 return (
                     <Box>
-                        <Typography>{params.row?.text}</Typography>
+                        <Typography>{date.format("YYYY-MM-DD H:m:s")}</Typography>
                     </Box>
                 );
-            },
-            flex: 1
+            }
         },
+
     ];
 
 
