@@ -11,8 +11,9 @@ import {enqueueSnackbar} from "notistack";
 import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
+import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 
-export default function ClientUsersTable({products, readOnly, units, color, props}) {
+export default function ClientUsersTable({users, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
@@ -20,257 +21,53 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
     const {data, setData, re} = useForm([])
 
     useEffect(() => {
-        setData(products)
-    }, [products]);
+        setData(users)
+    }, [users]);
 
 
     const column = [
         {field: "id", headerName: "Id"},
-        {field: "subiekt_id", headerName: "Id Subiekt"},
         {
-            field: "symbol",
-            headerName: "Symbol",
-            sortable: false,
-            filterable: false,
-            width: 160
-        },
-        {
-            field: "name",
-            headerName: "Nazwa", sortable: false,
-            filterable: false,
-            width: 300
-        },
-        {
-            field: "size",
-            headerName: "Rozmiar",
-            sortable: false,
-            filterable: false,
-
-            width: 70,
+            field: "client_user_name",
+            headerName: "Użytkownik",
             renderCell: (params) => {
-                return <Typography>{params.row.size.name} </Typography>;
-            }
-        },
-        {
-            field: "quantity",
-            headerName: "Stan",
-            sortable: false,
-            filterable: false,
-            type: "number",
-            width: 70
-        },
-        {
-            field: "unit",
-            headerName: "J.m.",
-            sortable: false,
-            filterable: false,
-
-            width: 70,
-            renderCell: (params) => {
-                return <Typography>{units.find(unit => unit.id === params.row.product_unit_id).name} </Typography>;
-            }
-        },
-        {
-            field: "codes",
-            headerName: "Kody kreskowe",
-            sortable: false,
-            filterable: false,
-
-            headerAlign: 'center',
-            align: 'center',
-            width: 150,
-            renderCell: (params) => {
-                return <BarcodesCell barcodes={params.row.barcodes}/>;
-
-            }
-        },
-        {
-            field: "show_in_subiekt",
-            headerName: "Subiekt",
-            sortable: false,
-            filterable: false,
-            headerAlign: 'center',
-            align: 'center',
-            renderCell: (params) => {
-                const {data: rowData, setData: setRowData, reset} = useForm({
-                    id: params.row.id,
-                    show_in_subiekt: Boolean(params.row.show_in_subiekt)
-                })
-                const handleChange = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setRowData("show_in_subiekt", !rowData.show_in_subiekt);
-
-                    router.post(route("system.products.show.update", {product: rowData.id}),
-                        {...rowData, show_in_subiekt: !rowData.show_in_subiekt},
-                        {
-                            onSuccess: params => {
-                                // setEdited(false);
-                                enqueueSnackbar("Zapisano", {variant: 'success'})
-
-                            },
-                            onError: params => {
-                                console.error(params);
-                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
-                            },
-                            preserveScroll: true
-                        })
-                };
-
                 return (
-                    <Checkbox
-                        disabled={Boolean(params.row.quantity_total) || readOnly}
-                        checked={rowData.show_in_subiekt}
-                        onChange={handleChange}
-                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
-                    />
-
+                    <Box>
+                        <Typography>{params.row?.name}</Typography>
+                    </Box>
                 );
-
             }
         },
-        {
-            field: "show_in_b2b",
-            headerName: "B2B",
-            sortable: false,
-            filterable: false,
-            headerAlign: 'center',
-            align: 'center',
-            renderCell: (params) => {
-                const {data: rowData, setData: setRowData, reset} = useForm({
-                    id: params.row.id,
-                    show_in_b2b: Boolean(params.row.show_in_b2b)
-                })
-                const handleChange = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setRowData("show_in_b2b", !rowData.show_in_b2b);
-
-                    router.post(route("system.products.show.update", {product: rowData.id}),
-                        {...rowData, show_in_b2b: !rowData.show_in_b2b},
-                        {
-                            onSuccess: params => {
-                                // setEdited(false);
-                                enqueueSnackbar("Zapisano", {variant: 'success'})
-
-                            },
-                            onError: params => {
-                                console.error(params);
-                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
-                            },
-                            preserveScroll: true
-                        })
-                };
-
-                return (
-                    <Checkbox
-                        disabled={true || readOnly}
-                        checked={rowData.show_in_b2b}
-                        onChange={handleChange}
-                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
-                    />
-
-                );
-
-            }
-        },
-        {
-            field: "show_in_b2c",
-            headerName: "B2C",
-            sortable: false,
-            filterable: false,
-            headerAlign: 'center',
-            align: 'center',
-            renderCell: (params) => {
-                const {data: rowData, setData: setRowData, reset} = useForm({
-                    id: params.row.id,
-                    show_in_b2c: Boolean(params.row.show_in_b2c)
-                })
-                const handleChange = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setRowData("show_in_b2c", !rowData.show_in_b2c);
-
-                    router.post(route("system.products.show.update", {product: rowData.id}),
-                        {...rowData, show_in_b2c: !rowData.show_in_b2c},
-                        {
-                            onSuccess: params => {
-                                // setEdited(false);
-                                enqueueSnackbar("Zapisano", {variant: 'success'})
-
-                            },
-                            onError: params => {
-                                console.error(params);
-                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
-                            },
-                            preserveScroll: true
-                        })
-                };
-                const CanEdit = () => {
-                    return !Boolean(props.productModel.brand) ||
-                        !Boolean(props.productModel.b2c_category) ||
-                        !Boolean(props.productModel.b2c_variant) ||
-                        !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
-                            return colorWithImages.id === color.id;
-                        }).b2c_color_id) ||
-                        !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
-                            return colorWithImages.id === color.id;
-                        }).b2c_product_name) ||
-                        !Boolean(params.row.size) ||
-                        !Boolean(params.row.barcodes.length)
-                }
-
-                return (
-                    <Tooltip
-                        title={CanEdit() ? "Sprawdź czy masz zaznaczone wszystkie dane potrzebne do sklepu: marka w module \"Podstawowe informacje\", kategoria, wariant, opis w module \"B2C\", symbol koloru do sklepu, kolor do sklepu, nazwa produktu do sklepu w edycji koloru" : null}
-                        arrow>
-                                <span>
-                    <Checkbox
-                        disabled={CanEdit() || readOnly}
-                        checked={rowData.show_in_b2c}
-                        onChange={handleChange}
-                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
-                    />
-   </span>
-                    </Tooltip>
-                );
-
-            }
-        },
+        // {field: "description", headerName: "Opis", width: 350},
         // {
-        //     field: "show_in_allegro",
-        //     headerName: "Allegro",
+        //     field: "date",
+        //     headerName: "Data",
         //     sortable: false,
         //     filterable: false,
-        //     headerAlign: 'center',
-        //     align: 'center',
-        //     renderCell: (params) => {
-        //         const handleChange = (e) => {
-        //             e.stopPropagation(); // don't select this row after clicking
-        //
-        //             params.row.show_in_allegro = !params.row.show_in_allegro;
-        //         };
-        //
-        //         return (
-        //             <Checkbox
-        //                 disabled={readOnly}
-        //                 checked={params.row.show_in_allegro == 1 ? true : false}
-        //                 onChange={handleChange}
-        //                 sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
-        //             />
-        //
-        //         );
-        //
-        //     }
-        // }
-
+        //     // width: 160
+        // },
+        // {
+        //     field: "time",
+        //     headerName: "Godzina",
+        //     sortable: false,
+        //     filterable: false,
+        //     // width: 160
+        // },
+        {
+            field: "client_user_email",
+            headerName: "Email", sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.email}</Typography>
+                    </Box>
+                );
+            }
+            // width: 300
+        },
     ];
 
-    const [rowCountState, setRowCountState] = useState(0);
-    const [columnVisibilityModel, setColumnVisibilityModel] = useState({
-        id: false,
-        subiekt_id: false
-    });
 
     const columnWithAction = [
         ...column,
@@ -282,22 +79,11 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const [openDialogAdd, setOpenDialogAdd] = useState(false);
-                const [openDialogCopy, setOpenDialogCopy] = useState(false);
 
 
                 const onEditClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
-                    // return alert(JSON.stringify(params.row, null, 4));
-                    // let row = {...data.find(e => e.id === params.row.id)}
-                    // row.edit = true
-                    // console.log('row', row)
-                    // setData([...data.filter(e => e.id !== params.row.id), row])
                     setOpenDialogAdd(true)
-                };
-
-                const onCopyClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-                    setOpenDialogCopy(true)
                 };
 
                 const onDeleteClick = (e) => {
@@ -314,26 +100,16 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
                             </IconButton>
                         </Tooltip>
 
-
-                        <Tooltip title="Powiel">
-                            <IconButton aria-label="copy" onClick={onCopyClick}>
-                                <ContentCopy/>
-                            </IconButton>
-                        </Tooltip>
-
                         <Tooltip title="Usuń">
                             <IconButton aria-label="delete" onClick={onDeleteClick}>
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
-                        <ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                              product={params.row} last={products.length === 1}/>
-                        <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}
-                                           method={"update"} actualState={params.row} props={props}/>
 
-                        <ProductsAddDialog open={openDialogCopy} setOpen={setOpenDialogCopy} color={color}
-                                           method={"copy"} actualState={params.row} props={props}/>
-                        {/*reloadData={reloadData}*/}
+                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
+                        {/*                      product={params.row} last={products.length === 1}/>*/}
+                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
+                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>
 
                 );
@@ -341,13 +117,20 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
             }
         }
     ];
+    const columnVisibility = {
+        id: false,
+    };
+    const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+        ...columnVisibility
+    });
+    const [rowCountState, setRowCountState] = useState(data.length);
 
 
     return (
         <>
             <DataGrid
                 // rows={data}
-                rows={sortBySizesModelColorObject(data)}
+                rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -361,7 +144,7 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
                 // slotProps={{
                 //     toolbar: {
                 //         showQuickFilter: true,
-                //         quickFilterProps: { debounceMs: 500 }
+                //         quickFilterProps: {debounceMs: 500}
                 //     }
                 // }}
                 disableColumnFilter
@@ -397,15 +180,15 @@ export default function ClientUsersTable({products, readOnly, units, color, prop
             />
             {!readOnly ?
                 <>
-                    <Box sx={{position: "absolute", bottom: -10, right: -10, zIndex: 20}}>
+                    <Box sx={{position: "absolute", bottom: -10, right: 0, zIndex: 20}}>
                         <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
                             <Add/>
                         </Fab>
 
                     </Box>
 
-                    <ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}
-                                       props={props}/>
+                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
+                    {/*                   props={props}/>*/}
                 </>
                 : ""
             }

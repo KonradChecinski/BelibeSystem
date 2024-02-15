@@ -39,9 +39,9 @@ export default function Client(props) {
                     <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
-                {/*<IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>*/}
-                {/*    <ClientUsersComponent {...props} />*/}
-                {/*</IconGrid>*/}
+                <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
+                    <ClientUsersComponent {...props} />
+                </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
                           iconColor={"darkcyan"}>

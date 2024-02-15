@@ -10,6 +10,8 @@ import {Cancel, Save} from "@mui/icons-material";
 import {useNotesClientForm} from "@/Components/Pages/Client/NotesClientComponent/form/useNotesClientForm";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ClientActivityTable from "@/Components/Table/ClientActivityTable";
+import ClientUsersTable from "@/Components/Table/ClientUsersTable";
 
 
 export default function ClientUsersComponent(props) {
@@ -74,7 +76,9 @@ export default function ClientUsersComponent(props) {
                 Użytkownicy klienta
             </Typography>
 
-            
+            <Box sx={{pr: 0}}>
+                <ClientUsersTable users={props.client?.client_users} readOnly={!props.editing}/>
+            </Box>
         </Box>
 
     );
