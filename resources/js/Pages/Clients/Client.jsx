@@ -18,6 +18,8 @@ import TaskIcon from "@mui/icons-material/Task";
 import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
+import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
+import HistoryIcon from '@mui/icons-material/History';
 
 
 export default function Client(props) {
@@ -60,6 +62,11 @@ export default function Client(props) {
                 <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
                           iconColor={"darkcyan"}>
                     <ClientActivityComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Historia zamówień klienta"} icon={<HistoryIcon/>}
+                          iconColor={"darkcyan"}>
+                    <ClientOrderHistoryComponent {...props} />
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Zadania klienta"} icon={<TaskIcon/>}
