@@ -65,7 +65,7 @@ export default function ClientDiscountsComponent(props) {
         //     preserveScroll: true
         // })
     }
-    console.log("")
+
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>

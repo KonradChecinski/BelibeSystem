@@ -27,62 +27,10 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
 
     const column = [
         {field: "id", headerName: "Id"},
-        {
-            field: "client_id",
-            headerName: "Id Klienta",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.client_id}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "title",
-            headerName: "Tytuł",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.title}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "text",
-            headerName: "Treść",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.text}</Typography>
-                    </Box>
-                );
-            },
-            width: 350
-        },
-        {
-            field: "date",
-            headerName: "Data",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.date}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "time",
-            headerName: "Godzina",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.time}</Typography>
-                    </Box>
-                );
-            }
-        },
+        {field: "title", headerName: "Tytuł", width: 200},
+        {field: "text", headerName: "Treść", flex: 1},
+        {field: "date", headerName: "Data", width: 100},
+        {field: "time", headerName: "Godzina", width: 100},
     ];
 
 

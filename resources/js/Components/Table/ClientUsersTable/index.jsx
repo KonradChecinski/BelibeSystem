@@ -27,48 +27,29 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
 
     const column = [
         {field: "id", headerName: "Id"},
+        {field: "name", headerName: "Użytkownik", width: 150},
+        {field: "email", headerName: "Email", width: 250},
         {
-            field: "client_user_name",
-            headerName: "Użytkownik",
+            field: "email_verified_at",
+            headerName: "Zweryfikowany",
+            width: 150,
+            sortable: true,
+            filterable: true,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params) => {
                 return (
-                    <Box>
-                        <Typography>{params.row?.name}</Typography>
-                    </Box>
+                    <Checkbox
+                        disabled={true}
+                        checked={!!params.row.email_verified_at}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
+                    />
                 );
             }
-        },
-        // {field: "description", headerName: "Opis", width: 350},
-        // {
-        //     field: "date",
-        //     headerName: "Data",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "time",
-        //     headerName: "Godzina",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        {
-            field: "client_user_email",
-            headerName: "Email", sortable: false,
-            filterable: false,
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.email}</Typography>
-                    </Box>
-                );
-            }
-            // width: 300
-        },
+        }
     ];
 
-
+    console.log(data)
     const columnWithAction = [
         ...column,
         {
@@ -129,8 +110,7 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
     return (
         <>
             <DataGrid
-                // rows={data}
-                rows={sortByDateAndTimeObject(data)}
+                rows={data}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>

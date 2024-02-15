@@ -64,10 +64,11 @@ export default function Client(props) {
                     <ClientActivityComponent {...props} />
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Historia zamówień klienta"} icon={<HistoryIcon/>}
-                          iconColor={"darkcyan"}>
-                    <ClientOrderHistoryComponent {...props} />
-                </IconGrid>
+                {/*To dopiero jak będą zamówienia*/}
+                {/*<IconGrid xs={12} md={12} title={"Historia zamówień klienta"} icon={<HistoryIcon/>}*/}
+                {/*          iconColor={"darkcyan"}>*/}
+                {/*    <ClientOrderHistoryComponent {...props} />*/}
+                {/*</IconGrid>*/}
 
                 <IconGrid xs={12} md={12} title={"Zadania klienta"} icon={<TaskIcon/>}
                           iconColor={"indigo"}>
@@ -78,29 +79,7 @@ export default function Client(props) {
                     <NotesClientComponent {...props} />
                 </IconGrid>
 
-                {/*<IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>*/}
-                {/*    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}*/}
-                {/*                       props={{...props}}/>*/}
-                {/*</IconGrid>*/}
-                {/*<IconGrid xs={12} md={12} title={"B2C"} icon={<PeopleAltIcon/>} iconColor={"indigo"}>*/}
-                {/*    <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}*/}
-                {/*                       props={{...props}}/>*/}
-                {/*</IconGrid>*/}
-                {/*<IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"indigo"}>*/}
-                {/*    <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}*/}
-                {/*                       props={{...props}}/>*/}
-                {/*</IconGrid>*/}
-                {/*/!*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*!/*/}
-                {/*/!*    <TextEditorAllegro/>*!/*/}
-                {/*/!*</IconGrid>*!/*/}
 
-                {/*<IconGrid xs={12} md={12} title={"Zdjęcia"} icon={<PhotoSizeSelectActualIcon/>}*/}
-                {/*          iconColor={"cyan"}>*/}
-                {/*    <ImagesComponent {...props}/>*/}
-                {/*</IconGrid>*/}
-
-                {/*/!*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*!/*/}
-                {/*/!*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*!/*/}
             </Grid>
 
         </UserLayout>

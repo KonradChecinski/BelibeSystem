@@ -23,12 +23,11 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
     useEffect(() => {
         setData(locations)
     }, [locations]);
-
-
+    
     const column = [
         {field: "id", headerName: "Id"},
         {
-            field: "country",
+            field: "country_id",
             headerName: "Kraj",
             renderCell: (params) => {
                 return (
@@ -38,73 +37,13 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
                 );
             }
         },
-        {
-            field: "postal_code",
-            headerName: "Kod pocztowy",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.postal_code}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "city",
-            headerName: "Miasto",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.city}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "street",
-            headerName: "Ulica",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.street}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "building_number",
-            headerName: "Numer budynku",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.building_number}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "house_number",
-            headerName: "Numer lokalu",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.house_number}</Typography>
-                    </Box>
-                );
-            }
-        },
-        {
-            field: "note",
-            headerName: "Notatka",
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.note}</Typography>
-                    </Box>
-                );
-            },
-            width: 350
-        },
+
+        {field: "city", headerName: "Miasto"},
+        {field: "street", headerName: "Ulica"},
+        {field: "building_number", headerName: "Numer budynku"},
+        {field: "apartment_number", headerName: "Numer lokalu"},
+        {field: "postal_code", headerName: "Kod pocztowy"},
+        {field: "note", headerName: "Notatka", flex: 1},
     ];
 
 
@@ -168,8 +107,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
     return (
         <>
             <DataGrid
-                // rows={data}
-                rows={sortByDateAndTimeObject(data)}
+                rows={data}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>

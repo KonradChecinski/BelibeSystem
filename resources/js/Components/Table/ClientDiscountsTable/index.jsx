@@ -24,26 +24,75 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
         setData(discounts)
     }, [discounts]);
 
-
+    console.log(data)
     const column = [
         {field: "id", headerName: "Id"},
         {
-            field: "product_model",
-            headerName: "Model", sortable: false,
+            field: "type",
+            headerName: "Typ",
+            sortable: false,
             filterable: false,
+            width: 150,
             renderCell: (params) => {
+                let text = '';
+                switch (params.value) {
+                    case 1:
+                        text = 'Model';
+                        break;
+                    case 2:
+                        text = 'Kategoria';
+                        break;
+                    case 3:
+                        text = 'Grupa';
+                        break;
+                    case 4:
+                        text = 'Producent';
+                        break;
+                }
                 return (
                     <Box>
-                        <Typography>{params.row?.product_model?.name}</Typography>
+                        <Typography>{text}</Typography>
+                    </Box>
+                );
+            },
+
+        },
+        {
+            field: "name",
+            headerName: "Nazwa",
+            sortable: false,
+            filterable: false,
+            // align: 'center',
+            width: 400,
+            renderCell: (params) => {
+                let text = '';
+                switch (params.row.type) {
+                    case 1:
+                        text = params.row.product_model.symbol + " - " + params.row.product_model.name
+                        break;
+                    case 2:
+                        text = params.row.product_category.name
+                        break;
+                    case 3:
+                        text = params.row.product_group.name
+                        break;
+                    case 4:
+                        text = params.row.product_brand.name
+                        break;
+                }
+                return (
+                    <Box>
+                        <Typography>{text}</Typography>
                     </Box>
                 );
             }
-            // width: 300
         },
         {
             field: "value",
             headerName: "Wartość rabatu", sortable: false,
             filterable: false,
+            align: 'center',
+            width: 100,
             renderCell: (params) => {
                 return (
                     <Box>
@@ -51,7 +100,6 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                     </Box>
                 );
             }
-            // width: 300
         },
     ];
 

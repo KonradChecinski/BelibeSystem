@@ -66,7 +66,7 @@ export default function ClientTasksComponent(props) {
         //     preserveScroll: true
         // })
     }
-    console.log("")
+
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
