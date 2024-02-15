@@ -12,6 +12,7 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import DeleteClientTaskDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientTaskDialog";
 
 export default function ClientTasksTable({tasks, readOnly, color, props}) {
     const theme = useTheme();
@@ -71,8 +72,8 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
                             </IconButton>
                         </Tooltip>
 
-                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                      product={params.row} last={products.length === 1}/>*/}
+                        <DeleteClientTaskDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                task={params.row}/>
                         {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
                         {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>

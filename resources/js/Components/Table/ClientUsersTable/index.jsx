@@ -12,6 +12,7 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import DeleteClientUserDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientUserDialog";
 
 export default function ClientUsersTable({users, readOnly, color, props}) {
     const theme = useTheme();
@@ -87,8 +88,8 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
                             </IconButton>
                         </Tooltip>
 
-                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                      product={params.row} last={products.length === 1}/>*/}
+                        <DeleteClientUserDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                user={params.row}/>
                         {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
                         {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>
