@@ -13,6 +13,7 @@ import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientTaskDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientTaskDialog";
+import ClientAddEditTasksDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditTasksDialog";
 
 export default function ClientTasksTable({tasks, readOnly, color, props}) {
     const theme = useTheme();
@@ -74,8 +75,9 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
 
                         <DeleteClientTaskDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                                 task={params.row}/>
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+
+                        <ClientAddEditTasksDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                  clickedTask={params.row}/>
                     </>
 
                 );
@@ -153,8 +155,8 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditTasksDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                              clickedTask={null}/>
                 </>
                 : ""
             }

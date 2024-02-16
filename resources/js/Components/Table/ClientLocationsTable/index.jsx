@@ -14,11 +14,12 @@ import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDi
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientLocationsDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientLocationsDialog";
+import ClientAddEditLocationsDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditLocationsDialog";
 
 export default function ClientLocationsTable({locations, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
-
 
     const {data, setData, re} = useForm([])
 
@@ -88,8 +89,8 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
 
                         <DeleteClientLocationsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                                      location={params.row}/>
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+                        <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                      clickedLocation={params.row} params={props}/>
                     </>
 
                 );
@@ -166,8 +167,8 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd} clickedLocation={null}
+                                                  params={props}/>
                 </>
                 : ""
             }

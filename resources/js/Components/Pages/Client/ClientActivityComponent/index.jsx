@@ -76,7 +76,7 @@ export default function ClientActivityComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientActivityTable activities={props.client.activities} readOnly={!props.editing}/>
+                <ClientActivityTable activities={props.client.activities} readOnly={!props.editing} props={props}/>
             </Box>
         </Box>
 

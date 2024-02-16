@@ -14,6 +14,8 @@ import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDi
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientActivityDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientActivityDialog";
+import ClientAddEditActivitiesDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog";
 
 export default function ClientActivityTable({activities, readOnly, color, props}) {
     const theme = useTheme();
@@ -110,8 +112,9 @@ export default function ClientActivityTable({activities, readOnly, color, props}
 
                         <DeleteClientActivityDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                                     activity={params.row}/>
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+                        <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                       clickedActivity={params.row}
+                                                       params={props}/>
                     </>
 
                 );
@@ -189,8 +192,9 @@ export default function ClientActivityTable({activities, readOnly, color, props}
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                   clickedActivity={null}
+                                                   params={props}/>
                 </>
                 : ""
             }

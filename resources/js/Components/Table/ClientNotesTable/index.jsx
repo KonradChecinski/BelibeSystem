@@ -41,7 +41,7 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
             }
         },
         {
-            field: "created_at", headerName: "O", width: 200,
+            field: "created_at", headerName: "Kiedy", width: 200,
             renderCell: (params) => {
                 let date = moment(params.value)
                 return (

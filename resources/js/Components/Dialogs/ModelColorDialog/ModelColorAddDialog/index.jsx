@@ -332,7 +332,7 @@ function Step1({data, setData, clickedColor = null, register, errors, params}) {
                         sx={{my: 1}}
                         {...register("b2c_name")}
                         value={data.b2c_name}
-                        color={errors.size?.message && "error"}
+                        color={errors.b2c_name?.message && "error"}
                     />
                 }
             />

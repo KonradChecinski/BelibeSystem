@@ -77,7 +77,7 @@ export default function ClientLocationsComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientLocationsTable locations={props.client?.locations} readOnly={!props.editing}/>
+                <ClientLocationsTable locations={props.client?.locations} readOnly={!props.editing} props={props}/>
             </Box>
         </Box>
 

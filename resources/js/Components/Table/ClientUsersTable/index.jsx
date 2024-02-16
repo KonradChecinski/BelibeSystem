@@ -13,6 +13,7 @@ import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientUserDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientUserDialog";
+import ClientAddEditUsersDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditUsersDialog";
 
 export default function ClientUsersTable({users, readOnly, color, props}) {
     const theme = useTheme();
@@ -90,6 +91,8 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
 
                         <DeleteClientUserDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                                 user={params.row}/>
+                        <ClientAddEditUsersDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                  clickedUser={params.row}/>
                         {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
                         {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>
@@ -168,6 +171,8 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
 
                     </Box>
 
+                    <ClientAddEditUsersDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                              clickedUser={null}/>
                     {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
                     {/*                   props={props}/>*/}
                 </>
