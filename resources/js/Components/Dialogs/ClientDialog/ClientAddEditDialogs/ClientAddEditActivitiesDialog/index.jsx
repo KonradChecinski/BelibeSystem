@@ -16,6 +16,8 @@ import moment from "moment";
 import {
     useClientActivitiesDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog/form/useClientActivitiesDialogForm";
+import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 // import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
 export default function ClientAddEditActivitiesDialog({
@@ -42,8 +44,8 @@ export default function ClientAddEditActivitiesDialog({
             label: clickedActivity.activity_type.name,
         } : null,
         description: clickedActivity ? clickedActivity.description : '',
-        date: clickedActivity ? clickedActivity.date : moment().format('YYYY-MM-DD'),
-        time: clickedActivity ? clickedActivity.time : moment().format('HH:mm'),
+        date: clickedActivity ? clickedActivity.date : moment(),//.format('YYYY-MM-DD'),
+        time: clickedActivity ? clickedActivity.time : moment(),//.format('HH:mm'),
         user: clickedActivity ? {
             id: clickedActivity.user.id,
             name: clickedActivity.user.name,
@@ -66,8 +68,8 @@ export default function ClientAddEditActivitiesDialog({
                 label: clickedActivity.activity_type.name,
             } : null,
             description: clickedActivity ? clickedActivity.description : '',
-            date: clickedActivity ? clickedActivity.date : moment().format('YYYY-MM-DD'),
-            time: clickedActivity ? clickedActivity.time : moment().format('HH:mm'),
+            date: clickedActivity ? clickedActivity.date : moment(),//.format('YYYY-MM-DD'),
+            time: clickedActivity ? clickedActivity.time : moment(),//.format('HH:mm'),
             user: clickedActivity ? {
                 id: clickedActivity.user.id,
                 name: clickedActivity.user.name,
@@ -276,59 +278,69 @@ function Step1({data, setData, params, clickedActivity = null, register, errors}
             </Box>
 
             <Box>
-                <TextField
-                    type="date"
-                    id="date"
-                    label=""
-                    color={errors.date?.message && "error"}
-                    {...register("date")}
-                    onChange={(value) => {
-                        setData('date', value.target.value);
-                    }}
-                    defaultValue={data.date}
-                    sx={{width: "30ch", my: 1}}
-                />
+                {/*<TextField*/}
+                {/*    type="date"*/}
+                {/*    id="date"*/}
+                {/*    label="Data"*/}
+                {/*    color={errors.date?.message && "error"}*/}
+                {/*    {...register("date")}*/}
+                {/*    onChange={(value) => {*/}
+                {/*        setData('date', value.target.value);*/}
+                {/*    }}*/}
+                {/*    defaultValue={data.date}*/}
+                {/*    sx={{width: "30ch", my: 1}}*/}
+                {/*/>*/}
+
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DatePicker
+                        label="Data"
+                        id="date"
+                        value={data.date}
+                        onChange={(value) => {
+                            setData('date', value);
+                            // setValue('') ???
+                        }}
+                        sx={{width: "30ch", my: 1}}
+
+                    />
+                </LocalizationProvider>
                 {errors.date?.message && (
                     <Typography variant="body2" color="error" sx={{ml: 1}}>
                         {errors.date?.message.toString()}
                     </Typography>
                 )}
-
-                {/*<DatePicker*/}
-                {/*    label="Data"*/}
-                {/*    value={data.date}*/}
-                {/*    onChange={(value) => {*/}
-                {/*        setData('date', value);*/}
-                {/*    }}*/}
-                {/*    renderInput={(params) => (*/}
-                {/*        <TextField*/}
-                {/*            {...params}*/}
-                {/*            color={errors.date?.message && "error"}*/}
-                {/*            {...register("date")}*/}
-                {/*            sx={{width: "30ch", my: 1}}*/}
-                {/*        />*/}
-                {/*    )}*/}
-                {/*/>*/}
-                {/*{errors.date?.message && (*/}
-                {/*    <Typography variant="body2" color="error" sx={{ml: 1}}>*/}
-                {/*        {errors.date?.message.toString()}*/}
-                {/*    </Typography>*/}
-                {/*)}*/}
             </Box>
 
             <Box>
-                <TextField
-                    type="time"
-                    id="time"
-                    label=""
-                    color={errors.time?.message && "error"}
-                    {...register("time")}
-                    onChange={(value) => {
-                        setData('time', value.target.value);
-                    }}
-                    defaultValue={data.time}
-                    sx={{width: "30ch", my: 1}}
-                />
+                {/*<TextField*/}
+                {/*    type="time"*/}
+                {/*    id="time"*/}
+                {/*    label=""*/}
+                {/*    color={errors.time?.message && "error"}*/}
+                {/*    {...register("time")}*/}
+                {/*    onChange={(value) => {*/}
+                {/*        setData('time', value.target.value);*/}
+                {/*    }}*/}
+                {/*    defaultValue={data.time}*/}
+                {/*    sx={{width: "30ch", my: 1}}*/}
+                {/*/>*/}
+                {/*{errors.time?.message && (*/}
+                {/*    <Typography variant="body2" color="error" sx={{ml: 1}}>*/}
+                {/*        {errors.time?.message.toString()}*/}
+                {/*    </Typography>*/}
+                {/*)}*/}
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <TimePicker
+                        label="Czas"
+                        id="time"
+                        value={data.time}
+                        onChange={(value) => {
+                            setData('time', value);
+                            // setValue('') ???
+                        }}
+                        sx={{width: "30ch", my: 1}}
+                    />
+                </LocalizationProvider>
                 {errors.time?.message && (
                     <Typography variant="body2" color="error" sx={{ml: 1}}>
                         {errors.time?.message.toString()}
