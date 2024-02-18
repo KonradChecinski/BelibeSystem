@@ -11,7 +11,7 @@ class StoreClientLocationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editClient", "user");
     }
 
     /**
@@ -22,7 +22,16 @@ class StoreClientLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'country' => 'required',
+            'country.id' => 'required|numeric',
+            'country.name' => 'required|string',
+            'city' => 'required|string',
+            'street' => 'required|string',
+            'postal_code' => 'required|string',
+            'building_number' => 'required|string',
+            'apartment_number' => 'numeric|nullable',
+            'note' => 'required|string',
+            'active' => 'required|boolean',
         ];
     }
 }

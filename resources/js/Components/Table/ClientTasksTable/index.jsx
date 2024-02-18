@@ -74,10 +74,10 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
                         </Tooltip>
 
                         <DeleteClientTaskDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                task={params.row}/>
+                                                task={params.row} params={props}/>
 
                         <ClientAddEditTasksDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                  clickedTask={params.row}/>
+                                                  clickedTask={params.row} params={props}/>
                     </>
 
                 );

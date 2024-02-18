@@ -26,7 +26,7 @@ export default function DeleteClientLocationsDialog({open, setOpen, location, la
     };
 
     const save = () => {
-        destroy(route("system.clients.client.location.delete", {clientLocation: location}),
+        destroy(route("system.clients.client.location.delete", {client: params.client.id, clientLocation: location}),
 
             {
                 preserveScroll: true,

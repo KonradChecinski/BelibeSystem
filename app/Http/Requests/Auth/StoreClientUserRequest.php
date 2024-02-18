@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Client\ClientUser;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class StoreClientUserRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreClientUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editClient", "user");
     }
 
     /**
@@ -22,7 +24,11 @@ class StoreClientUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => "required|string|max:255",
+            "email" =>
+                "required|string|email|max:255|unique:" .
+                ClientUser::class,
+            "password" => ["required", Password::defaults()],
         ];
     }
 }

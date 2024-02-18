@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientActivityController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDiscountController;
 use App\Http\Controllers\ClientLocationController;
+use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\ClientTaskController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\GS1BrandController;
@@ -97,16 +98,33 @@ Route::middleware("auth:user")->group(function () {
 
         Route::get("/clients/client/{id}", [ClientController::class, 'show'])->name("system.clients.client");
         Route::get("/clients/client/{id}/edit", [ClientController::class, 'edit'])->name("system.clients.client.edit");
-//        Route::post("/models/model/{model}/color", [ProductModelColorController::class, 'store'])->name("system.products.model.color");
-//        Route::patch("/models/model/{model}/color/{productModelColor}", [ProductModelColorController::class, 'update'])->name("system.products.model.color.update");
+
+
         Route::post("/clients/client/{client}/update/basic", [BasicClientController::class, 'update'])->name("system.clients.client.update.basic");
         Route::post("/clients/client/{client}/update/additional", [AdditionalClientController::class, 'update'])->name("system.clients.client.update.additional");
 
-        Route::delete("/clients/client/user/{clientUser}", [ClientUserController::class, 'destroy'])->name("system.clients.client.user.delete");
-        Route::delete("/clients/client/location/{clientLocation}", [ClientLocationController::class, 'destroy'])->name("system.clients.client.location.delete");
+        Route::post("/clients/client/{client}/user/", [ClientUserController::class, 'store'])->name("system.clients.client.user");
+        Route::patch("/clients/client/{client}/user/{clientUser}", [ClientUserController::class, 'update'])->name("system.clients.client.user.update");
+        Route::delete("/clients/client/{client}/user/{clientUser}", [ClientUserController::class, 'destroy'])->name("system.clients.client.user.delete");
+
+
+        Route::post("/clients/client/{client}/location/", [ClientLocationController::class, 'store'])->name("system.clients.client.location");
+        Route::patch("/clients/client/{client}/location/{clientLocation}", [ClientLocationController::class, 'update'])->name("system.clients.client.location.update");
+        Route::delete("/clients/client/{client}/location/{clientLocation}", [ClientLocationController::class, 'destroy'])->name("system.clients.client.location.delete");
+
         Route::delete("/clients/client/discount/{clientDiscount}", [ClientDiscountController::class, 'destroy'])->name("system.clients.client.discount.delete");
-        Route::delete("/clients/client/activity/{clientActivity}", [ClientActivityController::class, 'destroy'])->name("system.clients.client.activity.delete");
-        Route::delete("/clients/client/task/{clientTask}", [ClientTaskController::class, 'destroy'])->name("system.clients.client.task.delete");
+
+        Route::post("/clients/client/{client}/activity/", [ClientActivityController::class, 'store'])->name("system.clients.client.activity");
+        Route::patch("/clients/client/{client}/activity/{clientActivity}", [ClientActivityController::class, 'update'])->name("system.clients.client.activity.update");
+        Route::delete("/clients/client/{client}/activity/{clientActivity}", [ClientActivityController::class, 'destroy'])->name("system.clients.client.activity.delete");
+
+        Route::post("/clients/client/{client}/task/", [ClientTaskController::class, 'store'])->name("system.clients.client.task");
+        Route::patch("/clients/client/{client}/task/{clientTask}", [ClientTaskController::class, 'update'])->name("system.clients.client.task.update");
+        Route::delete("/clients/client/{client}/task/{clientTask}", [ClientTaskController::class, 'destroy'])->name("system.clients.client.task.delete");
+
+        Route::post("/clients/client/{client}/note/", [ClientNoteController::class, 'store'])->name("system.clients.client.note");
+        Route::patch("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'update'])->name("system.clients.client.note.update");
+        Route::delete("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'destroy'])->name("system.clients.client.note.delete");
 
     });
 

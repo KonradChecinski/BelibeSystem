@@ -17,12 +17,14 @@ import {
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditTasksDialog/form/useClientTasksDialogForm";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {enqueueSnackbar} from "notistack";
 // import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
 export default function ClientAddEditTasksDialog({
                                                      open,
                                                      setOpen,
                                                      clickedTask,
+                                                     params
                                                  }) {
 
     const {
@@ -36,8 +38,8 @@ export default function ClientAddEditTasksDialog({
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         title: clickedTask ? clickedTask.title : '',
         text: clickedTask ? clickedTask.text : '',
-        date: clickedTask ? clickedTask.date : moment(),//.format('YYYY-MM-DD'),
-        time: clickedTask ? clickedTask.time : moment(),//.format('HH:mm'),
+        date: clickedTask ? moment(clickedTask.date) : moment(),//.format('YYYY-MM-DD'),
+        time: clickedTask ? moment(clickedTask.date + " " + clickedTask.time) : moment(),//.format('HH:mm'),
     })
 
     useEffect(() => {
@@ -50,8 +52,8 @@ export default function ClientAddEditTasksDialog({
         setData({
             title: clickedTask ? clickedTask.title : '',
             text: clickedTask ? clickedTask.text : '',
-            date: clickedTask ? clickedTask.date : moment(),
-            time: clickedTask ? clickedTask.time : moment(),
+            date: clickedTask ? moment(clickedTask.date) : moment(),
+            time: clickedTask ? moment(clickedTask.date + " " + clickedTask.time) : moment(),
         })
 
         console.log("data w useEffect: ", data);
@@ -87,46 +89,42 @@ export default function ClientAddEditTasksDialog({
     }
 
     const save = () => {
-        // if (clickedColor) {
-        //     console.log(clickedColor.id)
-        //     patch(route("system.products.model.color.update", {
-        //             model: params.productModel.id,
-        //             productModelColor: clickedColor.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano kolor", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.products.model.color", {model: params.productModel.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
-        //                 handleClose();
-        //                 setOpenDialogAdd(true);
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedTask) {
+            patch(route("system.clients.client.task.update", {
+                    client: params.client.id,
+                    clientTask: clickedTask.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano zadanie", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji zadania", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.task.color", {client: params.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano zadanie", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu zadania", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 

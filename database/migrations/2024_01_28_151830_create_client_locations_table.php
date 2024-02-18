@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string("city", 50);
             $table->string("street", 50);
             $table->string("building_number", 50);
-            $table->string("apartment_number", 50);
+            $table->string("apartment_number", 50)->nullable()->default(null);
             $table->string("postal_code", 20);
             $table->text("note");
             $table->tinyInteger("active");

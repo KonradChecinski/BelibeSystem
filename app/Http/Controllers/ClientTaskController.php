@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Client\StoreClientTaskRequest;
 use App\Http\Requests\Client\UpdateClientTaskRequest;
+use App\Models\Client\Client;
 use App\Models\ClientTask;
 
 class ClientTaskController extends Controller
@@ -27,9 +28,11 @@ class ClientTaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientTaskRequest $request)
+    public function store(StoreClientTaskRequest $request, Client $client)
     {
-        //
+        $clientTask = new ClientTask($request->all());
+        $clientTask->client()->associate($client);
+        $clientTask->save();
     }
 
     /**
@@ -51,16 +54,20 @@ class ClientTaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientTaskRequest $request, ClientTask $clientTask)
+    public function update(UpdateClientTaskRequest $request, Client $client, ClientTask $clientTask)
     {
-        //
+        if ($clientTask->client != $client) abort(403);
+
+        $clientTask->update($request->all());
+//        $clientTask->save();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClientTask $clientTask)
+    public function destroy(Client $client, ClientTask $clientTask)
     {
+        if ($clientTask->client != $client) abort(403);
         $clientTask->delete();
     }
 }

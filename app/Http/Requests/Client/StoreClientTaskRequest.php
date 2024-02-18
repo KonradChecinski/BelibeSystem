@@ -11,7 +11,7 @@ class StoreClientTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editClient", "user");
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreClientTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string',
+            'text' => 'required|string',
+            'date' => 'required|date',
+            'time' => 'required|time',
         ];
     }
 }

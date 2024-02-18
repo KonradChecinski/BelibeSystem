@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Client\StoreClientNoteRequest;
 use App\Http\Requests\Client\UpdateClientNoteRequest;
+use App\Models\Client\Client;
 use App\Models\ClientNote;
 
 class ClientNoteController extends Controller
@@ -27,9 +28,11 @@ class ClientNoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientNoteRequest $request)
+    public function store(StoreClientNoteRequest $request, Client $client)
     {
-        //
+        $clientNote = new ClientNote($request->all());
+        $clientNote->client()->associate($client);
+        $clientNote->save();
     }
 
     /**
@@ -51,16 +54,21 @@ class ClientNoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientNoteRequest $request, ClientNote $clientNote)
+    public function update(UpdateClientNoteRequest $request, Client $client, ClientNote $clientNote)
     {
-        //
+        if ($clientNote->client != $client) abort(403);
+
+        $clientNote->update($request->all());
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClientNote $clientNote)
+    public function destroy(Client $client, ClientNote $clientNote)
     {
-        //
+        if ($clientNote->client != $client) abort(403);
+        $clientNote->delete();
     }
 }

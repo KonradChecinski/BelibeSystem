@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Client\StoreClientActivityRequest;
 use App\Http\Requests\Client\UpdateClientActivityRequest;
+use App\Models\Client\Client;
 use App\Models\ClientActivity;
 
 class ClientActivityController extends Controller
@@ -27,9 +28,13 @@ class ClientActivityController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientActivityRequest $request)
+    public function store(StoreClientActivityRequest $request, Client $client)
     {
-        //
+        $clientActivity = new ClientActivity($request->all());
+        $clientActivity->client()->associate($client);
+        $clientActivity->user()->associate($request->user["id"]);
+        $clientActivity->activityType()->associate($request->type["id"]);
+        $clientActivity->save();
     }
 
     /**
@@ -51,16 +56,23 @@ class ClientActivityController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientActivityRequest $request, ClientActivity $clientActivity)
+    public function update(UpdateClientActivityRequest $request, Client $client, ClientActivity $clientActivity)
     {
-        //
+        if ($clientActivity->client != $client) abort(403);
+
+        $clientActivity->update($request->all());
+        $clientActivity->user()->associate($request->user["id"]);
+        $clientActivity->activityType()->associate($request->type["id"]);
+        $clientActivity->save();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClientActivity $clientActivity)
+    public function destroy(Client $client, ClientActivity $clientActivity)
     {
+        if ($clientActivity->client != $client) abort(403);
+
         $clientActivity->delete();
     }
 }

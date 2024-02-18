@@ -77,7 +77,7 @@ export default function ClientUsersComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientUsersTable users={props.client?.client_users} readOnly={!props.editing}/>
+                <ClientUsersTable users={props.client?.client_users} readOnly={!props.editing} props={props}/>
             </Box>
         </Box>
 

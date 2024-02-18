@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Client\StoreClientLocationRequest;
 use App\Http\Requests\Client\UpdateClientLocationRequest;
+use App\Models\Client\Client;
 use App\Models\ClientLocation;
 
 class ClientLocationController extends Controller
@@ -27,9 +28,12 @@ class ClientLocationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientLocationRequest $request)
+    public function store(StoreClientLocationRequest $request, Client $client)
     {
-        //
+        $clientLocation = new ClientLocation($request->all());
+        $clientLocation->country()->associate($request->country["id"]);
+        $clientLocation->client()->associate($client);
+        $clientLocation->save();
     }
 
     /**
@@ -51,16 +55,22 @@ class ClientLocationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientLocationRequest $request, ClientLocation $clientLocation)
+    public function update(UpdateClientLocationRequest $request, Client $client, ClientLocation $clientLocation)
     {
-        //
+        if ($clientLocation->client != $client) abort(403);
+
+        $clientLocation->update($request->all());
+        $clientLocation->country()->associate($request->country["id"]);
+//        $clientLocation->save();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClientLocation $clientLocation)
+    public function destroy(Client $client, ClientLocation $clientLocation)
     {
+        if ($clientLocation->client != $client) abort(403);
+
         $clientLocation->delete();
     }
 }

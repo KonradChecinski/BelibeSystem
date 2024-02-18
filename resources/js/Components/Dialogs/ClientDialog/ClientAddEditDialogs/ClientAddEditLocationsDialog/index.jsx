@@ -15,6 +15,7 @@ import {useForm} from "@inertiajs/react";
 import {
     useClientLocationsDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditLocationsDialog/form/useClientLocationsDialogForm";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientAddEditLocationsDialog({
                                                          open,
@@ -107,46 +108,42 @@ export default function ClientAddEditLocationsDialog({
     }
 
     const save = () => {
-        // if (clickedColor) {
-        //     console.log(clickedColor.id)
-        //     patch(route("system.products.model.color.update", {
-        //             model: params.productModel.id,
-        //             productModelColor: clickedColor.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano kolor", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.products.model.color", {model: params.productModel.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
-        //                 handleClose();
-        //                 setOpenDialogAdd(true);
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedLocation) {
+            patch(route("system.clients.client.location.update", {
+                    client: params.client.id,
+                    clientLocation: clickedLocation.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano lokalizacje", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji lokalizacji", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.location", {client: params.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano lokalizacje", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu lokalizacji", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 
@@ -353,7 +350,7 @@ function Step1({data, params, setData, clickedLocation = null, register, errors}
                     </Typography>
                 )}
             </Box>
-            
+
             <Box>
                 <TextField
                     type="text"

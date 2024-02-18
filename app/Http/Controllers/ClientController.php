@@ -30,8 +30,10 @@ use App\Models\B2bSourceOfAcquisition;
 use App\Models\B2bStatus;
 use App\Models\B2cColor;
 use App\Models\Client\Client;
+use App\Models\ProductBrand;
 use App\Models\Products\Product;
 use App\Models\Products\ProductCategory;
+use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
@@ -240,6 +242,12 @@ class ClientController extends Controller
         $b2bStatus = B2bStatus::all();
         $b2bIndustry = B2bIndustry::all();
         $users = User::query()->whereNotNull("email_verified_at")->get();
+
+        $productModels = ProductModel::all();
+        $productCategories = ProductCategory::all();
+        $productGroups = ProductGroup::all();
+        $productBrands = ProductBrand::all();
+
         return Inertia::render("Clients/Client", [
             "client" => $client,
             "activityType" => $b2bActivityType,
@@ -249,6 +257,12 @@ class ClientController extends Controller
             "status" => $b2bStatus,
             "industry" => $b2bIndustry,
             "user" => $users,
+            "discountDictionary" => [
+                "productModels" => $productModels,
+                "productCategories" => $productCategories,
+                "productGroups" => $productGroups,
+                "productBrands" => $productBrands,
+            ]
         ]);
 
     }
@@ -272,6 +286,11 @@ class ClientController extends Controller
         $b2bIndustry = B2bIndustry::all();
         $users = User::query()->whereNotNull("email_verified_at")->get();
 
+        $productModels = ProductModel::all();
+        $productCategories = ProductCategory::all();
+        $productGroups = ProductGroup::all();
+        $productBrands = ProductBrand::all();
+
         return Inertia::render("Clients/Client", [
             "editing" => true,
             "client" => $client,
@@ -282,6 +301,12 @@ class ClientController extends Controller
             "status" => $b2bStatus,
             "industry" => $b2bIndustry,
             "user" => $users,
+            "discountDictionary" => [
+                "productModels" => $productModels,
+                "productCategories" => $productCategories,
+                "productGroups" => $productGroups,
+                "productBrands" => $productBrands,
+            ]
         ]);
     }
 

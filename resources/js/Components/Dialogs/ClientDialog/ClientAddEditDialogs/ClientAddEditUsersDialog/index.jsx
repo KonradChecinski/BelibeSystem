@@ -14,11 +14,13 @@ import {useForm} from "@inertiajs/react";
 import {
     useClientUsersDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditUsersDialog/form/useClientUsersDialogForm";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientAddEditUsersDialog({
                                                      open,
                                                      setOpen,
                                                      clickedUser,
+                                                     props,
                                                  }) {
 
     const {
@@ -82,46 +84,42 @@ export default function ClientAddEditUsersDialog({
     }
 
     const save = () => {
-        // if (clickedColor) {
-        //     console.log(clickedColor.id)
-        //     patch(route("system.products.model.color.update", {
-        //             model: params.productModel.id,
-        //             productModelColor: clickedColor.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano kolor", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.products.model.color", {model: params.productModel.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
-        //                 handleClose();
-        //                 setOpenDialogAdd(true);
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedUser) {
+            patch(route("system.clients.client.user.update", {
+                    client: props.client.id,
+                    clientUser: clickedUser.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano użytkownika klienta", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji użytkownika klienta", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.user", {client: props.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano użytkownika klienta", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu użytkownika klienta", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 

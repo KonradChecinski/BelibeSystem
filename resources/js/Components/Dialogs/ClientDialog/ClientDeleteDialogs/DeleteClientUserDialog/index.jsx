@@ -26,7 +26,7 @@ export default function DeleteClientUserDialog({open, setOpen, user, last, param
     };
 
     const save = () => {
-        destroy(route("system.clients.client.user.delete", {clientUser: user}),
+        destroy(route("system.clients.client.user.delete", {client: params.client.id, clientUser: user}),
 
             {
                 preserveScroll: true,

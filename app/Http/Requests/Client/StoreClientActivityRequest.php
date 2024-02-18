@@ -11,7 +11,7 @@ class StoreClientActivityRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editClient", "user");
     }
 
     /**
@@ -22,7 +22,15 @@ class StoreClientActivityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => 'required',
+            'type.id' => 'required|numeric',
+            'type.name' => 'required|string',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'time' => 'required|time',
+            'user' => 'required',
+            'user.id' => 'numeric|numeric',
+            'user.name' => 'required|string',
         ];
     }
 }

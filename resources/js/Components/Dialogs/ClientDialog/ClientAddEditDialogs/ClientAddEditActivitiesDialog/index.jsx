@@ -18,6 +18,7 @@ import {
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog/form/useClientActivitiesDialogForm";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {enqueueSnackbar} from "notistack";
 // import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
 export default function ClientAddEditActivitiesDialog({
@@ -44,8 +45,8 @@ export default function ClientAddEditActivitiesDialog({
             label: clickedActivity.activity_type.name,
         } : null,
         description: clickedActivity ? clickedActivity.description : '',
-        date: clickedActivity ? clickedActivity.date : moment(),//.format('YYYY-MM-DD'),
-        time: clickedActivity ? clickedActivity.time : moment(),//.format('HH:mm'),
+        date: clickedActivity ? moment(clickedActivity.date) : moment(),//.format('YYYY-MM-DD'),
+        time: clickedActivity ? moment(clickedActivity.date + " " + clickedActivity.time) : moment(),//.format('HH:mm'),
         user: clickedActivity ? {
             id: clickedActivity.user.id,
             name: clickedActivity.user.name,
@@ -68,8 +69,8 @@ export default function ClientAddEditActivitiesDialog({
                 label: clickedActivity.activity_type.name,
             } : null,
             description: clickedActivity ? clickedActivity.description : '',
-            date: clickedActivity ? clickedActivity.date : moment(),//.format('YYYY-MM-DD'),
-            time: clickedActivity ? clickedActivity.time : moment(),//.format('HH:mm'),
+            date: clickedActivity ? moment(clickedActivity.date) : moment(),//.format('YYYY-MM-DD'),
+            time: clickedActivity ? moment(clickedActivity.date + " " + clickedActivity.time) : moment(),//.format('HH:mm'),
             user: clickedActivity ? {
                 id: clickedActivity.user.id,
                 name: clickedActivity.user.name,
@@ -111,46 +112,42 @@ export default function ClientAddEditActivitiesDialog({
     }
 
     const save = () => {
-        // if (clickedColor) {
-        //     console.log(clickedColor.id)
-        //     patch(route("system.products.model.color.update", {
-        //             model: params.productModel.id,
-        //             productModelColor: clickedColor.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano kolor", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.products.model.color", {model: params.productModel.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
-        //                 handleClose();
-        //                 setOpenDialogAdd(true);
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedActivity) {
+            patch(route("system.clients.client.activity.update", {
+                    client: params.client.id,
+                    clientActivity: clickedActivity.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano aktywność", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji aktywności", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.activity", {client: params.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano aktywność", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu aktywności", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 

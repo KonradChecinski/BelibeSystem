@@ -111,7 +111,7 @@ export default function ClientActivityTable({activities, readOnly, color, props}
                         </Tooltip>
 
                         <DeleteClientActivityDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                    activity={params.row}/>
+                                                    activity={params.row} params={props}/>
                         <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
                                                        clickedActivity={params.row}
                                                        params={props}/>

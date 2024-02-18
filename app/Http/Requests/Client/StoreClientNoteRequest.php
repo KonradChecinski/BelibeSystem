@@ -11,7 +11,7 @@ class StoreClientNoteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editClient", "user");
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreClientNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'text' => 'required|string',
+            'user' => 'required',
+            'user.id' => 'numeric|numeric',
+            'user.name' => 'required|string',
         ];
     }
 }

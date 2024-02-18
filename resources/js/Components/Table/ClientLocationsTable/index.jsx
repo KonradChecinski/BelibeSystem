@@ -88,7 +88,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
                         </Tooltip>
 
                         <DeleteClientLocationsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                     location={params.row}/>
+                                                     location={params.row} params={props}/>
                         <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
                                                       clickedLocation={params.row} params={props}/>
                     </>
