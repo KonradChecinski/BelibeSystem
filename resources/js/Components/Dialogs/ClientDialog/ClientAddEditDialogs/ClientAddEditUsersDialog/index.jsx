@@ -15,6 +15,10 @@ import {
     useClientUsersDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditUsersDialog/form/useClientUsersDialogForm";
 import {enqueueSnackbar} from "notistack";
+import {
+    addSchema,
+    editSchema
+} from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditUsersDialog/form/clientUsersDialogFormSchema";
 
 export default function ClientAddEditUsersDialog({
                                                      open,
@@ -29,14 +33,13 @@ export default function ClientAddEditUsersDialog({
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useClientUsersDialogForm();
-
-    // const [color, setColor] = useState({});
+    } = useClientUsersDialogForm(clickedUser ? editSchema : addSchema);
 
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         name: clickedUser ? clickedUser.name : '',
         email: clickedUser ? clickedUser.email : '',
+        password: '',
     })
 
     useEffect(() => {
@@ -45,10 +48,12 @@ export default function ClientAddEditUsersDialog({
         // inicjacja wartości pól
         setValue('name', clickedUser?.name);
         setValue('email', clickedUser?.email);
+        setValue('password', '')
 
         setData({
             name: clickedUser ? clickedUser.name : '',
             email: clickedUser ? clickedUser.email : '',
+            password: '',
         })
 
         console.log("data w useEffect: ", data);
@@ -76,6 +81,7 @@ export default function ClientAddEditUsersDialog({
         clearErrors()
         clrErrors("name")
         clrErrors("email")
+        clrErrors("password")
 
         // setClickedUser(null)
 
@@ -228,6 +234,26 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                     </Typography>
                 )}
             </Box>
+
+            <Box>
+                <TextField
+                    type="text"
+                    id="password"
+                    label={clickedUser ? "Hasło (uzupełnij w przypadku zmiany)" : "Hasło"}
+                    color={errors.password?.message && "error"}
+                    {...register("password")}
+                    onChange={(value) => {
+                        setData('password', value.target.value);
+                    }}
+                    defaultValue={data.password}
+                    sx={{width: "30ch", my: 1}}
+                />
+                {errors.password?.message && (
+                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                        {errors.password?.message.toString()}
+                    </Typography>
+                )}
+            </Box>
         </Box>
     );
 }
@@ -242,6 +268,11 @@ function Step2({data, errors}) {
 
             <TextField id="email" label="Email" variant="outlined"
                        value={data.email}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+            <TextField id={"password"} label={"Hasło (uzupełnij w przypadku zmiany)"} variant={"outlined"}
+                       value={data.password}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
