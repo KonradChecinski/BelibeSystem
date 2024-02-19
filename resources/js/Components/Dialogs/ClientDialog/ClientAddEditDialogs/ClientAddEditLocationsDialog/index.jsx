@@ -1,9 +1,9 @@
 import {
     Autocomplete,
-    Box, Button,
+    Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
-    DialogTitle, Paper,
+    DialogTitle, FormControl, FormControlLabel, Paper,
     Step,
     StepLabel,
     Stepper,
@@ -33,6 +33,7 @@ export default function ClientAddEditLocationsDialog({
     } = useClientLocationsDialogForm();
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
+        active: clickedLocation ? clickedLocation.active : 0,
         country: clickedLocation ? {
             id: clickedLocation.country.id,
             name: clickedLocation.country.name,
@@ -45,6 +46,8 @@ export default function ClientAddEditLocationsDialog({
         postal_code: clickedLocation ? clickedLocation.postal_code : '',
         note: clickedLocation ? clickedLocation.note : '',
     })
+
+    const [checked, setChecked] = useState(clickedLocation ? (clickedLocation.active !== 0) : false);
 
     useEffect(() => {
         console.log("Clicked location w useEffect: ", clickedLocation);
@@ -59,6 +62,7 @@ export default function ClientAddEditLocationsDialog({
         setValue('note', clickedLocation?.note);
 
         setData({
+            active: clickedLocation ? clickedLocation.active : 0,
             country: clickedLocation ? {
                 id: clickedLocation.country.id,
                 name: clickedLocation.country.name,
@@ -178,8 +182,11 @@ export default function ClientAddEditLocationsDialog({
                                 clickedLocation={clickedLocation}
                                 register={register}
                                 errors={fieldErrors}
+                                checked={checked}
+                                setChecked={setChecked}
                             /> : null}
-                        {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
+                        {activeStep === 1 ?
+                            <Step2 data={data} setData={setData} errors={errors} checked={checked}/> : null}
 
                     </DialogContent>
                     <DialogActions>
@@ -208,13 +215,37 @@ export default function ClientAddEditLocationsDialog({
     );
 }
 
-function Step1({data, params, setData, clickedLocation = null, register, errors}) {
+function Step1({data, params, setData, clickedLocation = null, register, errors, checked, setChecked}) {
     console.log(data)
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
             overflowY: "hidden", gap: 0.5
         }}>
+            <FormControl
+                sx={{width: "30ch", display: "flex", flexDirection: "column", alignItems: 'center', mb: 2}}
+            >
+                <FormControlLabel
+                    label={<Typography>Aktywna</Typography>}
+                    control={
+                        <Checkbox
+                            id="blacklist-select"
+                            label="Aktywna"
+                            size={"large"}
+                            checked={checked}
+                            onChange={(value) => {
+                                // setProductModel({...productModel, product_group_id: value.target.value});
+                                setChecked(value.target.checked)
+                                setData({
+                                    ...data,
+                                    active: value.target.checked ? 1 : 0,
+                                })
+                            }}
+                        />
+                    }
+                />
+            </FormControl>
+
             <Box>
                 <Autocomplete
                     id="country"
@@ -374,9 +405,26 @@ function Step1({data, params, setData, clickedLocation = null, register, errors}
     );
 }
 
-function Step2({data, errors}) {
+function Step2({data, errors, checked}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
+            <FormControl
+                sx={{width: "30ch", display: "flex", flexDirection: "column", alignItems: 'center', mb: 2}}
+            >
+                <FormControlLabel
+                    label={<Typography>Aktywna</Typography>}
+                    control={
+                        <Checkbox
+                            id="blacklist-select"
+                            label="Aktywna"
+                            size={"large"}
+                            checked={checked}
+                            disabled={true}
+                        />
+                    }
+                />
+            </FormControl>
+
             <TextField id="country" label="Kraj" variant="outlined"
                        value={data.country.name}
                        disabled={true}
