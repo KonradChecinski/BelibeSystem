@@ -13,6 +13,8 @@ import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import moment from "moment";
+import DeleteClientNotesDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientNotesDialog";
+import ClientAddEditNotesDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog";
 
 export default function ClientNotesTable({notes, readOnly, color, props}) {
     const theme = useTheme();
@@ -92,10 +94,11 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
                             </IconButton>
                         </Tooltip>
 
-                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                      product={params.row} last={products.length === 1}/>*/}
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+                        <DeleteClientNotesDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                 note={params.row}/>
+
+                        <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                  clickedNote={params.row} params={props}/>
                     </>
 
                 );
@@ -172,8 +175,8 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                              clickedNote={null} params={props}/>
                 </>
                 : ""
             }

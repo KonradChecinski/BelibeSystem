@@ -77,7 +77,7 @@ export default function NotesClientComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientNotesTable notes={props.client.notes} readOnly={!props.editing}/>
+                <ClientNotesTable notes={props.client.notes} readOnly={!props.editing} props={props}/>
             </Box>
 
 

@@ -318,7 +318,6 @@ export default function BasicClientInfoComponent(props) {
 
                             <Box>
                                 <TextField id="apartment_number" label="Numer lokalu" variant="outlined"
-                                           type={"number"}
                                            value={data.apartment_number ? data.apartment_number : ""}
                                            {...register("apartment_number")}
                                            color={fieldErrors.city?.message ? "error" : null}

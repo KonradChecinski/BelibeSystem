@@ -27,8 +27,8 @@ const schema = yup.object().shape({
         .required("Pole jest wymagane")
         .max(10, "Pole zawiera zbyt dużą ilość znaków"),
     apartment_number: yup
-        .number()
-        .nullable(),
+        .string()
+        .max(10, "Pole zawiera zbyt dużą ilość znaków"),
 
     phone: yup
         .string()
