@@ -187,7 +187,6 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
         </Typography>);
     })
 
-
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
@@ -199,6 +198,7 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                 {...register("name")}
                 defaultValue={data.name}
                 sx={{width: "30ch", my: 1}}
+                disabled={clickedUser.id === 1}
             />
             {errors.name?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -247,6 +247,7 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                     onChange={onChangeSelect}
                     value={data.roles}
                     renderValue={renderCell}
+                    disabled={clickedUser.id === 1}
                 >
                     {roles.map(role => {
                         return (

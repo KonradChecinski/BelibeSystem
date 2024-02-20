@@ -178,10 +178,17 @@ class SettingsUsersController extends Controller
      */
     public function update(UpdateSettingsUsersRequest $request, User $user)
     {
-        $validatedUserCredential = [
-            "name" => $request->name,
-            "email" => $request->email,
-        ];
+        if ($user->id == 1) {
+            $validatedUserCredential = [
+                "email" => $request->email,
+            ];
+        } else {
+            $validatedUserCredential = [
+                "name" => $request->name,
+                "email" => $request->email,
+            ];
+        }
+
 
         $user->update($validatedUserCredential);
         if ($user->id != 1) $user->syncRoles($request->roles);
@@ -193,7 +200,6 @@ class SettingsUsersController extends Controller
                 'remember_token' => Str::random(60),
             ])->save();
             event(new PasswordReset($user));
-
         }
 
 

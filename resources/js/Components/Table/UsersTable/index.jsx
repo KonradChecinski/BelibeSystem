@@ -64,6 +64,7 @@ export default function UsersTable(props) {
                 return (
                     <Switch
                         checked={true}
+                        disabled={params.row.id === 1}
                         // onChange={handleChange}
                         inputProps={{'aria-label': 'controlled'}}
                     />
@@ -124,7 +125,8 @@ export default function UsersTable(props) {
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
-                        <UserAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData} roles={props.roles} clickedUser={params.row}/>
+                        <UserAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}
+                                       roles={props.roles} clickedUser={params.row}/>
 
                     </>
                 );
