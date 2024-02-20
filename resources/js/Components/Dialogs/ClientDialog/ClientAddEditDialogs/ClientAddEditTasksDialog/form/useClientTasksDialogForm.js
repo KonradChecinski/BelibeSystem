@@ -9,8 +9,9 @@ export const useClientTasksDialogForm = () => {
         handleSubmit,
         formState: {errors},
         setValue,
-        clearErrors
+        clearErrors,
+        control
     } = useForm({resolver: yupResolver(schema)})
 
-    return {register, handleSubmit, errors, setValue, clearErrors}
+    return {register, handleSubmit, errors, setValue, clearErrors, control}
 }

@@ -18,7 +18,7 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {enqueueSnackbar} from "notistack";
-// import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {Controller} from 'react-hook-form';
 
 export default function ClientAddEditTasksDialog({
                                                      open,
@@ -33,13 +33,14 @@ export default function ClientAddEditTasksDialog({
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
+        control
     } = useClientTasksDialogForm();
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         title: clickedTask ? clickedTask.title : '',
         text: clickedTask ? clickedTask.text : '',
-        date: clickedTask ? moment(clickedTask.date) : moment(),//.format('YYYY-MM-DD'),
-        time: clickedTask ? moment(clickedTask.date + " " + clickedTask.time) : moment(),//.format('HH:mm'),
+        date: clickedTask ? moment(clickedTask.date) : moment(),
+        time: clickedTask ? moment(clickedTask.date + " " + clickedTask.time) : moment(),
     })
 
     useEffect(() => {
@@ -158,6 +159,7 @@ export default function ClientAddEditTasksDialog({
                                 clickedTask={clickedTask}
                                 register={register}
                                 errors={fieldErrors}
+                                control={control}
                             /> : null}
                         {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
 
@@ -188,7 +190,7 @@ export default function ClientAddEditTasksDialog({
     );
 }
 
-function Step1({data, setData, clickedTask = null, register, errors}) {
+function Step1({data, setData, clickedTask = null, register, errors, control}) {
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
@@ -220,6 +222,7 @@ function Step1({data, setData, clickedTask = null, register, errors}) {
                     id="text"
                     label="Treść"
                     multiline
+                    minRows={3}
                     color={errors.text?.message && "error"}
                     {...register("text")}
                     onChange={(value) => {
@@ -250,16 +253,38 @@ function Step1({data, setData, clickedTask = null, register, errors}) {
                 {/*/>*/}
 
                 <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                        label="Data"
-                        id="date"
-                        value={data.date}
-                        onChange={(value) => {
-                            setData('date', value);
-                            // setValue('') ???
-                        }}
-                        sx={{width: "30ch", my: 1}}
+                    <Controller
+                        control={control}
+                        name="date"
+                        defaultValue={data.date}
+                        render={({field}) => (
+                            <DatePicker
+                                {...field}
+                                label="Data"
+                                value={data.date}
+                                onChange={(value) => {
+                                    const newDate = moment(value);
+                                    const formattedDate = newDate.format("DD-MM-YYYY");
+                                    setData('date', formattedDate);
+                                    field.onChange(value);
+                                    console.log('New Date:', newDate); // Check if new date is correctly formatted
+                                    console.log('Data:', data); // Check if data object is updated
+                                }}
+                                sx={{width: "30ch", my: 1}}
+                            />
+                        )}
                     />
+
+                    {/*<DatePicker*/}
+                    {/*    label="Data"*/}
+                    {/*    id="date"*/}
+                    {/*    value={data.date}*/}
+                    {/*    onChange={(value) => {*/}
+                    {/*        setData('date', value.target.value);*/}
+                    {/*    }}*/}
+                    {/*    {...register("date")}*/}
+                    {/*    sx={{width: "30ch", my: 1}}*/}
+                    {/*/>*/}
                 </LocalizationProvider>
 
                 {errors.date?.message && (
@@ -289,8 +314,7 @@ function Step1({data, setData, clickedTask = null, register, errors}) {
                         id="time"
                         value={data.time}
                         onChange={(value) => {
-                            setData('time', value);
-                            // setValue('') ???
+                            setData('time', value.target.value);
                         }}
                         {...register("time")}
                         sx={{width: "30ch", my: 1}}
@@ -308,6 +332,9 @@ function Step1({data, setData, clickedTask = null, register, errors}) {
 }
 
 function Step2({data, errors}) {
+    const formattedDate = moment(data.date).format("DD-MM-YYYY")
+    const formattedTime = moment(data.time).format("HH:mm")
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="title" label="Tytuł" variant="outlined"
@@ -317,16 +344,18 @@ function Step2({data, errors}) {
 
             <TextField id="text" label="Treść" variant="outlined"
                        value={data.text}
+                       multiline
+                       minRows={3}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
             <TextField id="date" label="Data" variant="outlined"
-                       value={data.date}
+                       value={formattedDate}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
             <TextField id="time" label="Czas" variant="outlined"
-                       value={data.time}
+                       value={formattedTime}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

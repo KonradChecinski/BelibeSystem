@@ -387,6 +387,8 @@ function Step1({data, params, setData, clickedLocation = null, register, errors,
                     type="text"
                     id="note"
                     label="Notatka"
+                    multiline
+                    minRows={3}
                     color={errors.note?.message && "error"}
                     {...register("note")}
                     onChange={(value) => {
@@ -457,6 +459,8 @@ function Step2({data, errors, checked}) {
 
             <TextField id="note" label="Notatka" variant="outlined"
                        value={data.note}
+                       multiline
+                       minRows={3}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

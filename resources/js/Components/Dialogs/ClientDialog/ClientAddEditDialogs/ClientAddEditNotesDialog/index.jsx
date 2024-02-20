@@ -13,16 +13,10 @@ import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import moment from "moment";
 import {
-    useClientTasksDialogForm
-} from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditTasksDialog/form/useClientTasksDialogForm";
-import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
-import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
-import {enqueueSnackbar} from "notistack";
-import {
     useClientNotesDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog/form/useClientNotesDialogForm";
-import TextEditorB2B from "@/Components/TextEditor/B2B";
-// import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {TextareaAutosize} from '@mui/base/TextareaAutosize';
+
 
 export default function ClientAddEditNotesDialog({
                                                      open,
@@ -192,6 +186,7 @@ function Step1({data, setData, clickedNote = null, register, errors}) {
                     id="text"
                     label="Treść"
                     multiline
+                    minRows={3}
                     color={errors.text?.message && "error"}
                     {...register("text")}
                     onChange={(value) => {
@@ -211,12 +206,14 @@ function Step1({data, setData, clickedNote = null, register, errors}) {
 }
 
 function Step2({data, errors}) {
-    let date = moment(data.date).format("YYYY-MM-DD H:m:s")
+    let date = moment(data.date).format("YYYY-MM-DD HH:mm:ss")
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="text" label="Treść" variant="outlined"
                        value={data.text}
+                       multiline
+                       minRows={3}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

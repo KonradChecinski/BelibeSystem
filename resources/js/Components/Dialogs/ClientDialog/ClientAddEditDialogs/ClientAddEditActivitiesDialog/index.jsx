@@ -259,8 +259,9 @@ function Step1({data, setData, params, clickedActivity = null, register, errors}
                     id="description"
                     label="Opis"
                     multiline
+                    minRows={3}
                     color={errors.description?.message && "error"}
-                    {...register("text")}
+                    {...register("description")}
                     onChange={(value) => {
                         setData('description', value.target.value);
                     }}
@@ -388,12 +389,13 @@ function Step2({data, errors}) {
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="type" label="Typ" variant="outlined"
                        value={data.type.label}
-
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
             <TextField id="description" label="Opis" variant="outlined"
                        value={data.description}
+                       multiline
+                       minRows={3}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
