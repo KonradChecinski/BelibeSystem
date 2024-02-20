@@ -14,6 +14,7 @@ import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDi
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientTaskDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientTaskDialog";
 import ClientAddEditTasksDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditTasksDialog";
+import moment from "moment/moment";
 
 export default function ClientTasksTable({tasks, readOnly, color, props}) {
     const theme = useTheme();
@@ -31,8 +32,28 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
         {field: "id", headerName: "Id"},
         {field: "title", headerName: "Tytuł", width: 200},
         {field: "text", headerName: "Treść", flex: 1},
-        {field: "date", headerName: "Data", width: 100},
-        {field: "time", headerName: "Godzina", width: 100},
+        {
+            field: "user_id",
+            headerName: "Użytkownik",
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.user?.name}</Typography>
+                    </Box>
+                );
+            }
+        },
+        {
+            field: "datetime", headerName: "Data i godzina", width: 150,
+            renderCell: (params) => {
+                let date = moment(params.value)
+                return (
+                    <Box>
+                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
+                    </Box>
+                );
+            }
+        },
     ];
 
 
@@ -156,7 +177,7 @@ export default function ClientTasksTable({tasks, readOnly, color, props}) {
                     </Box>
 
                     <ClientAddEditTasksDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                              clickedTask={null}/>
+                                              clickedTask={null} params={props}/>
                 </>
                 : ""
             }

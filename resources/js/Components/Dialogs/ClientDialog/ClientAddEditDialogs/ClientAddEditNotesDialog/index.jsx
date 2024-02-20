@@ -1,4 +1,5 @@
 import {
+    Autocomplete,
     Box, Button,
     Dialog, DialogActions,
     DialogContent,
@@ -16,6 +17,7 @@ import {
     useClientNotesDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog/form/useClientNotesDialogForm";
 import {TextareaAutosize} from '@mui/base/TextareaAutosize';
+import {enqueueSnackbar} from "notistack";
 
 
 export default function ClientAddEditNotesDialog({
@@ -35,15 +37,27 @@ export default function ClientAddEditNotesDialog({
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         text: clickedNote ? clickedNote.text : '',
-        user: clickedNote ? clickedNote.user : params.auth.user.name,
-        date: clickedNote ? clickedNote.date : moment(),
+        user: clickedNote ? {
+            id: clickedNote.user.id,
+            name: clickedNote.user.name,
+            label: clickedNote.user.name,
+        } : null,
     })
 
     useEffect(() => {
         // inicjacja wartości pól
         setValue('text', data.text)
+        setValue('user', clickedNote?.user)
 
-        setData({text: clickedNote ? clickedNote.text : ''})
+
+        setData({
+            text: clickedNote ? clickedNote.text : '',
+            user: clickedNote ? {
+                id: clickedNote.user.id,
+                name: clickedNote.user.name,
+                label: clickedNote.user.name,
+            } : null,
+        })
 
         console.log("data w useEffect: ", data);
     }, [setValue, clickedNote]);
@@ -69,48 +83,49 @@ export default function ClientAddEditNotesDialog({
     const handleClose = () => {
         clearErrors()
         clrErrors("text")
+        clrErrors("user")
 
         setActiveStep(0);
         setOpen(false);
     }
 
     const save = () => {
-        // if (clickedTask) {
-        //     patch(route("system.clients.client.task.update", {
-        //             client: params.client.id,
-        //             clientTask: clickedTask.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano zadanie", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji zadania", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.clients.client.task.color", {client: params.client.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano zadanie", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu zadania", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedNote) {
+            patch(route("system.clients.client.note.update", {
+                    client: params.client.id,
+                    clientNote: clickedNote.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano notatkę", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji notatki", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.note", {client: params.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano notatkę", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu notatki", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 
@@ -141,11 +156,13 @@ export default function ClientAddEditNotesDialog({
                             <Step1
                                 data={data}
                                 setData={setData}
+                                params={params}
                                 clickedNote={clickedNote}
                                 register={register}
                                 errors={fieldErrors}
                             /> : null}
-                        {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
+                        {activeStep === 1 ?
+                            <Step2 data={data} setData={setData} params={params} errors={errors}/> : null}
 
                     </DialogContent>
                     <DialogActions>
@@ -174,7 +191,7 @@ export default function ClientAddEditNotesDialog({
     );
 }
 
-function Step1({data, setData, clickedNote = null, register, errors}) {
+function Step1({data, setData, params, clickedNote = null, register, errors}) {
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
@@ -201,11 +218,49 @@ function Step1({data, setData, clickedNote = null, register, errors}) {
                     </Typography>
                 )}
             </Box>
+            {params.auth.permissions.includes("changeUserInClientRelation") ?
+                <Box>
+                    <Autocomplete
+                        id="user"
+                        options={params.user.map(e => ({
+                            id: e.id,
+                            name: e.name,
+                            label: e.name
+                        }))}
+                        sx={{width: "30ch"}}
+                        value={data.user}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        onChange={(e, value) => {
+                            setData({
+                                ...data,
+                                user: value,
+                            })
+                        }}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                label="Użytkownik"
+                                sx={{my: 1}}
+                                {...register("user")}
+                                value={data.user}
+                                color={errors.user?.message && "error"}
+                            />
+                        }
+                    />
+                    {errors.user?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                            {errors.user?.message.toString()}
+                        </Typography>
+                    )}
+                </Box>
+                : null
+            }
+
         </Box>
     );
 }
 
-function Step2({data, errors}) {
+function Step2({data, params, errors}) {
     let date = moment(data.date).format("YYYY-MM-DD HH:mm:ss")
 
     return (
@@ -217,12 +272,19 @@ function Step2({data, errors}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-            <TextField id="date" label="Data" variant="outlined"
-                       value={date}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1, mt: 4}}
+            {/*<TextField id="date" label="Data" variant="outlined"*/}
+            {/*           value={date}*/}
+            {/*           disabled={true}*/}
+            {/*           sx={{width: "30ch", my: 1, mt: 4}}*/}
 
-            />
+            {/*/>*/}
+            {params.auth.permissions.includes("changeUserInClientRelation") ?
+                <TextField id="user" label="Użytkownik" variant="outlined"
+                           value={data.user.label}
+                           disabled={true}
+                           sx={{width: "30ch", my: 1}}/>
+                : null
+            }
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>

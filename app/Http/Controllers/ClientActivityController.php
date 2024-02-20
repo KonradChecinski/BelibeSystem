@@ -32,8 +32,14 @@ class ClientActivityController extends Controller
     {
         $clientActivity = new ClientActivity($request->all());
         $clientActivity->client()->associate($client);
-        $clientActivity->user()->associate($request->user["id"]);
         $clientActivity->activityType()->associate($request->type["id"]);
+
+        if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
+            $clientActivity->user()->associate($request->user["id"]);
+        } else {
+            $clientActivity->user()->associate(auth()->user());
+        }
+
         $clientActivity->save();
     }
 
@@ -61,8 +67,11 @@ class ClientActivityController extends Controller
         if ($clientActivity->client != $client) abort(403);
 
         $clientActivity->update($request->all());
-        $clientActivity->user()->associate($request->user["id"]);
         $clientActivity->activityType()->associate($request->type["id"]);
+
+        if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
+            $clientActivity->user()->associate($request->user["id"]);
+        }
         $clientActivity->save();
     }
 

@@ -16,6 +16,7 @@ import DeleteClientActivityDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientActivityDialog";
 import ClientAddEditActivitiesDialog
     from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog";
+import moment from "moment/moment";
 
 export default function ClientActivityTable({activities, readOnly, color, props}) {
     const theme = useTheme();
@@ -42,24 +43,11 @@ export default function ClientActivityTable({activities, readOnly, color, props}
                 );
             }
         },
-        {field: "description", headerName: "Opis", width: 350},
-        {
-            field: "date",
-            headerName: "Data",
-            sortable: false,
-            filterable: false,
-            // width: 160
-        },
-        {
-            field: "time",
-            headerName: "Godzina",
-            sortable: false,
-            filterable: false,
-            // width: 160
-        },
+        {field: "description", headerName: "Opis", flex: 1},
+
         {
             field: "user_id",
-            headerName: "Kto", sortable: false,
+            headerName: "Użytkownik", sortable: false,
             filterable: false,
             renderCell: (params) => {
                 return (
@@ -69,6 +57,19 @@ export default function ClientActivityTable({activities, readOnly, color, props}
                 );
             }
             // width: 300
+        },
+        {
+            field: "datetime",
+            headerName: "Data i godzina",
+            width: 150,
+            renderCell: (params) => {
+                let date = moment(params.value)
+                return (
+                    <Box>
+                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
+                    </Box>
+                );
+            }
         },
     ];
 

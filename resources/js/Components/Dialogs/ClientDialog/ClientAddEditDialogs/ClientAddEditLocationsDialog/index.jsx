@@ -57,7 +57,7 @@ export default function ClientAddEditLocationsDialog({
         setValue('city', clickedLocation?.city);
         setValue('street', clickedLocation?.street);
         setValue('building_number', clickedLocation?.building_number);
-        setValue('apartment_number', clickedLocation?.apartment_number);
+        setValue('apartment_number', clickedLocation?.apartment_number ? clickedLocation?.apartment_number : '');
         setValue('postal_code', clickedLocation?.postal_code);
         setValue('note', clickedLocation?.note);
 

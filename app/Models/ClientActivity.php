@@ -14,10 +14,13 @@ class ClientActivity extends Model
     protected $fillable = [
         'client_id',
         'activity_type_id',
-        'date',
-        'time',
+        'datetime',
         'description',
         'user_id',
+    ];
+
+    protected $casts = [
+        'datetime' => 'datetime',
     ];
 
     public function client(): BelongsTo

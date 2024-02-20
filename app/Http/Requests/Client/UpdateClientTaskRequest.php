@@ -24,8 +24,7 @@ class UpdateClientTaskRequest extends FormRequest
         return [
             'title' => 'required|string',
             'text' => 'required|string',
-            'date' => 'required|date',
-            'time' => 'required|time',
+            'datetime' => 'required|date',
         ];
     }
 }

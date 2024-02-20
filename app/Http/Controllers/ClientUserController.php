@@ -7,8 +7,10 @@ use App\Http\Requests\Auth\UpdateClientUserRequest;
 use App\Models\Client\Client;
 use App\Models\Client\ClientUser;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
 class ClientUserController extends Controller
@@ -73,9 +75,16 @@ class ClientUserController extends Controller
         $validatedClientUserCredential = [
             "name" => $request->name,
             "email" => $request->email,
-            "password" => Hash::make($request->password),
         ];
         $clientUser->update($validatedClientUserCredential);
+
+        if (strlen($request->password) > 0) {
+            $clientUser->forceFill([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60),
+            ])->save();
+            event(new PasswordReset($clientUser));
+        }
     }
 
     /**
@@ -84,7 +93,7 @@ class ClientUserController extends Controller
     public function destroy(Client $client, ClientUser $clientUser)
     {
         if ($clientUser->client != $client) abort(403);
-        
+
         $clientUser->delete();
 //        dd($clientUser);
     }

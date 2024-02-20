@@ -32,6 +32,12 @@ class ClientTaskController extends Controller
     {
         $clientTask = new ClientTask($request->all());
         $clientTask->client()->associate($client);
+
+        if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
+            $clientTask->user()->associate($request->user["id"]);
+        } else {
+            $clientTask->user()->associate(auth()->user());
+        }
         $clientTask->save();
     }
 
@@ -59,6 +65,11 @@ class ClientTaskController extends Controller
         if ($clientTask->client != $client) abort(403);
 
         $clientTask->update($request->all());
+
+        if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
+            $clientTask->user()->associate($request->user["id"]);
+            $clientTask->save();
+        }
 //        $clientTask->save();
     }
 

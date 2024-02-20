@@ -47,6 +47,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
         {field: "apartment_number", headerName: "Numer lokalu"},
         {field: "postal_code", headerName: "Kod pocztowy"},
         {field: "note", headerName: "Notatka", flex: 1},
+        {field: "active", headerName: "Aktywność", type: "boolean"},
     ];
 
 

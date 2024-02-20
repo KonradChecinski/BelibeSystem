@@ -15,8 +15,7 @@ return new class extends Migration {
             $table->foreignId("client_id")->references("id")->on("clients")->restrictOnDelete();
             $table->string("title", 100);
             $table->text("text");
-            $table->date("date");
-            $table->time("time");
+            $table->dateTime("datetime");
             $table->foreignId("user_id")->references("id")->on("users")->restrictOnDelete();
             $table->timestamps();
         });

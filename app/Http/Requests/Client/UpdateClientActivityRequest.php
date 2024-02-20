@@ -26,11 +26,10 @@ class UpdateClientActivityRequest extends FormRequest
             'type.id' => 'required|numeric',
             'type.name' => 'required|string',
             'description' => 'required|string',
-            'date' => 'required|date',
-            'time' => 'required|time',
-            'user' => 'required',
-            'user.id' => 'numeric|numeric',
-            'user.name' => 'required|string',
+            'datetime' => 'required|date',
+            'user' => '',
+            'user.id' => 'numeric',
+            'user.name' => 'string',
         ];
     }
 }

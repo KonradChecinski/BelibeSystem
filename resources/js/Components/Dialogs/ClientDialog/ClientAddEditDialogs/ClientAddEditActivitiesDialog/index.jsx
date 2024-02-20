@@ -16,9 +16,10 @@ import moment from "moment";
 import {
     useClientActivitiesDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog/form/useClientActivitiesDialogForm";
-import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
+import {DatePicker, DateTimePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {enqueueSnackbar} from "notistack";
+import {Controller} from "react-hook-form";
 // import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
 export default function ClientAddEditActivitiesDialog({
@@ -34,6 +35,7 @@ export default function ClientAddEditActivitiesDialog({
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
+        control
     } = useClientActivitiesDialogForm();
 
     console.log("clickedActivity: ", clickedActivity)
@@ -45,8 +47,7 @@ export default function ClientAddEditActivitiesDialog({
             label: clickedActivity.activity_type.name,
         } : null,
         description: clickedActivity ? clickedActivity.description : '',
-        date: clickedActivity ? moment(clickedActivity.date) : moment(),//.format('YYYY-MM-DD'),
-        time: clickedActivity ? moment(clickedActivity.date + " " + clickedActivity.time) : moment(),//.format('HH:mm'),
+        datetime: clickedActivity ? moment(clickedActivity.datetime) : moment(),//.format('YYYY-MM-DD'),
         user: clickedActivity ? {
             id: clickedActivity.user.id,
             name: clickedActivity.user.name,
@@ -58,8 +59,7 @@ export default function ClientAddEditActivitiesDialog({
         // inicjacja wartości pól
         setValue('type', clickedActivity?.activity_type?.name)
         setValue('description', clickedActivity?.description)
-        setValue('date', clickedActivity?.date)
-        setValue('time', clickedActivity?.time)
+        setValue('datetime', clickedActivity?.datetime)
         setValue('user', clickedActivity?.user)
 
         setData({
@@ -69,8 +69,7 @@ export default function ClientAddEditActivitiesDialog({
                 label: clickedActivity.activity_type.name,
             } : null,
             description: clickedActivity ? clickedActivity.description : '',
-            date: clickedActivity ? moment(clickedActivity.date) : moment(),//.format('YYYY-MM-DD'),
-            time: clickedActivity ? moment(clickedActivity.date + " " + clickedActivity.time) : moment(),//.format('HH:mm'),
+            datetime: clickedActivity ? moment(clickedActivity.datetime) : moment(),//.format('YYYY-MM-DD'),
             user: clickedActivity ? {
                 id: clickedActivity.user.id,
                 name: clickedActivity.user.name,
@@ -103,8 +102,7 @@ export default function ClientAddEditActivitiesDialog({
         clearErrors()
         clrErrors("type")
         clrErrors("description")
-        clrErrors("date")
-        clrErrors("time")
+        clrErrors("datetime")
         clrErrors("user")
 
         setActiveStep(0);
@@ -182,8 +180,10 @@ export default function ClientAddEditActivitiesDialog({
                                 clickedActivity={clickedActivity}
                                 register={register}
                                 errors={fieldErrors}
+                                control={control}
                             /> : null}
-                        {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors}/> : null}
+                        {activeStep === 1 ?
+                            <Step2 data={data} setData={setData} params={params} errors={errors}/> : null}
 
                     </DialogContent>
                     <DialogActions>
@@ -212,7 +212,7 @@ export default function ClientAddEditActivitiesDialog({
     );
 }
 
-function Step1({data, setData, params, clickedActivity = null, register, errors}) {
+function Step1({data, setData, params, clickedActivity = null, register, errors, control}) {
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
@@ -275,39 +275,6 @@ function Step1({data, setData, params, clickedActivity = null, register, errors}
                 )}
             </Box>
 
-            <Box>
-                {/*<TextField*/}
-                {/*    type="date"*/}
-                {/*    id="date"*/}
-                {/*    label="Data"*/}
-                {/*    color={errors.date?.message && "error"}*/}
-                {/*    {...register("date")}*/}
-                {/*    onChange={(value) => {*/}
-                {/*        setData('date', value.target.value);*/}
-                {/*    }}*/}
-                {/*    defaultValue={data.date}*/}
-                {/*    sx={{width: "30ch", my: 1}}*/}
-                {/*/>*/}
-
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                        label="Data"
-                        id="date"
-                        value={data.date}
-                        onChange={(value) => {
-                            setData('date', value);
-                            // setValue('') ???
-                        }}
-                        sx={{width: "30ch", my: 1}}
-
-                    />
-                </LocalizationProvider>
-                {errors.date?.message && (
-                    <Typography variant="body2" color="error" sx={{ml: 1}}>
-                        {errors.date?.message.toString()}
-                    </Typography>
-                )}
-            </Box>
 
             <Box>
                 {/*<TextField*/}
@@ -328,63 +295,92 @@ function Step1({data, setData, params, clickedActivity = null, register, errors}
                 {/*    </Typography>*/}
                 {/*)}*/}
                 <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <TimePicker
-                        label="Czas"
-                        id="time"
-                        value={data.time}
-                        onChange={(value) => {
-                            setData('time', value);
-                            // setValue('') ???
-                        }}
-                        sx={{width: "30ch", my: 1}}
+                    <Controller
+                        control={control}
+                        name="datetime"
+                        defaultValue={data.datetime}
+                        render={({field}) => (
+                            <DateTimePicker
+                                {...field}
+                                label="Data i czas"
+                                value={data.datetime}
+                                onChange={(value) => {
+                                    const newDate = moment(value);
+                                    // const formattedDate = newDate.format("DD-MM-YYYY HH:mm:ss");
+                                    setData('datetime', newDate);
+                                    field.onChange(value);
+                                    console.log('New Date:', newDate); // Check if new date is correctly formatted
+                                    console.log('Data:', data); // Check if data object is updated
+                                }}
+                                sx={{width: "30ch", my: 1}}
+                            />
+                        )}
                     />
+
+                    {/*<DatePicker*/}
+                    {/*    label="Data"*/}
+                    {/*    id="date"*/}
+                    {/*    value={data.date}*/}
+                    {/*    onChange={(value) => {*/}
+                    {/*        setData('date', value.target.value);*/}
+                    {/*    }}*/}
+                    {/*    {...register("date")}*/}
+                    {/*    sx={{width: "30ch", my: 1}}*/}
+                    {/*/>*/}
                 </LocalizationProvider>
-                {errors.time?.message && (
+
+                {errors.datetime?.message && (
                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                        {errors.time?.message.toString()}
+                        {errors.date?.message.toString()}
                     </Typography>
                 )}
             </Box>
 
-            <Box>
-                <Autocomplete
-                    id="user"
-                    options={params.user.map(e => ({
-                        id: e.id,
-                        name: e.name,
-                        label: e.name
-                    }))}
-                    sx={{width: "30ch"}}
-                    value={data.user}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    onChange={(e, value) => {
-                        setData({
-                            ...data,
-                            user: value,
-                        })
-                    }}
-                    renderInput={(params) =>
-                        <TextField
-                            {...params}
-                            label="Kto"
-                            sx={{my: 1}}
-                            {...register("user")}
-                            value={data.user}
-                            color={errors.user?.message && "error"}
-                        />
-                    }
-                />
-                {errors.user?.message && (
-                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
-                        {errors.user?.message.toString()}
-                    </Typography>
-                )}
-            </Box>
+            {params.auth.permissions.includes("changeUserInClientRelation") ?
+                <Box>
+                    <Autocomplete
+                        id="user"
+                        options={params.user.map(e => ({
+                            id: e.id,
+                            name: e.name,
+                            label: e.name
+                        }))}
+                        sx={{width: "30ch"}}
+                        value={data.user}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        onChange={(e, value) => {
+                            setData({
+                                ...data,
+                                user: value,
+                            })
+                        }}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                label="Użytkownik"
+                                sx={{my: 1}}
+                                {...register("user")}
+                                value={data.user}
+                                color={errors.user?.message && "error"}
+                            />
+                        }
+                    />
+                    {errors.user?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                            {errors.user?.message.toString()}
+                        </Typography>
+                    )}
+                </Box>
+                : null
+            }
+
         </Box>
     );
 }
 
-function Step2({data, errors}) {
+function Step2({data, params, errors}) {
+    const formattedDateTime = moment(data.datetime).format("DD-MM-YYYY HH:mm")
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="type" label="Typ" variant="outlined"
@@ -399,21 +395,19 @@ function Step2({data, errors}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-            <TextField id="date" label="Data" variant="outlined"
-                       value={data.date}
+            <TextField id="datetime" label="Data i czas" variant="outlined"
+                       value={formattedDateTime}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-            <TextField id="time" label="Czas" variant="outlined"
-                       value={data.time}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
+            {params.auth.permissions.includes("changeUserInClientRelation") ?
 
-            <TextField id="user" label="Kto" variant="outlined"
-                       value={data.user.label}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
-
+                <TextField id="user" label="Użytkownik" variant="outlined"
+                           value={data.user.label}
+                           disabled={true}
+                           sx={{width: "30ch", my: 1}}/>
+                : null
+            }
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>

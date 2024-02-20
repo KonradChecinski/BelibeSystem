@@ -8,12 +8,13 @@ import {
 import Draggable from "react-draggable";
 import moment from "moment";
 import {useForm} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 export default function DeleteClientNotesDialog({open, setOpen, note, last, params}) {
 
-    // const {data, setData, delete: destroy, processing, errors, reset} = useForm({
-    //     task: task.id,
-    // })
+    const {data, setData, delete: destroy, processing, errors, reset} = useForm({
+        note: note.id,
+    })
 
     let date = moment(note.created_at)
 
@@ -22,21 +23,20 @@ export default function DeleteClientNotesDialog({open, setOpen, note, last, para
     };
 
     const save = () => {
-        // console.log(task)
-        // destroy(route("system.clients.client.task.delete", {client: params.client.id, clientTask: task}),
-        //
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             enqueueSnackbar(`Usunięto zadanie ${task.id} - ${task.title}`, {variant: 'success'})
-        //             handleClose();
-        //         },
-        //         onError: errors => {
-        //             enqueueSnackbar(`Błąd przy usuwaniu zadania ${task.id} - ${task.title}`, {variant: 'error'})
-        //             console.error(errors)
-        //         }
-        //     })
-        //
+        destroy(route("system.clients.client.note.delete", {client: params.client.id, clientNote: note}),
+
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    enqueueSnackbar(`Usunięto notatkę ${task.id} - ${task.title}`, {variant: 'success'})
+                    handleClose();
+                },
+                onError: errors => {
+                    enqueueSnackbar(`Błąd przy usuwaniu notatki ${task.id} - ${task.title}`, {variant: 'error'})
+                    console.error(errors)
+                }
+            })
+
 
     }
 

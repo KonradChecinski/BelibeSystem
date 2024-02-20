@@ -23,9 +23,9 @@ class UpdateClientNoteRequest extends FormRequest
     {
         return [
             'text' => 'required|string',
-            'user' => 'required',
-            'user.id' => 'numeric|numeric',
-            'user.name' => 'required|string',
+            'user' => '',
+            'user.id' => 'numeric',
+            'user.name' => 'string',
         ];
     }
 }

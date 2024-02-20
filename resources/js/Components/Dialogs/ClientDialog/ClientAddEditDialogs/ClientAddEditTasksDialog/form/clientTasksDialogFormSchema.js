@@ -7,10 +7,7 @@ const schema = yup.object().shape({
     text: yup
         .string()
         .required("Pole jest wymagane"),
-    date: yup
-        .string()
-        .required("Pole jest wymagane"),
-    time: yup
+    datetime: yup
         .string()
         .required("Pole jest wymagane"),
 })

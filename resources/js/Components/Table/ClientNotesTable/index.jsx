@@ -33,7 +33,7 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
         {field: "text", headerName: "Treść", flex: 1},
         {
             field: "user_id",
-            headerName: "Dodana przez",
+            headerName: "Użytkownik",
             renderCell: (params) => {
                 return (
                     <Box>
@@ -43,12 +43,12 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
             }
         },
         {
-            field: "created_at", headerName: "Kiedy", width: 200,
+            field: "created_at", headerName: "Data i godzina", width: 150,
             renderCell: (params) => {
                 let date = moment(params.value)
                 return (
                     <Box>
-                        <Typography>{date.format("YYYY-MM-DD H:m:s")}</Typography>
+                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
                     </Box>
                 );
             }
@@ -95,7 +95,7 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
                         </Tooltip>
 
                         <DeleteClientNotesDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                 note={params.row}/>
+                                                 note={params.row} params={props}/>
 
                         <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
                                                   clickedNote={params.row} params={props}/>
