@@ -5,6 +5,8 @@ import {Add, Edit} from "@mui/icons-material";
 import RoleCell from "@/Components/Table/UsersTable/RoleCell";
 import UserAvatar from "@/Components/UserAvatar";
 import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
+import {router, useForm} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 export default function UsersTable(props) {
     const url = route(route().current()) + "/data";
@@ -55,17 +57,69 @@ export default function UsersTable(props) {
             }
         },
         {
-            field: "activate",
+            field: "active",
             headerName: "Aktywność",
             width: 100,
             sortable: false,
             filterable: false,
             renderCell: (params) => {
+                const handleChangeActive = () => {
+                    router.patch(route("system.settings.users.update.active", {user: params.row.id}),
+                        {
+                            active: !Boolean(params.value)
+                        },
+                        {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                enqueueSnackbar("Zaktualizowano użytkownika", {variant: 'success'})
+                                reloadData();
+                            },
+                            onError: errors => {
+                                enqueueSnackbar("Błąd przy aktualizacji użytkownika", {variant: 'error'})
+                                console.error(errors)
+                            },
+                        })
+                }
                 return (
                     <Switch
-                        checked={true}
+                        checked={Boolean(params.value)}
                         disabled={params.row.id === 1}
-                        // onChange={handleChange}
+                        onChange={handleChangeActive}
+                        inputProps={{'aria-label': 'controlled'}}
+                    />
+                );
+            }
+        },
+        {
+            field: "account_manager",
+            headerName: "Handlowiec",
+            width: 100,
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                const handleChangeAccountManager = () => {
+                    router.patch(route("system.settings.users.update.accountManager", {user: params.row.id}),
+                        {
+                            account_manager: !Boolean(params.value)
+                        },
+                        {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                enqueueSnackbar("Zaktualizowano użytkownika", {variant: 'success'})
+                                reloadData();
+                            },
+                            onError: errors => {
+                                enqueueSnackbar("Błąd przy aktualizacji użytkownika", {variant: 'error'})
+                                console.error(errors)
+                            },
+                        })
+                }
+
+                return (
+                    <Switch
+                        checked={Boolean(params.value)}
+                        disabled={params.row.id === 1}
+                        onChange={handleChangeAccountManager}
                         inputProps={{'aria-label': 'controlled'}}
                     />
                 );
@@ -133,6 +187,7 @@ export default function UsersTable(props) {
             }
         }
     ];
+
     const columnVisibility = {
         id: false
     };
@@ -181,8 +236,8 @@ export default function UsersTable(props) {
             search: filterModel.quickFilterValues,
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {

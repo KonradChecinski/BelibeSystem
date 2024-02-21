@@ -35,6 +35,8 @@ use App\Http\Controllers\Settings\SettingsMainController;
 use App\Http\Controllers\Settings\SettingsPermissionsController;
 use App\Http\Controllers\Settings\SettingsRolesController;
 use App\Http\Controllers\Settings\SettingsUsersController;
+use App\Http\Controllers\SettingsUsersAccountManagerController;
+use App\Http\Controllers\SettingsUsersActiveController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\XmlGeneratorController;
 use App\Models\ClientLocation;
@@ -139,6 +141,8 @@ Route::middleware("auth:user")->group(function () {
         Route::get("/user", [SettingsUsersController::class, 'index'])->name("system.settings.users");
         Route::post("/user", [SettingsUsersController::class, 'store'])->name("system.settings.users.create");
         Route::patch("/user/{user}", [SettingsUsersController::class, 'update'])->name("system.settings.users.update");
+        Route::patch("/user/{user}/active", [SettingsUsersActiveController::class, 'update'])->name("system.settings.users.update.active");
+        Route::patch("/user/{user}/accountManager", [SettingsUsersAccountManagerController::class, 'update'])->name("system.settings.users.update.accountManager");
         Route::get("/user/data", [SettingsUsersController::class, 'data']);
 
         Route::get("/permissions", [SettingsPermissionsController::class, 'index'])->name("system.settings.permissions");

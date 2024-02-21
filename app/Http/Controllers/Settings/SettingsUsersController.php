@@ -35,6 +35,8 @@ class SettingsUsersController extends Controller
             'id',
             'name',
             'email',
+            'active',
+            'account_manager'
         ];
 
         $models = User::with("roles");
@@ -42,9 +44,9 @@ class SettingsUsersController extends Controller
 
         if ($request->search) {
             foreach (json_decode($request->search) as $word) {
-                $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
-                $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
-                $models = $models->orWhere('email', 'LIKE', '%' . $word . '%');
+                foreach ($mainColumn as $item) {
+                    $models = $models->orWhere($item, 'LIKE', '%' . $word . '%');
+                }
             }
         }
 
@@ -127,7 +129,7 @@ class SettingsUsersController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get()->toArray());
-        $models = $models->paginate($request->limit, ['id', 'name', 'email', 'email_verified_at']);
+        $models = $models->paginate($request->limit, ['id', 'name', 'email', 'email_verified_at', 'active', 'account_manager']);
         return response()->json([$models]);
     }
 

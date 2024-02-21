@@ -22,6 +22,7 @@ use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\CreateTowarInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\B2bActivityType;
 use App\Models\B2bCountry;
 use App\Models\B2bIndustry;
@@ -241,12 +242,15 @@ class ClientController extends Controller
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
         $b2bIndustry = B2bIndustry::all();
-        $users = User::query()->whereNotNull("email_verified_at")->get();
+        $users = User::query()->where("active", true)->where("account_manager", true)->get();
 
-        $productModels = ProductModel::all();
-        $productCategories = ProductCategory::all();
-        $productGroups = ProductGroup::all();
-        $productBrands = ProductBrand::all();
+
+        $productModels = ProductModel::whereHas("products", function (Builder $query) {
+            $query->where('show_in_b2b', true);
+        })->get(["id", "symbol", "name"]);
+        $productCategories = ProductCategory::all(["id", "name"]);
+        $productGroups = ProductGroup::all(["id", "name"]);
+        $productBrands = ProductBrand::all(["id", "name"]);
 
         return Inertia::render("Clients/Client", [
             "client" => $client,
@@ -284,12 +288,14 @@ class ClientController extends Controller
         $b2bSourceOfAcquisition = B2bSourceOfAcquisition::all();
         $b2bStatus = B2bStatus::all();
         $b2bIndustry = B2bIndustry::all();
-        $users = User::query()->whereNotNull("email_verified_at")->get();
+        $users = User::query()->where("active", true)->where("account_manager", true)->get();
 
-        $productModels = ProductModel::all();
-        $productCategories = ProductCategory::all();
-        $productGroups = ProductGroup::all();
-        $productBrands = ProductBrand::all();
+        $productModels = ProductModel::whereHas("products", function (Builder $query) {
+            $query->where('show_in_b2b', true);
+        })->get(["id", "symbol", "name"]);
+        $productCategories = ProductCategory::all(["id", "name"]);
+        $productGroups = ProductGroup::all(["id", "name"]);
+        $productBrands = ProductBrand::all(["id", "name"]);
 
         return Inertia::render("Clients/Client", [
             "editing" => true,
