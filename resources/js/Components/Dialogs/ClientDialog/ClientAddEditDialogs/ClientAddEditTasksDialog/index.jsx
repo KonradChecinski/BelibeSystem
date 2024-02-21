@@ -207,7 +207,7 @@ function Step1({data, setData, params, clickedTask = null, register, errors, con
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
-            overflowY: "hidden", gap: 0.5
+            overflowY: "hidden", gap: 1
         }}>
             <Box>
                 <TextField
@@ -287,22 +287,10 @@ function Step1({data, setData, params, clickedTask = null, register, errors, con
                             />
                         )}
                     />
-
-                    {/*<DatePicker*/}
-                    {/*    label="Data"*/}
-                    {/*    id="date"*/}
-                    {/*    value={data.date}*/}
-                    {/*    onChange={(value) => {*/}
-                    {/*        setData('date', value.target.value);*/}
-                    {/*    }}*/}
-                    {/*    {...register("date")}*/}
-                    {/*    sx={{width: "30ch", my: 1}}*/}
-                    {/*/>*/}
                 </LocalizationProvider>
-
                 {errors.datetime?.message && (
                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                        {errors.date?.message.toString()}
+                        {errors.datetime?.message.toString()}
                     </Typography>
                 )}
             </Box>

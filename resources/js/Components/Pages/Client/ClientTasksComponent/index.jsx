@@ -16,8 +16,8 @@ import TaskIcon from '@mui/icons-material/Task';
 
 
 export default function ClientTasksComponent(props) {
+    console.log("Propsy: ", props)
     return (
-
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
             <Typography
