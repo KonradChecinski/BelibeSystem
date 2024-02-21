@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('client_invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("client_id")->unique()->references("id")->on("clients")->restrictOnDelete();
+            $table->foreignId("client_id")->references("id")->on("clients")->restrictOnDelete();
             $table->smallInteger("type");
             $table->string("number");
             $table->integer("net_value");

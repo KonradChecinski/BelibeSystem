@@ -4,6 +4,7 @@ import {
     ThemeProvider,
     useMediaQuery
 } from "@mui/material";
+import {plPL} from '@mui/material/locale';
 import {useMemo} from "react";
 
 export default function Theme({children}) {

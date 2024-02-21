@@ -279,7 +279,7 @@ class ClientController extends Controller
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payment", "industry",
             "activities.user:id,name", "activities.activityType:id,name", "tasks.user:id,name", "notes.user:id,name", "locations.country:id,name",
             "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name", "discounts.productGroup:id,name", "discounts.productBrand:id,name",
-            "clientUsers", "recipient.country:id,name", "invoices",
+            "clientUsers", "recipient.country:id,name", "invoices", "receivables", "obligations"
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
@@ -314,8 +314,6 @@ class ClientController extends Controller
                 "productGroups" => $productGroups,
                 "productBrands" => $productBrands,
             ],
-            "invoices" => [],
-            "settlements" => [],
         ]);
     }
 

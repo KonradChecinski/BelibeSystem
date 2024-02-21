@@ -13,6 +13,7 @@ use App\Models\Client\Client;
 use App\Models\Client\ClientUser;
 use App\Models\ClientActivity;
 use App\Models\ClientDiscount;
+use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
 use App\Models\ClientRecipient;
@@ -86,6 +87,17 @@ class TestController extends Controller
 
 //        $client->save();
 
+//        $clientInvoice = new ClientInvoice([
+//            'type' => 1,
+//            'number' => "FV 153/MAG/01/2024",
+//            'net_value' => 20000,
+//            'gross_value' => 24600,
+//            'datetime' => '2024-02-21 16:00',
+//            'path' => "",
+//        ]);
+//        $clientInvoice->client()->associate(1);
+//        $clientInvoice->save();
+        
     }
 
     /**

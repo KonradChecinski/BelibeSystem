@@ -12,7 +12,9 @@ use App\Models\ClientDiscount;
 use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
+use App\Models\ClientObligation;
 use App\Models\ClientRecipient;
+use App\Models\ClientReceivable;
 use App\Models\ClientTask;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -115,6 +117,24 @@ class Client extends Model
     public function invoices(): HasMany
     {
         return $this->hasMany(ClientInvoice::class);
+    }
+
+    public function receivables(): HasMany
+    {
+        return $this->hasMany(ClientReceivable::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+    }
+
+    public function obligations(): HasMany
+    {
+        return $this->hasMany(ClientObligation::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+    }
+
+    public function settlements()
+    {
+        return [
+            "receivables" => $this->receivables,
+            "obligations" => $this->obligations
+        ];
     }
 
 

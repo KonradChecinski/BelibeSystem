@@ -1,6 +1,6 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Grid, Paper} from "@mui/material";
+import {Grid, Paper, Typography} from "@mui/material";
 import IconGrid from "@/Components/IconGrid";
 import InfoIcon from '@mui/icons-material/Info';
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
@@ -22,7 +22,8 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
 import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
 import HistoryIcon from '@mui/icons-material/History';
-import {Description} from "@mui/icons-material";
+import {Description, PointOfSale, Receipt, Savings} from "@mui/icons-material";
+import ClientSettlementsTable from "@/Components/Table/ClientSettlementsTable";
 
 
 export default function Client(props) {
@@ -90,10 +91,26 @@ export default function Client(props) {
                 <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<PaymentIcon/>} iconColor={"magenta"}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} lg={6}>
-                            <Paper>xs=12 lg=6</Paper>
+                            <Paper elevation={2}>
+                                <Typography
+                                    sx={{p: 1, display: "flex", gap: 1, alignItems: "center"}}>
+                                    <PointOfSale fontSize={"large"}/>
+                                    Należności
+                                </Typography>
+                                <ClientSettlementsTable settlement={props.client.receivables} readOnly={!props.editing}
+                                                        props={props}/>
+                            </Paper>
                         </Grid>
                         <Grid item xs={12} lg={6}>
-                            <Paper>xs=12 lg=6</Paper>
+                            <Paper elevation={2}>
+                                <Typography
+                                    sx={{p: 1, display: "flex", gap: 1, alignItems: "center"}}>
+                                    <Savings fontSize={"large"}/>
+                                    Zobowiązania
+                                </Typography>
+                                <ClientSettlementsTable settlement={props.client.obligations} readOnly={!props.editing}
+                                                        props={props}/>
+                            </Paper>
                         </Grid>
                     </Grid>
                     {/*<InvoicesClientComponent {...props} />*/}
