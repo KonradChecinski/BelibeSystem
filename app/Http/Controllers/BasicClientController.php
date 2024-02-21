@@ -57,7 +57,7 @@ class BasicClientController extends Controller
      */
     public function update(UpdateBasicClientRequest $request, Client $client)
     {
-        $client->update($request->all());
+        $client->update($request->except(["nip"]));
         $client->country()->associate($request->country["id"]);
         $client->save();
 //        ChangeBasicInModelInSubiekt::dispatch($productModel);

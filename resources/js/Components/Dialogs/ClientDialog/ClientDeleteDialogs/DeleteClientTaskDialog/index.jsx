@@ -26,7 +26,6 @@ export default function DeleteClientTaskDialog({open, setOpen, task, last, param
     };
 
     const save = () => {
-        console.log(task)
         destroy(route("system.clients.client.task.delete", {client: params.client.id, clientTask: task}),
 
             {

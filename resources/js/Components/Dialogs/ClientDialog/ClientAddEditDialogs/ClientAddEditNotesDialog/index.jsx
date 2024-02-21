@@ -59,12 +59,12 @@ export default function ClientAddEditNotesDialog({
             } : null,
         })
 
-        console.log("data w useEffect: ", data);
+        // console.log("data w useEffect: ", data);
     }, [setValue, clickedNote]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }

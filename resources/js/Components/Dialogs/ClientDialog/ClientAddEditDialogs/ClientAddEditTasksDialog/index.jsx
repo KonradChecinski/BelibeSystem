@@ -67,12 +67,12 @@ export default function ClientAddEditTasksDialog({
             } : null,
         })
 
-        console.log("data w useEffect: ", data);
+        // console.log("data w useEffect: ", data);
     }, [setValue, clickedTask]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }
@@ -280,8 +280,8 @@ function Step1({data, setData, params, clickedTask = null, register, errors, con
                                     // const formattedDate = newDate.format("DD-MM-YYYY HH:mm:ss");
                                     setData('datetime', newDate);
                                     field.onChange(value);
-                                    console.log('New Date:', newDate); // Check if new date is correctly formatted
-                                    console.log('Data:', data); // Check if data object is updated
+                                    // console.log('New Date:', newDate); // Check if new date is correctly formatted
+                                    // console.log('Data:', data); // Check if data object is updated
                                 }}
                                 sx={{width: "30ch", my: 1}}
                             />

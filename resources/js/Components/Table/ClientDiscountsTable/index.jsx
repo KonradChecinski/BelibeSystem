@@ -26,7 +26,6 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
         setData(discounts)
     }, [discounts]);
 
-    console.log(data)
     const column = [
         {field: "id", headerName: "Id"},
         {

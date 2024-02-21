@@ -26,8 +26,7 @@ export default function ClientNotesTable({notes, readOnly, color, props}) {
     useEffect(() => {
         setData(notes)
     }, [notes]);
-
-    console.log(notes)
+    
     const column = [
         {field: "id", headerName: "Id"},
         {field: "text", headerName: "Treść", flex: 1},

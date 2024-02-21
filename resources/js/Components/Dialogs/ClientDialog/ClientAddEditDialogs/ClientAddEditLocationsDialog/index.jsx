@@ -50,7 +50,7 @@ export default function ClientAddEditLocationsDialog({
     const [checked, setChecked] = useState(clickedLocation ? (clickedLocation.active !== 0) : false);
 
     useEffect(() => {
-        console.log("Clicked location w useEffect: ", clickedLocation);
+        // console.log("Clicked location w useEffect: ", clickedLocation);
 
         // inicjacja wartości pól
         setValue('country', clickedLocation?.country);
@@ -76,12 +76,12 @@ export default function ClientAddEditLocationsDialog({
             note: clickedLocation ? clickedLocation.note : '',
         })
 
-        console.log("data w useEffect: ", data);
+        // console.log("data w useEffect: ", data);
     }, [setValue, clickedLocation]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }
@@ -216,7 +216,6 @@ export default function ClientAddEditLocationsDialog({
 }
 
 function Step1({data, params, setData, clickedLocation = null, register, errors, checked, setChecked}) {
-    console.log(data)
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",

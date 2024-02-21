@@ -51,7 +51,6 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
         }
     ];
 
-    console.log(data)
     const columnWithAction = [
         ...column,
         {

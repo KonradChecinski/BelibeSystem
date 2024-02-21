@@ -43,7 +43,7 @@ export default function ClientAddEditUsersDialog({
     })
 
     useEffect(() => {
-        console.log("Clicked user w useEffect: ", clickedUser);
+        // console.log("Clicked user w useEffect: ", clickedUser);
 
         // inicjacja wartości pól
         setValue('name', clickedUser?.name);
@@ -56,12 +56,12 @@ export default function ClientAddEditUsersDialog({
             password: '',
         })
 
-        console.log("data w useEffect: ", data);
+        // console.log("data w useEffect: ", data);
     }, [setValue, clickedUser]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }

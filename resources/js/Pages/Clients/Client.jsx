@@ -1,6 +1,6 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Grid} from "@mui/material";
+import {Grid, Paper} from "@mui/material";
 import IconGrid from "@/Components/IconGrid";
 import InfoIcon from '@mui/icons-material/Info';
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
@@ -17,9 +17,12 @@ import DiscountIcon from '@mui/icons-material/Discount';
 import TaskIcon from "@mui/icons-material/Task";
 import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DescriptionIcon from '@mui/icons-material/Description';
+import PaymentIcon from '@mui/icons-material/Payment';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
 import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
 import HistoryIcon from '@mui/icons-material/History';
+import {Description} from "@mui/icons-material";
 
 
 export default function Client(props) {
@@ -78,6 +81,22 @@ export default function Client(props) {
 
                 <IconGrid xs={12} md={12} title={"Notatki do klienta"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
                     <NotesClientComponent {...props} />
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Faktury klienta"} icon={<DescriptionIcon/>} iconColor={"magenta"}>
+                    {/*<InvoicesClientComponent {...props} />*/}
+                </IconGrid>
+
+                <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<PaymentIcon/>} iconColor={"magenta"}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} lg={6}>
+                            <Paper>xs=12 lg=6</Paper>
+                        </Grid>
+                        <Grid item xs={12} lg={6}>
+                            <Paper>xs=12 lg=6</Paper>
+                        </Grid>
+                    </Grid>
+                    {/*<InvoicesClientComponent {...props} />*/}
                 </IconGrid>
 
 

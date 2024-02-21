@@ -15,56 +15,6 @@ import ClientUsersTable from "@/Components/Table/ClientUsersTable";
 
 
 export default function ClientUsersComponent(props) {
-    // const [edited, setEdited] = useState(false);
-    //
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     errors: fieldErrors,
-    //     setValue,
-    //     clearErrors,
-    // } = useNotesClientForm()
-    //
-    // const {data, setData, processing, post} = useForm({
-    //     'notes': '',
-    // })
-    //
-    // const initializeFieldValues = () => {
-    //     setValue('notes', data.notes)
-    // }
-    //
-    // useEffect(() => {
-    //     // inicjacja wartości pól
-    //     initializeFieldValues()
-    // }, [setValue]);
-
-    const onSubmit = (formData) => {
-        saveBasic()
-    }
-
-    // const resetForm = () => {
-    //     setData({
-    //         'notes': '',
-    //     });
-    //
-    //     initializeFieldValues()
-    //     setEdited(false);
-    //
-    //     clearErrors('notes')
-    // };
-    const saveBasic = () => {
-        // post(route("system.products.model.update.basic", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
-    }
 
     return (
 

@@ -26,7 +26,6 @@ export default function DeleteClientActivityDialog({open, setOpen, activity, las
     };
 
     const save = () => {
-        console.log(activity)
         destroy(route("system.clients.client.activity.delete", {client: params.client.id, clientActivity: activity}),
 
             {

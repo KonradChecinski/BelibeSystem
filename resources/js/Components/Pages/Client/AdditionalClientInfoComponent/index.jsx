@@ -55,8 +55,8 @@ export default function AdditionalClientInfoComponent(props) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("React Hook Form Data: ", formData)
-        console.log("Inertia Data: ", data)
+        // console.log("React Hook Form Data: ", formData)
+        // console.log("Inertia Data: ", data)
         saveBasic()
     }
 

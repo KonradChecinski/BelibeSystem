@@ -9,6 +9,7 @@ use App\Models\B2bSourceOfAcquisition;
 use App\Models\B2bStatus;
 use App\Models\ClientActivity;
 use App\Models\ClientDiscount;
+use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
 use App\Models\ClientRecipient;
@@ -109,6 +110,11 @@ class Client extends Model
     public function recipient(): HasOne
     {
         return $this->hasOne(ClientRecipient::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(ClientInvoice::class);
     }
 
 

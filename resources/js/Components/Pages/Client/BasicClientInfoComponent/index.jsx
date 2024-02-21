@@ -21,7 +21,7 @@ export default function BasicClientInfoComponent(props) {
     const [edited, setEdited] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    console.log("Propsy: ", props)
+    // console.log("Propsy: ", props)
 
     const {
         register,
@@ -41,7 +41,7 @@ export default function BasicClientInfoComponent(props) {
         "postal_code": props.client.postal_code,
         "street": props.client.street,
         "building_number": props.client.building_number,
-        "apartment_number": props.client.apartment_number,
+        "apartment_number": props.client.apartment_number ? props.client.apartment_number : '',
 
         "phone": props.client.phone,
         "email": props.client.email
@@ -82,7 +82,7 @@ export default function BasicClientInfoComponent(props) {
             "postal_code": props.client.postal_code,
             "street": props.client.street,
             "building_number": props.client.building_number,
-            "apartment_number": props.client.apartment_number,
+            "apartment_number": props.client.apartment_number ? props.client.apartment_number : '',
 
             "phone": props.client.phone,
             "email": props.client.email
@@ -153,6 +153,7 @@ export default function BasicClientInfoComponent(props) {
                                            setData("nip", value.target.value)
                                            setEdited(true)
                                        }}
+                                       disabled={true}
                                        inputProps={{readOnly: !props.editing}}
                                        sx={{width: "30ch"}}/>
                             {fieldErrors.nip?.message && (
