@@ -28,10 +28,10 @@ export default function ClientsTable(props) {
         {field: "email", headerName: "Email", filterable: true, width: 200},
         {field: "phone", headerName: "Telefon", filterable: true},
         {field: "blacklist", headerName: "Czarna lista", type: 'boolean', filterable: true, width: 80},
+        {field: "status_id", headerName: "Status", type: 'number', filterable: true, width: 80},
         {
             field: "user_id", headerName: "Opiekun", filterable: false, flex: true,
             renderCell: (params) => {
-                console.log(params)
                 return (
                     <Box>
                         <Typography>{params.row?.account_manager?.name}</Typography>
@@ -96,7 +96,8 @@ export default function ClientsTable(props) {
     ];
     const columnVisibility = {
         id: false,
-        symbol: false
+        symbol: false,
+        status_id: false
     };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -104,7 +105,11 @@ export default function ClientsTable(props) {
         orderBy: null,
         order: null,
         search: [],
-        filter: []
+        filter: [{
+            field: 'status_id',
+            operator: '>',
+            value: '1'
+        }]
     });
     const [isLoading, setIsLoading] = useState(true);
     const [rowCountState, setRowCountState] = useState(0);
@@ -140,11 +145,11 @@ export default function ClientsTable(props) {
             order: paginationModel.order,
             page: paginationModel.page,
             pageSize: paginationModel.pageSize,
-            search: filterModel.quickFilterValues,
+            search: filterModel.quickFilterValues ? filterModel.quickFilterValues : [],
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {
@@ -163,7 +168,7 @@ export default function ClientsTable(props) {
                 (paginationModel.search.length !== 0
                     ? `&search=${JSON.stringify(paginationModel.search)}`
                     : "") +
-                (paginationModel.filter.length !== 0
+                (paginationModel.filter?.length !== 0
                     ? `&filter=${JSON.stringify(paginationModel.filter)}`
                     : "");
             let option = {headers: {Accept: "application/json"}};
@@ -173,7 +178,7 @@ export default function ClientsTable(props) {
             setPageData(json[0].data);
             setIsLoading(false)
 
-            console.log(json[0].data)
+            // console.log(json[0].data)
         };
         fetchData();
     }, [paginationModel]);

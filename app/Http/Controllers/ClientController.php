@@ -79,6 +79,7 @@ class ClientController extends Controller
             'email',
             'priority',
             'blacklist',
+            'status_id'
         ];
 
         $models = Client::with(["accountManager:id,name", /*"colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"*/]);
@@ -117,6 +118,9 @@ class ClientController extends Controller
                                 break;
                             case "is":
                                 $models = $models->Where($filter->field, '=', $filter->value === "true" ? true : false);
+                                break;
+                            case ">":
+                                $models = $models->Where($filter->field, '>', $filter->value);
                                 break;
                             case "isAnyOf":
                                 foreach ($filter->value as $value) {
@@ -184,7 +188,7 @@ class ClientController extends Controller
 //        dd($sql);
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
 //        dd($models->get()->toArray());
-        $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist', 'user_id']);
+        $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist', 'user_id', 'status_id']);
         return response()->json([$models]);
     }
 
