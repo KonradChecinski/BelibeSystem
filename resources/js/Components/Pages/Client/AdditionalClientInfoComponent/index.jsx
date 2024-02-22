@@ -10,7 +10,7 @@ import {
     Checkbox, FormControlLabel
 } from "@mui/material";
 import {Cancel, Save} from "@mui/icons-material";
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import {AddBox, CheckBox, CheckBoxOutlineBlank} from '@mui/icons-material';
 import {
     useAdditionalClientInfoForm
 } from "@/Components/Pages/Client/AdditionalClientInfoComponent/form/useAdditionalClientInfoForm";
@@ -33,7 +33,7 @@ export default function AdditionalClientInfoComponent(props) {
         'status': props.client.status,
         'priority': props.client.priority,
         'source_of_acquisition': props.client.source_of_acquisition,
-        'payment': props.client.payment,
+        'payments': props.client ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
         'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
     })
@@ -45,7 +45,7 @@ export default function AdditionalClientInfoComponent(props) {
         setValue('status', data.status.name)
         setValue('priority', data.priority === 1 ? "Niski" : data.priority === 2 ? "Średni" : "Wysoki")
         setValue('source_of_acquisition', data.source_of_acquisition.name)
-        setValue('payment', data.payment.name)
+        // setValue('payment', data.payment.name)
         setValue('account_manager', data.account_manager.name)
     }
 
@@ -66,7 +66,7 @@ export default function AdditionalClientInfoComponent(props) {
             'status': props.client.status,
             'priority': props.client.priority,
             'source_of_acquisition': props.client.source_of_acquisition,
-            'payment': props.client.payment,
+            'payments': props.client.payments,
             'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
         });
@@ -78,7 +78,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('status')
         clearErrors('priority')
         clearErrors('source_of_acquisition')
-        clearErrors('payment')
+        // clearErrors('payment')
         clearErrors('account_manager')
         clearErrors('blacklist')
     };
@@ -95,14 +95,14 @@ export default function AdditionalClientInfoComponent(props) {
             preserveScroll: true
         })
     }
-
+    console.log(data)
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
                 <Box>
                     <Typography
                         sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <AddBoxIcon fontSize={"large"}/>
+                        <AddBox fontSize={"large"}/>
                         Informacje dodatkowe
                     </Typography>
 
@@ -259,28 +259,41 @@ export default function AdditionalClientInfoComponent(props) {
                             <>
                                 <Autocomplete
                                     id="payment"
+                                    multiple
                                     options={props.payment.map(e => ({
                                         id: e.id,
                                         name: e.name,
                                         label: e.name
                                     }))}
                                     sx={{width: "30ch"}}
-                                    value={data.payment.name}
-                                    isOptionEqualToValue={(option, value) => option.name === value}
+                                    value={data.payments}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
                                     onChange={(e, value) => {
                                         setData({
                                             ...data,
-                                            payment: value,
+                                            payments: value,
                                         })
                                         setEdited(true)
                                     }}
+                                    getOptionLabel={(option) => option.name}
+                                    renderOption={(props, option, {selected}) => (
+                                        <li {...props}>
+                                            <Checkbox
+                                                icon={<CheckBoxOutlineBlank fontSize="small"/>}
+                                                checkedIcon={<CheckBox fontSize="small"/>}
+                                                style={{marginRight: 8}}
+                                                checked={selected}
+                                            />
+                                            {option.name}
+                                        </li>
+                                    )}
                                     renderInput={(params) =>
                                         <TextField
                                             {...params}
                                             label="Płatność"
                                             sx={{my: 1}}
                                             {...register("payment")}
-                                            value={data.payment.name}
+                                            // value={data.payment.name}
                                             color={fieldErrors.payment?.message && "error"}
                                         />
                                     }
@@ -301,7 +314,7 @@ export default function AdditionalClientInfoComponent(props) {
                                 inputProps={{readOnly: true}}
                             />
                         )}
-                        {/*lskakk*/}
+
                         {props.editing ? (
                             <>
                                 <Autocomplete
