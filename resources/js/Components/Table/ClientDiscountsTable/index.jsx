@@ -66,7 +66,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             sortable: false,
             filterable: false,
             // align: 'center',
-            width: 400,
+            flex: 1,
             renderCell: (params) => {
                 let text = '';
                 switch (params.row.type) {

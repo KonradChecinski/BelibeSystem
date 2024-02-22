@@ -39,41 +39,32 @@ export default function Client(props) {
 
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={"Klient: " + "test"}>
-            <Head title={"test"}/>
+        <UserLayout auth={props.auth} errors={props.errors} header={"Klient: " + props.client.name}>
+            <Head title={props.client.name}/>
             <Grid container spacing={3} sx={{pb: 1}}>
-                <IconGrid xs={12} md={12} title={"Informacje podstawowe"} icon={<InfoIcon/>} iconColor={"darkblue"}>
+                <IconGrid xs={12} lg={6} title={"Informacje podstawowe"} icon={<InfoIcon/>} iconColor={"darkblue"}>
                     <BasicClientInfoComponent {...props}/>
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Informacje dodatkowe"} icon={<AddBoxIcon/>}
+                <IconGrid xs={12} lg={6} title={"Informacje dodatkowe"} icon={<AddBoxIcon/>}
                           iconColor={"green"}>
                     <AdditionalClientInfoComponent {...props} />
                 </IconGrid>
 
-                {/*To dopiero jak będą zamówienia*/}
-                <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
-                    <ClientUsersComponent {...props} />
+                <IconGrid xs={12} lg={6} title={"Rabaty klienta"} icon={<DiscountIcon/>} iconColor={"green"}>
+                    <ClientDiscountsComponent {...props} />
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Lokacje klienta"} icon={<LocationOnIcon/>} iconColor={"blue"}>
+                <IconGrid xs={12} lg={6} title={"Lokacje klienta"} icon={<LocationOnIcon/>} iconColor={"blue"}>
                     <ClientLocationsComponent {...props} />
                 </IconGrid>
 
-                <IconGrid xs={12} md={12} title={"Rabaty klienta"} icon={<DiscountIcon/>} iconColor={"green"}>
-                    <ClientDiscountsComponent {...props} />
-                </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Aktywność klienta"} icon={<EventAvailableIcon/>}
                           iconColor={"darkcyan"}>
                     <ClientActivityComponent {...props} />
                 </IconGrid>
 
-                {/*To dopiero jak będą zamówienia*/}
-                {/*<IconGrid xs={12} md={12} title={"Historia zamówień klienta"} icon={<HistoryIcon/>}*/}
-                {/*          iconColor={"darkcyan"}>*/}
-                {/*    <ClientOrderHistoryComponent {...props} />*/}
-                {/*</IconGrid>*/}
 
                 <IconGrid xs={12} md={12} title={"Zadania klienta"} icon={<TaskIcon/>}
                           iconColor={"indigo"}>
@@ -113,7 +104,18 @@ export default function Client(props) {
                             </Paper>
                         </Grid>
                     </Grid>
-                    {/*<InvoicesClientComponent {...props} />*/}
+                </IconGrid>
+
+
+                {/*To dopiero jak będą zamówienia*/}
+                <IconGrid xs={12} md={12} title={"Historia zamówień klienta"} icon={<HistoryIcon/>}
+                          iconColor={"darkcyan"}>
+                    <ClientOrderHistoryComponent {...props} />
+                </IconGrid>
+
+                {/*To dopiero jak będą zamówienia*/}
+                <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>
+                    <ClientUsersComponent {...props} />
                 </IconGrid>
 
 
