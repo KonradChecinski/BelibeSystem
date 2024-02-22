@@ -83,7 +83,7 @@ export default function Theme({children}) {
                 shape: {
                     borderRadius: 16
                 }
-            }),
+            }, plPL),
 
         [prefersDarkMode]
     );
