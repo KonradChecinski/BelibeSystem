@@ -1,7 +1,6 @@
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
-import schema
-    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditDiscountsDialog/form/clientDiscountsDialogFormSchema";
+import schema from './clientDiscountsDialogFormSchema'
 
 export const useClientDiscountsDialogForm = () => {
     const {

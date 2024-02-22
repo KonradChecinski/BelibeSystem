@@ -14,6 +14,8 @@ import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDi
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
 import DeleteClientDiscountsDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientDiscountsDialog";
+import ClientAddEditDiscountsDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditDiscountsDialog";
 
 export default function ClientDiscountsTable({discounts, readOnly, color, props}) {
     const theme = useTheme();
@@ -144,8 +146,8 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
 
                         <DeleteClientDiscountsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
                                                      discount={params.row}/>
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+                        <ClientAddEditDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                      clickedDiscount={params.row} params={props}/>
                     </>
 
                 );
@@ -223,8 +225,8 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                  clickedDiscount={null} params={props}/>
                 </>
                 : ""
             }

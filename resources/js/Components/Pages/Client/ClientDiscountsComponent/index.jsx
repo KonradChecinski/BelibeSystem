@@ -26,7 +26,7 @@ export default function ClientDiscountsComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientDiscountsTable discounts={props.client?.discounts} readOnly={!props.editing}/>
+                <ClientDiscountsTable discounts={props.client?.discounts} readOnly={!props.editing} props={props}/>
             </Box>
         </Box>
 
