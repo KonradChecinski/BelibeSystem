@@ -873,8 +873,13 @@ class Shoper
                 "subiekt_added_at" => null
             ]);
             foreach ($shoperOrderProducts as $shoperOrderProduct) {
+                $code = $shoperOrderProduct["code"];
+                if (substr($code, -1) === ".") {
+                    $code = substr($code, 0, -1);
+                }
+
                 $shoperOrderModel->shoperOrderProducts()->create([
-                    'code' => $shoperOrderProduct["code"],
+                    'code' => $code,
                     'quantity' => $shoperOrderProduct["quantity"],
                     'price' => $shoperOrderProduct["price"],
                 ]);
