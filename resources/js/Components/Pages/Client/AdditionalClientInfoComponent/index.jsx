@@ -78,7 +78,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('status')
         clearErrors('priority')
         clearErrors('source_of_acquisition')
-        // clearErrors('payment')
+        clearErrors('payment')
         clearErrors('account_manager')
         clearErrors('blacklist')
     };
