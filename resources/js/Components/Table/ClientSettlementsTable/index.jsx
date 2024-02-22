@@ -1,13 +1,13 @@
 import {useMemo} from "react";
 import {Box, Tooltip, Typography,} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Done, DoneOutline, Close, DownloadDone} from '@mui/icons-material';
+import {Done, Close, DownloadDone} from '@mui/icons-material';
 import moment from "moment";
 import {
     MaterialReactTable,
     useMaterialReactTable,
 } from 'material-react-table';
-import {MRT_Localization_PL} from 'material-react-table/locales/pl';
+import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
 
 
@@ -31,9 +31,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
             {
                 accessorKey: 'nzf_Id',
                 header: 'Id',
-                // minSize: 100, //min size enforced during resizing
-                // maxSize: 400, //max size enforced during resizing
-                // size: 180, //medium column
+                size: 10,
             },
             {
                 accessorKey: 'Rozliczenie',
@@ -117,7 +115,10 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 header: 'Spóźnienie',
                 size: 30,
                 muiTableBodyCellProps: {
-                    align: 'center',
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
                 },
                 Cell: ({cell}) => cell.getValue() ?
                     <Box sx={{color: "error.main"}}>{Number(cell.getValue())}</Box> : "",
@@ -135,6 +136,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 header: 'Wartość początkowa W PLN',
                 size: 50,
                 muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
                     align: 'right',
                 },
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue())),
@@ -155,6 +159,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 header: 'Wartość bieżąca w PLN',
                 size: 50,
                 muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
                     align: 'right',
                 },
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue())),
@@ -184,6 +191,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
         enableGrouping: true,
         enableStickyHeader: true,
         enableStickyFooter: true,
+        localization: MRT_Localization_PL,
         initialState: {
             columnVisibility: {nzf_Id: false},
             density: 'compact',
@@ -196,7 +204,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: '500px'}
+            sx: {maxHeight: '500px', height: '500px'}
         },
         muiTablePaperProps: ({table}) => ({
             sx: {
@@ -218,7 +226,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
 
 
     return (
-        <MaterialReactTable table={table} localization={MRT_Localization_PL}/>
+        <MaterialReactTable table={table}/>
 
     );
 }
