@@ -82,6 +82,41 @@ export default function Theme({children}) {
                 },
                 shape: {
                     borderRadius: 16
+                },
+                components: {
+                    MuiCssBaseline: {
+                        styleOverrides: {
+                            body: {
+                                // scrollbarColor: "#6b6b6b #2b2b2b",
+                                "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+                                    backgroundColor: prefersDarkMode ? "#1f2937" : "#c2c2c2",
+                                    right: 0,
+                                    width: "12px",
+                                    height: "12px",
+                                },
+                                "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+                                    borderRadius: 8,
+                                    // backgroundColor: "#6b6b6b",
+                                    // border: "3px solid #2b2b2b",
+                                    backgroundColor: prefersDarkMode ? "#525760" : "#a1a1a1",
+                                    width: "12px",
+                                    height: "12px",
+                                },
+                                "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
+                                    backgroundColor: prefersDarkMode ? "#7c838d" : "#7a7a7a",
+                                },
+                                "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
+                                    backgroundColor: prefersDarkMode ? "#7c838d" : "#7a7a7a",
+                                },
+                                "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
+                                    backgroundColor: prefersDarkMode ? "#6b727c" : "#818181",
+                                },
+                                "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+                                    backgroundColor: prefersDarkMode ? "#1f2937" : "#c2c2c2",
+                                },
+                            }
+                        }
+                    }
                 }
             }, plPL),
 
@@ -94,31 +129,3 @@ export default function Theme({children}) {
         </ThemeProvider>
     );
 }
-
-//         palette: {
-//         mode,
-//     ...(mode === 'light'
-//             ? {
-//                 // palette values for light mode
-//                 primary: amber,
-//                 divider: amber[200],
-//                 text: {
-//                     primary: grey[900],
-//                     secondary: grey[800],
-//                 },
-//             }
-//             : {
-//                 // palette values for dark mode
-//                 primary: deepOrange,
-//                 divider: deepOrange[700],
-//                 background: {
-//                     default: deepOrange[900],
-//                     paper: deepOrange[900],
-//                 },
-//                 text: {
-//                     primary: '#fff',
-//                     secondary: grey[500],
-//                 },
-//             }),
-//     },
-// });
