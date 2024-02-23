@@ -8,8 +8,9 @@ export const useAdditionalClientInfoForm = () => {
         handleSubmit,
         formState: {errors},
         setValue,
-        clearErrors
+        clearErrors,
+        getValues
     } = useForm({resolver: yupResolver(schema)})
 
-    return {register, handleSubmit, errors, setValue, clearErrors}
+    return {register, handleSubmit, errors, setValue, clearErrors, getValues}
 }

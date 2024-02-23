@@ -26,6 +26,7 @@ export default function AdditionalClientInfoComponent(props) {
         errors: fieldErrors,
         setValue,
         clearErrors,
+        getValues
     } = useAdditionalClientInfoForm()
 
     const {data, setData, processing, post} = useForm({
@@ -45,7 +46,7 @@ export default function AdditionalClientInfoComponent(props) {
         setValue('status', data.status.name)
         setValue('priority', data.priority === 1 ? "Niski" : data.priority === 2 ? "Średni" : "Wysoki")
         setValue('source_of_acquisition', data.source_of_acquisition.name)
-        // setValue('payment', data.payment.name)
+        setValue('payments', data.payments ? data.payments.map(obj => ({...obj, label: obj.name})) : "")
         setValue('account_manager', data.account_manager.name)
     }
 
@@ -55,8 +56,6 @@ export default function AdditionalClientInfoComponent(props) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        // console.log("React Hook Form Data: ", formData)
-        // console.log("Inertia Data: ", data)
         saveBasic()
     }
 
@@ -78,7 +77,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('status')
         clearErrors('priority')
         clearErrors('source_of_acquisition')
-        clearErrors('payment')
+        clearErrors('payments')
         clearErrors('account_manager')
         clearErrors('blacklist')
     };
@@ -258,7 +257,7 @@ export default function AdditionalClientInfoComponent(props) {
                         {props.editing ? (
                             <>
                                 <Autocomplete
-                                    id="payment"
+                                    id="payments"
                                     multiple
                                     options={props.payment.map(e => ({
                                         id: e.id,
@@ -273,7 +272,9 @@ export default function AdditionalClientInfoComponent(props) {
                                             ...data,
                                             payments: value,
                                         })
+                                        setValue('payments', value, {shouldValidate: true})
                                         setEdited(true)
+                                        console.log("formValues: ", getValues("payments"))
                                     }}
                                     getOptionLabel={(option) => option.name}
                                     renderOption={(props, option, {selected}) => (
@@ -292,25 +293,24 @@ export default function AdditionalClientInfoComponent(props) {
                                             {...params}
                                             label="Płatność"
                                             sx={{my: 1}}
-                                            {...register("payment")}
+                                            {...register("payments")}
                                             // value={data.payment.name}
-                                            color={fieldErrors.payment?.message && "error"}
+                                            color={fieldErrors.payments?.message && "error"}
                                         />
                                     }
                                 />
-                                {fieldErrors.payment?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
-                                        {fieldErrors.payment?.message.toString()}
+                                {fieldErrors.payments?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -3, mb: 1.5}}>
+                                        {fieldErrors.payments?.message.toString()}
                                     </Typography>
                                 )}
                             </>
                         ) : (
                             <TextField
-                                id="payment"
+                                id="payments"
                                 label="Płatność"
                                 sx={{my: 1, width: "30ch"}}
-                                {...register("payment")}
-                                color={fieldErrors.payment?.message && "error"}
+                                {...register("payments")}
                                 inputProps={{readOnly: true}}
                             />
                         )}
@@ -353,11 +353,10 @@ export default function AdditionalClientInfoComponent(props) {
                             </>
                         ) : (
                             <TextField
-                                id="payment"
-                                label="Płatność"
+                                id="account_manager"
+                                label="Opiekun klienta"
                                 sx={{my: 1, width: "30ch"}}
-                                {...register("payment")}
-                                color={fieldErrors.payment?.message && "error"}
+                                {...register("account_manager")}
                                 inputProps={{readOnly: true}}
                             />
                         )}
