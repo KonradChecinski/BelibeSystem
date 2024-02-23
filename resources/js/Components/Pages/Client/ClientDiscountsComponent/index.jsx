@@ -22,12 +22,18 @@ export default function ClientDiscountsComponent(props) {
             <Typography
                 sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
                 <DiscountIcon fontSize={"large"}/>
-                Rabaty klienta
+                Rabaty na produkty
             </Typography>
 
             <Box sx={{pr: 0}}>
                 <ClientDiscountsTable discounts={props.client?.discounts} readOnly={!props.editing} props={props}/>
             </Box>
+
+            <Typography
+                sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                <DiscountIcon fontSize={"large"}/>
+                Rabaty przy płatnościach
+            </Typography>
         </Box>
 
     );

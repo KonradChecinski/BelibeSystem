@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->foreignId("industry_id")->after("payment_id")->references("id")->on("b2b_industries")->restrictOnDelete();
+            $table->foreignId("industry_id")->after("user_id")->references("id")->on("b2b_industries")->restrictOnDelete();
         });
     }
 

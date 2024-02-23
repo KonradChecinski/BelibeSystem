@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->boolean("blacklist")->default(false)->after("nip");
-            $table->foreignId("payment_id")->after("nip")->references("id")->on("b2b_payments")->restrictOnDelete();
             $table->foreignId("user_id")->after("nip")->references("id")->on("users")->restrictOnDelete();
             $table->foreignId("source_of_acquisition_id")->after("nip")->references("id")->on("b2b_source_of_acquisitions")->restrictOnDelete();
             $table->smallInteger("priority")->default(1)->after("nip");
@@ -39,7 +38,6 @@ return new class extends Migration {
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->dropColumn("blacklist");
-            $table->dropConstrainedForeignId("payment_id");
             $table->dropConstrainedForeignId("user_id");
             $table->dropConstrainedForeignId("source_of_acquisition_id");
             $table->dropColumn("priority");

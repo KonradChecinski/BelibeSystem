@@ -1,12 +1,12 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import {Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, Grid, Typography} from "@mui/material";
+import {ExpandMore} from "@mui/icons-material";
 
-export default function IconGrid({ iconColor, icon, title, xs, md, children }) {
+export default function IconGrid({iconColor, icon, title, xs, md, lg, children}) {
     return (
-        <Grid item xs={xs} md={md} sx={{ position: "relative", mt: 2 }}>
+        <Grid item xs={xs} md={md} lg={lg} sx={{position: "relative", mt: 2}}>
             <Accordion defaultExpanded={true}>
                 <AccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMore/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{

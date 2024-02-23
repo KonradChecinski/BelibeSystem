@@ -259,6 +259,7 @@ export default function AdditionalClientInfoComponent(props) {
                                 <Autocomplete
                                     id="payments"
                                     multiple
+                                    disableCloseOnSelect
                                     options={props.payment.map(e => ({
                                         id: e.id,
                                         name: e.name,
