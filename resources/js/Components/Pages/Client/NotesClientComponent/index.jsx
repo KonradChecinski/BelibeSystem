@@ -2,16 +2,17 @@ import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {
     Box,
-    Button,
-    Fade,
+    Button, Card, CardActions, CardContent, Chip, Divider,
+    Fade, IconButton, Tooltip,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
+import {Cancel, Delete, Edit, ExpandMore, Save} from "@mui/icons-material";
 import {useNotesClientForm} from "@/Components/Pages/Client/NotesClientComponent/form/useNotesClientForm";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import TextEditorB2B from "@/Components/TextEditor/B2B";
 import ClientOrderHistoryTable from "@/Components/Table/ClientOrderHistoryTable";
 import ClientNotesTable from "@/Components/Table/ClientNotesTable";
+import ClientNotes from "@/Components/Other/ClientNotes";
 
 
 export default function NotesClientComponent(props) {
@@ -19,15 +20,19 @@ export default function NotesClientComponent(props) {
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
-            <Typography
-                sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                <NoteAddIcon fontSize={"large"}/>
-                Notatki do klienta
-            </Typography>
+            {/*<Typography*/}
+            {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
+            {/*    <NoteAddIcon fontSize={"large"}/>*/}
+            {/*    Notatki do klienta*/}
+            {/*</Typography>*/}
 
             <Box sx={{pr: 0}}>
-                <ClientNotesTable notes={props.client.notes} readOnly={!props.editing} props={props}/>
+                <ClientNotes notes={props.client.notes} readOnly={!props.editing} props={props}/>
             </Box>
+
+            {/*<Box sx={{pr: 0}}>*/}
+            {/*    <ClientNotesTable notes={props.client.notes} readOnly={!props.editing} props={props}/>*/}
+            {/*</Box>*/}
 
 
             {/*<TextEditorB2B*/}
