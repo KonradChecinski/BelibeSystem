@@ -24,6 +24,7 @@ import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHi
 import HistoryIcon from '@mui/icons-material/History';
 import {Description, PointOfSale, Receipt, Savings} from "@mui/icons-material";
 import ClientSettlementsTable from "@/Components/Table/ClientSettlementsTable";
+import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
 
 
 export default function Client(props) {
@@ -76,7 +77,7 @@ export default function Client(props) {
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Faktury klienta"} icon={<DescriptionIcon/>} iconColor={"magenta"}>
-                    {/*<InvoicesClientComponent {...props} />*/}
+                    <ClientInvoicesComponent {...props} />
                 </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<PaymentIcon/>} iconColor={"magenta"}>
