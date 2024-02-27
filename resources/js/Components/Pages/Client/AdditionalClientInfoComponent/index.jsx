@@ -34,7 +34,7 @@ export default function AdditionalClientInfoComponent(props) {
         'status': props.client.status,
         'priority': props.client.priority,
         'source_of_acquisition': props.client.source_of_acquisition,
-        'payments': props.client ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
+        'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
         'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
     })
@@ -46,7 +46,7 @@ export default function AdditionalClientInfoComponent(props) {
         setValue('status', data.status.name)
         setValue('priority', data.priority === 1 ? "Niski" : data.priority === 2 ? "Średni" : "Wysoki")
         setValue('source_of_acquisition', data.source_of_acquisition.name)
-        setValue('payments', data.payments ? data.payments.map(obj => ({...obj, label: obj.name})) : "")
+        setValue('payments', data.payments ? data.payments : [])
         setValue('account_manager', data.account_manager.name)
     }
 
@@ -65,7 +65,7 @@ export default function AdditionalClientInfoComponent(props) {
             'status': props.client.status,
             'priority': props.client.priority,
             'source_of_acquisition': props.client.source_of_acquisition,
-            'payments': props.client.payments,
+            'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
             'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
         });
@@ -94,7 +94,7 @@ export default function AdditionalClientInfoComponent(props) {
             preserveScroll: true
         })
     }
-    console.log(data)
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>

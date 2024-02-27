@@ -17,6 +17,7 @@ const schema = yup.object().shape({
         //     return typeof value === 'object' || (typeof value === 'string' && value.trim() !== '');
         // }),
         .test('is-not-empty', 'Pole jest wymagane (test)', function (value) {
+            console.log(value);
             return !!value && Array.isArray(value) && value.length > 0; // Ensure the value is truthy and not an empty array
         }),
     // .nullable(),
