@@ -218,7 +218,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
             // console.log(row.original, row.original.Rozliczenie, row.original.Wartosc, row.original.DniSpoznienia)
             return ({
                 sx: {
-                    bgcolor: row.original.Rozliczenie != 2 ? row.original.DniSpoznienia != null ? Number(row.original.Wartosc) > 0 ? "#ff00001a" : "" : "" : ""
+                    bgcolor: row.original.Rozliczenie != 2 ? row.original.DniSpoznienia != null ? Number(row.original.Wartosc) > 0 ? "errorBg.main" : "" : "" : ""
                 },
             })
         },

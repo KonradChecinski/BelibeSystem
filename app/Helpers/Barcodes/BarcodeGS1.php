@@ -22,7 +22,7 @@ class BarcodeGS1 implements IBarcode
 
         $barcode = substr(substr($response->json()["data"][0]["id"], 1), 0, -1);
         $barcode += 1;
-        $barcode = strval($barcode);
+        $barcode = (string)$barcode;
 
         $checksum = self::generateChecksum($barcode);
         $barcode = new ProductBarcode(["barcode" => $barcode . $checksum, "type" => 1]);
@@ -42,7 +42,7 @@ class BarcodeGS1 implements IBarcode
                     "attributes" => [
                         "brandName" => $model->gs1Brand->name,
                         "commonName" => $product->name,
-                        "description" => $product->name,
+                        "description" => mb_substr($product->model->description_b2b, 0, 4000),
                         "internalSymbol" => $product->symbol,
                         "descriptionLanguage" => "pl",
                         "gpcCode" => $model->gs1Gpc->value,
@@ -78,7 +78,6 @@ class BarcodeGS1 implements IBarcode
 
         }
 
-        $reszta = 0;
         $reszta = $suma % 10;
         $reszta = 10 - $reszta;
         if ($reszta == 10) $reszta = 0;

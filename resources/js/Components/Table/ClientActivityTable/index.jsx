@@ -135,8 +135,8 @@ export default function ClientActivityTable({activities, readOnly, color, props}
     return (
         <>
             <DataGrid
-                // rows={data}
-                rows={sortByDateAndTimeObject(data)}
+                rows={data}
+                // rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>

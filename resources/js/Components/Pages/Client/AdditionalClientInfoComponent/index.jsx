@@ -99,11 +99,11 @@ export default function AdditionalClientInfoComponent(props) {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
                 <Box>
-                    <Typography
-                        sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <AddBox fontSize={"large"}/>
-                        Informacje dodatkowe
-                    </Typography>
+                    {/*<Typography*/}
+                    {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
+                    {/*    <AddBox fontSize={"large"}/>*/}
+                    {/*    Informacje dodatkowe*/}
+                    {/*</Typography>*/}
 
                     <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
 

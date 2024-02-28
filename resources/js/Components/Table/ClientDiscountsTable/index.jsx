@@ -54,7 +54,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                 }
                 return (
                     <Box>
-                        <Typography>{text}</Typography>
+                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
                     </Box>
                 );
             },
@@ -85,7 +85,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                 }
                 return (
                     <Box>
-                        <Typography>{text}</Typography>
+                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
                     </Box>
                 );
             }
@@ -99,7 +99,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography>{params.row?.value}%</Typography>
+                        <Typography sx={{fontSize: "11px"}}>{params.row?.value}%</Typography>
                     </Box>
                 );
             }
@@ -167,8 +167,8 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
     return (
         <>
             <DataGrid
-                // rows={data}
-                rows={sortByDateAndTimeObject(data)}
+                rows={data}
+                // rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>

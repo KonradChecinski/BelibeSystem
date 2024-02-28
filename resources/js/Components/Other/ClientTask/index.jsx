@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {
-    Box,
+    Box, Button,
     Card, CardActions,
     CardContent, Chip,
     Divider,
@@ -23,6 +23,8 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
     const [openDialogDelete, setOpenDialogDelete] = useState(tasks.map((task) => ({id: task.id, value: false})));
     const [openDialogEdit, setOpenDialogEdit] = useState(tasks.map((task) => ({id: task.id, value: false})));
 
+    const [showDone, setShowDone] = useState(false);
+
     useEffect(() => {
         setOpenDialogDelete(tasks.map((task) => ({id: task.id, value: false})))
         setOpenDialogEdit(tasks.map((task) => ({id: task.id, value: false})))
@@ -31,7 +33,17 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
     return (
         <>
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, mb: 3}}>
-                {tasks.map((task) => {
+                {tasks.filter((o) => {
+                    return showDone || !o.done
+                    // if (showDone) return true;
+                    // return
+                }).sort((a, b) => moment(b.datetime).diff(a.datetime)).map((task) => {
+                    const isExpired = () => {
+                        return !(task.done || moment().diff(task.datetime) <= 0)
+                    }
+                    const isDone = () => {
+                        return Boolean(task.done)
+                    }
 
                     const onEditClick = (e) => {
                         // setOpenDialogAdd(true)
@@ -52,10 +64,10 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                     return (
                         <Box key={task.id}>
                             <Card variant="outlined"
-
                                   sx={{
                                       position: "relative",
-                                      px: 1
+                                      px: 1,
+                                      bgcolor: isExpired() ? "errorBg.main" : isDone() ? "successBg.main" : "",
                                   }}>
                                 <CardContent>
                                     <Box sx={{
@@ -72,7 +84,7 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                                         }}>
                                             <Typography
                                                 sx={{
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                 }}>
                                                 {task.title}
                                             </Typography>
@@ -80,14 +92,16 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                                         </Box>
 
                                         <Chip label={moment(task.datetime).format("DD-MM-YYYY HH:mm")}
-                                              variant="outlined"/>
+                                              variant="outlined"
+                                              color={isExpired() ? "error" : "default"}/>
 
                                     </Box>
 
                                     <Divider variant="middle"/>
 
                                     <Typography sx={{
-                                        my: 2
+                                        my: 2,
+                                        fontSize: "11px"
                                     }}>
                                         {task.text}
                                     </Typography>
@@ -99,13 +113,28 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                                         gap: 1,
                                         mt: 1
                                     }}>
-                                        <Typography>
+                                        <Typography sx={{fontSize: "10px"}}>
                                             {task.user.name}
                                         </Typography>
                                         <Divider orientation="vertical" flexItem/>
-                                        <Typography>
-                                            {moment(task.created_at).format("DD-MM-YYYY HH:mm")}
-                                        </Typography>
+                                        <Tooltip title="Dodano" arrow>
+                                            <Typography sx={{fontSize: "10px"}}>
+                                                {moment(task.created_at).format("DD-MM-YYYY HH:mm")}
+                                            </Typography>
+                                        </Tooltip>
+                                        {
+                                            task.done ?
+                                                <>
+                                                    <Divider orientation="vertical" flexItem/>
+                                                    <Tooltip title="Zakończono" arrow>
+                                                        <Typography sx={{fontSize: "10px"}}>
+                                                            {moment(task.done).format("DD-MM-YYYY HH:mm")}
+                                                        </Typography>
+                                                    </Tooltip>
+                                                </>
+                                                : ""
+                                        }
+
                                     </Box>
 
                                 </CardContent>
@@ -163,6 +192,17 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                         <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
                             <Add/>
                         </Fab>
+
+                    </Box>
+                    <Box sx={{position: "absolute", top: 0, right: 120, zIndex: 20}}>
+
+                        <Button
+                            variant={showDone ? "contained" : "outlined"}
+                            onClick={() => setShowDone(!showDone)}
+                            sx={{height: "25px", mt: 1}}
+                        >
+                            Pokaż zakończone
+                        </Button>
 
                     </Box>
 

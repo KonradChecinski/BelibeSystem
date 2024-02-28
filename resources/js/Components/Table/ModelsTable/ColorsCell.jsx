@@ -16,7 +16,7 @@ export default function ColorsCell({colors}) {
         }}>
             {colors.map((value, key) => {
                 return (
-                    <Typography key={key}>
+                    <Typography key={key} sx={{fontSize: "11px"}}>
                         {value.shortcut} - {value.name}
                     </Typography>
                 );

@@ -21,11 +21,11 @@ export default function ClientLocationsComponent(props) {
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
-            <Typography
-                sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                <LocationOnIcon fontSize={"large"}/>
-                Lokacje klienta
-            </Typography>
+            {/*<Typography*/}
+            {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
+            {/*    <LocationOnIcon fontSize={"large"}/>*/}
+            {/*    Lokacje klienta*/}
+            {/*</Typography>*/}
 
             <Box sx={{pr: 0}}>
                 <ClientLocationsTable locations={props.client?.locations} readOnly={!props.editing} props={props}/>

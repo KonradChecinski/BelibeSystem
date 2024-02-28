@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {
-    Box, Button,
+    Box,
     Card, CardActions,
     CardContent,
     Divider,
@@ -14,25 +14,35 @@ import {useTheme} from "@mui/material/styles";
 import moment from "moment";
 import DeleteClientNotesDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientNotesDialog";
 import ClientAddEditNotesDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog";
+import ClientAddEditActivitiesDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog";
+import DeleteClientActivityDialog
+    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientActivityDialog";
 
-export default function ClientNotes({notes, readOnly, color, props}) {
+export default function ClientActivity({activities, readOnly, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
-    const [openDialogDelete, setOpenDialogDelete] = useState(notes.map((note) => ({id: note.id, value: false})));
-    const [openDialogEdit, setOpenDialogEdit] = useState(notes.map((note) => ({id: note.id, value: false})));
+    const [openDialogDelete, setOpenDialogDelete] = useState(activities.map((activity) => ({
+        id: activity.id,
+        value: false
+    })));
+    const [openDialogEdit, setOpenDialogEdit] = useState(activities.map((activity) => ({
+        id: activity.id,
+        value: false
+    })));
 
     useEffect(() => {
-        setOpenDialogDelete(notes.map((note) => ({id: note.id, value: false})))
-        setOpenDialogEdit(notes.map((note) => ({id: note.id, value: false})))
+        setOpenDialogDelete(activities.map((activity) => ({id: activity.id, value: false})))
+        setOpenDialogEdit(activities.map((activity) => ({id: activity.id, value: false})))
     }, [props])
     return (
         <>
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, mb: 3}}>
-                {notes.map((note) => {
+                {activities.map((activity) => {
 
                     const onEditClick = (e) => {
                         // setOpenDialogAdd(true)
-                        let object = openDialogEdit.find(e => e.id === note.id)
+                        let object = openDialogEdit.find(e => e.id === activity.id)
                         object.value = !object.value
 
                         setOpenDialogEdit([...openDialogEdit, object])
@@ -41,13 +51,13 @@ export default function ClientNotes({notes, readOnly, color, props}) {
                     const onDeleteClick = (e) => {
                         // setOpenDialogDelete(true);
 
-                        let object = openDialogDelete.find(e => e.id === note.id)
+                        let object = openDialogDelete.find(e => e.id === activity.id)
                         object.value = !object.value
 
                         setOpenDialogDelete([...openDialogDelete, object])
                     };
                     return (
-                        <Box key={note.id}>
+                        <Box key={activity.id}>
                             <Card variant="outlined"
 
                                   sx={{
@@ -55,12 +65,19 @@ export default function ClientNotes({notes, readOnly, color, props}) {
                                       px: 1
                                   }}>
                                 <CardContent>
-                                    <Typography sx={{
-                                        mb: 1,
-                                        fontSize: "11px"
+                                    <Box sx={{
+                                        display: 'inline-flex',
+                                        gap: 1,
+                                        mb: 1
                                     }}>
-                                        {note.text}
-                                    </Typography>
+                                        <Typography>
+                                            {activity.activity_type?.name}
+                                        </Typography>
+                                        <Divider orientation="vertical" flexItem/>
+                                        <Typography sx={{fontSize: "11px"}}>
+                                            {activity.description}
+                                        </Typography>
+                                    </Box>
                                     <Divider variant="middle"/>
                                     <Box sx={{
                                         display: 'inline-flex',
@@ -68,16 +85,14 @@ export default function ClientNotes({notes, readOnly, color, props}) {
                                         mt: 1
                                     }}>
                                         <Typography sx={{fontSize: "10px"}}>
-                                            {note.user.name}
+                                            {activity.user.name}
                                         </Typography>
                                         <Divider orientation="vertical" flexItem/>
                                         <Tooltip title="Dodano" arrow>
                                             <Typography sx={{fontSize: "10px"}}>
-                                                {moment(note.created_at).format("DD-MM-YYYY HH:mm")}
+                                                {moment(activity.datetime).format("DD-MM-YYYY HH:mm")}
                                             </Typography>
                                         </Tooltip>
-
-
                                     </Box>
 
                                 </CardContent>
@@ -105,24 +120,24 @@ export default function ClientNotes({notes, readOnly, color, props}) {
                                     </Tooltip>
                                 </CardActions>
                             </Card>
-                            <DeleteClientNotesDialog open={openDialogDelete.find(e => e.id === note.id)?.value}
-                                                     setOpen={() => {
-                                                         let object = openDialogDelete.find(e => e.id === note.id)
-                                                         object.value = !object.value
+                            <DeleteClientActivityDialog open={openDialogDelete.find(e => e.id === activity.id)?.value}
+                                                        setOpen={() => {
+                                                            let object = openDialogDelete.find(e => e.id === activity.id)
+                                                            object.value = !object.value
 
-                                                         setOpenDialogDelete([...openDialogDelete, object])
-                                                     }
-                                                     }
-                                                     note={note} params={props}/>
+                                                            setOpenDialogDelete([...openDialogDelete, object])
+                                                        }
+                                                        }
+                                                        activity={activity} params={props}/>
 
-                            <ClientAddEditNotesDialog open={openDialogEdit.find(e => e.id === note.id)?.value}
-                                                      setOpen={() => {
-                                                          let object = openDialogEdit.find(e => e.id === note.id)
-                                                          object.value = !object.value
+                            <ClientAddEditActivitiesDialog open={openDialogEdit.find(e => e.id === activity.id)?.value}
+                                                           setOpen={() => {
+                                                               let object = openDialogEdit.find(e => e.id === activity.id)
+                                                               object.value = !object.value
 
-                                                          setOpenDialogEdit([...openDialogEdit, object])
-                                                      }}
-                                                      clickedNote={note} params={props}/>
+                                                               setOpenDialogEdit([...openDialogEdit, object])
+                                                           }}
+                                                           clickedActivity={activity} params={props}/>
                         </Box>
                     )
                 })}
@@ -137,8 +152,9 @@ export default function ClientNotes({notes, readOnly, color, props}) {
 
                     </Box>
 
-                    <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                              clickedNote={null} params={props}/>
+                    <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                   clickedActivity={null}
+                                                   params={props}/>
                 </>
                 : ""
             }

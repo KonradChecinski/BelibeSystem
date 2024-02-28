@@ -30,24 +30,28 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
     const column = [
         {field: "id", headerName: "Id"},
         {
-            field: "country_id",
-            headerName: "Kraj",
+            field: "city",
+            headerName: "Adres",
+            width: 180,
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography>{params.row?.country?.name}</Typography>
+                        <Typography
+                            sx={{fontSize: "11px"}}>{params.row?.street} {params.row?.building_number}{params.row?.apartment_number ? "/" + params.row?.apartment_number : ""}</Typography>
+                        <Typography
+                            sx={{fontSize: "11px"}}>{params.row?.city}, {params.row?.postal_code} - {params.row?.country?.name}</Typography>
                     </Box>
                 );
             }
         },
 
-        {field: "city", headerName: "Miasto"},
-        {field: "street", headerName: "Ulica"},
-        {field: "building_number", headerName: "Numer budynku"},
-        {field: "apartment_number", headerName: "Numer lokalu"},
-        {field: "postal_code", headerName: "Kod pocztowy"},
-        {field: "note", headerName: "Notatka", flex: 1},
-        {field: "active", headerName: "Aktywność", type: "boolean"},
+        // {field: "city", headerName: "Miasto"},
+        // {field: "street", headerName: "Ulica"},
+        // {field: "building_number", headerName: "Numer budynku"},
+        // {field: "apartment_number", headerName: "Numer lokalu"},
+        // {field: "postal_code", headerName: "Kod pocztowy"},
+        {field: "note", headerName: "Notatka", flex: 1, minWidth: 160},
+        {field: "active", headerName: "Aktywność", type: "boolean", width: 50},
     ];
 
 
@@ -56,7 +60,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
         {
             field: "action",
             headerName: "Akcje",
-            width: 120,
+            width: 80,
             sortable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);

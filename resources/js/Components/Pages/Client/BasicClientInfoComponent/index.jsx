@@ -136,11 +136,11 @@ export default function BasicClientInfoComponent(props) {
                 {/*    }*/}
 
                 <Box>
-                    <Typography
-                        sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <InfoIcon fontSize={"large"}/>
-                        Informacje podstawowe
-                    </Typography>
+                    {/*<Typography*/}
+                    {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
+                    {/*    <InfoIcon fontSize={"large"}/>*/}
+                    {/*    Informacje podstawowe*/}
+                    {/*</Typography>*/}
 
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
                         <Box>

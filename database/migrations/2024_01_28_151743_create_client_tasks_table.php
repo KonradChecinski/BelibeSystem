@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->text("text");
             $table->dateTime("datetime");
             $table->foreignId("user_id")->references("id")->on("users")->restrictOnDelete();
+            $table->dateTime("done")->default(null);
             $table->timestamps();
         });
     }

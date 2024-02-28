@@ -25,6 +25,12 @@ export default function Theme({children}) {
             card: "#ffffff",
             toolbar: "#ffffff"
         },
+        errorBg: {
+            main: "#ff00001a",
+        },
+        successBg: {
+            main: "#00ad1b66",
+        },
         gradient: {
             divider:
                 "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)"
@@ -54,6 +60,12 @@ export default function Theme({children}) {
             paper: "#1f2937",
             card: "#1f2937",
             toolbar: "#1f2937"
+        },
+        errorBg: {
+            main: "#ff00001a",
+        },
+        successBg: {
+            main: "#00ad1b66",
         },
         gradient: {
             divider:

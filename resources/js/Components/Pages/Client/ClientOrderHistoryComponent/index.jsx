@@ -66,7 +66,7 @@ export default function ClientOrderHistoryComponent(props) {
         //     preserveScroll: true
         // })
     }
-    console.log("")
+    // console.log("")
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
