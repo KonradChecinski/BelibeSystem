@@ -60,11 +60,14 @@ class AdditionalClientController extends Controller
     {
         $client->update([
             "priority" => $request->priority,
-            "blacklist" => $request->blacklist
+            "blacklist" => $request->blacklist,
+            "newsletter" => $request->newsletter,
         ]);
         $client->status()->associate($request->status["id"]);
         $client->sourceOfAcquisition()->associate($request->source_of_acquisition["id"]);
-        $client->payment()->associate($request->payment["id"]);
+        $client->payments()->sync(collect($request->payments)->map(function ($payment) {
+            return $payment["id"];
+        }));
         $client->status()->associate($request->status["id"]);
         $client->accountManager()->associate($request->account_manager["id"]);
         $client->save();

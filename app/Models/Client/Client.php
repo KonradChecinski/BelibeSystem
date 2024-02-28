@@ -47,6 +47,7 @@ class Client extends Model
         'payment_id',
         'industry_id',
         'blacklist',
+        'newsletter',
     ];
 
     public function country(): BelongsTo

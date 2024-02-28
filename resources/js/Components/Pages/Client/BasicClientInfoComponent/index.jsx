@@ -3,7 +3,7 @@ import {useForm} from "@inertiajs/react";
 import {
     Autocomplete,
     Box,
-    Button,
+    Button, Divider,
     Fade,
     TextField,
     Typography
@@ -120,7 +120,7 @@ export default function BasicClientInfoComponent(props) {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen} nip={data.nip}/>
 
-            <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
+            <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
                 {/*    {props.editing ? (*/}
                 {/*        <Button*/}
                 {/*            variant="outlined"*/}
@@ -183,7 +183,7 @@ export default function BasicClientInfoComponent(props) {
                         </Box>
                     </Box>
                 </Box>
-
+                <Divider/>
                 <Box>
                     <Typography
                         sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
@@ -339,7 +339,7 @@ export default function BasicClientInfoComponent(props) {
                         </Box>
                     </Box>
                 </Box>
-
+                <Divider/>
                 <Box>
                     <Typography
                         sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>

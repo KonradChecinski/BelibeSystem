@@ -7,10 +7,10 @@ import {
     Fade, FormControl, InputLabel, MenuItem, Select,
     TextField,
     Typography,
-    Checkbox, FormControlLabel
+    Checkbox, FormControlLabel, Divider
 } from "@mui/material";
 import {Cancel, Save} from "@mui/icons-material";
-import {AddBox, CheckBox, CheckBoxOutlineBlank} from '@mui/icons-material';
+import {AddBox, CheckBox, CheckBoxOutlineBlank, Handshake} from '@mui/icons-material';
 import {
     useAdditionalClientInfoForm
 } from "@/Components/Pages/Client/AdditionalClientInfoComponent/form/useAdditionalClientInfoForm";
@@ -37,9 +37,11 @@ export default function AdditionalClientInfoComponent(props) {
         'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
         'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
+        'newsletter': props.client.newsletter,
     })
 
-    const [checked, setChecked] = useState(props.client.blacklist !== 0);
+    const [checkedBlacklist, setCheckedBlacklist] = useState(props.client.blacklist !== 0);
+    const [checkedNewsletter, setCheckedNewsletter] = useState(props.client.newsletter !== 0);
 
     const initializeFieldValues = () => {
         setValue('id', data.id)
@@ -68,10 +70,12 @@ export default function AdditionalClientInfoComponent(props) {
             'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
             'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
+            'newsletter': props.client.newsletter,
         });
 
         initializeFieldValues()
-        setChecked(props.client.blacklist !== 0)
+        setCheckedBlacklist(props.client.blacklist !== 0)
+        setCheckedNewsletter(props.client.newsletter !== 0)
         setEdited(false);
 
         clearErrors('status')
@@ -80,6 +84,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('payments')
         clearErrors('account_manager')
         clearErrors('blacklist')
+        clearErrors('newsletter')
     };
     const saveBasic = () => {
         post(route("system.clients.client.update.additional", {client: data.id}), {
@@ -363,7 +368,13 @@ export default function AdditionalClientInfoComponent(props) {
                         )}
 
                         <FormControl
-                            sx={{width: "30ch", display: "flex", flexDirection: "column", alignItems: 'center'}}
+                            sx={{
+                                ml: 2,
+                                width: "30ch",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: 'flex-start'
+                            }}
                         >
                             <FormControlLabel
                                 label={<Typography>Czarna lista</Typography>}
@@ -373,10 +384,10 @@ export default function AdditionalClientInfoComponent(props) {
                                         label="Czarna lista"
                                         size={"large"}
                                         disabled={!props.editing}
-                                        checked={checked}
+                                        checked={checkedBlacklist}
                                         onChange={(value) => {
                                             // setProductModel({...productModel, product_group_id: value.target.value});
-                                            setChecked(value.target.checked)
+                                            setCheckedBlacklist(value.target.checked)
                                             setData({
                                                 ...data,
                                                 blacklist: value.target.checked ? 1 : 0,
@@ -389,6 +400,51 @@ export default function AdditionalClientInfoComponent(props) {
                             {fieldErrors.blacklist?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
                                     {fieldErrors.blacklist?.message.toString()}
+                                </Typography>
+                            )}
+                        </FormControl>
+                        <Divider/>
+
+                        <Typography
+                            sx={{mb: 1, display: "flex", gap: 1, alignItems: "center"}}>
+                            <Handshake fontSize={"large"}/>
+
+                            Zgody marketingowe
+                        </Typography>
+
+                        <FormControl
+                            sx={{
+                                ml: 2,
+                                width: "30ch",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: 'flex-start'
+                            }}
+                        >
+                            <FormControlLabel
+                                label={<Typography>Newsletter</Typography>}
+                                control={
+                                    <Checkbox
+                                        id="newsletter-select"
+                                        label="Newsletter"
+                                        size={"large"}
+                                        disabled={!props.editing}
+                                        checked={checkedNewsletter}
+                                        onChange={(value) => {
+                                            // setProductModel({...productModel, product_group_id: value.target.value});
+                                            setCheckedNewsletter(value.target.checked)
+                                            setData({
+                                                ...data,
+                                                newsletter: value.target.checked ? 1 : 0,
+                                            })
+                                            setEdited(true)
+                                        }}
+                                    />
+                                }
+                            />
+                            {fieldErrors.newsletter?.message && (
+                                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
+                                    {fieldErrors.newsletter?.message.toString()}
                                 </Typography>
                             )}
                         </FormControl>

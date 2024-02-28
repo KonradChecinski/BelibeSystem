@@ -11,6 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('clients', function (Blueprint $table) {
+            $table->boolean("newsletter")->default(false)->after("nip");
             $table->boolean("blacklist")->default(false)->after("nip");
             $table->foreignId("user_id")->after("nip")->references("id")->on("users")->restrictOnDelete();
             $table->foreignId("source_of_acquisition_id")->after("nip")->references("id")->on("b2b_source_of_acquisitions")->restrictOnDelete();
