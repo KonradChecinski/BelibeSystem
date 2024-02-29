@@ -15,6 +15,7 @@ import {useForm} from "@inertiajs/react";
 import {
     useClientDiscountsDialogForm
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditDiscountsDialog/form/useClientDiscountsDialogForm";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientAddEditDiscountsDialog({
                                                          open,
@@ -64,7 +65,7 @@ export default function ClientAddEditDiscountsDialog({
             label: clickedDiscount.product_brand?.name
         } : null,
 
-        value: clickedDiscount ? clickedDiscount.value : null,
+        value: clickedDiscount ? clickedDiscount.value : 0,
     })
 
     const getNameByTypeId = (id) => {
@@ -88,7 +89,7 @@ export default function ClientAddEditDiscountsDialog({
         // inicjacja wartości pól
         setValue('type', clickedDiscount ? 'type' : '');
         setValue('name', clickedDiscount ? 'name' : '');
-        setValue('value', clickedDiscount?.value);
+        setValue('value', clickedDiscount?.value ? clickedDiscount?.value : 0);
 
         setData({
             type: clickedDiscount ? types.find((e) => e.id === clickedDiscount.type) : null,
@@ -152,46 +153,42 @@ export default function ClientAddEditDiscountsDialog({
     }
 
     const save = () => {
-        // if (clickedColor) {
-        //     console.log(clickedColor.id)
-        //     patch(route("system.products.model.color.update", {
-        //             model: params.productModel.id,
-        //             productModelColor: clickedColor.id
-        //         }),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Edytowano kolor", {variant: 'success'})
-        //                 handleClose();
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy edycji koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // } else {
-        //     post(route("system.products.model.color", {model: params.productModel.id}),
-        //
-        //         {
-        //             preserveScroll: true,
-        //             onSuccess: (e) => {
-        //                 setColor(e.props.productModel.colors_with_images.find((e) => e.shortcut == data.shortcut))
-        //                 reset();
-        //                 setActiveStep(0);
-        //                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
-        //                 handleClose();
-        //                 setOpenDialogAdd(true);
-        //             },
-        //             onError: errors => {
-        //                 enqueueSnackbar("Błąd przy dodawniu koloru", {variant: 'error'})
-        //                 console.error(errors)
-        //             },
-        //         })
-        // }
+        if (clickedDiscount) {
+            patch(route("system.clients.client.discount.update", {
+                    client: params.client.id,
+                    clientDiscount: clickedDiscount.id
+                }),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Edytowano rabat", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy edycji rabatu", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        } else {
+            post(route("system.clients.client.discount", {client: params.client.id}),
+
+                {
+                    preserveScroll: true,
+                    onSuccess: (e) => {
+                        reset();
+                        setActiveStep(0);
+                        enqueueSnackbar("Dodano rabat", {variant: 'success'})
+                        handleClose();
+                    },
+                    onError: errors => {
+                        enqueueSnackbar("Błąd przy dodawniu rabatu", {variant: 'error'})
+                        console.error(errors)
+                    },
+                })
+        }
 
     }
 
@@ -407,7 +404,8 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                             onChange={(value) => {
                                 setData('value', value.target.value);
                             }}
-                            defaultValue={data.value}
+                            defaultValue={0}
+                            value={data.value}
                             sx={{width: "30ch", my: 1}}
                         />
                         {errors.value?.message && (

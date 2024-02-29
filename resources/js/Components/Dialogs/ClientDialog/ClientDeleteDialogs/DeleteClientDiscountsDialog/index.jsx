@@ -58,12 +58,11 @@ export default function DeleteClientDiscountsDialog({open, setOpen, discount, la
     }
 
     const save = () => {
-        destroy(route("system.clients.client.discount.delete", {clientDiscount: discount}),
+        destroy(route("system.clients.client.discount.delete", {clientDiscount: discount, client: params.client.id}),
 
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // deleteRow(product.id)
                     enqueueSnackbar(`Usunięto rabat ${type} - ${name}`, {variant: 'success'})
                     handleClose();
                 },

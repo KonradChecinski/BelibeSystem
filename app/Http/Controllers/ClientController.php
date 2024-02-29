@@ -237,9 +237,20 @@ class ClientController extends Controller
     public function show(int $id)
     {
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payments", "industry",
-            "activities.user:id,name", "activities.activityType:id,name", "tasks.user:id,name", "notes.user:id,name", "locations.country:id,name",
-            "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name", "discounts.productGroup:id,name", "discounts.productBrand:id,name",
+            "notes.user:id,name", "locations.country:id,name", "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name",
+            "discounts.productGroup:id,name", "discounts.productBrand:id,name",
             "clientUsers", "recipient.country:id,name", "invoices", "receivables", "obligations"
+        ])->with(["activities" => function ($query) {
+            $query->latest()->take(10)->with([
+                "user:id,name",
+                "activityType:id,name"
+            ]);
+        },
+            "tasks" => function ($query) {
+                $query->latest()->take(10)->with([
+                    "user:id,name",
+                ]);
+            },
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();
@@ -283,9 +294,20 @@ class ClientController extends Controller
     public function edit(int $id)
     {
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payments", "industry",
-            "activities.user:id,name", "activities.activityType:id,name", "tasks.user:id,name", "notes.user:id,name", "locations.country:id,name",
-            "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name", "discounts.productGroup:id,name", "discounts.productBrand:id,name",
+            "notes.user:id,name", "locations.country:id,name", "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name",
+            "discounts.productGroup:id,name", "discounts.productBrand:id,name",
             "clientUsers", "recipient.country:id,name", "invoices", "receivables", "obligations"
+        ])->with(["activities" => function ($query) {
+            $query->latest()->take(10)->with([
+                "user:id,name",
+                "activityType:id,name"
+            ]);
+        },
+            "tasks" => function ($query) {
+                $query->latest()->take(10)->with([
+                    "user:id,name",
+                ]);
+            },
         ])->findOrFail($id);
 
         $b2bActivityType = B2bActivityType::all();

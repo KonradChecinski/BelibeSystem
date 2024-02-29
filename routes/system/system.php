@@ -9,6 +9,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDiscountController;
 use App\Http\Controllers\ClientLocationController;
 use App\Http\Controllers\ClientNoteController;
+use App\Http\Controllers\ClientPaymentDiscountController;
 use App\Http\Controllers\ClientTaskController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\GS1BrandController;
@@ -109,12 +110,15 @@ Route::middleware("auth:user")->group(function () {
         Route::patch("/clients/client/{client}/user/{clientUser}", [ClientUserController::class, 'update'])->name("system.clients.client.user.update");
         Route::delete("/clients/client/{client}/user/{clientUser}", [ClientUserController::class, 'destroy'])->name("system.clients.client.user.delete");
 
-
         Route::post("/clients/client/{client}/location/", [ClientLocationController::class, 'store'])->name("system.clients.client.location");
         Route::patch("/clients/client/{client}/location/{clientLocation}", [ClientLocationController::class, 'update'])->name("system.clients.client.location.update");
         Route::delete("/clients/client/{client}/location/{clientLocation}", [ClientLocationController::class, 'destroy'])->name("system.clients.client.location.delete");
 
-        Route::delete("/clients/client/discount/{clientDiscount}", [ClientDiscountController::class, 'destroy'])->name("system.clients.client.discount.delete");
+        Route::post("/clients/client/{client}/discount/", [ClientDiscountController::class, 'store'])->name("system.clients.client.discount");
+        Route::patch("/clients/client/{client}/discount/{clientDiscount}", [ClientDiscountController::class, 'update'])->name("system.clients.client.discount.update");
+        Route::delete("/clients/client/{client}/discount/{clientDiscount}", [ClientDiscountController::class, 'destroy'])->name("system.clients.client.discount.delete");
+
+        Route::patch("/clients/client/{client}/payment/discount/{b2bPayment}", [ClientPaymentDiscountController::class, 'update'])->name("system.clients.client.payment.discount.update");
 
         Route::post("/clients/client/{client}/activity/", [ClientActivityController::class, 'store'])->name("system.clients.client.activity");
         Route::patch("/clients/client/{client}/activity/{clientActivity}", [ClientActivityController::class, 'update'])->name("system.clients.client.activity.update");

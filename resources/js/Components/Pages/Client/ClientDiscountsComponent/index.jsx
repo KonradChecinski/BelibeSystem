@@ -12,6 +12,7 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ClientDiscountsTable from "@/Components/Table/ClientDiscountsTable";
 import DiscountIcon from '@mui/icons-material/Discount';
+import ClientDiscountsOnPaymentsTable from "@/Components/Table/ClientDiscountsOnPaymentsTable";
 
 
 export default function ClientDiscountsComponent(props) {
@@ -35,8 +36,9 @@ export default function ClientDiscountsComponent(props) {
                 Rabaty przy płatnościach
             </Typography>
 
-            <Box sx={{pr: 0}}>
-                <ClientDiscountsTable discounts={props.client?.discounts} readOnly={!props.editing} props={props}/>
+            <Box sx={{pr: 0, position: "relative"}}>
+                <ClientDiscountsOnPaymentsTable payments={props.client?.payments} readOnly={!props.editing}
+                                                props={props}/>
             </Box>
         </Box>
 

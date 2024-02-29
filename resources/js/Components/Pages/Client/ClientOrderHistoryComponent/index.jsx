@@ -78,7 +78,7 @@ export default function ClientOrderHistoryComponent(props) {
             </Typography>
 
             <Box sx={{pr: 0}}>
-                <ClientOrderHistoryTable history={props.client.activities} readOnly={!props.editing}/>
+                <ClientOrderHistoryTable history={[]} readOnly={!props.editing}/>
             </Box>
         </Box>
 

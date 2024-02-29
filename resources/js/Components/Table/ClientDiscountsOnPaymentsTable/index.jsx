@@ -16,96 +16,50 @@ import DeleteClientDiscountsDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientDiscountsDialog";
 import ClientAddEditDiscountsDialog
     from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditDiscountsDialog";
+import ClientAddEditPaymentsDiscountsDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditPaymentsDiscountsDialog";
 
-export default function ClientDiscountsTable({discounts, readOnly, color, props}) {
+export default function ClientDiscountsOnPaymentsTable({payments, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
-    const {data, setData, re} = useForm([])
+    const {data, setData, re} = useForm(payments)
 
     useEffect(() => {
-        setData(discounts)
-    }, [discounts]);
+        setData(payments)
+    }, [payments]);
 
     const column = [
         {field: "id", headerName: "Id"},
-        {
-            field: "type",
-            headerName: "Typ",
-            sortable: false,
-            filterable: false,
-            width: 150,
-            renderCell: (params) => {
-                let text = '';
-                switch (params.value) {
-                    case 1:
-                        text = 'Model';
-                        break;
-                    case 2:
-                        text = 'Kategoria';
-                        break;
-                    case 3:
-                        text = 'Grupa';
-                        break;
-                    case 4:
-                        text = 'Producent';
-                        break;
-                }
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
-                    </Box>
-                );
-            },
-
-        },
         {
             field: "name",
             headerName: "Nazwa",
             sortable: false,
             filterable: false,
-            // align: 'center',
             flex: 1,
-            renderCell: (params) => {
-                let text = '';
-                switch (params.row.type) {
-                    case 1:
-                        text = params.row.product_model.symbol + " - " + params.row.product_model.name
-                        break;
-                    case 2:
-                        text = params.row.product_category.name
-                        break;
-                    case 3:
-                        text = params.row.product_group.name
-                        break;
-                    case 4:
-                        text = params.row.product_brand.name
-                        break;
-                }
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
-                    </Box>
-                );
-            }
         },
         {
-            field: "value",
-            headerName: "Wartość rabatu", sortable: false,
+            field: "discount.discount",
+            headerName: "Aktywność",
+            sortable: false,
             filterable: false,
+            type: "boolean",
             align: 'center',
             width: 100,
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{params.row?.value}%</Typography>
-                    </Box>
-                );
-            }
+            valueGetter: (params) => params.row?.discount?.discount
+        },
+        {
+            field: "discount.discount_value",
+            headerName: "Wartość",
+            sortable: false,
+            filterable: false,
+            align: 'center',
+            headerAlign: 'center',
+            width: 100,
+            valueGetter: (params) => params.row?.discount?.discount_value + "%"
         },
     ];
-
 
     const columnWithAction = [
         ...column,
@@ -124,12 +78,6 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                     setOpenDialogAdd(true)
                 };
 
-                const onDeleteClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setOpenDialogDelete(true);
-                };
-
                 return (
                     <>
                         <Tooltip title="Edycja">
@@ -138,16 +86,8 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                             </IconButton>
                         </Tooltip>
 
-                        <Tooltip title="Usuń">
-                            <IconButton aria-label="delete" onClick={onDeleteClick}>
-                                <Delete/>
-                            </IconButton>
-                        </Tooltip>
-
-                        <DeleteClientDiscountsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                     discount={params.row} params={props}/>
-                        <ClientAddEditDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                      clickedDiscount={params.row} params={props}/>
+                        <ClientAddEditPaymentsDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                              clickedDiscount={params.row} params={props}/>
                     </>
 
                 );
@@ -178,19 +118,17 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                 pageSizeOptions={[5, 20, 50, 100]}
                 editMode="row"
 
-                // slots={{toolbar: GridToolbar}}
+                // slots={{ toolbar: GridToolbar }}
                 // slotProps={{
                 //     toolbar: {
                 //         showQuickFilter: true,
-                //         printOptions: {disableToolbarButton: true},
-                //         csvOptions: {disableToolbarButton: true},
                 //         quickFilterProps: {debounceMs: 500}
                 //     }
                 // }}
                 disableColumnFilter
-                disableColumnSelector
+                // disableColumnSelector
                 disableDensitySelector
-                disableColumnMenu
+                // disableColumnMenu
                 disableVirtualization
                 autoHeight
                 localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
@@ -218,20 +156,6 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                     }
                 }}
             />
-            {!readOnly ?
-                <>
-                    <Box sx={{position: "absolute", bottom: -25, right: -15, zIndex: 20}}>
-                        <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
-                            <Add/>
-                        </Fab>
-
-                    </Box>
-
-                    <ClientAddEditDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                  clickedDiscount={null} params={props}/>
-                </>
-                : ""
-            }
 
         </>
     );
