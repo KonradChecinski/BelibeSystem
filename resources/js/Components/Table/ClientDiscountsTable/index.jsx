@@ -22,87 +22,81 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
-    const {data, setData, re} = useForm([])
+    const {data, setData, re} = useForm(discounts)
+    const [rowCountState, setRowCountState] = useState(discounts.length);
 
     useEffect(() => {
         setData(discounts)
+        setRowCountState(discounts.length)
     }, [discounts]);
+
+    const getName = (row) => {
+        let text = '';
+        switch (row.type) {
+            case 1:
+                text = row.product_model.symbol + " - " + row.product_model.name
+                break;
+            case 2:
+                text = row.product_category.name
+                break;
+            case 3:
+                text = row.product_group.name
+                break;
+            case 4:
+                text = row.product_brand.name
+                break;
+        }
+
+        return text;
+    }
+
+    const getType = (params) => {
+        let text = '';
+        switch (params.value) {
+            case 1:
+                text = 'Model';
+                break;
+            case 2:
+                text = 'Kategoria';
+                break;
+            case 3:
+                text = 'Grupa';
+                break;
+            case 4:
+                text = 'Producent';
+                break;
+        }
+
+        return text;
+    }
 
     const column = [
         {field: "id", headerName: "Id"},
         {
             field: "type",
             headerName: "Typ",
-            sortable: false,
-            filterable: false,
+            sortable: true,
+            filterable: true,
             width: 150,
-            renderCell: (params) => {
-                let text = '';
-                switch (params.value) {
-                    case 1:
-                        text = 'Model';
-                        break;
-                    case 2:
-                        text = 'Kategoria';
-                        break;
-                    case 3:
-                        text = 'Grupa';
-                        break;
-                    case 4:
-                        text = 'Producent';
-                        break;
-                }
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
-                    </Box>
-                );
-            },
-
+            valueGetter: (params) => getType(params),
         },
         {
             field: "name",
             headerName: "Nazwa",
-            sortable: false,
-            filterable: false,
+            sortable: true,
+            filterable: true,
             // align: 'center',
             flex: 1,
-            renderCell: (params) => {
-                let text = '';
-                switch (params.row.type) {
-                    case 1:
-                        text = params.row.product_model.symbol + " - " + params.row.product_model.name
-                        break;
-                    case 2:
-                        text = params.row.product_category.name
-                        break;
-                    case 3:
-                        text = params.row.product_group.name
-                        break;
-                    case 4:
-                        text = params.row.product_brand.name
-                        break;
-                }
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{text}</Typography>
-                    </Box>
-                );
-            }
+            valueGetter: (params) => getName(params.row),
         },
         {
             field: "value",
-            headerName: "Wartość rabatu", sortable: false,
-            filterable: false,
+            headerName: "Wartość rabatu",
+            sortable: true,
+            filterable: true,
             align: 'center',
             width: 100,
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography sx={{fontSize: "11px"}}>{params.row?.value}%</Typography>
-                    </Box>
-                );
-            }
+            valueGetter: (params) => params.row?.value + "%",
         },
     ];
 
@@ -114,6 +108,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             headerName: "Akcje",
             width: 120,
             sortable: false,
+            filterable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
                 const [openDialogAdd, setOpenDialogAdd] = useState(false);
@@ -161,7 +156,6 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
         ...columnVisibility
     });
-    const [rowCountState, setRowCountState] = useState(data.length);
 
 
     return (
@@ -175,24 +169,31 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                     setColumnVisibilityModel(newModel)
                 }
                 rowCount={rowCountState}
-                pageSizeOptions={[5, 20, 50, 100]}
-                editMode="row"
-
-                // slots={{toolbar: GridToolbar}}
-                // slotProps={{
-                //     toolbar: {
-                //         showQuickFilter: true,
-                //         printOptions: {disableToolbarButton: true},
-                //         csvOptions: {disableToolbarButton: true},
-                //         quickFilterProps: {debounceMs: 500}
-                //     }
-                // }}
-                disableColumnFilter
+                pageSizeOptions={[5, 10, 20, 50, 100]}
+                // editMode="row"
+                slots={{toolbar: GridToolbar}}
+                slotProps={{
+                    toolbar: {
+                        showQuickFilter: true,
+                        printOptions: {disableToolbarButton: true},
+                        csvOptions: {disableToolbarButton: true},
+                        quickFilterProps: {debounceMs: 500}
+                    }
+                }}
+                initialState={{
+                    ...data.initialState,
+                    pagination: {paginationModel: {pageSize: 10}},
+                    sorting: {
+                        sortModel: [{field: 'type', sort: 'asc'}],
+                    },
+                }}
+                // disableColumnFilter
                 disableColumnSelector
-                disableDensitySelector
-                disableColumnMenu
-                disableVirtualization
+                // disableDensitySelector
+                // disableColumnMenu
+                // disableVirtualization
                 autoHeight
+                pagination
                 localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
                 sx={{
 
@@ -204,17 +205,14 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                             color: "text.primary"
                         }
                     },
-                    "& .MuiToolbar-gutters": {
-                        display: "none"
-                    },
-                    "& .MuiDataGrid-selectedRowCount": {
-                        display: "none"
-                    },
                     "& .MuiDataGrid-row.Mui-selected": {
                         bgcolor: "rgba(255,255,255,0.25)"
                     },
                     "& .MuiDataGrid-row:hover": {
                         bgcolor: "primary"
+                    },
+                    "& .MuiTablePagination-root": {
+                        mr: 10
                     }
                 }}
             />
