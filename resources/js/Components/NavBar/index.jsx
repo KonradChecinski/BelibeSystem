@@ -128,17 +128,25 @@ export default function Navbar({auth}) {
                                     position: "relative"
                                 }}
                             >
-
                                 <Countdown date={Date.now() + 7200000}
+
+                                           onComplete={() => {
+                                               router.post(route("logout"))
+                                               // router.visit(route("logout"), {method:"post"})
+                                           }}
                                            renderer={({hours, minutes, seconds}) => {
                                                return (
-                                                   <Typography variant="h6" gutterBottom>
-                                                       {hours.toLocaleString(undefined, {minimumIntegerDigits: 2})}
-                                                       :
-                                                       {minutes.toLocaleString(undefined, {minimumIntegerDigits: 2})}
-                                                       :
-                                                       {seconds.toLocaleString(undefined, {minimumIntegerDigits: 2})}
-                                                   </Typography>
+
+                                                   <Tooltip title="Czas do wygaśnięcia sesji" arrow>
+                                                       <Typography variant="h6" gutterBottom>
+                                                           {hours.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                           :
+                                                           {minutes.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                           :
+                                                           {seconds.toLocaleString(undefined, {minimumIntegerDigits: 2})}
+                                                       </Typography>
+                                                   </Tooltip>
+
                                                );
                                            }
                                            }/>
