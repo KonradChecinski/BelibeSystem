@@ -32,6 +32,7 @@ import {useForm} from "@inertiajs/react";
 import DropzoneImagesAddDialog from "@/Components/Dialogs/ModelImageDialog/DropzoneImagesAddDialog";
 import ImagesDeleteDialog from "@/Components/Dialogs/ModelImageDialog/ImageDeleteDialog";
 import ImagesInfoDialog from "@/Components/Dialogs/ModelImageDialog/ImageInfoDialog";
+import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 
 
 export default function ImagesComponent(props) {
@@ -40,7 +41,7 @@ export default function ImagesComponent(props) {
 
     const [accordion, setAccordion] = useState(
         props.productModel.colors_with_images
-            .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
+            .sort(sortByColorShortcut)
             .map((color) => {
                     const {id, shortcut} = color
                     return {id: id, shortcut: shortcut, '2': false, '3': false}
@@ -79,7 +80,7 @@ export default function ImagesComponent(props) {
         setData(makeDataStructure())
 
         setAccordion(props.productModel.colors_with_images
-            .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
+            .sort(sortByColorShortcut)
             .map((color) => {
                     const {id, shortcut} = color
                     return {id: id, shortcut: shortcut, '2': false, '3': false}

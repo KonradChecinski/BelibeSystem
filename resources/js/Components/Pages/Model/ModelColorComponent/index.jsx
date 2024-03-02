@@ -11,6 +11,7 @@ import ModelsColorTable from "@/Components/Table/ModelsColorTable";
 import {Edit, ExpandMore} from "@mui/icons-material";
 import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
 import {useState} from "react";
+import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 
 export default function ModelColorComponent(props) {
     const countQuantityInColor = (color_id) => {
@@ -33,7 +34,7 @@ export default function ModelColorComponent(props) {
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 5, mt: 2}}>
             {props.productModel.colors_with_images
-                .sort((a, b) => (a.shortcut > b.shortcut) ? 1 : ((b.shortcut > a.shortcut) ? -1 : 0))
+                .sort(sortByColorShortcut)
                 .map((color) => {
                     const colorName = props.b2c.color.find((b2cColor) => {
                         return b2cColor.id === color.b2c_color_id
