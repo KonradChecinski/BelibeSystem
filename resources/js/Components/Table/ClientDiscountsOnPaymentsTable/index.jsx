@@ -23,11 +23,10 @@ export default function ClientDiscountsOnPaymentsTable({payments, readOnly, colo
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
-
-    const {data, setData, re} = useForm(payments)
+    const {data, setData, re} = useForm(payments.slice().sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0))
 
     useEffect(() => {
-        setData(payments)
+        setData(payments.slice().sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0))
     }, [payments]);
 
     const column = [

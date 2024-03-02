@@ -39,7 +39,13 @@ export default function AdditionalClientInfoComponent(props) {
         'status': props.client.status,
         'priority': props.client.priority,
         'source_of_acquisition': props.client.source_of_acquisition,
-        'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
+        'payments': props.client.payments ? props.client.payments
+            .slice()
+            .sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0)
+            .map(obj => ({
+                ...obj,
+                label: obj.name
+            })) : [],
         'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
         'newsletter': props.client.newsletter,
@@ -305,7 +311,9 @@ export default function AdditionalClientInfoComponent(props) {
                                     onChange={(e, value) => {
                                         setData({
                                             ...data,
-                                            payments: value,
+                                            payments: value.slice()
+                                                .sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0)
+                                            ,
                                         })
                                         setValue('payments', value, {shouldValidate: true})
                                         setEdited(true)
