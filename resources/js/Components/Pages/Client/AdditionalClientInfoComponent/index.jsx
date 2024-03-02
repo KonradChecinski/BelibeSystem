@@ -109,7 +109,7 @@ export default function AdditionalClientInfoComponent(props) {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
                 <Box>
-                    {xlBreakpointUp && (
+                    {(xlBreakpointUp && props.editing) && (
                         <Box sx={{display: "flex", gap: 2, mb: 2, mt: -1}}>
                             <Fade in={edited}>
                                 <Tooltip title={"Zapisz"}>
