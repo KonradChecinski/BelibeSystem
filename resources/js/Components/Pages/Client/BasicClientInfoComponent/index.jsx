@@ -4,8 +4,8 @@ import {
     Autocomplete,
     Box,
     Button, Divider,
-    Fade,
-    TextField,
+    Fade, IconButton,
+    TextField, Tooltip,
     Typography
 } from "@mui/material";
 import {Cancel, Save} from "@mui/icons-material";
@@ -142,7 +142,7 @@ export default function BasicClientInfoComponent(props) {
                     {/*    Informacje podstawowe*/}
                     {/*</Typography>*/}
 
-                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
+                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>
                         <Box>
                             <TextField id="nip" label="NIP" variant="outlined"
                                        value={data.nip}
@@ -390,28 +390,38 @@ export default function BasicClientInfoComponent(props) {
 
 
                 <Fade in={edited}>
-                    <Button type="submit" variant="outlined" startIcon={<Save/>}
+                    <Tooltip title={"Zapisz"}>
+                        <IconButton
+                            type="submit"
+                            color="success"
+                            size={"small"}
                             disabled={processing}
                             sx={{
                                 position: "absolute",
                                 top: 7,
                                 right: 230,
                             }}>
-                        Zapisz
-                    </Button>
+                            <Save fontSize={"large"}/>
+                        </IconButton>
+                    </Tooltip>
+
                 </Fade>
                 <Fade in={edited}>
-                    <Button variant="outlined" startIcon={<Cancel/>}
+                    <Tooltip title={"Cofnij zmiany"}>
+                        <IconButton
+                            color="error"
+                            size={"small"}
                             disabled={processing}
+                            onClick={resetForm}
                             sx={{
                                 position: "absolute",
                                 top: 7,
-                                right: 335,
+                                right: 280,
                             }}
-                            onClick={resetForm}
-                    >
-                        Cofnij zmiany
-                    </Button>
+                        >
+                            <Cancel fontSize={"large"}/>
+                        </IconButton>
+                    </Tooltip>
                 </Fade>
             </Box>
         </form>
