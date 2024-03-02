@@ -7,7 +7,7 @@ import {
     Fade, FormControl, InputLabel, MenuItem, Select,
     TextField,
     Typography,
-    Checkbox, FormControlLabel, Divider
+    Checkbox, FormControlLabel, Divider, Tooltip, IconButton
 } from "@mui/material";
 import {Cancel, Save} from "@mui/icons-material";
 import {AddBox, CheckBox, CheckBoxOutlineBlank, Handshake} from '@mui/icons-material';
@@ -15,9 +15,14 @@ import {
     useAdditionalClientInfoForm
 } from "@/Components/Pages/Client/AdditionalClientInfoComponent/form/useAdditionalClientInfoForm";
 import {enqueueSnackbar} from "notistack";
+import {useTheme} from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 export default function AdditionalClientInfoComponent(props) {
+    const theme = useTheme();
+    const xlBreakpointUp = useMediaQuery(theme.breakpoints.up("xl"));
+
     const [edited, setEdited] = useState(false);
 
     const {
@@ -104,11 +109,35 @@ export default function AdditionalClientInfoComponent(props) {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Box sx={{display: "flex", flexDirection: "column", gap: 8}}>
                 <Box>
-                    {/*<Typography*/}
-                    {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
-                    {/*    <AddBox fontSize={"large"}/>*/}
-                    {/*    Informacje dodatkowe*/}
-                    {/*</Typography>*/}
+                    {(xlBreakpointUp && props.editing) && (
+                        <Box sx={{display: "flex", gap: 2, mb: 2, mt: -1}}>
+                            <Fade in={edited}>
+                                <Tooltip title={"Zapisz"}>
+                                    <IconButton
+                                        type="submit"
+                                        color="success"
+                                        size={"small"}
+                                        disabled={processing}
+                                    >
+                                        <Save fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+
+                            </Fade>
+                            <Fade in={edited}>
+                                <Tooltip title={"Cofnij zmiany"}>
+                                    <IconButton
+                                        color="error"
+                                        size={"small"}
+                                        disabled={processing}
+                                        onClick={resetForm}
+                                    >
+                                        <Cancel fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+                            </Fade>
+                        </Box>
+                    )}
 
                     <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
 
@@ -451,30 +480,44 @@ export default function AdditionalClientInfoComponent(props) {
                     </Box>
                 </Box>
 
-                <Fade in={edited}>
-                    <Button type="submit" variant="outlined" startIcon={<Save/>}
-                            disabled={processing}
-                            sx={{
-                                position: "absolute",
-                                top: 7,
-                                right: 230,
-                            }}>
-                        Zapisz
-                    </Button>
-                </Fade>
-                <Fade in={edited}>
-                    <Button variant="outlined" startIcon={<Cancel/>}
-                            disabled={processing}
-                            sx={{
-                                position: "absolute",
-                                top: 7,
-                                right: 335,
-                            }}
-                            onClick={resetForm}
-                    >
-                        Cofnij zmiany
-                    </Button>
-                </Fade>
+                {!xlBreakpointUp && (
+                    <>
+                        <Fade in={edited}>
+                            <Tooltip title={"Zapisz"}>
+                                <IconButton
+                                    type="submit"
+                                    color="success"
+                                    size={"small"}
+                                    disabled={processing}
+                                    sx={{
+                                        position: "absolute",
+                                        top: xlBreakpointUp ? 35 : 7,
+                                        right: 220,
+                                    }}>
+                                    <Save fontSize={"large"}/>
+                                </IconButton>
+                            </Tooltip>
+
+                        </Fade>
+                        <Fade in={edited}>
+                            <Tooltip title={"Cofnij zmiany"}>
+                                <IconButton
+                                    color="error"
+                                    size={"small"}
+                                    disabled={processing}
+                                    onClick={resetForm}
+                                    sx={{
+                                        position: "absolute",
+                                        top: xlBreakpointUp ? 35 : 7,
+                                        right: 270,
+                                    }}
+                                >
+                                    <Cancel fontSize={"large"}/>
+                                </IconButton>
+                            </Tooltip>
+                        </Fade>
+                    </>
+                )}
             </Box>
         </form>
     );
