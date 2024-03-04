@@ -155,8 +155,7 @@ class ProductController extends Controller
                 $product->barcodes()->delete();
                 $product->barcodes()->saveMany($tmpBarcodes);
 
-                return response("", 503);
-                redirect()->back()->withErrors([
+                return redirect()->back()->withErrors([
                     'barcodes' => 'Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu'
                 ]);
             }

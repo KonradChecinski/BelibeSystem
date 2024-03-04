@@ -34,7 +34,7 @@ class BarcodeGS1 implements IBarcode
     {
 
         $response = Http::withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
-//            ->contentType("application/vnd.api+json")
+            ->contentType("application/vnd.api+json")
             ->put('https://mojegs1.pl/api/v2/products/' . $barcode->barcode, [
                 "data" => [
                     "type" => "products",
