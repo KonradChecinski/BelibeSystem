@@ -58,10 +58,14 @@ class ProductController extends Controller
             if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
 
                 $barcode = BarcodeInside::generate();
-                if ($barcode == null) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+                if ($barcode == null) return redirect()->back()->withErrors([
+                    'barcodes' => 'Nie można wygenerować nowego kodu wewnętrznego'
+                ]);
             } else if ($barcodeValue["type"] == 1 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeGS1::generate();
-                if ($barcode == null) return response("Nie można wygenerować nowego kodu GS1", 503);
+                if ($barcode == null) return redirect()->back()->withErrors([
+                    'barcodes' => 'Nie można wygenerować nowego kodu GS1'
+                ]);
                 $isGS1BarcodeGenerated = true;
                 $gs1BarcodeGenerated = $barcode;
             } else {
@@ -112,10 +116,14 @@ class ProductController extends Controller
 
             if ($barcodeValue["type"] == 2 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeInside::generate();
-                if ($barcode == null) return response("Nie można wygenerować nowego kodu wewnętrznego", 503);
+                if ($barcode == null) return redirect()->back()->withErrors([
+                    'barcodes' => 'Nie można wygenerować nowego kodu wewnętrznego'
+                ]);
             } else if ($barcodeValue["type"] == 1 && strlen($barcodeValue["barcode"]) !== 13) {
                 $barcode = BarcodeGS1::generate();
-                if ($barcode == null) return response("Nie można wygenerować nowego kodu GS1", 503);
+                if ($barcode == null) return redirect()->back()->withErrors([
+                    'barcodes' => 'Nie można wygenerować nowego kodu GS1'
+                ]);
                 $isGS1BarcodeGenerated = true;
                 $gs1BarcodeGenerated = $barcode;
             } else {
@@ -147,7 +155,10 @@ class ProductController extends Controller
                 $product->barcodes()->delete();
                 $product->barcodes()->saveMany($tmpBarcodes);
 
-                return response("Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu", 503);
+                return response("", 503);
+                redirect()->back()->withErrors([
+                    'barcodes' => 'Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu'
+                ]);
             }
         }
 
