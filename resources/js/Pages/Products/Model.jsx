@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Grid} from "@mui/material";
 import {Palette} from "@mui/icons-material";
-import IconGrid from "@/Components/IconGrid";
+import IconGrid from "@/Components/Layout/IconGrid";
 import {useState} from "react";
 import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
 import ImagesComponent from "@/Components/Pages/Model/ImagesComponent";

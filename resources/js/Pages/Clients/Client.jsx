@@ -1,12 +1,12 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Box, Container, Divider, Grid, Paper, Stack, Typography} from "@mui/material";
-import IconGrid from "@/Components/IconGrid";
+import IconGrid from "@/Components/Layout/IconGrid";
 import InfoIcon from '@mui/icons-material/Info';
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
 import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalClientInfoComponent";
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import NotesClientComponent from "@/Components/Pages/Client/NotesClientComponent";
+import NotesClientComponent from "@/Components/Pages/Client/ClientNotesComponent";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";

@@ -6,15 +6,7 @@ import {
     Fade,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/NotesClientComponent/form/useNotesClientForm";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ClientActivityTable from "@/Components/Table/ClientActivityTable";
-import ClientTasksTable from "@/Components/Table/ClientTasksTable";
-import TaskIcon from '@mui/icons-material/Task';
-import ClientNotes from "@/Components/Other/ClientNotes";
-import ClientTasks from "@/Components/Other/ClientTask";
+import ClientTasks from "@/Components/Pages/Client/ClientTasksComponent/ClientTask";
 
 
 export default function ClientTasksComponent(props) {

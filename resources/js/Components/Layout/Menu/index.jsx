@@ -2,8 +2,8 @@ import {Link} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import {Box, Card, Divider} from "@mui/material";
 import React from "react";
-import MainMenuLink from "@/Components/Menu/MenuMainLink";
-import SubMenuLink from "@/Components/Menu/SubMenuLink";
+import MainMenuLink from "@/Components/Layout/Menu/MenuMainLink";
+import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
@@ -24,7 +24,7 @@ export default function Menu({showContent, auth}) {
                 alignItems: "center"
             }}
         >
-            <Link href="/">
+            <Link href="/public">
                 <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200"/>
             </Link>
             <Divider
@@ -59,6 +59,13 @@ export default function Menu({showContent, auth}) {
                         active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                         showContent={smBreakpointUp || showContent}
                         text={"Produkty"}
+                    /> : ""}
+                {auth.permissions.includes("showClient") ?
+                    <MainMenuLink
+                        href={route("system.clients")}
+                        active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Klienci"}
                     /> : ""}
                 {auth.permissions.includes("showSetting") ?
                     <MainMenuLink
@@ -121,6 +128,12 @@ export default function Menu({showContent, auth}) {
                                 href={route("system.settings.brand")}
                                 active={route().current("system.settings.brand")}
                                 text={"Marki"}
+                            />
+
+                            <SubMenuLink
+                                href={route("system.settings.category")}
+                                active={route().current("system.settings.category")}
+                                text={"Kategoria"}
                             />
 
                             <SubMenuLink

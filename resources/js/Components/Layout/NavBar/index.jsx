@@ -24,8 +24,8 @@ import {
     Settings,
     Logout, Event
 } from "@mui/icons-material";
-import UserAvatar from "@/Components/UserAvatar";
-import UserAvatarMenu from "@/Components/UserAvatar/Menu";
+import UserAvatar from "@/Components/Layout/UserAvatar";
+import UserAvatarMenu from "@/Components/Layout/UserAvatar/Menu";
 import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
 

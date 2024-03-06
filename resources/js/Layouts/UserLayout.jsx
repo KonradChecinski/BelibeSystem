@@ -3,9 +3,9 @@ import {Box, Typography} from "@mui/material";
 import Theme from "@/Theme/Theme";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Menu from "@/Components/Menu";
-import Navbar from "@/Components/NavBar";
-import AppBar from "@/Components/AppBar";
+import Menu from "@/Components/Layout/Menu";
+import Navbar from "@/Components/Layout/NavBar";
+import AppBar from "@/Components/Layout/AppBar";
 
 export default function UserLayout({auth, header, children}) {
     const theme = useTheme();

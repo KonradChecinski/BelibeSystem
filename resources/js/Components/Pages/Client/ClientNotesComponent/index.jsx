@@ -7,12 +7,12 @@ import {
     Typography
 } from "@mui/material";
 import {Cancel, Delete, Edit, ExpandMore, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/NotesClientComponent/form/useNotesClientForm";
+import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import TextEditorB2B from "@/Components/TextEditor/B2B";
 import ClientOrderHistoryTable from "@/Components/Table/ClientOrderHistoryTable";
 import ClientNotesTable from "@/Components/Table/ClientNotesTable";
-import ClientNotes from "@/Components/Other/ClientNotes";
+import ClientNotes from "@/Components/Pages/Client/ClientNotesComponent/ClientNotes";
 
 
 export default function NotesClientComponent(props) {

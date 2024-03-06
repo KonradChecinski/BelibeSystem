@@ -7,7 +7,7 @@ import {
     Typography
 } from "@mui/material";
 import {Cancel, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/NotesClientComponent/form/useNotesClientForm";
+import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ClientActivityTable from "@/Components/Table/ClientActivityTable";

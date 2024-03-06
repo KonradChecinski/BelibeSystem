@@ -181,8 +181,8 @@ export default function ModelsTable(props) {
             search: filterModel.quickFilterValues,
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {
@@ -212,7 +212,7 @@ export default function ModelsTable(props) {
             setIsLoading(false)
 
             for (const model of json[0].data) {
-                console.log(model)
+                // console.log(model)
                 let quantity = 0;
                 for (const product of model.products) {
                     quantity += product.quantity

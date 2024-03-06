@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductCategoryRequest;
 use App\Http\Requests\Product\UpdateProductCategoryRequest;
 use App\Models\Products\ProductCategory;
+use Inertia\Inertia;
 
 class ProductCategoryController extends Controller
 {
@@ -14,7 +15,9 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("Settings/Dictionaries/Category", [
+            'categories' => ProductCategory::all()
+        ]);
     }
 
     /**

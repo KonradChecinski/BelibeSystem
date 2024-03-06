@@ -3,7 +3,7 @@ import {useCallback, useEffect, useState} from "react";
 import {Box, Checkbox, Fab, IconButton, Switch, Tooltip} from "@mui/material";
 import {Add, Edit} from "@mui/icons-material";
 import RoleCell from "@/Components/Table/UsersTable/RoleCell";
-import UserAvatar from "@/Components/UserAvatar";
+import UserAvatar from "@/Components/Layout/UserAvatar";
 import UserAddDialog from "@/Components/Dialogs/UserDialog/UserAddDialog";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
