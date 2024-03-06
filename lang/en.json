@@ -74,5 +74,9 @@
     "Users": "Users",
     "Roles": "Roles",
     "Sizes": "Sizes",
+    "Brands": "Brands",
+    "Units": "Units",
+    "Groups": "Groups",
+    "Categories": "Categories",
     "Clients": "Clients"
 }
