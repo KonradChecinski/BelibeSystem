@@ -18,6 +18,7 @@ use App\Http\Controllers\Product\B2BProductModelController;
 use App\Http\Controllers\Product\B2CProductModelController;
 use App\Http\Controllers\Product\BasicProductModelController;
 use App\Http\Controllers\Product\GS1ProductModelController;
+use App\Http\Controllers\Product\ProductCategoryController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductGroupController;
 use App\Http\Controllers\Product\ProductImageController;
@@ -182,6 +183,9 @@ Route::middleware("auth:user")->group(function () {
             Route::post("/brand", [ProductBrandController::class, 'store'])->name("system.settings.brand.create");
             Route::patch("/brand/{productBrand}", [ProductBrandController::class, 'update'])->name("system.settings.brand.update");
             Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
+
+            Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
+
 
             Route::group(['prefix' => '/gs1'], function () {
                 Route::get("/gpc/", [GS1GPCController::class, 'index'])->name("system.settings.gs1.gpc");
