@@ -13,10 +13,10 @@ export default function Brand(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Marki")
+                t("Brands")
             }
         >
-            <Head title={t("Marki")}/>
+            <Head title={t("Brands")}/>
             <Card sx={{height: "100%", width: 1}}>
                 <BrandsTable {...props} />
             </Card>
