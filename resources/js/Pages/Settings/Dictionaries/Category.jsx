@@ -1,6 +1,6 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Card} from "@mui/material";
+import {Box, Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import TreeViewComponent from "@/Components/Pages/Settings/Dictionaries/Category/TreeViewComponent/TreeViewComponent";
 
@@ -17,9 +17,12 @@ export default function Category(props) {
             }
         >
             <Head title={t("Categories")}/>
-            <Card sx={{height: "100%", width: 1}}>
+            <Box sx={{height: "100%", width: 1}}>
                 <TreeViewComponent {...props} />
-            </Card>
+            </Box>
+            {/*<Card >*/}
+
+            {/*</Card>*/}
         </UserLayout>
     );
 }

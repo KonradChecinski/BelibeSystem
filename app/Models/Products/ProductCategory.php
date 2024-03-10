@@ -13,7 +13,9 @@ class ProductCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'parent',
+        'show_in_menu',
     ];
 
     public function productModels(): BelongsToMany

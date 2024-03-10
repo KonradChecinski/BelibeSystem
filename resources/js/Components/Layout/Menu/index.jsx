@@ -133,7 +133,7 @@ export default function Menu({showContent, auth}) {
                             <SubMenuLink
                                 href={route("system.settings.category")}
                                 active={route().current("system.settings.category")}
-                                text={"Kategoria"}
+                                text={"Kategorie"}
                             />
 
                             <SubMenuLink

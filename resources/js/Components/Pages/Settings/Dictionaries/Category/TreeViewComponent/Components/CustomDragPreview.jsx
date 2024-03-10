@@ -1,11 +1,12 @@
 import React from "react";
 import {TypeIcon} from "./TypeIcon";
 import {Box} from "@mui/material";
+import {DragHandle} from "@mui/icons-material";
 // import styles from "./CustomDragPreview.module.css";
 
 export const CustomDragPreview = (props) => {
     const item = props.monitorProps.item;
-
+    // console.log(props, item)
     return (
         <Box
             sx={{
@@ -28,10 +29,11 @@ export const CustomDragPreview = (props) => {
                     display: "flex",
                 }}
             >
-                <TypeIcon
-                    droppable={item.droppable || false}
-                    fileType={item?.data?.fileType}
-                />
+                {/*<TypeIcon*/}
+                {/*    droppable={item.droppable || false}*/}
+                {/*    fileType={item?.data?.fileType}*/}
+                {/*/>*/}
+                <DragHandle/>
             </Box>
             <Box
                 sx={{

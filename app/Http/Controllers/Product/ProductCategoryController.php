@@ -16,7 +16,7 @@ class ProductCategoryController extends Controller
     public function index()
     {
         return Inertia::render("Settings/Dictionaries/Category", [
-            'categories' => ProductCategory::all()
+            'categories' => ProductCategory::withCount(["productModels", "clientsDiscounts"])->get(),
         ]);
     }
 
