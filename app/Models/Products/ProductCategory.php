@@ -20,7 +20,7 @@ class ProductCategory extends Model
 
     public function productModels(): BelongsToMany
     {
-        return $this->belongsToMany(ProductModel::class);
+        return $this->belongsToMany(ProductModel::class)->withTimestamps();
     }
 
     public function clientsDiscounts(): HasMany

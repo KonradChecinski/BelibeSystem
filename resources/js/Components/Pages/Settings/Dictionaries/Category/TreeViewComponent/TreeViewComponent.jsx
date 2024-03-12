@@ -11,8 +11,8 @@ import {
     Box,
     Button,
     Checkbox,
-    Divider,
-    Fade,
+    Divider, Fab,
+    Fade, FormControlLabel, FormGroup,
     Grid,
     IconButton,
     Paper,
@@ -22,9 +22,11 @@ import {
 } from "@mui/material";
 import useTreeOpenHandler
     from "@/Components/Pages/Settings/Dictionaries/Category/TreeViewComponent/Components/useTreeOpenHandler";
-import {Cancel, Edit, Save} from "@mui/icons-material";
+import {Add, Cancel, Delete, Edit, Save} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
 import {useForm} from "@inertiajs/react";
+import {useTheme} from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const reorderArray = (array, sourceIndex, targetIndex) => {
     const newArray = [...array];
@@ -38,6 +40,9 @@ export default function TreeViewComponent(props) {
     const {ref, getPipeHeight, toggle} = useTreeOpenHandler();
     const [edited, setEdited] = useState(false);
     const [editedId, setEditedId] = useState(null);
+
+    const theme = useTheme();
+    const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
     const {data, setData, processing, post} = useForm(props.categories.map(e => (
         {
             ...e,
@@ -59,6 +64,8 @@ export default function TreeViewComponent(props) {
                 }
             }
         )))
+        setEdited(false)
+        setEditedId(null)
     }
     const saveBasic = () => {
         console.log(data)
@@ -80,7 +87,42 @@ export default function TreeViewComponent(props) {
         treeData = sortTreeData(treeData);
         setData(treeData)
         setEdited(true);
+        ref.current?.openAll();
     }
+
+    const handleDelete = (id) => {
+        const node = data.find(e => e.id === id);
+        const descendants = getDescendants(data, node.id);
+        if (descendants.length > 0) {
+            return
+        }
+
+        const newTree = data.filter(e => e.id !== id);
+
+        setData(newTree)
+        setEditedId(null)
+    }
+    const handleAdd = () => {
+        const id = Number(String(data.slice(-1)[0].id).replace("#", "")) + 1
+        const node = {
+            id: "#" + id,
+            parent: 0,
+            droppable: true,
+            text: "Zmień nazwę",
+            name: "",
+            clients_discounts_count: 0,
+            clients_discounts: [],
+            product_models_count: 0,
+            product_models: [],
+            data: {
+                show_in_menu: true,
+            }
+        }
+
+        setData([...data, node])
+        setEdited(true)
+    }
+
     const sortTreeData = (treeData) => {
         const sortTreeDataChildrten = (unsortedTreeData, sortedTreeData, nodeId) => {
             const children = unsortedTreeData.filter(e => e.parent === nodeId);
@@ -105,49 +147,82 @@ export default function TreeViewComponent(props) {
             sortTreeDataChildrten(unsortedTreeData, sortedTreeData, nodeId);
         }
         return sortedTreeData;
+
+        // const sortTreeData = (treeData) => {
+        //     const unsortedTreeData = treeData.slice();
+        //     const sortedTreeData = [];
+        //
+        //     while (unsortedTreeData.length > 0) {
+        //         const node = unsortedTreeData.find(e => e.parent === 0);
+        //         if (node) {
+        //             const nodeId = node.id;
+        //             sortedTreeData.push(node);
+        //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
+        //             const children = unsortedTreeData.filter(e => e.parent === nodeId);
+        //             children.forEach(child => {
+        //                 sortedTreeData.push(child);
+        //                 unsortedTreeData.splice(unsortedTreeData.indexOf(child), 1);
+        //             });
+        //         } else {
+        //             const node = unsortedTreeData[0];
+        //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
+        //             const parent = sortedTreeData.find(e => e.id === node.parent);
+        //             sortedTreeData.splice(sortedTreeData.indexOf(parent) + 1, 0, node);
+        //             console.log(unsortedTreeData, sortedTreeData)
+        //             // return sortTreeData(sortedTreeData);
+        //             return sortedTreeData;
+        //         }
+        //
+        //     }
+        //     console.log(treeData, sortedTreeData)
+        //     return sortedTreeData;
+        // }
     }
 
-    // const sortTreeData = (treeData) => {
-    //     const unsortedTreeData = treeData.slice();
-    //     const sortedTreeData = [];
-    //
-    //     while (unsortedTreeData.length > 0) {
-    //         const node = unsortedTreeData.find(e => e.parent === 0);
-    //         if (node) {
-    //             const nodeId = node.id;
-    //             sortedTreeData.push(node);
-    //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
-    //             const children = unsortedTreeData.filter(e => e.parent === nodeId);
-    //             children.forEach(child => {
-    //                 sortedTreeData.push(child);
-    //                 unsortedTreeData.splice(unsortedTreeData.indexOf(child), 1);
-    //             });
-    //         } else {
-    //             const node = unsortedTreeData[0];
-    //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
-    //             const parent = sortedTreeData.find(e => e.id === node.parent);
-    //             sortedTreeData.splice(sortedTreeData.indexOf(parent) + 1, 0, node);
-    //             console.log(unsortedTreeData, sortedTreeData)
-    //             // return sortTreeData(sortedTreeData);
-    //             return sortedTreeData;
-    //         }
-    //
-    //     }
-    //     console.log(treeData, sortedTreeData)
-    //     return sortedTreeData;
-    // }
 
     return (
-        <Grid container spacing={2} sx={{height: 1}}>
-            <Grid item xs={12} md={6} sx={{position: "relative"}}>
-                <Paper sx={{height: 1, p: 1, pt: 2}}>
+        <Grid container columnSpacing={2} sx={{height: "100%"}}>
+            <Grid item xs={12} lg={6} sx={{position: "relative", mb: lgBreakpointDown ? 2 : 0}}>
+                <Paper sx={{height: 1, p: 1}}>
                     <Box
                         sx={{
                             overflowY: "auto",
                             height: 1,
                         }}>
-                        <Typography variant={"h6"}>Kolejność kategorii</Typography>
-                        <Divider sx={{my: 1}}/>
+                        <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                            <Typography variant={"h6"}>Kolejność kategorii</Typography>
+                            <Box>
+                                <Fade in={edited}>
+                                    <Tooltip title={"Cofnij zmiany"}>
+                                        <IconButton
+                                            color="error"
+                                            size={"small"}
+                                            disabled={processing}
+                                            onClick={resetForm}
+                                        >
+                                            <Cancel fontSize={"large"}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </Fade>
+                                <Fade in={edited}>
+                                    <Tooltip title={"Zapisz"}>
+                                        <IconButton
+                                            type="submit"
+                                            color="success"
+                                            size={"small"}
+                                            disabled={processing}
+                                            onClick={saveBasic}
+                                        >
+                                            <Save fontSize={"large"}/>
+                                        </IconButton>
+                                    </Tooltip>
+
+                                </Fade>
+
+                            </Box>
+                        </Box>
+
+                        <Divider sx={{mb: 1}}/>
                         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
                             <Tree
                                 tree={data}
@@ -191,122 +266,132 @@ export default function TreeViewComponent(props) {
                             />
                         </DndProvider>
                     </Box>
+                    <Box sx={{position: "absolute", bottom: -5, right: -5, zIndex: 20}}>
+                        <Fab color="primary" aria-label="add" onClick={handleAdd}>
+                            <Add/>
+                        </Fab>
+                    </Box>
                 </Paper>
-                <Fade in={edited}>
-                    <Tooltip title={"Zapisz"}>
-                        <IconButton
-                            type="submit"
-                            color="success"
-                            size={"small"}
-                            disabled={processing}
-                            onClick={saveBasic}
-                            sx={{
-                                position: "absolute",
-                                top: 20,
-                                right: 15,
-                            }}>
-                            <Save fontSize={"large"}/>
-                        </IconButton>
-                    </Tooltip>
 
-                </Fade>
-                <Fade in={edited}>
-                    <Tooltip title={"Cofnij zmiany"}>
-                        <IconButton
-                            color="error"
-                            size={"small"}
-                            disabled={processing}
-                            onClick={resetForm}
-                            sx={{
-                                position: "absolute",
-                                top: 20,
-                                right: 65,
-                            }}
-                        >
-                            <Cancel fontSize={"large"}/>
-                        </IconButton>
-                    </Tooltip>
-                </Fade>
+
             </Grid>
-            <Grid item xs={12} md={6} sx={{position: "relative"}}>
+            <Grid item xs={12} lg={6} sx={{position: "relative"}}>
                 <Paper sx={{height: 1, p: 1, pt: 2}}>
                     <Box>
-                        <Typography variant={"h6"}>Edycja kategorii</Typography>
+                        <Typography variant={"h6"}>Edycja
+                            kategorii {editedId ? editedId + " - " + data.find(e => e.id === editedId)?.name : ""} </Typography>
                         <Divider sx={{my: 1}}/>
-                        <Box sx={{p: 2}}>
-                            {/*<Typography variant={"h6"}>Nazwa</Typography>*/}
-                            {/*<Typography>{data.find(e => e.id === 1).text}</Typography>*/}
-                            <TextField id="name"
-                                       label="Nazwa"
-                                       variant="outlined"
-                                       value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.name : ""}
-                                       onChange={(e) => {
-                                           setData(data.map(d => {
-                                               if (d.id === editedId) {
-                                                   d.name = e.target.value;
-                                                   d.text = e.target.value;
-                                                   setEdited(true);
-                                               }
-                                               return d;
-                                           }))
+                        <Box sx={{display: "flex"}}>
+                            <Box sx={{p: 2}}>
+                                <TextField id="name"
+                                           label="Nazwa kategorii"
+                                           variant="outlined"
+                                           value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.name : ""}
+                                           onChange={(e) => {
+                                               setData(data.map(d => {
+                                                   if (d.id === editedId) {
+                                                       d.name = e.target.value;
+                                                       d.text = e.target.value;
+                                                       setEdited(true);
+                                                   }
+                                                   return d;
+                                               }))
 
-                                       }}
-                            />
+                                           }}
+                                />
+
+                            </Box>
+                            <Box sx={{p: 2}}>
+                                <Typography variant={"h6"}></Typography>
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={Boolean(data.find(e => e.id === editedId)?.data?.show_in_menu)}
+                                                onChange={(e) => {
+                                                    setData(data.map(d => {
+                                                        if (d.id === editedId) {
+                                                            d.data.show_in_menu = e.target.checked;
+                                                            setEdited(true);
+                                                        }
+                                                        return d;
+                                                    }))
+                                                }}
+                                                sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                            />
+                                        }
+                                        label="Pokaż w menu"/>
+                                </FormGroup>
+
+                            </Box>
+                        </Box>
+
+                        <Box>
 
                         </Box>
-                        <Box sx={{p: 2}}>
-                            <Typography variant={"h6"}>Pokaż w menu</Typography>
-                            <Checkbox
-                                checked={Boolean(data.find(e => e.id === editedId)?.data?.show_in_menu)}
-                                onChange={(e) => {
-                                    setData(data.map(d => {
-                                        if (d.id === editedId) {
-                                            d.data.show_in_menu = e.target.checked;
-                                            setEdited(true);
-                                        }
-                                        return d;
-                                    }))
-                                }}
-                            />
+                        <Box>
+
                         </Box>
                     </Box>
 
                 </Paper>
-                <Fade in={edited}>
-                    <Tooltip title={"Zapisz"}>
-                        <IconButton
-                            type="submit"
-                            color="success"
-                            size={"small"}
-                            disabled={processing}
-                            onClick={saveBasic}
-                            sx={{
-                                position: "absolute",
-                                top: 20,
-                                right: 15,
-                            }}>
-                            <Save fontSize={"large"}/>
-                        </IconButton>
-                    </Tooltip>
+                {/*<Fade in={edited}>*/}
+                {/*    <Tooltip title={"Zapisz"}>*/}
+                {/*        <IconButton*/}
+                {/*            type="submit"*/}
+                {/*            color="success"*/}
+                {/*            size={"small"}*/}
+                {/*            disabled={processing}*/}
+                {/*            onClick={saveBasic}*/}
+                {/*            sx={{*/}
+                {/*                position: "absolute",*/}
+                {/*                top: 10,*/}
+                {/*                right: 30,*/}
+                {/*            }}>*/}
+                {/*            <Save fontSize={"large"}/>*/}
+                {/*        </IconButton>*/}
+                {/*    </Tooltip>*/}
 
-                </Fade>
-                <Fade in={edited}>
-                    <Tooltip title={"Cofnij zmiany"}>
-                        <IconButton
-                            color="error"
-                            size={"small"}
-                            disabled={processing}
-                            onClick={resetForm}
+                {/*</Fade>*/}
+                {/*<Fade in={edited}>*/}
+                {/*    <Tooltip title={"Cofnij zmiany"}>*/}
+                {/*        <IconButton*/}
+                {/*            color="error"*/}
+                {/*            size={"small"}*/}
+                {/*            disabled={processing}*/}
+                {/*            onClick={resetForm}*/}
+                {/*            sx={{*/}
+                {/*                position: "absolute",*/}
+                {/*                top: 10,*/}
+                {/*                right: 80,*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            <Cancel fontSize={"large"}/>*/}
+                {/*        </IconButton>*/}
+                {/*    </Tooltip>*/}
+                {/*</Fade>*/}
+                <Fade in={Boolean(editedId)}>
+                    <Tooltip
+                        title={getDescendants(data, editedId).length > 0 ? "Nie można usunąć kategorii z podkategoriami" : "Usuń kategorię"}>
+                        <Box
                             sx={{
                                 position: "absolute",
-                                top: 20,
-                                right: 65,
-                            }}
-                        >
-                            <Cancel fontSize={"large"}/>
-                        </IconButton>
+                                top: 50,
+                                right: 30,
+                            }}>
+                            <IconButton
+                                color="warning"
+                                size={"small"}
+                                disabled={processing || getDescendants(data, editedId).length > 0}
+                                onClick={() => handleDelete(editedId)}
+                            >
+                                <Delete fontSize={"large"}/>
+                            </IconButton>
+                        </Box>
+
                     </Tooltip>
                 </Fade>
+
             </Grid>
         </Grid>
 

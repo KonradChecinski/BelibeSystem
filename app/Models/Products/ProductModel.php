@@ -72,7 +72,7 @@ class ProductModel extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(ProductCategory::class);
+        return $this->belongsToMany(ProductCategory::class)->withTimestamps();
     }
 
     public function brand(): BelongsTo
