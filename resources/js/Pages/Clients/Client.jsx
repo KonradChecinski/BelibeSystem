@@ -8,8 +8,6 @@ import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalC
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import NotesClientComponent from "@/Components/Pages/Client/ClientNotesComponent";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
 import ClientActivityComponent from "@/Components/Pages/Client/ClientActivityComponent";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ClientDiscountsComponent from "@/Components/Pages/Client/ClientDiscountsComponent";
@@ -17,12 +15,10 @@ import DiscountIcon from '@mui/icons-material/Discount';
 import TaskIcon from "@mui/icons-material/Task";
 import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import DescriptionIcon from '@mui/icons-material/Description';
 import PaymentIcon from '@mui/icons-material/Payment';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
 import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
-import HistoryIcon from '@mui/icons-material/History';
-import {Description, PointOfSale, Receipt, Savings} from "@mui/icons-material";
+import {PointOfSale, Savings} from "@mui/icons-material";
 import ClientSettlementsTable from "@/Components/Table/ClientSettlementsTable";
 import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
 

@@ -2,9 +2,9 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
 import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
+import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -12,65 +12,46 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
-import DeleteClientActivityDialog
-    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientActivityDialog";
-import ClientAddEditActivitiesDialog
-    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog";
-import moment from "moment/moment";
+import DeleteClientLocationsDialog
+    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientLocationsDialog";
+import ClientAddEditLocationsDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditLocationsDialog";
 
-export default function ClientActivityTable({activities, readOnly, color, props}) {
+export default function ClientLocationsTable({locations, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
-
 
     const {data, setData, re} = useForm([])
 
     useEffect(() => {
-        setData(activities)
-    }, [activities]);
-
+        setData(locations)
+    }, [locations]);
 
     const column = [
         {field: "id", headerName: "Id"},
         {
-            field: "activity_type_id",
-            headerName: "Typ",
+            field: "city",
+            headerName: "Adres",
+            width: 180,
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography>{params.row?.activity_type?.name}</Typography>
+                        <Typography
+                            sx={{fontSize: "11px"}}>{params.row?.street} {params.row?.building_number}{params.row?.apartment_number ? "/" + params.row?.apartment_number : ""}</Typography>
+                        <Typography
+                            sx={{fontSize: "11px"}}>{params.row?.city}, {params.row?.postal_code} - {params.row?.country?.name}</Typography>
                     </Box>
                 );
             }
         },
-        {field: "description", headerName: "Opis", flex: 1},
 
-        {
-            field: "user_id",
-            headerName: "Użytkownik", sortable: false,
-            filterable: false,
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography>{params.row?.user?.name}</Typography>
-                    </Box>
-                );
-            }
-            // width: 300
-        },
-        {
-            field: "datetime",
-            headerName: "Data i godzina",
-            width: 150,
-            renderCell: (params) => {
-                let date = moment(params.value)
-                return (
-                    <Box>
-                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
-                    </Box>
-                );
-            }
-        },
+        // {field: "city", headerName: "Miasto"},
+        // {field: "street", headerName: "Ulica"},
+        // {field: "building_number", headerName: "Numer budynku"},
+        // {field: "apartment_number", headerName: "Numer lokalu"},
+        // {field: "postal_code", headerName: "Kod pocztowy"},
+        {field: "note", headerName: "Notatka", flex: 1, minWidth: 160},
+        {field: "active", headerName: "Aktywność", type: "boolean", width: 50},
     ];
 
 
@@ -79,7 +60,7 @@ export default function ClientActivityTable({activities, readOnly, color, props}
         {
             field: "action",
             headerName: "Akcje",
-            width: 120,
+            width: 80,
             sortable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
@@ -111,11 +92,10 @@ export default function ClientActivityTable({activities, readOnly, color, props}
                             </IconButton>
                         </Tooltip>
 
-                        <DeleteClientActivityDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                    activity={params.row} params={props}/>
-                        <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                       clickedActivity={params.row}
-                                                       params={props}/>
+                        <DeleteClientLocationsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                     location={params.row} params={props}/>
+                        <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                      clickedLocation={params.row} params={props}/>
                     </>
 
                 );
@@ -136,7 +116,6 @@ export default function ClientActivityTable({activities, readOnly, color, props}
         <>
             <DataGrid
                 rows={data}
-                // rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -193,9 +172,8 @@ export default function ClientActivityTable({activities, readOnly, color, props}
 
                     </Box>
 
-                    <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                   clickedActivity={null}
-                                                   params={props}/>
+                    <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd} clickedLocation={null}
+                                                  params={props}/>
                 </>
                 : ""
             }

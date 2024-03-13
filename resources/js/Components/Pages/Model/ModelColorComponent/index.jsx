@@ -7,7 +7,7 @@ import {
     Paper,
     Typography
 } from "@mui/material";
-import ModelsColorTable from "@/Components/Table/ModelsColorTable";
+import ModelsColorTable from "@/Components/Table/Model/ModelsColorTable";
 import {Edit, ExpandMore} from "@mui/icons-material";
 import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
 import {useState} from "react";

@@ -2,9 +2,9 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
 import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
+import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -12,8 +12,13 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import DeleteClientActivityDialog
+    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientActivityDialog";
+import ClientAddEditActivitiesDialog
+    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditActivitiesDialog";
+import moment from "moment/moment";
 
-export default function ClientOrderHistoryTable({history, readOnly, color, props}) {
+export default function ClientActivityTable({activities, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
@@ -21,51 +26,51 @@ export default function ClientOrderHistoryTable({history, readOnly, color, props
     const {data, setData, re} = useForm([])
 
     useEffect(() => {
-        setData(history)
-    }, [history]);
+        setData(activities)
+    }, [activities]);
 
 
     const column = [
-        // {field: "id", headerName: "Id"},
-        // {
-        //     field: "client_user_name",
-        //     headerName: "Użytkownik",
-        //     renderCell: (params) => {
-        //         return (
-        //             <Box>
-        //                 <Typography>{params.row?.name}</Typography>
-        //             </Box>
-        //         );
-        //     }
-        // },
-        // {field: "description", headerName: "Opis", width: 350},
-        // {
-        //     field: "date",
-        //     headerName: "Data",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "time",
-        //     headerName: "Godzina",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "client_user_email",
-        //     headerName: "Email", sortable: false,
-        //     filterable: false,
-        //     renderCell: (params) => {
-        //         return (
-        //             <Box>
-        //                 <Typography>{params.row?.email}</Typography>
-        //             </Box>
-        //         );
-        //     }
-        //     // width: 300
-        // },
+        {field: "id", headerName: "Id"},
+        {
+            field: "activity_type_id",
+            headerName: "Typ",
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.activity_type?.name}</Typography>
+                    </Box>
+                );
+            }
+        },
+        {field: "description", headerName: "Opis", flex: 1},
+
+        {
+            field: "user_id",
+            headerName: "Użytkownik", sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.user?.name}</Typography>
+                    </Box>
+                );
+            }
+            // width: 300
+        },
+        {
+            field: "datetime",
+            headerName: "Data i godzina",
+            width: 150,
+            renderCell: (params) => {
+                let date = moment(params.value)
+                return (
+                    <Box>
+                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
+                    </Box>
+                );
+            }
+        },
     ];
 
 
@@ -106,10 +111,11 @@ export default function ClientOrderHistoryTable({history, readOnly, color, props
                             </IconButton>
                         </Tooltip>
 
-                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                      product={params.row} last={products.length === 1}/>*/}
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
+                        <DeleteClientActivityDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                    activity={params.row} params={props}/>
+                        <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                       clickedActivity={params.row}
+                                                       params={props}/>
                     </>
 
                 );
@@ -187,8 +193,9 @@ export default function ClientOrderHistoryTable({history, readOnly, color, props
 
                     </Box>
 
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
+                    <ClientAddEditActivitiesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                   clickedActivity={null}
+                                                   params={props}/>
                 </>
                 : ""
             }

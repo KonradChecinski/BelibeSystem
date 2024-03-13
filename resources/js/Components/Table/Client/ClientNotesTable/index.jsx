@@ -2,9 +2,9 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
 import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
+import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -12,53 +12,49 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
-import DeleteClientDiscountsDialog
-    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientDiscountsDialog";
-import ClientAddEditDiscountsDialog
-    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditDiscountsDialog";
-import ClientAddEditPaymentsDiscountsDialog
-    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditPaymentsDiscountsDialog";
+import moment from "moment";
+import DeleteClientNotesDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientNotesDialog";
+import ClientAddEditNotesDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog";
 
-export default function ClientDiscountsOnPaymentsTable({payments, readOnly, color, props}) {
+export default function ClientNotesTable({notes, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
-    const {data, setData, re} = useForm(payments.slice().sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0))
+
+    const {data, setData, re} = useForm([])
 
     useEffect(() => {
-        setData(payments.slice().sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0))
-    }, [payments]);
+        setData(notes)
+    }, [notes]);
 
     const column = [
         {field: "id", headerName: "Id"},
+        {field: "text", headerName: "Treść", flex: 1},
         {
-            field: "name",
-            headerName: "Nazwa",
-            sortable: false,
-            filterable: false,
-            flex: 1,
+            field: "user_id",
+            headerName: "Użytkownik",
+            renderCell: (params) => {
+                return (
+                    <Box>
+                        <Typography>{params.row?.user?.name}</Typography>
+                    </Box>
+                );
+            }
         },
         {
-            field: "discount.discount",
-            headerName: "Aktywność",
-            sortable: false,
-            filterable: false,
-            type: "boolean",
-            align: 'center',
-            width: 100,
-            valueGetter: (params) => params.row?.discount?.discount
+            field: "created_at", headerName: "Data i godzina", width: 150,
+            renderCell: (params) => {
+                let date = moment(params.value)
+                return (
+                    <Box>
+                        <Typography>{date.format("YYYY-MM-DD HH:mm")}</Typography>
+                    </Box>
+                );
+            }
         },
-        {
-            field: "discount.discount_value",
-            headerName: "Wartość",
-            sortable: false,
-            filterable: false,
-            align: 'center',
-            headerAlign: 'center',
-            width: 100,
-            valueGetter: (params) => params.row?.discount?.discount_value + "%"
-        },
+
     ];
+
 
     const columnWithAction = [
         ...column,
@@ -77,6 +73,12 @@ export default function ClientDiscountsOnPaymentsTable({payments, readOnly, colo
                     setOpenDialogAdd(true)
                 };
 
+                const onDeleteClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+
+                    setOpenDialogDelete(true);
+                };
+
                 return (
                     <>
                         <Tooltip title="Edycja">
@@ -85,8 +87,17 @@ export default function ClientDiscountsOnPaymentsTable({payments, readOnly, colo
                             </IconButton>
                         </Tooltip>
 
-                        <ClientAddEditPaymentsDiscountsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                              clickedDiscount={params.row} params={props}/>
+                        <Tooltip title="Usuń">
+                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
+
+                        <DeleteClientNotesDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
+                                                 note={params.row} params={props}/>
+
+                        <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                                  clickedNote={params.row} params={props}/>
                     </>
 
                 );
@@ -107,7 +118,6 @@ export default function ClientDiscountsOnPaymentsTable({payments, readOnly, colo
         <>
             <DataGrid
                 rows={data}
-                // rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -155,6 +165,20 @@ export default function ClientDiscountsOnPaymentsTable({payments, readOnly, colo
                     }
                 }}
             />
+            {!readOnly ?
+                <>
+                    <Box sx={{position: "absolute", bottom: -10, right: 0, zIndex: 20}}>
+                        <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
+                            <Add/>
+                        </Fab>
+
+                    </Box>
+
+                    <ClientAddEditNotesDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
+                                              clickedNote={null} params={props}/>
+                </>
+                : ""
+            }
 
         </>
     );

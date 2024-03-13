@@ -2,9 +2,9 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
 import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/ModelsColorTable/BarcodesCell";
+import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
+import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -12,46 +12,60 @@ import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDe
 import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
 import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
 import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
-import DeleteClientLocationsDialog
-    from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientLocationsDialog";
-import ClientAddEditLocationsDialog
-    from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditLocationsDialog";
 
-export default function ClientLocationsTable({locations, readOnly, color, props}) {
+export default function ClientOrderHistoryTable({history, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
+
 
     const {data, setData, re} = useForm([])
 
     useEffect(() => {
-        setData(locations)
-    }, [locations]);
+        setData(history)
+    }, [history]);
+
 
     const column = [
-        {field: "id", headerName: "Id"},
-        {
-            field: "city",
-            headerName: "Adres",
-            width: 180,
-            renderCell: (params) => {
-                return (
-                    <Box>
-                        <Typography
-                            sx={{fontSize: "11px"}}>{params.row?.street} {params.row?.building_number}{params.row?.apartment_number ? "/" + params.row?.apartment_number : ""}</Typography>
-                        <Typography
-                            sx={{fontSize: "11px"}}>{params.row?.city}, {params.row?.postal_code} - {params.row?.country?.name}</Typography>
-                    </Box>
-                );
-            }
-        },
-
-        // {field: "city", headerName: "Miasto"},
-        // {field: "street", headerName: "Ulica"},
-        // {field: "building_number", headerName: "Numer budynku"},
-        // {field: "apartment_number", headerName: "Numer lokalu"},
-        // {field: "postal_code", headerName: "Kod pocztowy"},
-        {field: "note", headerName: "Notatka", flex: 1, minWidth: 160},
-        {field: "active", headerName: "Aktywność", type: "boolean", width: 50},
+        // {field: "id", headerName: "Id"},
+        // {
+        //     field: "client_user_name",
+        //     headerName: "Użytkownik",
+        //     renderCell: (params) => {
+        //         return (
+        //             <Box>
+        //                 <Typography>{params.row?.name}</Typography>
+        //             </Box>
+        //         );
+        //     }
+        // },
+        // {field: "description", headerName: "Opis", width: 350},
+        // {
+        //     field: "date",
+        //     headerName: "Data",
+        //     sortable: false,
+        //     filterable: false,
+        //     // width: 160
+        // },
+        // {
+        //     field: "time",
+        //     headerName: "Godzina",
+        //     sortable: false,
+        //     filterable: false,
+        //     // width: 160
+        // },
+        // {
+        //     field: "client_user_email",
+        //     headerName: "Email", sortable: false,
+        //     filterable: false,
+        //     renderCell: (params) => {
+        //         return (
+        //             <Box>
+        //                 <Typography>{params.row?.email}</Typography>
+        //             </Box>
+        //         );
+        //     }
+        //     // width: 300
+        // },
     ];
 
 
@@ -60,7 +74,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
         {
             field: "action",
             headerName: "Akcje",
-            width: 80,
+            width: 120,
             sortable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
@@ -92,10 +106,10 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
                             </IconButton>
                         </Tooltip>
 
-                        <DeleteClientLocationsDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
-                                                     location={params.row} params={props}/>
-                        <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
-                                                      clickedLocation={params.row} params={props}/>
+                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
+                        {/*                      product={params.row} last={products.length === 1}/>*/}
+                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
+                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>
 
                 );
@@ -116,6 +130,7 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
         <>
             <DataGrid
                 rows={data}
+                // rows={sortByDateAndTimeObject(data)}
                 columns={readOnly ? column : columnWithAction}
                 columnVisibilityModel={columnVisibilityModel}
                 onColumnVisibilityModelChange={(newModel) =>
@@ -172,8 +187,8 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
 
                     </Box>
 
-                    <ClientAddEditLocationsDialog open={openDialogAdd} setOpen={setOpenDialogAdd} clickedLocation={null}
-                                                  params={props}/>
+                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
+                    {/*                   props={props}/>*/}
                 </>
                 : ""
             }

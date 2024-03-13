@@ -3,8 +3,8 @@ import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
 import {Box, Fab, IconButton, Tooltip} from "@mui/material";
 import {Add, ContentCopy, Edit, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/ModelsTable/ColorsCell";
-import GroupCell from "@/Components/Table/ModelsTable/GroupCell";
+import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
+import GroupCell from "@/Components/Table/Model/ModelsTable/GroupCell";
 import ModelsAddDialog from "@/Components/Dialogs/ModelsDialog/ModelsAddDialog";
 import ModelsCopyDialog from "@/Components/Dialogs/ModelsDialog/ModelsCopyDialog";
 

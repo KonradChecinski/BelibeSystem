@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import GroupsTable from "@/Components/Table/GroupsTable";
+import GroupsTable from "@/Components/Table/Settings/GroupsTable";
 
 export default function Sizes(props) {
     console.log(props)
