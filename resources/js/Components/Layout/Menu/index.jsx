@@ -7,6 +7,7 @@ import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
+import {Category, Dashboard, Group, Settings} from '@mui/icons-material';
 
 export default function Menu({showContent, auth}) {
     const theme = useTheme();
@@ -52,6 +53,7 @@ export default function Menu({showContent, auth}) {
                     active={route().current("system.dashboard")}
                     showContent={smBreakpointUp || showContent}
                     text={t("Dashboard")}
+                    menuIcon={Dashboard}
                 />
                 {auth.permissions.includes("showModel") ?
                     <MainMenuLink
@@ -59,6 +61,7 @@ export default function Menu({showContent, auth}) {
                         active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                         showContent={smBreakpointUp || showContent}
                         text={"Produkty"}
+                        menuIcon={Category}
                     /> : ""}
                 {auth.permissions.includes("showClient") ?
                     <MainMenuLink
@@ -66,6 +69,7 @@ export default function Menu({showContent, auth}) {
                         active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}
                         showContent={smBreakpointUp || showContent}
                         text={"Klienci"}
+                        menuIcon={Group}
                     /> : ""}
                 {auth.permissions.includes("showSetting") ?
                     <MainMenuLink
@@ -73,6 +77,7 @@ export default function Menu({showContent, auth}) {
                         active={route().current("system.settings")}
                         showContent={smBreakpointUp || showContent}
                         text={"Ustawienia"}
+                        menuIcon={Settings}
                     >
                         <SubMenuLink
                             href={route("system.settings.main")}

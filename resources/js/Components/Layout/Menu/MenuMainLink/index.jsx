@@ -1,4 +1,3 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import {Link} from "@inertiajs/react";
 import {Box, Collapse, IconButton, Typography} from "@mui/material";
 import {useState} from "react";
@@ -6,18 +5,22 @@ import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import PropTypes from "prop-types";
 
 export default function MainMenuLink({
                                          href,
                                          active,
                                          showContent,
                                          dropDown,
+                                         menuIcon,
                                          text,
                                          children
                                      }) {
     const [showChildren, setShowChildren] = useState(
         isChildActive(children) || active
     );
+
+    const MenuIcon = menuIcon;
 
     return (
         <Box
@@ -52,13 +55,12 @@ export default function MainMenuLink({
                         }
                     }}
                 >
-                    <DashboardIcon
-                        sx={{
-                            mr: showContent ? 1 : "auto",
-                            ml: showContent ? "" : "auto",
-                            fontSize: "1rem"
-                        }}
-                    />
+
+                    <MenuIcon sx={{
+                        mr: showContent ? 1 : "auto",
+                        ml: showContent ? "" : "auto",
+                        fontSize: "1rem"
+                    }}/>
                     {showContent ? (
                         <Typography
                             align="center"
@@ -104,3 +106,7 @@ export default function MainMenuLink({
         </Box>
     );
 }
+
+MainMenuLink.propTypes = {
+    menuIcon: PropTypes.element
+};
