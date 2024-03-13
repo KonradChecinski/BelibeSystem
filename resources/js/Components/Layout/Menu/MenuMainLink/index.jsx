@@ -108,5 +108,5 @@ export default function MainMenuLink({
 }
 
 MainMenuLink.propTypes = {
-    menuIcon: PropTypes.element
+    menuIcon: PropTypes.object
 };
