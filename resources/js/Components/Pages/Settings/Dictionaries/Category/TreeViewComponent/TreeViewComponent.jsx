@@ -45,7 +45,7 @@ export default function TreeViewComponent(props) {
 
     const theme = useTheme();
     const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
-    const {data, setData, processing, post} = useForm(props.categories.map(e => (
+    const {data, setData, processing, put, transform} = useForm(props.categories.map(e => (
         {
             ...e,
             droppable: true,
@@ -69,19 +69,28 @@ export default function TreeViewComponent(props) {
         setEdited(false)
         setEditedId(null)
     }
+    transform((data) =>
+        data.map(e => ({
+            id: String(e.id).includes("#") ? null : e.id,
+            name: e.name,
+            parent: e.parent,
+            show_in_menu: e.show_in_menu,
+        }))
+    );
+
     const saveBasic = () => {
         console.log(data)
-        // post(route("system.clients.client.update.additional", {client: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano dodatkowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu dodatkowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+        put(route("system.settings.category.update"), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano dodatkowe informację", {variant: 'success'})
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy zapisywaniu dodatkowych informacji", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
     }
 
     const handleDrop = (newTreeData, dnd, f) => {
@@ -112,6 +121,7 @@ export default function TreeViewComponent(props) {
             droppable: true,
             text: "Zmień nazwę",
             name: "",
+            show_in_menu: true,
             clients_discounts_count: 0,
             clients_discounts: [],
             product_models_count: 0,
@@ -314,6 +324,7 @@ export default function TreeViewComponent(props) {
                                                     setData(data.map(d => {
                                                         if (d.id === editedId) {
                                                             d.data.show_in_menu = e.target.checked;
+                                                            d.show_in_menu = e.target.checked;
                                                             setEdited(true);
                                                         }
                                                         return d;

@@ -185,6 +185,7 @@ Route::middleware("auth:user")->group(function () {
             Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
 
             Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
+            Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
 
 
             Route::group(['prefix' => '/gs1'], function () {

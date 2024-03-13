@@ -57,9 +57,10 @@ class ProductCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
+    public function update(UpdateProductCategoryRequest $request)
     {
-        //
+        dd($request->all());
+        //ProductCategory $productCategory
     }
 
     /**
