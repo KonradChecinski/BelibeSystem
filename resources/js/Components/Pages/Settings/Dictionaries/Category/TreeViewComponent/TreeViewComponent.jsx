@@ -27,6 +27,8 @@ import {enqueueSnackbar} from "notistack";
 import {useForm} from "@inertiajs/react";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import CategoryModelsTable from "@/Components/Table/Settings/CategoryModelsTable";
+import CategoryClientsTable from "@/Components/Table/Settings/CategoryClientsTable";
 
 const reorderArray = (array, sourceIndex, targetIndex) => {
     const newArray = [...array];
@@ -326,11 +328,15 @@ export default function TreeViewComponent(props) {
                             </Box>
                         </Box>
 
-                        <Box>
-
+                        <Box sx={{my: 1}}>
+                            <CategoryModelsTable
+                                models={editedId ? data.find(e => e.id === editedId)?.product_models : []}
+                                props={props}/>
                         </Box>
-                        <Box>
-
+                        <Box sx={{my: 1}}>
+                            <CategoryClientsTable
+                                clients={editedId ? data.find(e => e.id === editedId)?.clients_discounts : []}
+                                props={props}/>
                         </Box>
                     </Box>
 

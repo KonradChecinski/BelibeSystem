@@ -6,13 +6,8 @@ import {
     Fade,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ClientActivityTable from "@/Components/Table/ClientActivityTable";
 import HistoryIcon from '@mui/icons-material/History';
-import ClientOrderHistoryTable from "@/Components/Table/ClientOrderHistoryTable";
+import ClientOrderHistoryTable from "@/Components/Table/Client/ClientOrderHistoryTable";
 
 
 export default function ClientOrderHistoryComponent(props) {

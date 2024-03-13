@@ -1,7 +1,7 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
-import RolesEditTable from "@/Components/Table/RolesEditTable";
+import RolesEditTable from "@/Components/Table/Settings/RolesEditTable";
 
 export default function Roles(props) {
     console.log(props)

@@ -1,7 +1,7 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
-import RolesTable from "@/Components/Table/RolesTable";
+import RolesTable from "@/Components/Table/Settings/RolesTable";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 
 export default function Roles(props) {

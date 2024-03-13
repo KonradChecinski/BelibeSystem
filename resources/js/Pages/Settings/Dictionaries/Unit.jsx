@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import UnitsTable from "@/Components/Table/UnitsTable";
+import UnitsTable from "@/Components/Table/Settings/UnitsTable";
 
 export default function Unit(props) {
     console.log(props)

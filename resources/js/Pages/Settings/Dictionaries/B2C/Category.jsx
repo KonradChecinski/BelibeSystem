@@ -2,8 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import GS1BrandsTable from "@/Components/Table/GS1BrandsTable";
-import B2CCategoryTable from "@/Components/Table/B2CCategoryTable";
+import B2CCategoryTable from "@/Components/Table/Settings/B2CCategoryTable";
 
 export default function Category(props) {
     console.log(props)

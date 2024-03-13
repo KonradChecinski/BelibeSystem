@@ -10,9 +10,9 @@ import {Cancel, Save} from "@mui/icons-material";
 import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ClientDiscountsTable from "@/Components/Table/ClientDiscountsTable";
+import ClientDiscountsTable from "@/Components/Table/Client/ClientDiscountsTable";
 import DiscountIcon from '@mui/icons-material/Discount';
-import ClientDiscountsOnPaymentsTable from "@/Components/Table/ClientDiscountsOnPaymentsTable";
+import ClientDiscountsOnPaymentsTable from "@/Components/Table/Client/ClientDiscountsOnPaymentsTable";
 
 
 export default function ClientDiscountsComponent(props) {

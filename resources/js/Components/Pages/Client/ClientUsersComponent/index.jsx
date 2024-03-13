@@ -6,12 +6,8 @@ import {
     Fade,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import ClientActivityTable from "@/Components/Table/ClientActivityTable";
-import ClientUsersTable from "@/Components/Table/ClientUsersTable";
+import ClientUsersTable from "@/Components/Table/Client/ClientUsersTable";
 
 
 export default function ClientUsersComponent(props) {

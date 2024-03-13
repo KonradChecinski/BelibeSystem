@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import GS1BrandsTable from "@/Components/Table/GS1BrandsTable";
+import GS1BrandsTable from "@/Components/Table/Settings/GS1BrandsTable";
 
 export default function Brand(props) {
     console.log(props)

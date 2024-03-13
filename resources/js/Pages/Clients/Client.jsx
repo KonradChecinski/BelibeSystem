@@ -19,7 +19,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
 import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
 import {PointOfSale, Savings} from "@mui/icons-material";
-import ClientSettlementsTable from "@/Components/Table/ClientSettlementsTable";
+import ClientSettlementsTable from "@/Components/Table/Client/ClientSettlementsTable";
 import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
 
 

@@ -3,7 +3,7 @@ import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import ClientsTable from "@/Components/Table/ClientsTable";
+import ClientsTable from "@/Components/Table/Client/ClientsTable";
 
 export default function ClientList(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();

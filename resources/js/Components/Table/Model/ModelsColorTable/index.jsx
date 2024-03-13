@@ -2,8 +2,6 @@ import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
 import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
 import {useTheme} from "@mui/material/styles";
 import {router, useForm} from "@inertiajs/react";

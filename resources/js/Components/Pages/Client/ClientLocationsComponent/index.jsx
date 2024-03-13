@@ -6,12 +6,7 @@ import {
     Fade,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
-import {useNotesClientForm} from "@/Components/Pages/Client/ClientNotesComponent/form/useNotesClientForm";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ClientActivityTable from "@/Components/Table/ClientActivityTable";
-import ClientLocationsTable from "@/Components/Table/ClientLocationsTable";
+import ClientLocationsTable from "@/Components/Table/Client/ClientLocationsTable";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
