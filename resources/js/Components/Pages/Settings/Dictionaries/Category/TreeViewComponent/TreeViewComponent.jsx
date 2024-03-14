@@ -24,7 +24,7 @@ import useTreeOpenHandler
     from "@/Components/Pages/Settings/Dictionaries/Category/TreeViewComponent/Components/useTreeOpenHandler";
 import {Add, Cancel, Delete, Edit, Save} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
-import {useForm} from "@inertiajs/react";
+import {router, useForm} from "@inertiajs/react";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import CategoryModelsTable from "@/Components/Table/Settings/CategoryModelsTable";
@@ -45,6 +45,7 @@ export default function TreeViewComponent(props) {
 
     const theme = useTheme();
     const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
+
     const {data, setData, processing, put, transform} = useForm(props.categories.map(e => (
         {
             ...e,
@@ -55,6 +56,31 @@ export default function TreeViewComponent(props) {
             }
         }
     )));
+
+    const {data: dataAdd, setData: setDataAdd, post} = useForm({
+        id: null,
+        parent: 0,
+        name: "Brak nazwy",
+        show_in_menu: false,
+    })
+
+    useEffect(() => {
+        const newCategories = props.categories.filter(o => !data.find(e => e.id === o.id)).map(e => (
+            {
+                ...e,
+                droppable: true,
+                text: e.name,
+                data: {
+                    show_in_menu: e.show_in_menu,
+                }
+            }
+        ))
+        setData([...data, ...newCategories])
+        if (newCategories.length > 0) {
+            setEditedId(newCategories[0].id)
+        }
+    }, [props.categories])
+
     const resetForm = () => {
         setData(props.categories.map(e => (
             {
@@ -69,25 +95,62 @@ export default function TreeViewComponent(props) {
         setEdited(false)
         setEditedId(null)
     }
+
     transform((data) =>
         data.map(e => ({
-            id: String(e.id).includes("#") ? null : e.id,
-            name: e.name,
+            id: e.id,
+            name: e.name === "" ? "Brak nazwy" : e.name,
             parent: e.parent,
             show_in_menu: e.show_in_menu,
         }))
     );
 
-    const saveBasic = () => {
+    const handleSave = () => {
         console.log(data)
         put(route("system.settings.category.update"), {
             onSuccess: params => {
                 setEdited(false);
-                enqueueSnackbar("Zapisano dodatkowe informację", {variant: 'success'})
+                enqueueSnackbar("Zapisano kategorie", {variant: 'success'})
             },
             onError: params => {
                 console.error(params)
-                enqueueSnackbar("Błąd przy zapisywaniu dodatkowych informacji", {variant: 'error'})
+                enqueueSnackbar("Błąd przy zapisywaniu kotegorii", {variant: 'error'})
+            },
+            preserveScroll: true
+        })
+    }
+    const handleDelete = (id) => {
+        const node = data.find(e => e.id === id);
+        const descendants = getDescendants(data, node.id);
+        if (descendants.length > 0) {
+            return
+        }
+
+        const newTree = data.filter(e => e.id !== id);
+
+
+        router.delete(route("system.settings.category.delete", {productCategory: node.id}), {
+            onSuccess: params => {
+                enqueueSnackbar("Usunięto kategorię", {variant: 'success'})
+                setData(newTree)
+                setEditedId(null)
+                setEdited(false);
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy usuwaniu kategorii: " + params.error, {variant: 'error'})
+            },
+            preserveScroll: true
+        })
+    }
+    const handleAdd = () => {
+        post(route("system.settings.category"), {
+            onSuccess: params => {
+                enqueueSnackbar("Dodano kategorię", {variant: 'success'})
+            },
+            onError: params => {
+                console.error(params)
+                enqueueSnackbar("Błąd przy dodawaniu kategorii: " + params.error, {variant: 'error'})
             },
             preserveScroll: true
         })
@@ -99,41 +162,9 @@ export default function TreeViewComponent(props) {
         setData(treeData)
         setEdited(true);
         ref.current?.openAll();
+        ref.current?.openAll();
     }
 
-    const handleDelete = (id) => {
-        const node = data.find(e => e.id === id);
-        const descendants = getDescendants(data, node.id);
-        if (descendants.length > 0) {
-            return
-        }
-
-        const newTree = data.filter(e => e.id !== id);
-
-        setData(newTree)
-        setEditedId(null)
-    }
-    const handleAdd = () => {
-        const id = Number(String(data.slice(-1)[0].id).replace("#", "")) + 1
-        const node = {
-            id: "#" + id,
-            parent: 0,
-            droppable: true,
-            text: "Zmień nazwę",
-            name: "",
-            show_in_menu: true,
-            clients_discounts_count: 0,
-            clients_discounts: [],
-            product_models_count: 0,
-            product_models: [],
-            data: {
-                show_in_menu: true,
-            }
-        }
-
-        setData([...data, node])
-        setEdited(true)
-    }
 
     const sortTreeData = (treeData) => {
         const sortTreeDataChildrten = (unsortedTreeData, sortedTreeData, nodeId) => {
@@ -223,7 +254,7 @@ export default function TreeViewComponent(props) {
                                             color="success"
                                             size={"small"}
                                             disabled={processing}
-                                            onClick={saveBasic}
+                                            onClick={handleSave}
                                         >
                                             <Save fontSize={"large"}/>
                                         </IconButton>
@@ -352,41 +383,6 @@ export default function TreeViewComponent(props) {
                     </Box>
 
                 </Paper>
-                {/*<Fade in={edited}>*/}
-                {/*    <Tooltip title={"Zapisz"}>*/}
-                {/*        <IconButton*/}
-                {/*            type="submit"*/}
-                {/*            color="success"*/}
-                {/*            size={"small"}*/}
-                {/*            disabled={processing}*/}
-                {/*            onClick={saveBasic}*/}
-                {/*            sx={{*/}
-                {/*                position: "absolute",*/}
-                {/*                top: 10,*/}
-                {/*                right: 30,*/}
-                {/*            }}>*/}
-                {/*            <Save fontSize={"large"}/>*/}
-                {/*        </IconButton>*/}
-                {/*    </Tooltip>*/}
-
-                {/*</Fade>*/}
-                {/*<Fade in={edited}>*/}
-                {/*    <Tooltip title={"Cofnij zmiany"}>*/}
-                {/*        <IconButton*/}
-                {/*            color="error"*/}
-                {/*            size={"small"}*/}
-                {/*            disabled={processing}*/}
-                {/*            onClick={resetForm}*/}
-                {/*            sx={{*/}
-                {/*                position: "absolute",*/}
-                {/*                top: 10,*/}
-                {/*                right: 80,*/}
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            <Cancel fontSize={"large"}/>*/}
-                {/*        </IconButton>*/}
-                {/*    </Tooltip>*/}
-                {/*</Fade>*/}
                 <Fade in={Boolean(editedId)}>
                     <Tooltip
                         title={getDescendants(data, editedId).length > 0 ? "Nie można usunąć kategorii z podkategoriami" : "Usuń kategorię"}>

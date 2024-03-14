@@ -11,7 +11,7 @@ import {
     Typography
 } from "@mui/material";
 import TextEditorB2B from "@/Components/TextEditor/B2B";
-import {Save} from "@mui/icons-material";
+import {Category, Description, Save} from "@mui/icons-material";
 import {useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -68,6 +68,11 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
     return (
         <>
             <Box sx={{display: "flex", flexDirection: "column"}}>
+                <Typography
+                    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                    <Category fontSize={"large"}/>
+                    Kategorie i Wariantowanie
+                </Typography>
                 <Autocomplete
                     disablePortal
                     id="b2c_category"
@@ -129,6 +134,11 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
                 {/*)}*/}
             </Box>
             <Box sx={{my: 1}}>
+                <Typography
+                    sx={{my: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                    <Description fontSize={"large"}/>
+                    Opis
+                </Typography>
                 <TextEditorWebsite
                     value={data.description_b2c}
                     setValue={(value) => {

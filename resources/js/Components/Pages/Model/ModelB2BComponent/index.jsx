@@ -10,10 +10,11 @@ import {
     Typography
 } from "@mui/material";
 import TextEditorB2B from "@/Components/TextEditor/B2B";
-import {Save} from "@mui/icons-material";
+import {Category, Description, Save} from "@mui/icons-material";
 import {useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import CategoryComponent from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent";
 
 
 export default function ModelB2BComponent({productModel, setProductModel, props}) {
@@ -53,39 +54,20 @@ export default function ModelB2BComponent({productModel, setProductModel, props}
     return (
         <>
             <Box>
-                <FormControl sx={{width: "30ch"}}>
-                    <InputLabel id="category-checkbox-label">Kategoria</InputLabel>
-                    <Select
-                        labelId="category-checkbox-label"
-                        id="category-checkbox"
-                        multiple
-                        value={data.categories}
-                        onChange={(value) => {
-                            setEdited(true);
-                            // setProductModel({...productModel, categories: value.target.value});
-                            setData({...data, categories: value.target.value})
-                        }}
-                        input={<OutlinedInput label="Kategoria"/>}
-                        inputProps={{readOnly: !props.editing}}
-                        renderValue={(selected) => selected.map((value) => {
-                            return (<Typography key={value} variant="body1" gutterBottom>
-                                {props.categories.find(e => e.id == value).name}
-                            </Typography>);
-                        })}
-                        MenuProps={MenuProps}
-                    >
-                        {props.categories.map((category) => (
-                            <MenuItem key={category.id} value={category.id}>
-                                <Checkbox
-                                    checked={data.categories.find(e => e == category.id) != null}/>
-                                <ListItemText primary={category.name}/>
-                            </MenuItem>
-                        ))}
-
-                    </Select>
-                </FormControl>
+                <Typography
+                    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                    <Category fontSize={"large"}/>
+                    Kategorie
+                </Typography>
+                <CategoryComponent categories={props.categories} data={data} setData={setData}
+                                   setEdited={value => setEdited(value)}/>
             </Box>
             <Box sx={{my: 1}}>
+                <Typography
+                    sx={{my: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                    <Description fontSize={"large"}/>
+                    Opis
+                </Typography>
                 <TextEditorB2B
                     value={data.description_b2b}
                     setValue={(value) => {

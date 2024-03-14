@@ -1,7 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import {TypeIcon} from "./TypeIcon";
 import {Box, Button, Checkbox, Divider, IconButton, Switch, Tooltip} from "@mui/material";
 import {getDescendants, useDragOver} from "@minoru/react-dnd-treeview";
 import {Favorite, FavoriteBorder, DragHandle, Edit, Check, CheckBoxOutlineBlank, Close} from "@mui/icons-material";
@@ -126,7 +125,7 @@ export const CustomNode = (props) => {
                                 textAlign={"center"}>{props.node.product_models_count}</Typography>
                 </Tooltip>
                 <Divider orientation={"vertical"} flexItem/>
-                <Tooltip title="Widoczność" arrow>
+                <Tooltip title="Widoczność kategorii" arrow>
                     {data?.show_in_menu ?
                         <Check/>
                         :

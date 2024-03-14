@@ -35,7 +35,7 @@ class ProductCategoryController extends Controller
      */
     public function store(StoreProductCategoryRequest $request)
     {
-        //
+        ProductCategory::create($request->validated());
     }
 
     /**
@@ -59,8 +59,9 @@ class ProductCategoryController extends Controller
      */
     public function update(UpdateProductCategoryRequest $request)
     {
-        dd($request->all());
-        //ProductCategory $productCategory
+        foreach ($request->validated() as $item) {
+            ProductCategory::find($item['id'])->update($item);
+        }
     }
 
     /**
@@ -68,6 +69,11 @@ class ProductCategoryController extends Controller
      */
     public function destroy(ProductCategory $productCategory)
     {
-        //
+        if ($productCategory->productModels->count() != 0 || $productCategory->clientsDiscounts->count() != 0) {
+            return redirect()->back()->withErrors([
+                'error' => 'Nie można usunąć kategorii, ponieważ jest przypisana do modeli produktów lub klientów'
+            ]);
+        }
+        $productCategory->delete();
     }
 }

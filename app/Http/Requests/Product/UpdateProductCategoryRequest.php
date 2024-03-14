@@ -21,11 +21,12 @@ class UpdateProductCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+//        dd($this->all());
         return [
-            "id" => 'required|integer',
-            "name" => 'required|string|max:255',
-            "parent" => 'required|integer',
-            "show_in_menu" => 'required|boolean',
+            "*.id" => 'present|integer|nullable',
+            "*.name" => 'required|string|max:255',
+            "*.parent" => 'required|integer',
+            "*.show_in_menu" => 'required|boolean',
         ];
     }
 }

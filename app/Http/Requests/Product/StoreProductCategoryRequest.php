@@ -11,7 +11,7 @@ class StoreProductCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreProductCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "id" => 'present|nullable',
+            "name" => 'required|string|max:255',
+            "parent" => 'required|integer',
+            "show_in_menu" => 'required|boolean',
         ];
     }
 }

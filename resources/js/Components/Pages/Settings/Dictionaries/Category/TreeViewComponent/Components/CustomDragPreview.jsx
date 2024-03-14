@@ -1,5 +1,4 @@
 import React from "react";
-import {TypeIcon} from "./TypeIcon";
 import {Box} from "@mui/material";
 import {DragHandle} from "@mui/icons-material";
 // import styles from "./CustomDragPreview.module.css";
