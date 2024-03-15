@@ -66,8 +66,9 @@ Route::get('assets/{path}', function ($path) {
 })->name("assets");
 
 Route::get('storage/{path}', [StorageController::class, 'storage'])->name("storage");
-Route::get('images/{path}', [StorageController::class, 'images'])->name("images");
-Route::get('images1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images1x1");
+Route::get('images/basic/{path}', [StorageController::class, 'images'])->name("images");
+Route::get('images/webp/{path}', [StorageController::class, 'imagesWebp'])->name("images.webp");
+Route::get('images/1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
 
 
 Route::group(['prefix' => '/xml'], function () {
