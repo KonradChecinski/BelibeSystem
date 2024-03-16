@@ -143,7 +143,7 @@ export default function Menu({showContent, auth}) {
 
                             <SubMenuLink
                                 href={route("system.settings.gs1.brand")}
-                                active={route().current("system.settings.gs1.brand")}
+                                active={false}
                                 text={"GS1"}
                             >
                                 <SubMenuLink
@@ -161,7 +161,7 @@ export default function Menu({showContent, auth}) {
 
                             <SubMenuLink
                                 href={route("system.settings.b2c.category")}
-                                active={route().current("system.settings.b2c.category")}
+                                active={false}
                                 text={"B2C"}
                             >
                                 <SubMenuLink

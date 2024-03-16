@@ -16,7 +16,7 @@ class B2cColorController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/Dictionaries/B2C/Color");
+        return Inertia::render("System/Settings/Dictionaries/B2C/Color");
     }
 
     public function data(Request $request) //DataProductModelRequest

@@ -60,7 +60,7 @@ class ClientController extends Controller
     {
         $b2bCountry = B2bCountry::all();
 
-        return Inertia::render("Clients/ClientList", ["country" => $b2bCountry]);
+        return Inertia::render("System/Clients/ClientList", ["country" => $b2bCountry]);
 
     }
 
@@ -269,7 +269,7 @@ class ClientController extends Controller
         $productGroups = ProductGroup::all(["id", "name"]);
         $productBrands = ProductBrand::all(["id", "name"]);
 
-        return Inertia::render("Clients/Client", [
+        return Inertia::render("System/Clients/Client", [
             "client" => $client,
             "activityType" => $b2bActivityType,
             "country" => $b2bCountry,
@@ -326,7 +326,7 @@ class ClientController extends Controller
         $productGroups = ProductGroup::all(["id", "name"]);
         $productBrands = ProductBrand::all(["id", "name"]);
 
-        return Inertia::render("Clients/Client", [
+        return Inertia::render("System/Clients/Client", [
             "editing" => true,
             "client" => $client,
             "activityType" => $b2bActivityType,

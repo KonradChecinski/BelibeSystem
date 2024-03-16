@@ -1,8 +1,6 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {Head, Link} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {useSnackbar} from "notistack";
-import {Button} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 
 export default function Dashboard(props) {

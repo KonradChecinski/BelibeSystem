@@ -46,21 +46,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get("/", function () {
-//    return Inertia::render("Welcome", [
-//        "canLogin" => Route::has("system.login"),
-//        "canRegister" => Route::has("system.register"),
-//        "laravelVersion" => Application::VERSION,
-//        "phpVersion" => PHP_VERSION,
-//
-//        "routeLogin" => "system.login",
-//        "routeRegister" => "system.register",
-//        "routeDashboard" => "system.dashboard",
-//    ]);
-    return Inertia::render("Dashboard");
-})->middleware(["auth:user", "verified"])->name("system.dashboard");;
+    return Inertia::render("System/Dashboard");
+})->middleware(["auth:user", "verified"])->name("system.dashboard");
 
 
-Route::middleware("auth:user")->group(function () {
+Route::middleware(["auth:user", "verified"])->group(function () {
     Route::group([], function () {
         Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
         Route::get("/models/data", [ProductModelController::class, 'data']);
@@ -185,7 +175,7 @@ Route::middleware("auth:user")->group(function () {
             Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
 
             Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
-            Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category");
+            Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
             Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
             Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
 
@@ -232,7 +222,7 @@ Route::middleware("auth:user")->group(function () {
 
 });
 
-Route::middleware("auth:user")->group(function () {
+Route::middleware(["auth:user", "verified"])->group(function () {
 
     Route::get("phpinfo", function () {
         phpinfo();

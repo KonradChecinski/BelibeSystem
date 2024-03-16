@@ -17,7 +17,7 @@ class ProductSizeController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/Dictionaries/Sizes");
+        return Inertia::render("System/Settings/Dictionaries/Sizes");
 
     }
 

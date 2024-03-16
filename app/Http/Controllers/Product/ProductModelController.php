@@ -28,7 +28,7 @@ class ProductModelController extends Controller
     public function index(): \Inertia\Response
     {
 
-        return Inertia::render("Products/ModelList");
+        return Inertia::render("System/Products/ModelList");
     }
 
     public function data(DataProductModelRequest $request)
@@ -192,7 +192,7 @@ class ProductModelController extends Controller
         $b2cColor = B2cColor::all();
 
 
-        return Inertia::render("Products/Model", [
+        return Inertia::render("System/Products/Model", [
             "productModel" => $productModel,
             "groups" => $groups,
             "categories" => $categories,
@@ -226,7 +226,7 @@ class ProductModelController extends Controller
         $b2cCategory = B2cCategory::all();
         $b2cColor = B2cColor::all();
 
-        return Inertia::render("Products/Model", [
+        return Inertia::render("System/Products/Model", [
             "editing" => true,
             "productModel" => $productModel,
             "groups" => $groups,

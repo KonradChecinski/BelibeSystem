@@ -16,7 +16,7 @@ class ProductBrandController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/Dictionaries/Brand");
+        return Inertia::render("System/Settings/Dictionaries/Brand");
     }
 
     public function data(Request $request) //DataProductModelRequest

@@ -14,7 +14,7 @@ class SettingsPermissionsController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Settings/UsersAndPermissions/Permissions");
+        return Inertia::render("System/Settings/UsersAndPermissions/Permissions");
 
     }
 

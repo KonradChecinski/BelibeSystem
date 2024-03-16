@@ -144,7 +144,7 @@ export default function TreeViewComponent(props) {
         })
     }
     const handleAdd = () => {
-        post(route("system.settings.category"), {
+        post(route("system.settings.category.create"), {
             onSuccess: params => {
                 enqueueSnackbar("Dodano kategorię", {variant: 'success'})
             },
