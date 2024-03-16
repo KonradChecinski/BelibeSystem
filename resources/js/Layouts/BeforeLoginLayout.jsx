@@ -7,14 +7,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useEffect, useState} from "react";
 
 export default function BeforeLoginLayout({background, children}) {
-    const theme = useTheme();
-    console.log(theme)
-    const [isLightTheme, setIsLightTheme] = useState(useTheme().palette.mode === 'light');
+    let theme = useTheme();
+    const isLightMode = useMediaQuery("(prefers-color-scheme: light)");
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
-    console.log(isLightTheme)
-    useEffect(() => {
-        console.log(theme.palette.mode)
-    }, [theme]);
+
     return (
         <Theme>
             <Box sx={{
@@ -36,7 +32,7 @@ export default function BeforeLoginLayout({background, children}) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        bgcolor: useTheme().palette.mode === 'light' ? "rgb(55 65 81 / 0.25)" : "rgb(17 24 39 / 0.75)",
+                        bgcolor: isLightMode ? "rgb(55 65 81 / 0.25)" : "rgb(17 24 39 / 0.75)",
                     }}
                 >
                     <Box
@@ -45,7 +41,7 @@ export default function BeforeLoginLayout({background, children}) {
                             flexDirection: "column",
                             width: smBreakpointUp ? "25%" : "96%",
                             minWidth: "fit-content",
-                            backdropFilter: useTheme().palette.mode === 'light' ? "blur(8px) brightness(1.25) contrast(0.75)" : "blur(8px) brightness(1) contrast(1)",
+                            backdropFilter: isLightMode ? "blur(8px) brightness(1.25) contrast(0.75)" : "blur(8px) brightness(1) contrast(1)",
                             justifyContent: smBreakpointUp ? "center" : "flex-start",
                             alignItems: "center",
                             py: 4,
