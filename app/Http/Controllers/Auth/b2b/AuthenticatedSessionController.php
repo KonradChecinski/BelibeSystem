@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,7 +25,6 @@ class AuthenticatedSessionController extends Controller
             'canResetPassword' => Route::has('password.request'),
             'canRegister' => Route::has('b2b.register'),
             'status' => session('status'),
-
             'routeLogin' => "b2b.login",
             'routePasswordRequest' => 'password.request',
             'routeRegister' => 'b2b.register',

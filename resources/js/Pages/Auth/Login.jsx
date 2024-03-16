@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
+import GuestLayout from '@/Layouts/BeforeLoginLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -16,6 +16,7 @@ export default function Login({
                                   status,
                                   canResetPassword,
                                   canRegister,
+                                  backgroundImage,
                                   routeLogin,
                                   routePasswordRequest,
                                   routeRegister
@@ -55,7 +56,7 @@ export default function Login({
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout background={backgroundImage}>
             <Head title={t("Log in")}/>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}

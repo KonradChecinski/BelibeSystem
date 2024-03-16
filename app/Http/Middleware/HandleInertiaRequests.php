@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -30,6 +32,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        if (Session::exists("backgroundImage")) {
+            $backgroud = Session::get("backgroundImage");
+        } else {
+            $backgroud = Helper::getBackgroundImage();
+            Session::put("backgroundImage", $backgroud);
+        }
+
         return array_merge(parent::share($request), [
             "auth" => [
                 "user" => $request->user(),
@@ -49,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                     "location" => $request->url(),
                 ]);
             },
+            "backgroundImage" => $backgroud,
 //            'flash' => [
 ////                'type' => fn() => $request->session()->get("toast-type"),
 ////                'message' => fn() => $request->session()->get("toast-message")
