@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::table('product_categories', function (Blueprint $table) {
             $table->boolean("show_in_menu")->after("name")->default(true);
             $table->bigInteger("parent")->index()->after("name")->default(0);
+            $table->string("slug")->unique()->after("name");
 
         });
     }

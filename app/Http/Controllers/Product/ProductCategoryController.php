@@ -35,7 +35,9 @@ class ProductCategoryController extends Controller
      */
     public function store(StoreProductCategoryRequest $request)
     {
-        ProductCategory::create($request->validated());
+        $productCategory = ProductCategory::create($request->validated());
+        $productCategory->slug = "";
+        $productCategory->save();
     }
 
     /**
