@@ -1,4 +1,4 @@
-import GuestLayout from '@/Layouts/BeforeLoginLayout';
+import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
 import PrimaryButton from '@/Components/PrimaryButton';
 import {Head, Link, useForm} from '@inertiajs/react';
 import {useLaravelReactI18n} from "laravel-react-i18n";
@@ -15,7 +15,7 @@ export default function VerifyEmail({status, backgroundImage}) {
     };
 
     return (
-        <GuestLayout background={backgroundImage}>
+        <BeforeLoginLayout background={backgroundImage}>
             <Head title="Email Verification"/>
 
             <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
@@ -42,6 +42,6 @@ export default function VerifyEmail({status, backgroundImage}) {
                     </Link>
                 </div>
             </form>
-        </GuestLayout>
+        </BeforeLoginLayout>
     );
 }

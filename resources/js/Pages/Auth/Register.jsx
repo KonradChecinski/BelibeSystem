@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import GuestLayout from '@/Layouts/BeforeLoginLayout';
+import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -55,7 +55,7 @@ export default function Register({routeLogin, routeRegister, backgroundImage}) {
 
 
     return (
-        <GuestLayout background={backgroundImage}>
+        <BeforeLoginLayout background={backgroundImage}>
             <Head title={t("Register")}/>
 
             <form onSubmit={submit} className="guest">
@@ -78,7 +78,7 @@ export default function Register({routeLogin, routeRegister, backgroundImage}) {
                             id="name"
                             name="name"
                             type="text"
-                            error={errors.name ? 'error' : ''}
+                            error={!!errors.name}
                             inputProps={{className: "text-white-50"}}
                             autoComplete="name"
                             value={data.name}
@@ -220,6 +220,6 @@ export default function Register({routeLogin, routeRegister, backgroundImage}) {
                     </Link>
                 </div>
             </form>
-        </GuestLayout>
+        </BeforeLoginLayout>
     );
 }

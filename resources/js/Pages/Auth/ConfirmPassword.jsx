@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import GuestLayout from '@/Layouts/BeforeLoginLayout';
+import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -28,7 +28,7 @@ export default function ConfirmPassword({backgroundImage}) {
     };
 
     return (
-        <GuestLayout background={backgroundImage}>
+        <BeforeLoginLayout background={backgroundImage}>
             <Head title="Confirm Password"/>
 
             <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
@@ -58,6 +58,6 @@ export default function ConfirmPassword({backgroundImage}) {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </BeforeLoginLayout>
     );
 }

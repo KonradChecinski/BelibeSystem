@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/BeforeLoginLayout';
+import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -56,7 +56,7 @@ export default function Login({
     };
 
     return (
-        <GuestLayout background={backgroundImage}>
+        <BeforeLoginLayout background={backgroundImage}>
             <Head title={t("Log in")}/>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
@@ -148,6 +148,6 @@ export default function Login({
                     )}
                 </div>
             </form>
-        </GuestLayout>
+        </BeforeLoginLayout>
     );
 }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import GuestLayout from '@/Layouts/BeforeLoginLayout';
+import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -53,7 +53,7 @@ export default function ResetPassword({token, email, backgroundImage}) {
     };
 
     return (
-        <GuestLayout background={backgroundImage}>
+        <BeforeLoginLayout background={backgroundImage}>
             <Head title={t("Reset Password")}/>
 
             <form onSubmit={submit} className="guest">
@@ -147,6 +147,6 @@ export default function ResetPassword({token, email, backgroundImage}) {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </BeforeLoginLayout>
     );
 }
