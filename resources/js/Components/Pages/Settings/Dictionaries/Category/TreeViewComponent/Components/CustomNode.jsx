@@ -108,20 +108,27 @@ export const CustomNode = (props) => {
                         paddingInlineStart: "8px",
                         display: "flex",
                         alignItems: "center",
-                        width: 1
+                        width: "100%"
                     }}>
-                    <Typography variant="body2">{props.node.text}</Typography>
+                    <Tooltip title="Nazwa" arrow>
+                        <Typography variant="body2">{props.node.text}</Typography>
+                    </Tooltip>
 
 
                 </Box>
                 <Divider orientation={"vertical"} flexItem/>
+                <Tooltip title="Url" arrow>
+                    <Typography variant="body2" sx={{width: 200, minWidth: 200}}
+                                textAlign={"center"}>{props.node.slug}</Typography>
+                </Tooltip>
+                <Divider orientation={"vertical"} flexItem/>
                 <Tooltip title="Ilość klientów ze zniżką na tą kategorię" arrow>
-                    <Typography variant="body2" sx={{width: 40}}
+                    <Typography variant="body2" sx={{width: 30, minWidth: 30}}
                                 textAlign={"center"}>{props.node.clients_discounts_count}</Typography>
                 </Tooltip>
                 <Divider orientation={"vertical"} flexItem/>
                 <Tooltip title="Ilość produktów w tej kategorii" arrow>
-                    <Typography variant="body2" sx={{width: 40}}
+                    <Typography variant="body2" sx={{width: 30, minWidth: 30}}
                                 textAlign={"center"}>{props.node.product_models_count}</Typography>
                 </Tooltip>
                 <Divider orientation={"vertical"} flexItem/>

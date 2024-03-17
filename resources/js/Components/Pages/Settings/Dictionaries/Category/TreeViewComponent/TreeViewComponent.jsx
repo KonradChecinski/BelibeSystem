@@ -75,7 +75,12 @@ export default function TreeViewComponent(props) {
                 }
             }
         ))
-        setData([...data, ...newCategories])
+        const newData = data.slice()
+        const newSlugs = props.categories.filter(o => data.find(e => e.id === o.id && e.slug !== o.slug))
+        newSlugs.forEach(e => {
+            newData.find(d => d.id === e.id).slug = e.slug
+        })
+        setData([...newData, ...newCategories])
         if (newCategories.length > 0) {
             setEditedId(newCategories[0].id)
         }
@@ -101,12 +106,12 @@ export default function TreeViewComponent(props) {
             id: e.id,
             name: e.name === "" ? "Brak nazwy" : e.name,
             parent: e.parent,
+            slug: e.slug,
             show_in_menu: e.show_in_menu,
         }))
     );
 
     const handleSave = () => {
-        console.log(data)
         put(route("system.settings.category.update"), {
             onSuccess: params => {
                 setEdited(false);
@@ -335,6 +340,24 @@ export default function TreeViewComponent(props) {
                                                    if (d.id === editedId) {
                                                        d.name = e.target.value;
                                                        d.text = e.target.value;
+                                                       setEdited(true);
+                                                   }
+                                                   return d;
+                                               }))
+
+                                           }}
+                                />
+
+                            </Box>
+                            <Box sx={{p: 2}}>
+                                <TextField id="slug"
+                                           label="Url"
+                                           variant="outlined"
+                                           value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.slug : ""}
+                                           onChange={(e) => {
+                                               setData(data.map(d => {
+                                                   if (d.id === editedId) {
+                                                       d.slug = e.target.value;
                                                        setEdited(true);
                                                    }
                                                    return d;

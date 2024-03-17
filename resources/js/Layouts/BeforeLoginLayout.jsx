@@ -9,6 +9,7 @@ import {useEffect, useState} from "react";
 export default function BeforeLoginLayout({background, children}) {
     let theme = useTheme();
     const isLightMode = useMediaQuery("(prefers-color-scheme: light)");
+    const lgBreakpointUp = useMediaQuery(theme.breakpoints.up("lg"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
 
     return (
@@ -39,7 +40,7 @@ export default function BeforeLoginLayout({background, children}) {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            width: smBreakpointUp ? "25%" : "96%",
+                            width: lgBreakpointUp ? "25%" : smBreakpointUp ? "40%" : "96%",
                             minWidth: "fit-content",
                             backdropFilter: isLightMode ? "blur(8px) brightness(1.25) contrast(0.75)" : "blur(8px) brightness(1) contrast(1)",
                             justifyContent: smBreakpointUp ? "center" : "flex-start",
@@ -49,6 +50,7 @@ export default function BeforeLoginLayout({background, children}) {
                             border: 2,
                             borderColor: "rgb(55 65 81 / 1)",
                             boxShadow: 2,
+                            bgcolor: isLightMode ? "rgb(55 65 81 / 0.15)" : "rgb(17 24 39 / 0.75)",
                         }}
                     >
 
