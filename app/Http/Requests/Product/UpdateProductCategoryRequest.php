@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Models\Products\ProductCategory;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductCategoryRequest extends FormRequest
 {
@@ -21,10 +23,15 @@ class UpdateProductCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-//        dd($this->all());
         return [
             "*.id" => 'present|integer|nullable',
             "*.name" => 'required|string|max:255',
+            "*.slug" =>
+                Rule::forEach(function ($value, $attribute, $data) {
+                    return [
+                        'nullable', 'string', 'max:255', Rule::unique(ProductCategory::class)->ignore($data[explode(".", $attribute)[0] . ".id"]),
+                    ];
+                }),
             "*.parent" => 'required|integer',
             "*.show_in_menu" => 'required|boolean',
         ];
