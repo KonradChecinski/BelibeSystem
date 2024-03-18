@@ -27,7 +27,11 @@ export default function ModelsTable(props) {
                                 alt={"Zdjęcie produktu"}
                                 className={"w-100 p-1.5"}
                             />
-                            : ""
+                            : <img
+                                src={route("images", {path: "brak.jpg"})}
+                                alt={"Brak zdjęcia"}
+                                className={"w-100 p-1.5"}
+                            />
                     )
 
 

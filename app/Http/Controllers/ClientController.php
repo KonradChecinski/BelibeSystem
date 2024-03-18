@@ -7,6 +7,7 @@ use App\Helpers\Shoper\Shoper;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
 use App\Http\Requests\Client\DataClientRequest;
+use App\Http\Requests\Product\SearchProductModelRequest;
 use App\Jobs\FromSubiekt\Cena\UpdatePriceFromSubiekt;
 use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
@@ -190,6 +191,24 @@ class ClientController extends Controller
 //        dd($models->get()->toArray());
         $models = $models->paginate($request->limit, ['id', 'nip', 'name', 'city', 'street', 'building_number', 'apartment_number', 'phone', 'email', 'blacklist', 'user_id', 'status_id']);
         return response()->json([$models]);
+    }
+
+    public function search(SearchProductModelRequest $request)
+    {
+        $clients = Client::query()
+            ->Where('id', 'LIKE', '%' . $request->search . '%')
+            ->orWhere("name", "LIKE", "%" . $request->search . "%")
+            ->orWhere("nip", "LIKE", "%" . $request->search . "%")
+            ->orWhere("city", "LIKE", "%" . $request->search . "%")
+            ->orWhere("postal_code", "LIKE", "%" . $request->search . "%")
+            ->orWhere("street", "LIKE", "%" . $request->search . "%")
+            ->orWhere("phone", "LIKE", "%" . $request->search . "%")
+            ->orWhere("email", "LIKE", "%" . $request->search . "%")
+            ->limit(15)
+            ->get(["id", "name", "nip", "city", "postal_code", "street", "building_number", "apartment_number", "phone", "email",]);
+
+//        dd($clients);
+        return response()->json($clients);
     }
 
     /**

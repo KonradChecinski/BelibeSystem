@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ProductModel extends Model
 {
@@ -59,6 +60,16 @@ class ProductModel extends Model
         return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size', 'unit']);
     }
 
+    public function productsWithoutRelation(): HasManyThrough
+    {
+        return $this->hasManyThrough(Product::class, ProductModelColor::class);
+    }
+
+    public function barcodes(): HasManyThrough
+    {
+        return $this->hasManyDeepFromRelations($this->productsWithoutRelation(), (new Product())->barcodes());
+    }
+
     public function prices(): HasOne
     {
         return $this->hasOne(ProductModelPrice::class);
@@ -68,6 +79,11 @@ class ProductModel extends Model
     public function images(): HasManyThrough
     {
         return $this->hasManyThrough(ProductImage::class, ProductModelColor::class);
+    }
+
+    public function mainImage(): HasOneThrough
+    {
+        return $this->hasOneThrough(ProductImage::class, ProductModelColor::class)->where("order", 0)->where("type", 1);
     }
 
     public function categories(): BelongsToMany

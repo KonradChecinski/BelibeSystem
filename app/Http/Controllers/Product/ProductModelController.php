@@ -136,12 +136,15 @@ class ProductModelController extends Controller
 
     public function search(SearchProductModelRequest $request)
     {
-        $models = ProductModel::query()
+        $models = ProductModel::with(['mainImage:product_model_color_id,path', 'barcodes:product_id,barcode'])
             ->Where('id', 'LIKE', '%' . $request->search . '%')
             ->orWhere("name", "LIKE", "%" . $request->search . "%")
             ->orWhere("symbol", "LIKE", "%" . $request->search . "%")
+            ->orWhereHas("barcodes", function ($query) use ($request) {
+                $query->Where("barcode", "LIKE", "%" . $request->search . "%");
+            })
             ->limit(15)
-            ->get(["id", "name"]);
+            ->get(["id", "symbol", "name"]);
         return response()->json($models);
     }
 

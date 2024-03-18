@@ -18,7 +18,8 @@ import UserAvatar from "@/Components/Layout/UserAvatar";
 import UserAvatarMenu from "@/Components/Layout/UserAvatar/Menu";
 import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
-import SearchComponent from "@/Components/Layout/NavBar/SearchComponent";
+import SearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/SearchModelComponent";
+import SearchClientComponent from "@/Components/Layout/NavBar/SearchComponent/SearchClientComponent";
 
 export default function Navbar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
@@ -45,34 +46,40 @@ export default function Navbar({auth}) {
                     justifyContent="flex-start"
                     alignItems="center"
                 >
+                    {/*<Grid item xs={4} md={2}>*/}
+                    {/*    <FormControl*/}
+                    {/*        sx={{ml: 1, width: "100%"}}*/}
+                    {/*        variant="outlined"*/}
+                    {/*    >*/}
+                    {/*        <InputLabel htmlFor="outlined-adornment-models">*/}
+                    {/*            Model*/}
+                    {/*        </InputLabel>*/}
+                    {/*        <OutlinedInput*/}
+                    {/*            id="outlined-adornment-models"*/}
+                    {/*            type="text"*/}
+                    {/*            endAdornment={*/}
+                    {/*                <InputAdornment position="end">*/}
+                    {/*                    <IconButton*/}
+                    {/*                        // aria-label="toggle password visibility"*/}
+                    {/*                        // onClick={handleClickShowPassword}*/}
+                    {/*                        // onMouseDown={handleMouseDownPassword}*/}
+                    {/*                    >*/}
+                    {/*                        <Search/>*/}
+                    {/*                    </IconButton>*/}
+                    {/*                </InputAdornment>*/}
+                    {/*            }*/}
+                    {/*            label="Model"*/}
+                    {/*        />*/}
+                    {/*    </FormControl>*/}
+                    {/*</Grid>*/}
                     <Grid item xs={4} md={2}>
-                        <FormControl
-                            sx={{ml: 1, width: "100%"}}
-                            variant="outlined"
-                        >
-                            <InputLabel htmlFor="outlined-adornment-models">
-                                Model
-                            </InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-models"
-                                type="text"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            // aria-label="toggle password visibility"
-                                            // onClick={handleClickShowPassword}
-                                            // onMouseDown={handleMouseDownPassword}
-                                        >
-                                            <Search/>
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Model"
-                            />
-                        </FormControl>
+                        <SearchModelComponent auth={auth} searchRoute={route("system.products.models.search")}
+                                              label={"Model"}/>
+
                     </Grid>
                     <Grid item xs={4} md={2}>
-                        <SearchComponent/>
+                        <SearchClientComponent auth={auth} searchRoute={route("system.clients.search")}
+                                               label={"Firma"}/>
 
                     </Grid>
                     {/*<Grid item xs={4} md={2}>*/}
