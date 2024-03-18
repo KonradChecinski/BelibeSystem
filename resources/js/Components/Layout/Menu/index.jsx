@@ -63,14 +63,14 @@ export default function Menu({showContent, auth}) {
                         text={"Produkty"}
                         menuIcon={Category}
                     /> : ""}
-                {auth.permissions.includes("showClient") ?
-                    <MainMenuLink
-                        href={route("system.clients")}
-                        active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}
-                        showContent={smBreakpointUp || showContent}
-                        text={"Klienci"}
-                        menuIcon={Group}
-                    /> : ""}
+                {/*{auth.permissions.includes("showClient") ?*/}
+                {/*    <MainMenuLink*/}
+                {/*        href={route("system.clients")}*/}
+                {/*        active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}*/}
+                {/*        showContent={smBreakpointUp || showContent}*/}
+                {/*        text={"Klienci"}*/}
+                {/*        menuIcon={Group}*/}
+                {/*    /> : ""}*/}
                 {auth.permissions.includes("showSetting") ?
                     <MainMenuLink
                         href={route("system.settings")}
