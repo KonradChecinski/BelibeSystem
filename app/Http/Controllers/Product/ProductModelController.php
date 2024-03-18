@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\DataProductModelRequest;
 use App\Http\Requests\Product\DeleteProductModelRequest;
+use App\Http\Requests\Product\SearchProductModelRequest;
 use App\Http\Requests\Product\StoreProductModelRequest;
 use App\Http\Requests\Product\UpdateProductModelRequest;
 use App\Jobs\ToSubiekt\ModelTw\CreateModelInSubiekt;
@@ -131,6 +132,17 @@ class ProductModelController extends Controller
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
         $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
         return response()->json([$models]);
+    }
+
+    public function search(SearchProductModelRequest $request)
+    {
+        $models = ProductModel::query()
+            ->Where('id', 'LIKE', '%' . $request->search . '%')
+            ->orWhere("name", "LIKE", "%" . $request->search . "%")
+            ->orWhere("symbol", "LIKE", "%" . $request->search . "%")
+            ->limit(15)
+            ->get(["id", "name"]);
+        return response()->json($models);
     }
 
     /**

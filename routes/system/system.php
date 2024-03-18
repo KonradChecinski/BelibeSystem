@@ -54,6 +54,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::group([], function () {
         Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
         Route::get("/models/data", [ProductModelController::class, 'data']);
+        Route::get("/models/search", [ProductModelController::class, 'search'])->name("system.products.models.search");
         Route::post("/models", [ProductModelController::class, 'store'])->name("system.products.models.create");
         Route::post("/models/{productModel}", [ProductModelController::class, 'copy'])->name("system.products.models.copy");
         Route::delete("/models/{productModel}", [ProductModelController::class, 'destroy'])->name("system.products.models.delete");

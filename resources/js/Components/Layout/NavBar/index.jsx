@@ -1,7 +1,5 @@
-import {Link} from "@inertiajs/react";
-import ApplicationLogo from "@/Components/ApplicationLogo";
 import {
-    Badge,
+
     Card,
     Grid,
     IconButton,
@@ -10,24 +8,17 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    ListItemIcon,
-    Avatar,
-    Typography
+    Typography, TextField, Autocomplete
 } from "@mui/material";
-import {ClickAwayListener} from "@mui/base";
 import {useState} from "react";
 import {
-    Delete,
-    Search,
-    ArrowDropDown,
-    PersonAdd,
-    Settings,
-    Logout, Event
+    Search, Event
 } from "@mui/icons-material";
 import UserAvatar from "@/Components/Layout/UserAvatar";
 import UserAvatarMenu from "@/Components/Layout/UserAvatar/Menu";
 import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
+import SearchComponent from "@/Components/Layout/NavBar/SearchComponent";
 
 export default function Navbar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
@@ -81,31 +72,35 @@ export default function Navbar({auth}) {
                         </FormControl>
                     </Grid>
                     <Grid item xs={4} md={2}>
-                        <FormControl
-                            sx={{ml: 1, width: "100%"}}
-                            variant="outlined"
-                        >
-                            <InputLabel htmlFor="outlined-adornment-password">
-                                Firma
-                            </InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-password"
-                                type="text"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            // aria-label="toggle password visibility"
-                                            // onClick={handleClickShowPassword}
-                                            // onMouseDown={handleMouseDownPassword}
-                                        >
-                                            <Search/>
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Firma"
-                            />
-                        </FormControl>
+                        <SearchComponent/>
+
                     </Grid>
+                    {/*<Grid item xs={4} md={2}>*/}
+                    {/*    <FormControl*/}
+                    {/*        sx={{ml: 1, width: "100%"}}*/}
+                    {/*        variant="outlined"*/}
+                    {/*    >*/}
+                    {/*        <InputLabel htmlFor="outlined-adornment-password">*/}
+                    {/*            Firma*/}
+                    {/*        </InputLabel>*/}
+                    {/*        <OutlinedInput*/}
+                    {/*            id="outlined-adornment-password"*/}
+                    {/*            type="text"*/}
+                    {/*            endAdornment={*/}
+                    {/*                <InputAdornment position="end">*/}
+                    {/*                    <IconButton*/}
+                    {/*                        // aria-label="toggle password visibility"*/}
+                    {/*                        // onClick={handleClickShowPassword}*/}
+                    {/*                        // onMouseDown={handleMouseDownPassword}*/}
+                    {/*                    >*/}
+                    {/*                        <Search/>*/}
+                    {/*                    </IconButton>*/}
+                    {/*                </InputAdornment>*/}
+                    {/*            }*/}
+                    {/*            label="Firma"*/}
+                    {/*        />*/}
+                    {/*    </FormControl>*/}
+                    {/*</Grid>*/}
                     <Grid
                         item
                         xs={4}
