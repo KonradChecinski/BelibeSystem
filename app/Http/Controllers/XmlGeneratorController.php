@@ -63,7 +63,7 @@ class XmlGeneratorController extends Controller
 
                 $photosRow = $productRow->addChild('photos');
                 foreach ($product->images->sortBy("order")->values() as $image) {
-                    $photosRow->addChild('photoUrl', url("images1x1", ['path' => $image->path]));
+                    $photosRow->addChild('photoUrl', route("images1x1", ['path' => $image->path]));
                 }
 
             }

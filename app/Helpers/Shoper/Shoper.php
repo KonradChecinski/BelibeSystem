@@ -138,7 +138,7 @@ class Shoper
                     ->withToken(self::getAccessToken())
                     ->post(env('SHOPER_URL') . '/webapi/rest/product-images', [
                         "product_id" => $productShoperId,
-                        "url" => str_replace("test", "pl", url("images", ['path' => $image->path])),
+                        "url" => str_replace("test", "pl", route("images", ['path' => $image->path])),
                         "translations" => [
                             "pl_PL" => [
                                 "name" => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut
