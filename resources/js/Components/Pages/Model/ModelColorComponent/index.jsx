@@ -3,17 +3,21 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box, Button,
-    Chip,
-    Paper,
+    Chip, Divider,
+    Paper, TextField,
     Typography
 } from "@mui/material";
 import ModelsColorTable from "@/Components/Table/Model/ModelsColorTable";
-import {Edit, ExpandMore} from "@mui/icons-material";
+import {Edit, ExpandMore, ShoppingBasket} from "@mui/icons-material";
 import ModelColorAddDialog from "@/Components/Dialogs/ModelColorDialog/ModelColorAddDialog";
 import {useState} from "react";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
+import {useTheme} from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function ModelColorComponent(props) {
+    let theme = useTheme();
+    const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const countQuantityInColor = (color_id) => {
         let quantity = 0;
         props.productModel.products.filter((product) => {
@@ -47,40 +51,108 @@ export default function ModelColorComponent(props) {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Box sx={{mr: 2}}>
-                                        <img
-                                            src={color.images.length ? route("images", {path: color.images.find(image => image.order === 0).path}) : route("images", {path: "brak.jpg"})}
-                                            // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={"brak"}
-                                            width={50}
-                                            loading="lazy"
-                                        />
-                                    </Box>
+                                    <Box sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        width: 1,
+                                        gap: 2,
+                                        flexDirection: {xs: "column ", sm: "row"}
+                                    }}>
+                                        <Box>
+                                            <Box
+                                                component={"img"}
+                                                src={color.images.length ? route("images", {path: color.images.find(image => image.order === 0).path}) : route("images", {path: "brak.jpg"})}
+                                                alt={"brak"}
+                                                loading="lazy"
+                                                width={80}
+                                                sx={{}}>
+                                            </Box>
+                                        </Box>
 
-                                    <Box sx={{display: "flex", gap: 1, flexWrap: "wrap"}}>
-                                        <Chip label={`${color.shortcut} - ${color.name}`} color="primary"
-                                              variant="outlined"
-                                              sx={{fontSize: 15, height: 35}}/>
-                                        <Chip
-                                            label={`Kolor w sklepie: ${color.b2c_shortcut} - ${colorName === undefined ? " " : colorName}
-                                        `}
-                                            // color.b2c_color_id
-                                            color="primary"
-                                            variant="outlined"
-                                            sx={{fontSize: 15, height: 35}}/>
-                                        <Chip label={`Nazwa w sklepie - ${color.b2c_product_name}`} color="primary"
-                                              variant="outlined"
-                                              sx={{fontSize: 15, height: 35}}/>
-                                        <Chip label={`Stan koloru - ${countQuantityInColor(color.id)}`} color="primary"
-                                              variant="outlined"
-                                              sx={{fontSize: 15, height: 35}}/>
+                                        <Box sx={{
+                                            display: "flex",
+                                            width: 1,
+                                            gap: 1,
+                                            flexDirection: "column"
+                                        }}>
+                                            <Box sx={{
+                                                display: "flex",
+                                                gap: 2,
+                                                flexWrap: "wrap",
+                                                flexDirection: {xs: "column ", md: "row"}
+                                            }}>
+                                                <TextField id="symbol" label="Symbol" variant="outlined"
+                                                           value={color.shortcut}
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "10ch"}}/>
+
+                                                <TextField id="name" label="Nazwa koloru" variant="outlined"
+                                                           value={color.name}
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "30ch"}}/>
+
+                                                {mdBreakpointUp ?
+                                                    <Divider orientation="vertical" variant="middle" flexItem/> : null}
+
+                                                <TextField id="quantity" label="Stan" variant="outlined"
+                                                           value={countQuantityInColor(color.id)}
+                                                           type="number"
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "10ch"}}/>
+                                            </Box>
+                                            <Divider/>
+                                            <Typography
+                                                sx={{mb: 0.5, display: "flex", gap: 1, alignItems: "center"}}>
+                                                <ShoppingBasket fontSize={"large"}/>
+                                                Sklep Internetowy
+                                            </Typography>
+
+
+                                            <Box sx={{
+                                                display: "flex",
+                                                gap: 2,
+                                                flexWrap: "wrap",
+                                                flexDirection: {xs: "column ", md: "row"}
+                                            }}>
+                                                <TextField id="symbol_b2c" label="Symbol" variant="outlined"
+                                                           value={color.b2c_shortcut}
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "10ch"}}/>
+                                                <TextField id="name_b2c" label="Nazwa koloru" variant="outlined"
+                                                           value={colorName}
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "30ch"}}/>
+                                                {mdBreakpointUp ?
+                                                    <Divider orientation="vertical" variant="middle" flexItem/> : null}
+
+                                                <TextField id="product_name" label="Nazwa produktu w sklepie"
+                                                           variant="outlined"
+                                                           value={color.b2c_product_name}
+                                                           inputProps={{readOnly: true}}
+                                                           disabled={true}
+                                                           sx={{width: "100%", maxWidth: "60ch"}}/>
+                                            </Box>
+                                        </Box>
+
+
                                         {props.editing ?
                                             (
-
                                                 <Chip icon={<Edit/>}
                                                       label={"Edytuj kolor"}
                                                       color="secondary"
-                                                      sx={{fontSize: 15, fontWeight: 'bold', height: 35}}
+                                                      sx={{
+                                                          fontSize: 15,
+                                                          fontWeight: 'bold',
+                                                          height: 35,
+                                                          position: "absolute",
+                                                          right: 40,
+                                                          top: 12
+                                                      }}
                                                       onClick={(event) => {
                                                           event.stopPropagation();
                                                           setClickedColor(color);

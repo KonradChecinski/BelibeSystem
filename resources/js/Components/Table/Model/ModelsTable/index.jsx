@@ -19,20 +19,23 @@ export default function ModelsTable(props) {
             filterable: false,
             width: 80,
             renderCell: (params) => {
+                let src = "";
+                if (params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0) {
+                    src = route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path});
+                } else {
+                    src = route("images", {path: "brak.jpg"})
+                }
                 return (
-                    (
-                        params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0 ?
-                            <img
-                                src={route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path})}
-                                alt={"Zdjęcie produktu"}
-                                className={"w-100 p-1.5"}
-                            />
-                            : <img
-                                src={route("images", {path: "brak.jpg"})}
-                                alt={"Brak zdjęcia"}
-                                className={"w-100 p-1.5"}
-                            />
-                    )
+
+                    <Box
+                        component="img"
+                        src={src}
+                        alt={"Zdjęcie produktu"}
+                        sx={{
+                            width: 1,
+                            px: 0.5
+                        }}
+                    />
 
 
                 );
@@ -46,9 +49,9 @@ export default function ModelsTable(props) {
             width: 400
         },
         {
-            field: "group.name", headerName: "Grupa", renderCell: (params) => {
-                return <GroupCell key={params.row.id} group={params.row.group}/>;
-            },
+            field: "group.name",
+            headerName: "Grupa",
+            valueGetter: (params) => params.row?.group?.name,
             sortable: false,
             filterable: false
         },

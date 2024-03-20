@@ -1,16 +1,11 @@
-import React, {useEffect, useState, useRef} from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
     Box,
     Divider,
-    FormControl,
     IconButton,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
-    TextField, Typography,
+    Typography,
     useTheme
 } from "@mui/material";
 import {
@@ -25,7 +20,7 @@ import {
     LooksOne,
     LooksTwo
 } from "@mui/icons-material";
-
+import React from 'react';
 
 export default function TextEditorWebsite({value, setValue, setEdited, readOnly, props}) {
 
@@ -48,13 +43,12 @@ export default function TextEditorWebsite({value, setValue, setEdited, readOnly,
                     setValue(value)
                     setEdited(true)
                 }} modules={modules}
-                            formats={formats} theme={false} readOnly={readOnly}/>
+                            formats={formats} theme={""} readOnly={readOnly}/>
             </Box>
         </Paper>
 
     );
 }
-
 
 const CustomToolbar = () => {
     const theme = useTheme();

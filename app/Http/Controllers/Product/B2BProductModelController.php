@@ -7,6 +7,7 @@ use App\Http\Requests\Product\UpdateB2BProductModelRequest;
 use App\Jobs\Shoper\ShoperChangeDescription;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
+use Stevebauman\Purify\Facades\Purify;
 
 class B2BProductModelController extends Controller
 {
@@ -55,7 +56,7 @@ class B2BProductModelController extends Controller
      */
     public function update(UpdateB2BProductModelRequest $request, ProductModel $productModel)
     {
-        $productModel->update(["description_b2b" => $request->description_b2b]);
+        $productModel->update(["description_b2b" => Purify::config("descriptions")->clean($request->description_b2b)]);
         $productModel->categories()->sync($request->categories);
     }
 

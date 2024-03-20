@@ -22,20 +22,12 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 
 export default function Model(props) {
-
-    const [productModel, setProductModel] = useState({
-        ...props.productModel,
-        categories: props.productModel.categories.map((value) => {
-            // delete value.pivot;
-            return value.id;
-        })
-    });
-    console.log(props);
-
+    // console.log(props);
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={"Model: " + props.productModel.name}>
-            <Head title={props.productModel.name}/>
+        <UserLayout auth={props.auth} errors={props.errors}
+                    header={"Model: " + props.productModel.symbol + " - " + props.productModel.name}>
+            <Head title={props.productModel.symbol + " - " + props.productModel.name}/>
             <Grid container spacing={3} sx={{pb: 1}}>
                 <IconGrid xs={12} md={12} title={"Podstawowe informacje"} icon={<InfoIcon/>} iconColor={"darkblue"}>
                     <BasicInfoComponent {...props}/>
@@ -50,20 +42,16 @@ export default function Model(props) {
                     <ModelColorComponent {...props} />
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"Subiekt"} icon={<TextSnippetIcon/>} iconColor={"gray"}>
-                    <ModelSubiektComponent productModel={productModel} setProductModel={setProductModel}
-                                           props={{...props}}/>
+                    <ModelSubiektComponent {...props}/>
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>
-                    <ModelGS1Component productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
+                    <ModelGS1Component  {...props}/>
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2C"} icon={<PeopleAltIcon/>} iconColor={"indigo"}>
-                    <ModelB2CComponent productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
+                    <ModelB2CComponent {...props}/>
                 </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"indigo"}>
-                    <ModelB2BComponent productModel={productModel} setProductModel={setProductModel}
-                                       props={{...props}}/>
+                    <ModelB2BComponent {...props}/>
                 </IconGrid>
                 {/*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*/}
                 {/*    <TextEditorAllegro/>*/}
@@ -74,8 +62,6 @@ export default function Model(props) {
                     <ImagesComponent {...props}/>
                 </IconGrid>
 
-                {/*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*/}
-                {/*<IconGrid xs={6} md={6} icon={<Category />} iconColor={"blue"} />*/}
             </Grid>
 
         </UserLayout>

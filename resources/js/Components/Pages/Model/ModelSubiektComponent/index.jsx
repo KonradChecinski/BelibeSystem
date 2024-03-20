@@ -14,7 +14,7 @@ import {useModelSubiektForm} from "@/Components/Pages/Model/ModelSubiektComponen
 import {enqueueSnackbar} from "notistack";
 
 
-export default function ModelSubiektComponent({props}) {
+export default function ModelSubiektComponent(props) {
     const [edited, setEdited] = useState(false);
 
     const {
@@ -38,8 +38,8 @@ export default function ModelSubiektComponent({props}) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("Subiekt form data: ", formData)
-        console.log("Subiekt data: ", data)
+        // console.log("Subiekt form data: ", formData)
+        // console.log("Subiekt data: ", data)
         saveSubiekt()
     }
 

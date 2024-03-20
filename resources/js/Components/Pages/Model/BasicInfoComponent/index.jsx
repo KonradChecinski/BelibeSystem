@@ -5,7 +5,10 @@ import {Save} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
 import {useBasicInfoForm} from "@/Components/Pages/Model/BasicInfoComponent/form/useBasicInfoForm";
 
+
 export default function BasicInfoComponent(props) {
+
+
     const [edited, setEdited] = useState(false);
 
     const {
@@ -29,8 +32,8 @@ export default function BasicInfoComponent(props) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("Basic info dane: ", {...formData, symbol: data.symbol, id: data.id})
-        console.log("data z Inertia: ", data)
+        // console.log("Basic info dane: ", {...formData, symbol: data.symbol, id: data.id})
+        // console.log("data z Inertia: ", data)
         saveBasic()
     }
 
@@ -79,7 +82,7 @@ export default function BasicInfoComponent(props) {
 
 
                 </Box>
-                <Box sx={{display: "flex", flexDirection: "column"}}>
+                <Box sx={{display: "flex", flexDirection: "column", maxWidth: 1}}>
                     <TextField id="name" label="Nazwa" variant="outlined"
                                defaultValue={data.name}
                                {...register("name")}
@@ -90,7 +93,7 @@ export default function BasicInfoComponent(props) {
                                    setEdited(true)
                                }}
                                inputProps={{readOnly: !props.editing}}
-                               sx={{width: "30ch"}}/>
+                               sx={{width: "60ch", maxWidth: "100%"}}/>
                     {fieldErrors.name?.message && (
                         <Typography variant="body2" color="error" sx={{ml: 1}}>
                             {fieldErrors.name?.message.toString()}

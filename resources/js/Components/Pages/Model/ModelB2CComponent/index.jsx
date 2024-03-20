@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import TextEditorB2B from "@/Components/TextEditor/B2B";
 import {Category, Description, Save} from "@mui/icons-material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import TextEditorWebsite from "@/Components/TextEditor/Website";
 
 
-export default function ModelB2CComponent({productModel, setProductModel, props}) {
+export default function ModelB2CComponent(props) {
     const [edited, setEdited] = useState(false);
     const {data, setData, processing, post} = useForm({
         'id': props.productModel.id,
@@ -40,6 +40,17 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
             }
         }
     };
+    useEffect(() => {
+        setData({
+            'id': props.productModel.id,
+            "description_b2c": props.productModel.description_b2c,
+
+            "b2c_variant": props.productModel.b2c_variant,
+
+            'product_b2c_category_id': props.productModel.product_b2c_category_id,
+            'b2c_category': props.productModel.b2c_category,
+        })
+    }, [props]);
     const saveB2C = () => {
         post(route("system.products.model.update.b2c", {productModel: data.id}), {
             onSuccess: params => {
@@ -112,10 +123,8 @@ export default function ModelB2CComponent({productModel, setProductModel, props}
                     getOptionLabel={(option) => option.label}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     onChange={(e, value) => {
-                        console.log(value)
                         setData("b2c_variant", value?.id)
                         setEdited(true)
-                        console.log(data)
                     }}
                     renderInput={(params) =>
                         <TextField

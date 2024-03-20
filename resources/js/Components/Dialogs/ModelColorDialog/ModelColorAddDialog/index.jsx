@@ -42,7 +42,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     })
 
     useEffect(() => {
-        console.log("Clicked color w useEffect: ", clickedColor);
+        // console.log("Clicked color w useEffect: ", clickedColor);
 
         // inicjacja wartości pól
         setValue('shortcut', clickedColor?.shortcut);
@@ -77,7 +77,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
             } : null,
         })
 
-        console.log("data w useEffect: ", data);
+        // console.log("data w useEffect: ", data);
     }, [setValue, clickedColor]);
 
     const onSubmit = (submitData) => {

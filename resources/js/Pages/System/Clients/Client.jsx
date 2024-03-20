@@ -1,38 +1,34 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Box, Container, Divider, Grid, Paper, Stack, Typography} from "@mui/material";
+import {Grid, Paper, Typography} from "@mui/material";
+import {
+    PointOfSale,
+    Savings,
+    Payment,
+    Info,
+    LocationOn,
+    Task,
+    Discount,
+    EventAvailable,
+    NoteAdd,
+    AddBox
+} from "@mui/icons-material";
+
 import IconGrid from "@/Components/Layout/IconGrid";
-import InfoIcon from '@mui/icons-material/Info';
 import BasicClientInfoComponent from "@/Components/Pages/Client/BasicClientInfoComponent";
 import AdditionalClientInfoComponent from "@/Components/Pages/Client/AdditionalClientInfoComponent";
-import AddBoxIcon from '@mui/icons-material/AddBox';
 import NotesClientComponent from "@/Components/Pages/Client/ClientNotesComponent";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import ClientActivityComponent from "@/Components/Pages/Client/ClientActivityComponent";
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ClientDiscountsComponent from "@/Components/Pages/Client/ClientDiscountsComponent";
-import DiscountIcon from '@mui/icons-material/Discount';
-import TaskIcon from "@mui/icons-material/Task";
 import ClientTasksComponent from "@/Components/Pages/Client/ClientTasksComponent";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PaymentIcon from '@mui/icons-material/Payment';
 import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsComponent";
-import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
-import {PointOfSale, Savings} from "@mui/icons-material";
 import ClientSettlementsTable from "@/Components/Table/Client/ClientSettlementsTable";
+import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
 import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
 
 
 export default function Client(props) {
-
-    // const [productModel, setProductModel] = useState({
-    //     ...props.productModel,
-    //     categories: props.productModel.categories.map((value) => {
-    //         // delete value.pivot;
-    //         return value.id;
-    //     })
-    // });
-    console.log("Propsy: ", props);
+    // console.log("Propsy: ", props);
 
 
     return (
@@ -42,17 +38,17 @@ export default function Client(props) {
             <Grid container spacing={3} sx={{pb: 1}}>
                 <Grid item xs={12} md={12} lg={8}>
                     <Grid container spacing={3}>
-                        <IconGrid xs={12} md={12} lg={12} xl={8} title={"Informacje podstawowe"} icon={<InfoIcon/>}
+                        <IconGrid xs={12} md={12} lg={12} xl={8} title={"Informacje podstawowe"} icon={<Info/>}
                                   iconColor={"darkblue"}>
                             <BasicClientInfoComponent {...props}/>
                         </IconGrid>
 
-                        <IconGrid xs={12} md={12} lg={12} xl={4} title={"Informacje dodatkowe"} icon={<AddBoxIcon/>}
+                        <IconGrid xs={12} md={12} lg={12} xl={4} title={"Informacje dodatkowe"} icon={<AddBox/>}
                                   iconColor={"green"}>
                             <AdditionalClientInfoComponent {...props} />
                         </IconGrid>
 
-                        <IconGrid xs={12} md={12} lg={12} title={"Rabaty klienta"} icon={<DiscountIcon/>}
+                        <IconGrid xs={12} md={12} lg={12} title={"Rabaty klienta"} icon={<Discount/>}
                                   iconColor={"green"}>
                             <ClientDiscountsComponent {...props} />
                         </IconGrid>
@@ -61,20 +57,20 @@ export default function Client(props) {
                 </Grid>
                 <Grid item xs={12} lg={4}>
                     <Grid container spacing={3}>
-                        <IconGrid xs={12} md={12} title={"Notatki"} icon={<NoteAddIcon/>} iconColor={"magenta"}>
+                        <IconGrid xs={12} md={12} title={"Notatki"} icon={<NoteAdd/>} iconColor={"magenta"}>
                             <NotesClientComponent {...props} />
                         </IconGrid>
 
-                        <IconGrid xs={12} md={12} title={"Zadania"} icon={<TaskIcon/>} iconColor={"indigo"}>
+                        <IconGrid xs={12} md={12} title={"Zadania"} icon={<Task/>} iconColor={"indigo"}>
                             <ClientTasksComponent {...props} />
                         </IconGrid>
 
-                        <IconGrid xs={12} md={12} title={"Aktywności"} icon={<EventAvailableIcon/>}
+                        <IconGrid xs={12} md={12} title={"Aktywności"} icon={<EventAvailable/>}
                                   iconColor={"darkcyan"}>
                             <ClientActivityComponent {...props} />
                         </IconGrid>
 
-                        <IconGrid xs={12} lg={12} title={"Punkty klienta"} icon={<LocationOnIcon/>} iconColor={"blue"}>
+                        <IconGrid xs={12} lg={12} title={"Punkty klienta"} icon={<LocationOn/>} iconColor={"blue"}>
                             <ClientLocationsComponent {...props} />
                         </IconGrid>
                     </Grid>
@@ -94,7 +90,7 @@ export default function Client(props) {
                 {/*    <ClientInvoicesComponent {...props} />*/}
                 {/*</IconGrid>*/}
 
-                <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<PaymentIcon/>} iconColor={"magenta"}>
+                <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<Payment/>} iconColor={"magenta"}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} lg={6}>
                             <Paper elevation={2}>

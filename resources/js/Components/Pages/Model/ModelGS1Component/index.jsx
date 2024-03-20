@@ -12,7 +12,7 @@ import {enqueueSnackbar} from "notistack";
 import {useModelGS1Form} from "@/Components/Pages/Model/ModelGS1Component/form/useModelGS1Form";
 
 
-export default function ModelGS1Component({props}) {
+export default function ModelGS1Component(props) {
     const [edited, setEdited] = useState(false);
 
     const {
@@ -37,8 +37,8 @@ export default function ModelGS1Component({props}) {
     }, [setValue]);
 
     const onSubmit = (formData) => {
-        console.log("GS1 form data: ", formData)
-        console.log("GS1 data: ", data)
+        // console.log("GS1 form data: ", formData)
+        // console.log("GS1 data: ", data)
         saveGS1()
     }
 

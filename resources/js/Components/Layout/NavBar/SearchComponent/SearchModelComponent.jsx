@@ -78,15 +78,16 @@ export default function SearchModelComponent({auth, searchRoute, label}) {
                             height: 80
                         }}
                     >
-                        {/*<Box*/}
-                        {/*    component="img"*/}
-                        {/*    sx={{*/}
-                        {/*        width: 50,*/}
-                        {/*        mr: 1*/}
-                        {/*    }}*/}
-                        {/*    src={option.main_image ? route("images", {path: option.main_image?.path}) : route("images", {path: "brak.jpg"})}*/}
-                        {/*    alt={"Zdjęcie produktu"}*/}
-                        {/*/>*/}
+                        <Box
+                            component="img"
+                            sx={{
+                                width: 50,
+                                mr: 1
+                            }}
+                            src={option.main_image ? route("images", {path: option.main_image?.path}) : route("images", {path: "brak.jpg"})}
+                            alt={"Zdjęcie produktu"}
+                            loading="lazy"
+                        />
                         <Box>
                             <Typography variant="subtitle1" gutterBottom component="div">
                                 {option.symbol}

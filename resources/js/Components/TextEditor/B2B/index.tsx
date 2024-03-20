@@ -1,16 +1,11 @@
-import React, {useEffect, useState, useRef} from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
-    Box, Button,
-    Divider, Fade,
-    FormControl,
+    Box,
+    Divider,
     IconButton,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
-    TextField, Typography,
+    Typography,
     useTheme
 } from "@mui/material";
 import {
@@ -25,8 +20,7 @@ import {
     LooksOne,
     LooksTwo, Save
 } from "@mui/icons-material";
-import {useForm} from "@inertiajs/react";
-
+import React from 'react';
 
 export default function TextEditorB2B({value, setValue, setEdited, readOnly, props}) {
 
@@ -42,14 +36,14 @@ export default function TextEditorB2B({value, setValue, setEdited, readOnly, pro
                 fontSize: 20
             },
         }}>
-            <Box className="text-editor-allegro" sx={{position: "relative"}}>
+            <Box className="text-editor-b2c" sx={{position: "relative"}}>
                 <CustomToolbar/>
                 <Divider sx={{borderBottomWidth: 2, my: 1, bgcolor: "text.primary"}}/>
                 <ReactQuill value={value} onChange={value => {
                     setValue(value)
                     setEdited(true)
                 }} modules={modules}
-                            formats={formats} theme={false} readOnly={readOnly}/>
+                            formats={formats} theme={""} readOnly={readOnly}/>
 
             </Box>
         </Paper>

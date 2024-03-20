@@ -11,13 +11,13 @@ import {
 } from "@mui/material";
 import TextEditorB2B from "@/Components/TextEditor/B2B";
 import {Category, Description, Save} from "@mui/icons-material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import CategoryComponent from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent";
 
 
-export default function ModelB2BComponent({productModel, setProductModel, props}) {
+export default function ModelB2BComponent(props) {
     const [edited, setEdited] = useState(false);
     const {data, setData, processing, post} = useForm({
         'id': props.productModel.id,
@@ -26,6 +26,15 @@ export default function ModelB2BComponent({productModel, setProductModel, props}
             return value.id;
         })
     })
+    useEffect(() => {
+        setData({
+            'id': props.productModel.id,
+            "description_b2b": props.productModel.description_b2b,
+            "categories": props.productModel.categories.map((value) => {
+                return value.id;
+            })
+        })
+    }, [props]);
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
