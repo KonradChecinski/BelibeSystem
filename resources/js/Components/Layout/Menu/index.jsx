@@ -25,7 +25,7 @@ export default function Menu({showContent, auth}) {
                 alignItems: "center"
             }}
         >
-            <Link href="/public">
+            <Link href={route("system.dashboard")}>
                 <ApplicationLogo className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200"/>
             </Link>
             <Divider
