@@ -134,8 +134,8 @@ export default function RolesTable(props) {
             search: filterModel.quickFilterValues,
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {

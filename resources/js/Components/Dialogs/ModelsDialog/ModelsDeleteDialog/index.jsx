@@ -38,7 +38,7 @@ export default function ModelsDeleteDialog({open, setOpen, reloadData, model, pa
                     handleClose();
                 },
                 onError: errors => {
-                    console.log(errors)
+                    console.error(errors)
                 }
             })
 

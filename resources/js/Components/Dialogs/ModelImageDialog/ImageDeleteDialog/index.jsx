@@ -28,7 +28,7 @@ export default function ImagesDeleteDialog({open, setOpen, image, params}) {
     };
 
     const save = () => {
-        console.log(image)
+        // console.log(image)
         remove(route("system.products.images.delete", {image: image.id}),
 
             {

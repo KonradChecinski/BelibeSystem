@@ -123,8 +123,8 @@ export default function ClientAddEditDiscountsDialog({
     }, [setValue, clickedDiscount]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }

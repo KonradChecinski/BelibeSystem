@@ -120,8 +120,8 @@ export default function GS1GPCTable(props) {
             search: filterModel.quickFilterValues,
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {
@@ -147,7 +147,7 @@ export default function GS1GPCTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
-            console.log("GPC data: ", json[0].data)
+            // console.log("GPC data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };

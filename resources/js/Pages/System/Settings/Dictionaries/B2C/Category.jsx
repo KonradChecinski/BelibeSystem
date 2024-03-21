@@ -5,7 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import B2CCategoryTable from "@/Components/Table/Settings/B2CCategoryTable";
 
 export default function Category(props) {
-    console.log(props)
+    // console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (

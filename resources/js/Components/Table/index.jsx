@@ -1,9 +1,9 @@
-import { DataGrid, GridToolbar, plPL, enUS } from "@mui/x-data-grid";
-import { useCallback, useEffect, useState } from "react";
-import { Button, IconButton } from "@mui/material";
-import { Add, Delete, Edit, Preview, Visibility } from "@mui/icons-material";
+import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
+import {useCallback, useEffect, useState} from "react";
+import {Button, IconButton} from "@mui/material";
+import {Add, Delete, Edit, Preview, Visibility} from "@mui/icons-material";
 
-export default function Table({ url, column, columnVisibility }) {
+export default function Table({url, column, columnVisibility}) {
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 100,
@@ -37,13 +37,13 @@ export default function Table({ url, column, columnVisibility }) {
 
                         <IconButton aria-label="preview">
                             {/*<Preview />*/}
-                            <Visibility />
+                            <Visibility/>
                         </IconButton>
                         <IconButton aria-label="edit" onClick={onClick}>
-                            <Edit />
+                            <Edit/>
                         </IconButton>
                         <IconButton aria-label="delete">
-                            <Delete />
+                            <Delete/>
                         </IconButton>
 
                     </>
@@ -99,11 +99,11 @@ export default function Table({ url, column, columnVisibility }) {
                 (paginationModel.search.length != 0
                     ? `&search=${JSON.stringify(paginationModel.search)}`
                     : "");
-            let option = { headers: { Accept: "application/json" } };
+            let option = {headers: {Accept: "application/json"}};
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
-            console.log(json[0].data);
+            // console.log(json[0].data);
             let data = [];
             json[0].data.map((value) => {
                 let rowData = value;
@@ -115,7 +115,7 @@ export default function Table({ url, column, columnVisibility }) {
                 // console.log(rowData);
                 data.push(rowData);
             });
-            console.log(data);
+            // console.log(data);
             setPageData(data);
             setIsLoading(false);
         };
@@ -140,11 +140,11 @@ export default function Table({ url, column, columnVisibility }) {
             onSortModelChange={handleSortModelChange}
             filterMode="server"
             onFilterModelChange={onFilterChange}
-            slots={{ toolbar: GridToolbar }}
+            slots={{toolbar: GridToolbar}}
             slotProps={{
                 toolbar: {
                     showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 }
+                    quickFilterProps: {debounceMs: 500}
                 }
             }}
             // disableColumnFilter

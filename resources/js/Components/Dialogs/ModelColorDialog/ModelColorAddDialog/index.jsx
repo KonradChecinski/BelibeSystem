@@ -81,8 +81,8 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
     }, [setValue, clickedColor]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z submit: ", submitData)
-        console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
 
         setActiveStep(activeStep + 1)
     }
@@ -114,7 +114,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
     const save = () => {
         if (clickedColor) {
-            console.log(clickedColor.id)
+            // console.log(clickedColor.id)
             patch(route("system.products.model.color.update", {
                     model: params.productModel.id,
                     productModelColor: clickedColor.id
@@ -225,7 +225,7 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 }
 
 function Step1({data, setData, clickedColor = null, register, errors, params}) {
-    console.log(data)
+    // console.log(data)
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",

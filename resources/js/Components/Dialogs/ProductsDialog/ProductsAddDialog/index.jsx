@@ -67,8 +67,8 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
     }, [actualState, color, setValue]);
 
     const onSubmit = (submitData) => {
-        console.log("Dane z InertiaJS: ", data)
-        console.log("Dane z submit: ", submitData)
+        // console.log("Dane z InertiaJS: ", data)
+        // console.log("Dane z submit: ", submitData)
 
         setActiveStep(activeStep + 1)
     }

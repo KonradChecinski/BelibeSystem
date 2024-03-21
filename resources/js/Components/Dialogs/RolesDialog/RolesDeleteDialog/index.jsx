@@ -28,7 +28,7 @@ export default function RolesDeleteDialog({open, setOpen, reloadData, role, para
                     handleClose();
                 },
                 onError: errors => {
-                    console.log(errors)
+                    console.error(errors)
                 }
             })
 

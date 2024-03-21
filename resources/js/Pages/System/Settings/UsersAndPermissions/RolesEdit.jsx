@@ -4,7 +4,7 @@ import {Card} from "@mui/material";
 import RolesEditTable from "@/Components/Table/Settings/RolesEditTable";
 
 export default function Roles(props) {
-    console.log(props)
+    // console.log(props)
     return (
         <UserLayout
             auth={props.auth}

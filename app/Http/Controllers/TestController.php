@@ -32,11 +32,11 @@ class TestController extends Controller
      */
     public function index()
     {
-        $client = Client::find(1);
-        $model = ProductModel::find(37);
-//        $price = PriceForClient::getPrice($model, $client);
-        $price = $model->priceForClientB2b($client);
-        dd($price);
+//        $client = Client::find(1);
+//        $model = ProductModel::find(37);
+////        $price = PriceForClient::getPrice($model, $client);
+//        $price = $model->priceForClientB2b($client);
+//        dd($price);
 
         //        foreach (ProductModelColor::query()->whereNull("b2c_color_id")->get() as $productModelColor) {
 //            $b2cColor = B2cColor::query()->where("name", $productModelColor->b2c_name)->first();

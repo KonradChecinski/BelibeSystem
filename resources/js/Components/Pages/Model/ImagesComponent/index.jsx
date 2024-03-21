@@ -344,7 +344,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                     };
 
                     pswp.on("change", () => {
-                        console.log("change");
+                        // console.log("change");
                         el.href = pswp.currSlide.data.src;
                     });
                 }
@@ -388,7 +388,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                 });
             })
             .catch((e) => {
-                console.log("copyImg - Error: ", e.message);
+                console.error("copyImg - Error: ", e.message);
                 enqueueSnackbar("Coś poszło nie tak", {
                     variant: "Error"
                 });
@@ -427,7 +427,7 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
     const InfoImg = () => {
         handleClickOpen();
-        console.log(dropId)
+        // console.log(dropId)
     };
 
 

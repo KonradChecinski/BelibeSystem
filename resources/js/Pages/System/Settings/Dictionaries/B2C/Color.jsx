@@ -5,7 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import B2CColorTable from "@/Components/Table/Settings/B2CColorTable";
 
 export default function Color(props) {
-    console.log(props)
+    // console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (

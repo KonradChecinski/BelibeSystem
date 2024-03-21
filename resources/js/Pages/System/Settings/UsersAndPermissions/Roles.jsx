@@ -7,7 +7,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 export default function Roles(props) {
     const {t} = useLaravelReactI18n();
 
-    console.log(props)
+    // console.log(props)
     return (
         <UserLayout
             auth={props.auth}

@@ -34,15 +34,15 @@ export default function ModelColorComponent(props) {
     const reloadData = () => {
         // setPaginationModel({...paginationModel})
     }
-
+    // console.log(props)
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 5, mt: 2}}>
             {props.productModel.colors_with_images
                 .sort(sortByColorShortcut)
                 .map((color) => {
-                    const colorName = props.b2c.color.find((b2cColor) => {
-                        return b2cColor.id === color.b2c_color_id
-                    })?.name
+                    // const colorName = props.b2c.color.find((b2cColor) => {
+                    //     return b2cColor.id === color.b2c_color_id
+                    // })?.name
                     return (
                         <Paper elevation={12} key={color.id}>
                             <Accordion defaultExpanded={true} disableGutters={true}>
@@ -123,7 +123,7 @@ export default function ModelColorComponent(props) {
                                                            disabled={true}
                                                            sx={{width: "10ch"}}/>
                                                 <TextField id="name_b2c" label="Nazwa koloru" variant="outlined"
-                                                           value={colorName}
+                                                           value={color.b2c_color ? color?.b2c_color?.name : " "}
                                                            inputProps={{readOnly: true}}
                                                            disabled={true}
                                                            sx={{width: "30ch"}}/>

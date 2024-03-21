@@ -32,11 +32,11 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
         setOpen(false);
     };
 
-    transform((data)=>({
+    transform((data) => ({
         publish: !data.publish
     }))
     const save = () => {
-        console.log(image)
+        // console.log(image)
 
         patch(route("system.products.images.update.publish", {productImage: image.id}),
 
@@ -75,7 +75,8 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 <DialogContentText>
                     Udostępnione:
 
-                    <Switch color={"secondary"} checked={Boolean(data.publish)} onChange={handleChange} disabled={processing}/>
+                    <Switch color={"secondary"} checked={Boolean(data.publish)} onChange={handleChange}
+                            disabled={processing}/>
 
                 </DialogContentText>
                 <DialogContentText>

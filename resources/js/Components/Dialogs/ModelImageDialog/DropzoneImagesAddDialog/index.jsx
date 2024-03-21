@@ -29,7 +29,7 @@ export default function DropzoneImagesAddDialog({open, setOpen, props}) {
     }
 
     const handleSave = (files) => {
-        console.log(data)
+        // console.log(data)
 
         post(route("system.products.images.create", {modelColor: data.model_color.id}),
 

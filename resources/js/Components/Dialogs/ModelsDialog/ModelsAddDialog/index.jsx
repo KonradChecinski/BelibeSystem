@@ -38,7 +38,7 @@ export default function ModelsAddDialog({open, setOpen, reloadData}) {
         setData(data)
         setActiveStep(activeStep + 1)
 
-        console.log("Model data: ", data)
+        // console.log("Model data: ", data)
     }
 
     const [activeStep, setActiveStep] = useState(0);

@@ -110,7 +110,6 @@ export default function DictionariesAddDialog({
                     },
                 })
         } else {
-            console.log(route(`system.settings.${dictionaryType}.update`, routeParam));
             patch(route(`system.settings.${dictionaryType}.update`, routeParam),
 
                 {

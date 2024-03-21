@@ -5,7 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import UnitsTable from "@/Components/Table/Settings/UnitsTable";
 
 export default function Unit(props) {
-    console.log(props)
+    // console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (

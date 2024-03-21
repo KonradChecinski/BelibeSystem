@@ -28,7 +28,7 @@ export default function DictionariesDeleteDialog({open, setOpen, reloadData, cli
                     handleClose();
                 },
                 onError: errors => {
-                    console.log(errors)
+                    console.error(errors)
                 }
             })
 

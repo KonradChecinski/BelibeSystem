@@ -119,8 +119,8 @@ export default function BrandsTable(props) {
             search: filterModel.quickFilterValues,
             filter: filterModel.items
         });
-        console.log(paginationModel);
-        console.log(filterModel);
+        // console.log(paginationModel);
+        // console.log(filterModel);
     }, []);
 
     useEffect(() => {
@@ -146,7 +146,7 @@ export default function BrandsTable(props) {
             const response = await fetch(fetchUrl, option);
             const json = await response.json();
             setRowCountState(json[0].total);
-            console.log("Groups data: ", json[0].data)
+            // console.log("Groups data: ", json[0].data)
             setPageData(json[0].data);
             setIsLoading(false);
         };

@@ -317,7 +317,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         })
                                         setValue('payments', value, {shouldValidate: true})
                                         setEdited(true)
-                                        console.log("formValues: ", getValues("payments"))
+                                        // console.log("formValues: ", getValues("payments"))
                                     }}
                                     getOptionLabel={(option) => option.name}
                                     renderOption={(props, option, {selected}) => (

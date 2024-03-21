@@ -5,7 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import GroupsTable from "@/Components/Table/Settings/GroupsTable";
 
 export default function Sizes(props) {
-    console.log(props)
+    // console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (

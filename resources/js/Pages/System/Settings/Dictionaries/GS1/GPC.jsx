@@ -5,7 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import GS1GPCTable from "@/Components/Table/Settings/GS1GPCTable";
 
 export default function GPC(props) {
-    console.log(props)
+    // console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (
