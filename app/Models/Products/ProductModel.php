@@ -2,6 +2,7 @@
 
 namespace App\Models\Products;
 
+use App\Helpers\PriceForClient\PriceForClient;
 use App\Models\B2cCategory;
 use App\Models\B2cColor;
 use App\Models\ClientDiscount;
@@ -115,5 +116,10 @@ class ProductModel extends Model
     public function clientsDiscounts(): HasMany
     {
         return $this->hasMany(ClientDiscount::class);
+    }
+
+    public function priceForClientB2b($client)
+    {
+        return PriceForClient::getPrice($this, $client);
     }
 }

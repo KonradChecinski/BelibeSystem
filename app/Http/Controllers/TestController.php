@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PriceForClient\PriceForClient;
 use App\Helpers\Shoper\Shoper;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\B2bCountry;
@@ -20,6 +21,7 @@ use App\Models\ClientRecipient;
 use App\Models\ClientTask;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Products\ProductModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -30,6 +32,12 @@ class TestController extends Controller
      */
     public function index()
     {
+        $client = Client::find(1);
+        $model = ProductModel::find(37);
+//        $price = PriceForClient::getPrice($model, $client);
+        $price = $model->priceForClientB2b($client);
+        dd($price);
+
         //        foreach (ProductModelColor::query()->whereNull("b2c_color_id")->get() as $productModelColor) {
 //            $b2cColor = B2cColor::query()->where("name", $productModelColor->b2c_name)->first();
 //            if (is_null($b2cColor)) continue;
@@ -97,7 +105,7 @@ class TestController extends Controller
 //        ]);
 //        $clientInvoice->client()->associate(1);
 //        $clientInvoice->save();
-        
+
     }
 
     /**
