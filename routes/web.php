@@ -1,18 +1,12 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
-use App\Http\Controllers\XmlGeneratorController;
+use App\Http\Controllers\System\XmlGeneratorController;
 use App\Install\ClearDBController;
 use App\Install\Install2Controller;
 use App\Install\Install3Controller;
 use App\Install\InstallController;
-use App\Models\Products\ProductImage;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
-use Intervention\Image\Facades\Image;
 
 /*
 |--------------------------------------------------------------------------

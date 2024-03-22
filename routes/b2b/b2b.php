@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,7 +8,10 @@ Route::get("/", function () {
 })->middleware(["auth:client", "verified"])->name("b2b.dashboard");
 
 Route::middleware(["auth:client", "verified"])->group(function () {
+    Route::group([], function () {
+        Route::get("/kategoria/{slug}", [ProductModelController::class, 'index'])->name("b2b.category");
 
+    });
 
 });
 
