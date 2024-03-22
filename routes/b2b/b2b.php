@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\B2bProductCategoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,7 +10,7 @@ Route::get("/", function () {
 
 Route::middleware(["auth:client", "verified"])->group(function () {
     Route::group([], function () {
-        Route::get("/kategoria/{slug}", [ProductModelController::class, 'index'])->name("b2b.category");
+        Route::get("/c/{slug}", [B2bProductCategoryController::class, 'show'])->name("b2b.category");
 
     });
 

@@ -41,6 +41,10 @@ class ProductModel extends Model
         'b2c_variant'
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     public function colors(): HasMany
     {
         return $this->hasMany(ProductModelColor::class);

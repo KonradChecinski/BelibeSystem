@@ -21,6 +21,10 @@ class ProductCategory extends Model
         'show_in_menu',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     /**
      * Get the options for generating the slug.
      */
