@@ -40,7 +40,7 @@ class ProductModelController extends Controller
             'name',
         ];
 
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name", "images"]);
+        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name"]);
 //        dd($models->get()->toArray());
 
         if ($request->search) {
@@ -130,13 +130,17 @@ class ProductModelController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get(['id', 'symbol', 'name', 'product_group_id'])->toArray());
-        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id']);
+        $models = $models->paginate($request->limit, ['id', 'symbol', 'name', 'product_group_id'])->through(function ($model) {
+//            dd($model, $model->mainImage(), $model->mainImage());
+            $model->mainImage = $model->mainImage();
+            return $model;
+        });
         return response()->json([$models]);
     }
 
     public function search(SearchProductModelRequest $request)
     {
-        $models = ProductModel::with(['mainImage:product_model_color_id,path', 'barcodes:product_id,barcode'])
+        $models = ProductModel::with(['barcodes:product_id,barcode'])
             ->Where('id', 'LIKE', '%' . $request->search . '%')
             ->orWhere("name", "LIKE", "%" . $request->search . "%")
             ->orWhere("symbol", "LIKE", "%" . $request->search . "%")
@@ -144,7 +148,10 @@ class ProductModelController extends Controller
                 $query->Where("barcode", "LIKE", "%" . $request->search . "%");
             })
             ->limit(15)
-            ->get(["id", "symbol", "name"]);
+            ->get(["id", "symbol", "name"])->map(function ($model) {
+                $model->mainImage = $model->mainImage();
+                return $model;
+            });
         return response()->json($models);
     }
 

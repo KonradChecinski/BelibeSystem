@@ -22,7 +22,8 @@ class UpdateProductImagePublishRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "publish" => "required|bool"
+            "publish" => "required|bool",
+            "main" => "required|integer"
         ];
     }
 }

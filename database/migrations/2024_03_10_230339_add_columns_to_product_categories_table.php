@@ -26,6 +26,7 @@ return new class extends Migration {
         Schema::table('product_categories', function (Blueprint $table) {
             $table->dropColumn("parent");
             $table->dropColumn("show_in_menu");
+            $table->dropColumn("slug");
         });
     }
 };

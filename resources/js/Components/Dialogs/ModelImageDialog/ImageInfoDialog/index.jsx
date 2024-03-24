@@ -3,7 +3,7 @@ import {
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, FormControlLabel, FormGroup, Paper,
+    DialogTitle, FormControl, FormControlLabel, FormGroup, FormLabel, Paper, Radio, RadioGroup,
     Step,
     StepLabel,
     Stepper, Switch,
@@ -18,23 +18,21 @@ import moment from "moment";
 
 export default function ImagesInfoDialog({open, setOpen, image, props}) {
 
-    const {data, setData, patch, processing, transform} = useForm({publish: image.publish})
+    const {data, setData, patch, processing, transform} = useForm({
+        publish: image.publish,
+        main: image.main
+    })
+
 
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const handleChange = (e, value) => {
-        setData("publish", value)
-        save()
 
-    };
     const handleClose = () => {
         setOpen(false);
     };
 
-    transform((data) => ({
-        publish: !data.publish
-    }))
+
     const save = () => {
         // console.log(image)
 
@@ -44,14 +42,13 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 preserveScroll: true,
                 onSuccess: (e) => {
                     enqueueSnackbar("Zmieniono udostępnienie", {variant: 'success'})
-                    // handleClose()
+                    handleClose()
                 },
                 onError: errors => {
                     enqueueSnackbar("Błąd przy zmianie udostępnienia", {variant: 'error'})
                     console.error(errors)
                 },
             })
-
 
     }
 
@@ -72,13 +69,52 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 <DialogContentText>
                     Wymiary [S x W]: {image.width} x {image.height} ({aspectRatio(image.width, image.height)})
                 </DialogContentText>
-                <DialogContentText>
-                    Udostępnione:
+                {image.type === 1 ?
+                    <>
+                        <DialogContentText>
+                            Udostępnione:
 
-                    <Switch color={"secondary"} checked={Boolean(data.publish)} onChange={handleChange}
-                            disabled={processing}/>
+                            <Switch color={"secondary"} checked={Boolean(data.publish)} onChange={(e, value) => {
+                                setData("publish", value)
+                            }}
+                                    disabled={processing}/>
 
-                </DialogContentText>
+                        </DialogContentText>
+                        <DialogContentText>
+                            <FormControl component="fieldset">
+                                <FormLabel component="legend">Zdjęcie główne</FormLabel>
+                                <RadioGroup
+                                    aria-label="season"
+                                    // defaultValue="0"
+                                    value={data.main}
+                                    onChange={(e, value) => {
+                                        setData("main", e.target.value)
+                                    }}
+                                    name="mainImages"
+                                    sx={{ml: 5}}
+                                >
+                                    <FormControlLabel
+                                        value={0}
+                                        control={<Radio/>}
+                                        label="Nie jest zdjęciem głównym"
+                                    />
+                                    <FormControlLabel
+                                        value={1}
+                                        control={<Radio/>}
+                                        label="Pierwsze"
+                                    />
+                                    <FormControlLabel
+                                        value={2}
+                                        control={<Radio/>}
+                                        label="Drugie"
+                                    />
+                                </RadioGroup>
+                            </FormControl>
+                        </DialogContentText>
+                    </>
+                    : ""
+                }
+
                 <DialogContentText>
                     Ścieżka na dysku: {image.path.replaceAll("\\\\", "/").replaceAll("\\", "/")}
                 </DialogContentText>
@@ -95,9 +131,9 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 </Button>
 
 
-                {/*<Button onClick={save} disabled={processing}>*/}
-
-                {/*</Button>*/}
+                <Button onClick={save} disabled={processing}>
+                    Zapisz
+                </Button>
             </DialogActions>
 
         </Dialog>

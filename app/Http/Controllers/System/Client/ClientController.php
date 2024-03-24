@@ -204,7 +204,7 @@ class ClientController extends Controller
         $client->status()->associate(2);
         $client->sourceOfAcquisition()->associate(1);
         $client->accountManager()->associate(auth()->user());
-        $client->payment()->associate(1);
+
         $client->industry()->associate(1);
 
 
@@ -218,6 +218,8 @@ class ClientController extends Controller
         $client->save();
 //        dd($request->all(), $client);
 //        return to_route();
+
+        $client->payments()->sync([1]);
         return redirect()->route('system.clients.client.edit', ["id" => $client->id]);
     }
 

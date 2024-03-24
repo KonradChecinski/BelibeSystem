@@ -84,7 +84,7 @@ export default function SearchModelComponent({auth, searchRoute, label}) {
                                 width: 50,
                                 mr: 1
                             }}
-                            src={option.main_image ? route("images", {path: option.main_image?.path}) : route("images", {path: "brak.jpg"})}
+                            src={option.mainImage ? route("images", {path: option.mainImage?.path}) : route("images", {path: "brak.jpg"})}
                             alt={"Zdjęcie produktu"}
                             loading="lazy"
                         />

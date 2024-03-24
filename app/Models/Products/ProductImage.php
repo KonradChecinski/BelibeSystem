@@ -24,6 +24,7 @@ class ProductImage extends Model
         'height',
         'type',
         'publish',
+        'main'
     ];
 
 

@@ -61,6 +61,7 @@ Route::get('assets/{path}', function ($path) {
 
 Route::get('storage/{path}', [StorageController::class, 'storage'])->name("storage");
 Route::get('images/basic/{path}', [StorageController::class, 'images'])->name("images");
+Route::get('images/thumbnail/{path}', [StorageController::class, 'imagesThumb'])->name("images.thumbnail");
 Route::get('images/webp/{path}', [StorageController::class, 'imagesWebp'])->name("images.webp");
 Route::get('images/1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
 

@@ -153,7 +153,8 @@ export default function ImagesComponent(props) {
                                                 <Box {...provided.droppableProps} ref={provided.innerRef}
                                                      sx={{height: 270}}>
                                                     <ImageColorList props={props} dropId={color.id + "_1"}
-
+                                                                    color={color}
+                                                                    modelSymbol={props.productModel.symbol}
                                                                     imageArray={data.find(e => e.id === color.id).images[1] ?
                                                                         data.find(e => e.id === color.id).images[1] : []}/>
 
@@ -187,7 +188,8 @@ export default function ImagesComponent(props) {
                                                                  sx={{height: accordion.find(e => e.id === color.id)[2] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
                                                                                 dropId={color.id + "_2"}
-
+                                                                                color={color}
+                                                                                modelSymbol={props.productModel.symbol}
                                                                                 imageArray={data.find(e => e.id === color.id).images[2] ?
                                                                                     data.find(e => e.id === color.id).images[2] : []}/>
                                                                 {provided.placeholder}
@@ -225,7 +227,8 @@ export default function ImagesComponent(props) {
                                                                  sx={{height: accordion.find(e => e.id === color.id)[3] ? 270 : 0}}>
                                                                 <ImageColorList props={props}
                                                                                 dropId={color.id + "_3"}
-
+                                                                                color={color}
+                                                                                modelSymbol={props.productModel.symbol}
                                                                                 imageArray={data.find(e => e.id === color.id).images[3] ?
                                                                                     data.find(e => e.id === color.id).images[3] : []}/>
                                                                 {provided.placeholder}
@@ -277,7 +280,7 @@ export default function ImagesComponent(props) {
 }
 
 
-const ImageColorList = ({props, dropId, imageArray}) => {
+const ImageColorList = ({props, dropId, imageArray, modelSymbol, color}) => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down("sm"));
     const matchDownLg = useMediaQuery(theme.breakpoints.down("lg"));
@@ -559,6 +562,57 @@ const ImageColorList = ({props, dropId, imageArray}) => {
 
                                                 : ""}
 
+                                            {image.main ?
+                                                <Box sx={{
+                                                    // bgcolor: "yellow",
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    overflow: "hidden",
+                                                    position: "absolute",
+                                                    bottom: "-2px",
+                                                    left: "-2px",
+                                                    "&::before, &::after": {
+                                                        position: "absolute",
+                                                        zIndex: -1,
+                                                        content: "''",
+                                                        display: "block",
+                                                        border: "5px solid #2980b9",
+                                                        borderTopColor: "transparent",
+                                                        borderLeftColor: "transparent",
+                                                    },
+                                                    "&::before": {
+                                                        top: 0,
+                                                        right: 8,
+                                                    },
+                                                    "&::after": {
+                                                        bottom: 8,
+                                                        left: 0,
+                                                    },
+
+                                                }}>
+                                                    <Typography variant="body2" gutterBottom sx={{
+                                                        right: "0px",
+                                                        top: "25px",
+                                                        transform: "rotate(45deg)",
+
+                                                        position: "absolute",
+                                                        display: "block",
+                                                        width: "70px",
+                                                        padding: "5px 0",
+                                                        backgroundColor: image.main === 1 ? "#13770e" : "#810fa4",
+                                                        boxShadow: "0 5px 10px rgba(0,0,0,.1)",
+                                                        color: "#fff",
+                                                        textShadow: "0 1px 1px rgba(0,0,0,.2)",
+                                                        textTransform: "uppercase",
+                                                        textAlign: "center",
+                                                        fontSize: 6
+                                                    }}>
+                                                        {image.main === 1 ? "Pierwsze" : "Drugie"}
+                                                    </Typography>
+
+                                                </Box>
+
+                                                : ""}
 
                                             <Box sx={{
                                                 bgcolor: "rgba(0,0,0,0.5)",
@@ -590,7 +644,8 @@ const ImageColorList = ({props, dropId, imageArray}) => {
                                                     : ""}
                                                 <Tooltip title="Download">
                                                     <IconButton onClick={() => {
-                                                        downloadImg(image.path.replaceAll("\\\\", "-").replaceAll("\\", "-"), route("images", {path: image.path}));
+                                                        // downloadImg(image.path.replaceAll("\\\\", "-").replaceAll("\\", "-"), route("images", {path: image.path}));
+                                                        downloadImg(modelSymbol + "-" + color.shortcut + "-" + (i + 1), route("images", {path: image.path}));
                                                     }}>
                                                         <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>

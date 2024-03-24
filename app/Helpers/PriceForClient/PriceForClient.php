@@ -17,43 +17,56 @@ class PriceForClient
         $group = $productModel->group;
         $brand = $productModel->brand;
 
-        $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
-        $discountsForCategories = $discounts->where("type", 2)->whereIn('product_category_id', $categories->map(fn($category) => $category->id));
-        $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
-        $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
-
-
 //        Ceny
         $price = $productModel->prices;
         $vat = $price->vat_rate;
         $priceNet = $price->wholesale_net_price;
         $priceGross = $price->wholesale_gross_price;
 
-        if ($discountsForProductModel->isNotEmpty()) {
-            return self::calculatePrices($priceNet, $discountsForProductModel->first()->value, $vat);
+
+        if (!is_null($productModel)) {
+            $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
+            if ($discountsForProductModel->isNotEmpty()) {
+                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value, $vat);
+            }
         }
-        if ($discountsForCategories->isNotEmpty()) {
-            $discountValue = $discountsForCategories->max("value");
-            return self::calculatePrices($priceNet, $discountValue, $vat);
+
+        if (!is_null($categories)) {
+            $discountsForCategories = $discounts->where("type", 2)->whereIn('product_category_id', $categories->map(fn($category) => $category->id));
+
+            if ($discountsForCategories->isNotEmpty()) {
+                $discountValue = $discountsForCategories->max("value");
+                return self::calculatePrices($priceNet, $discountValue, $vat);
+            }
         }
-        if ($discountsForGroup->isNotEmpty()) {
-            return self::calculatePrices($priceNet, $discountsForGroup->first()->value, $vat);
+
+        if (!is_null($group)) {
+            $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
+
+            if ($discountsForGroup->isNotEmpty()) {
+                return self::calculatePrices($priceNet, $discountsForGroup->first()->value, $vat);
+            }
         }
-        if ($discountsForBrand->isNotEmpty()) {
-            return self::calculatePrices($priceNet, $discountsForBrand->first()->value, $vat);
+
+        if (!is_null($brand)) {
+            $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
+
+            if ($discountsForBrand->isNotEmpty()) {
+                return self::calculatePrices($priceNet, $discountsForBrand->first()->value, $vat);
+            }
         }
 
         return [
-            "discounted_wholesale_price_net" => $priceNet,
-            "discounted_wholesale_price_gross" => $priceGross
+            "discounted_wholesale_net_price" => $priceNet,
+            "discounted_wholesale_gross_price" => $priceGross
         ];
     }
 
     private static function calculatePrices(int $priceNet, int $discount, int $vat): array
     {
         return [
-            "discounted_wholesale_price_net" => round($priceNet - ($priceNet * ($discount / 100))),
-            "discounted_wholesale_price_gross" => round(($priceNet - ($priceNet * ($discount / 100))) * (1 + $vat / 100))
+            "discounted_wholesale_net_price" => round($priceNet - ($priceNet * ($discount / 100))),
+            "discounted_wholesale_gross_price" => round(($priceNet - ($priceNet * ($discount / 100))) * (1 + $vat / 100))
         ];
     }
 }

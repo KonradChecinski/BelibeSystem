@@ -12,7 +12,7 @@ export default function ClientLayout({auth, header, children}) {
     );
     return (
         <Theme>
-
+            {children}
         </Theme>
     );
 }

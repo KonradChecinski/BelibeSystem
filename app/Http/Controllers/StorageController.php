@@ -21,15 +21,27 @@ class StorageController extends Controller
         return response($img)->header('Content-Type', $mimeType);
     }
 
+    public function imagesThumb(string $path)
+    {
+        $image = ProductImage::query()->where('path', $path)->firstOrFail();
+        $path = $image->path;
+        $img = Storage::get('images/' . str_replace('\\', '/', $path));
+        $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
+
+
+        $img = Image::make($img)
+            ->resize(null, 450, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->encode($mimeType, 90);
+        return response($img)->header('Content-Type', $mimeType);
+    }
+
     public function imagesWebp(string $path)
     {
         $image = ProductImage::query()->where('path', $path)->firstOrFail();
         $path = $image->path;
         $img = Storage::get('images/' . str_replace('\\', '/', $path));
-
-//        $img = Image::make($img)->resize($image->width, $image->height, function ($constraint) {
-//            $constraint->aspectRatio();
-//        });
 
         $img = Image::make($img)->resize($image->width, $image->height)->encode('webp', 100);
 
@@ -42,7 +54,7 @@ class StorageController extends Controller
         $path = $image->path;
         $img = Storage::get('images/' . str_replace('\\', '/', $path));
         $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
-        
+
         $size = max($image->width, $image->height);
         $img = Image::canvas($size, $size, '#ffffff')->insert($img, 'center')->encode($mimeType, 100);
         return response($img)->header('Content-Type', $mimeType);

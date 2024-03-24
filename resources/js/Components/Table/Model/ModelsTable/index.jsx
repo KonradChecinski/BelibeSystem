@@ -19,17 +19,10 @@ export default function ModelsTable(props) {
             filterable: false,
             width: 80,
             renderCell: (params) => {
-                let src = "";
-                if (params.row.images.filter((e) => e.order == 0 && e.type == 1).length !== 0) {
-                    src = route("images", {path: params.row.images.filter((e) => e.order == 0 && e.type == 1)[0]?.path});
-                } else {
-                    src = route("images", {path: "brak.jpg"})
-                }
                 return (
-
                     <Box
                         component="img"
-                        src={src}
+                        src={route("images", {path: params.row.mainImage ? params.row.mainImage.path : "brak.jpg"})}
                         alt={"Zdjęcie produktu"}
                         sx={{
                             width: 1,

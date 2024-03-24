@@ -162,7 +162,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
 
                 return (
                     <Checkbox
-                        disabled={true || readOnly}
+                        disabled={readOnly}
                         checked={rowData.show_in_b2b}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}

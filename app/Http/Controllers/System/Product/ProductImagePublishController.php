@@ -56,6 +56,17 @@ class ProductImagePublishController extends Controller
     public function update(UpdateProductImagePublishRequest $request, ProductImage $productImage)
     {
         $productImage->publish = $request->publish;
+        if ($productImage->type === 1) {
+            foreach ($productImage->color->model->images as $image) {
+                if ($image->main == $request->main) {
+                    $image->main = 0;
+                    $image->save();
+                }
+            }
+            $productImage->main = $request->main;
+        }
+
+
         $productImage->save();
 
 //        AddImagesToSubiekt::dispatch($productImage->color->model);
