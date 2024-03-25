@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\B2B;
 
+use App\Http\Controllers\Controller;
+use App\Models\Client\Client;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -38,8 +40,24 @@ class B2bProductController extends Controller
     public function show(string $slug)
     {
         $productModel = ProductModel::findBySlug($slug);
-//        dd($productModel);
-        return Inertia::render('B2B/Model');
+//        $productModel = $productModel->load(['prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency']);
+        $client = Client::find(auth()->user()->client_id);
+
+
+        //        dd($productModel);
+        return Inertia::render('B2B/Model',
+            [
+                "model" => [
+                    'id' => $productModel->id,
+                    'name' => $productModel->name,
+                    'symbol' => $productModel->symbol,
+                    'slug' => $productModel->slug,
+                    'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["path" => $image->path]) : null,
+                    'price' => array_merge($productModel->prices->toArray(), $productModel->priceForClientB2b($client)),
+                    'quantity' => $productModel->quantityToB2b(),
+                ]
+            ]
+        );
     }
 
     /**
