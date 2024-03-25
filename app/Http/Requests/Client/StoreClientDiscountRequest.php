@@ -24,7 +24,7 @@ class StoreClientDiscountRequest extends FormRequest
     {
         return [
             "type" => 'required|array',
-            "type.id" => 'required|integer',
+            "type.id" => 'required|integer|min:1|max:5',
             "product_model" => [
                 Rule::when($this->type === 1, ['required', 'array'], ['nullable'])
             ],
