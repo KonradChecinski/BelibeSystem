@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\B2bProductCategoryController;
-use App\Http\Controllers\B2bProductController;
+use App\Http\Controllers\B2B\B2bProductCategoryController;
+use App\Http\Controllers\B2B\B2bProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

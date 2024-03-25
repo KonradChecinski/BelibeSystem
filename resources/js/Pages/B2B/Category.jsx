@@ -45,7 +45,7 @@ export default function B2bDashboard(props) {
                                         display: "flex",
                                         flexDirection: "column",
                                         alignItems: "flex-start",
-                                        justifyContent: "flex-end"
+                                        justifyContent: "flex-end",
                                     }}>
 
                                     <Box sx={{
