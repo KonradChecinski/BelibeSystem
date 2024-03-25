@@ -7,7 +7,7 @@ import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Category, Dashboard, Group, Settings} from '@mui/icons-material';
+import {Category, Dashboard, Group, QueryStats, Settings} from '@mui/icons-material';
 
 export default function Menu({showContent, auth}) {
     const theme = useTheme();
@@ -71,6 +71,20 @@ export default function Menu({showContent, auth}) {
                 {/*        text={"Klienci"}*/}
                 {/*        menuIcon={Group}*/}
                 {/*    /> : ""}*/}
+                {auth.permissions.includes("showQuery") ?
+                    <MainMenuLink
+                        href={route("system.queries.images")}
+                        active={false}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Zestawienia"}
+                        menuIcon={QueryStats}
+                    >
+                        <SubMenuLink
+                            href={route("system.queries.images")}
+                            active={route().current("system.queries.images")}
+                            text={"Zdjęcia"}
+                        />
+                    </MainMenuLink> : ""}
                 {auth.permissions.includes("showSetting") ?
                     <MainMenuLink
                         href={route("system.settings")}

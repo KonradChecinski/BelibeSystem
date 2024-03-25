@@ -33,6 +33,7 @@ use App\Http\Controllers\System\Product\ProductUnitController;
 use App\Http\Controllers\System\Product\ShowProductController;
 use App\Http\Controllers\System\Product\SubiektProductModelController;
 use App\Http\Controllers\System\ProfileController;
+use App\Http\Controllers\System\Queries\QueryImagesController;
 use App\Http\Controllers\System\Settings\SettingsMainController;
 use App\Http\Controllers\System\Settings\SettingsPermissionsController;
 use App\Http\Controllers\System\Settings\SettingsRolesController;
@@ -211,6 +212,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         });
 
+
+    });
+
+    Route::group(["prefix" => "/queries"], function () {
+        Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
 
     });
 
