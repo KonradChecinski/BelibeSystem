@@ -56,6 +56,14 @@ class PriceForClient
             }
         }
 
+        if (true) {
+            $discountsForEverything = $discounts->where("type", 5);
+
+            if ($discountsForEverything->isNotEmpty()) {
+                return self::calculatePrices($priceNet, $discountsForEverything->first()->value, $vat);
+            }
+        }
+
         return [
             "discounted_wholesale_net_price" => $priceNet,
             "discounted_wholesale_gross_price" => $priceGross

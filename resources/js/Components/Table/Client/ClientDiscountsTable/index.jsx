@@ -20,8 +20,7 @@ import ClientAddEditDiscountsDialog
 export default function ClientDiscountsTable({discounts, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
-
-
+    
     const {data, setData, re} = useForm(discounts)
     const [rowCountState, setRowCountState] = useState(discounts.length);
 
@@ -45,6 +44,7 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             case 4:
                 text = row.product_brand.name
                 break;
+
         }
 
         return text;
@@ -64,6 +64,9 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
                 break;
             case 4:
                 text = 'Producent';
+                break;
+            case 5:
+                text = 'Wszystko';
                 break;
         }
 

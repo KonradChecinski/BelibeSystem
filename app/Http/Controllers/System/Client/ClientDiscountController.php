@@ -36,7 +36,7 @@ class ClientDiscountController extends Controller
             "value" => $request->value,
         ]);
         $clientDiscount->client()->associate($client);
-        if (!is_null($request->product_model)) {
+        if (!is_null($request->product_model) && $request->type["id"] === 1) {
             $count = ClientDiscount::query()
                 ->where("type", 1)
                 ->where("product_model_id", $request->product_model["id"])
@@ -48,9 +48,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productModel()->associate($request->product_model["id"]);
-        } else if (!is_null($request->product_category)) {
+        } else if (!is_null($request->product_category) && $request->type["id"] === 2) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 2)
                 ->where("product_category_id", $request->product_category["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -60,9 +60,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productCategory()->associate($request->product_category["id"]);
-        } else if (!is_null($request->product_group)) {
+        } else if (!is_null($request->product_group) && $request->type["id"] === 3) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 3)
                 ->where("product_group_id", $request->product_group["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -72,9 +72,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productGroup()->associate($request->product_group["id"]);
-        } else if (!is_null($request->product_brand)) {
+        } else if (!is_null($request->product_brand) && $request->type["id"] === 4) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 4)
                 ->where("product_brand_id", $request->product_brand["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -84,7 +84,19 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productBrand()->associate($request->product_brand["id"]);
+        } else if ($request->type["id"] === 5) {
+            $count = ClientDiscount::query()
+                ->where("type", 5)
+                ->where("client_id", $client->id)
+                ->count();
+            if ($count > 0) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Klient ma juz rabat na wszystkie produkty'
+                ]);
+            }
+
         } else {
+            dd($request->all(), $clientDiscount);
             abort(403);
         }
 //        dd($request->all(), $clientDiscount);
@@ -123,7 +135,7 @@ class ClientDiscountController extends Controller
         $clientDiscount->productGroup()->dissociate();
         $clientDiscount->productBrand()->dissociate();
 
-        if (!is_null($request->product_model)) {
+        if (!is_null($request->product_model) && $request->type["id"] === 1) {
             $count = ClientDiscount::query()
                 ->where("type", 1)
                 ->where("product_model_id", $request->product_model["id"])
@@ -135,9 +147,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productModel()->associate($request->product_model["id"]);
-        } else if (!is_null($request->product_category)) {
+        } else if (!is_null($request->product_category) && $request->type["id"] === 2) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 2)
                 ->where("product_category_id", $request->product_category["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -147,9 +159,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productCategory()->associate($request->product_category["id"]);
-        } else if (!is_null($request->product_group)) {
+        } else if (!is_null($request->product_group) && $request->type["id"] === 3) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 3)
                 ->where("product_group_id", $request->product_group["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -159,9 +171,9 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productGroup()->associate($request->product_group["id"]);
-        } else if (!is_null($request->product_brand)) {
+        } else if (!is_null($request->product_brand) && $request->type["id"] === 4) {
             $count = ClientDiscount::query()
-                ->where("type", 1)
+                ->where("type", 4)
                 ->where("product_brand_id", $request->product_brand["id"])
                 ->where("client_id", $client->id)
                 ->count();
@@ -171,6 +183,18 @@ class ClientDiscountController extends Controller
                 ]);
             }
             $clientDiscount->productBrand()->associate($request->product_brand["id"]);
+        } else if ($request->type["id"] === 5) {
+            $count = ClientDiscount::query()
+                ->where("type", 5)
+                ->where("client_id", $client->id)
+                ->whereNot("id", $clientDiscount->id)
+                ->count();
+            if ($count > 0) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Klient ma juz rabat na wszystkie produkty'
+                ]);
+            }
+
         } else {
             abort(403);
         }

@@ -28,7 +28,8 @@ export default function ClientAddEditDiscountsDialog({
         {id: 1, name: "Model", label: "Model"},
         {id: 2, name: "Kategoria", label: "Kategoria"},
         {id: 3, name: "Grupa", label: "Grupa"},
-        {id: 4, name: "Producent", label: "Producent"}
+        {id: 4, name: "Producent", label: "Producent"},
+        {id: 5, name: "Wszystko", label: "Wszystko"}
     ]
 
     const {
@@ -78,6 +79,8 @@ export default function ClientAddEditDiscountsDialog({
                 return data.product_group
             case 4:
                 return data.product_brand
+            case 5:
+                return []
             default:
                 return null
         }
@@ -293,6 +296,8 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                         label: e.name
                     })))
                 )
+            case 5:
+                return []
             default:
                 return null
         }
@@ -382,7 +387,7 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                                     label="Nazwa"
                                     sx={{my: 1}}
                                     {...register("name")}
-                                    value={getNameByTypeId(data.type?.id)}
+                                    value={data.type?.id != 5 ? getNameByTypeId(data.type?.id) : "Wszystko"}
                                     color={errors.name?.message && "error"}
                                 />
                             }
