@@ -104,7 +104,7 @@ export const Node = ({node, depth, hasChild, categories, data, setData, setEdite
             }}
         >
             <Box
-                className={"pipeY-" + node.name}
+                // className={"pipeY-" + node.name}
                 sx={{
                     position: "absolute",
                     top: 36,
@@ -115,7 +115,7 @@ export const Node = ({node, depth, hasChild, categories, data, setData, setEdite
                 }}
             />
             <Box
-                className={"pipeX-" + node.name}
+                // className={"pipeX-" + node.name}
                 sx={{
                     width: depth > 0 ? 22 - 9 : 0,
                     position: "absolute",
