@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\Helper;
+use App\Helpers\SystemName;
+use App\Models\Products\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
@@ -32,6 +34,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $array = [];
+        $array = array_merge(parent::share($request), $array);
+
+
         if (Session::exists("backgroundImage")) {
             $backgroud = Session::get("backgroundImage");
         } else {
@@ -39,7 +45,14 @@ class HandleInertiaRequests extends Middleware
             Session::put("backgroundImage", $backgroud);
         }
 
-        return array_merge(parent::share($request), [
+        if (Helper::getSystemNameFromDomain($request) === SystemName::B2B) {
+
+            $array = array_merge($array, [
+                "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
+            ]);
+        }
+
+        return array_merge($array, [
             "auth" => [
                 "user" => $request->user(),
                 "roles" => $request->user()
