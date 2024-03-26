@@ -124,11 +124,12 @@ export default function B2bCategory(props) {
                                             display: "flex",
                                             justifyContent: "flex-start",
                                             alignItems: "center",
+                                            flexWrap: "wrap",
                                             gap: 1,
                                             width: 1,
                                             mb: 1
                                         }}>
-                                            {Array(10).fill(0).map((_, id) => (
+                                            {Array(6).fill(0).map((_, id) => (
                                                     <Box
                                                         key={id}
                                                         sx={{
