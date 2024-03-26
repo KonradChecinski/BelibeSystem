@@ -2,8 +2,14 @@ import {useState} from "react";
 import Theme from "@/Theme/Theme";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {Box, Typography} from "@mui/material";
+import Menu from "@/Components/Layout/Menu";
+import Navbar from "@/Components/Layout/NavBar";
+import AppBar from "@/Components/Layout/AppBar";
+import B2BNavBar from "@/Components/Layout/B2BNavBar";
+import B2BMenu from "@/Components/Layout/B2BMenu";
 
-export default function ClientLayout({auth, header, children}) {
+export default function ClientLayout({auth, bgImage, header, children}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -12,7 +18,82 @@ export default function ClientLayout({auth, header, children}) {
     );
     return (
         <Theme>
-            {children}
+            {smBreakpointUp ? (
+                <>
+                    <Box
+                        onMouseOver={() => setShowMenu(true)}
+                        onMouseOut={() => setShowMenu(false)}
+                        sx={{
+                            position: "fixed",
+                            top: "1%",
+                            bottom: "8px",
+                            left: ".5%",
+                            zIndex: 1001,
+                            width: "16%",
+                            minWidth: "200px",
+                            transition: "all .5s ease-in-out;",
+                            [theme.breakpoints.down("md")]: {
+                                width: "80px",
+                                minWidth: "80px",
+                                "&: hover": {
+                                    width: "16%",
+                                    minWidth: "200px"
+                                }
+                            }
+                        }}
+                    >
+                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage}/>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            top: "1%",
+                            right: ".5%",
+                            zIndex: 1000,
+                            height: "72px",
+                            width: "min(82.5%, calc(100% - 215px))",
+                            transition: "all .5s ease-in-out;",
+                            [theme.breakpoints.down("md")]: {
+                                width: "calc(100% - 95px)"
+                            }
+                        }}
+                    >
+                        <B2BNavBar auth={auth}/>
+                    </Box>
+                </>
+            ) : (
+                <>
+                    <AppBar position={"static"}></AppBar>
+                    <AppBar position={"fixed"}>
+                        <B2BMenu showContent={true} auth={auth}/>
+                    </AppBar>
+                </>
+            )}
+
+            <Box
+                sx={{
+                    // width: "100%",
+                    height: "calc(100% - 82px)",
+                    [theme.breakpoints.down("sm")]: {
+                        m: 1
+                    },
+                    [theme.breakpoints.up("sm")]: {
+                        marginLeft: "100px",
+                        paddingTop: "90px"
+                    },
+                    [theme.breakpoints.up("md")]: {
+                        marginLeft: "max(17%,220px)",
+                        marginRight: "10px",
+                        paddingTop: "90px",
+                        marginBottom: "10px"
+                    }
+                }}
+            >
+                <Typography variant="h4" sx={{my: 2, mx: 1, pt: 1}}>{header}</Typography>
+
+                {children}
+            </Box>
         </Theme>
     );
 }
