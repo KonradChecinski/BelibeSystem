@@ -4,6 +4,8 @@ import {getBackendOptions, getDescendants, MultiBackend, Tree} from "@minoru/rea
 import {Node} from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent/Components/Node";
 import styles from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent/Components/Tree.module.css";
 import {Paper} from "@mui/material";
+import useTreeOpenHandler
+    from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent/Components/useTreeOpenHandler";
 
 
 export default function CategoryComponent({categories, data, setData, setEdited}) {
@@ -14,10 +16,11 @@ export default function CategoryComponent({categories, data, setData, setEdited}
                 <Tree
                     tree={categories}
                     rootId={0}
-                    render={(node, {depth, isOpen, onToggle, handleRef}) => (
+                    render={(node, {depth, isOpen, onToggle, handleRef, hasChild}) => (
                         <Node
                             node={node}
                             depth={depth}
+                            hasChild={hasChild}
                             categories={categories}
                             data={data}
                             setData={setData}

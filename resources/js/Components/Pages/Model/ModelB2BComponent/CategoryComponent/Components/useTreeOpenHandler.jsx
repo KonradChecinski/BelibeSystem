@@ -38,6 +38,7 @@ const useTreeOpenHandler = () => {
 
     const getPipeHeight = (id, treeData) => {
         treeData = getDescendants(treeData, id);
+
         const ROW_HEIGHT = 32;
         const LIST_PADDING = 5;
 
