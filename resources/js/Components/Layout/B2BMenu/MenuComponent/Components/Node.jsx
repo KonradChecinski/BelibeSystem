@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {Box, Button, Checkbox, Divider, Tooltip} from "@mui/material";
 import {Check, Close} from "@mui/icons-material";
+import {Link} from "@inertiajs/react";
 
 export const Node = ({node, depth}) => {
     const indent = depth * 3;
@@ -39,7 +40,9 @@ export const Node = ({node, depth}) => {
                         alignItems: "center",
                         width: 1
                     }}>
-                    <Typography variant="body2">{node.name}</Typography>
+                    <Box sx={{width: 1}} component={Link} href={route('b2b.category', {slug: node.slug})}>
+                        <Typography variant="body2">{node.name}</Typography>
+                    </Box>
                 </Box>
             </Box>
         </Box>
