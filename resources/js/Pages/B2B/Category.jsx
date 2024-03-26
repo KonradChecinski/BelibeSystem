@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import toLocaleString from "@/Functions/toLocaleString";
 
-export default function B2bDashboard(props) {
+export default function B2bCategory(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     console.log(props)
@@ -24,6 +24,8 @@ export default function B2bDashboard(props) {
         <ClientLayout
             auth={props.auth}
             errors={props.errors}
+            categories={props.menu}
+            bgImage={props.backgroundImage}
             header={
                 t("Category")
             }
@@ -126,46 +128,19 @@ export default function B2bDashboard(props) {
                                             width: 1,
                                             mb: 1
                                         }}>
-                                            <Box
-                                                sx={{
-                                                    borderRadius: 1,
-                                                    width: 20,
-                                                    height: 20,
-                                                    bgcolor: "green"
-                                                }}
-                                            />
-                                            <Box
-                                                sx={{
-                                                    borderRadius: 1,
-                                                    width: "20px",
-                                                    height: "20px",
-                                                    bgcolor: "gray"
-                                                }}
-                                            />
-                                            <Box
-                                                sx={{
-                                                    borderRadius: 1,
-                                                    width: "20px",
-                                                    height: "20px",
-                                                    bgcolor: "blue"
-                                                }}
-                                            />
-                                            <Box
-                                                sx={{
-                                                    borderRadius: 1,
-                                                    width: "20px",
-                                                    height: "20px",
-                                                    bgcolor: "yellow"
-                                                }}
-                                            />
-                                            <Box
-                                                sx={{
-                                                    borderRadius: 1,
-                                                    width: "20px",
-                                                    height: "20px",
-                                                    bgcolor: "red"
-                                                }}
-                                            />
+                                            {Array(10).fill(0).map((_, id) => (
+                                                    <Box
+                                                        key={id}
+                                                        sx={{
+                                                            borderRadius: 1,
+                                                            width: 20,
+                                                            height: 20,
+                                                            bgcolor: "green"
+                                                        }}
+                                                    />
+                                                )
+                                            )}
+
                                         </Box>
 
                                         <Typography variant="body2" component={"h3"}>

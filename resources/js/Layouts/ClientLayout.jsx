@@ -9,7 +9,7 @@ import AppBar from "@/Components/Layout/AppBar";
 import B2BNavBar from "@/Components/Layout/B2BNavBar";
 import B2BMenu from "@/Components/Layout/B2BMenu";
 
-export default function ClientLayout({auth, bgImage, header, children}) {
+export default function ClientLayout({auth, bgImage, categories, header, children}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -42,7 +42,7 @@ export default function ClientLayout({auth, bgImage, header, children}) {
                             }
                         }}
                     >
-                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage}/>
+                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage} categories={categories}/>
                     </Box>
 
                     <Box
@@ -66,7 +66,7 @@ export default function ClientLayout({auth, bgImage, header, children}) {
                 <>
                     <AppBar position={"static"}></AppBar>
                     <AppBar position={"fixed"}>
-                        <B2BMenu showContent={true} auth={auth}/>
+                        <B2BMenu showContent={true} auth={auth} categories={categories}/>
                     </AppBar>
                 </>
             )}
