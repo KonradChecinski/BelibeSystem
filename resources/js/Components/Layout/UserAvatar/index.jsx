@@ -6,6 +6,7 @@ import stringToColor from "@/Functions/stringToColor";
 export default function UserAvatar({user}) {
     let src = "/storage/favicons/B.png";
     // let src = "";
+
     return (
         <Avatar
             src={src}
@@ -13,6 +14,7 @@ export default function UserAvatar({user}) {
                 boxShadow: 5,
                 bgcolor: src ? "" : stringToColor(user.name)
             }}
+            title={user.name}
         >
             {user.name.split(" ")[0] ? user.name.split(" ")[0][0] : ""}
             {user.name.split(" ")[1] ? user.name.split(" ")[1][0] : ""}

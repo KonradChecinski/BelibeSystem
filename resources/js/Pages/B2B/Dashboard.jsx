@@ -10,6 +10,7 @@ export default function B2bDashboard(props) {
     return (
         <ClientLayout
             auth={props.auth}
+            bgImage={props.backgroundImage}
             errors={props.errors}
             header={
                 t("Dashboard")
