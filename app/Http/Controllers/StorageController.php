@@ -23,8 +23,8 @@ class StorageController extends Controller
 
     public function imagesThumb(string $path)
     {
-        $image = ProductImage::query()->where('path', $path)->firstOrFail();
-        $path = $image->path;
+//        $image = ProductImage::query()->where('path', $path)->firstOrFail();
+//        $path = $image->path;
         $img = Storage::get('images/' . str_replace('\\', '/', $path));
         $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
 
