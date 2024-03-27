@@ -44,8 +44,8 @@ class HandleInertiaRequests extends Middleware
             $backgroud = Helper::getBackgroundImage();
             Session::put("backgroundImage", $backgroud);
         }
-
-        if (Helper::getSystemNameFromDomain($request) === SystemName::B2B) {
+        
+        if (Helper::getSystemNameFromDomain($request) === SystemName::B2B && !str_contains($request->url(), "images")) {
 
             $array = array_merge($array, [
                 "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
