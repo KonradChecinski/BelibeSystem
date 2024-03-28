@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Products\ProductCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +13,9 @@ class PagesController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Pages/Pages");
+        return Inertia::render("System/Pages/Pages", [
+            "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
+        ]);
     }
 
     /**

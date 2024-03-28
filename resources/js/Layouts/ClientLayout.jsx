@@ -9,7 +9,7 @@ import AppBar from "@/Components/Layout/AppBar";
 import B2BNavBar from "@/Components/Layout/B2BNavBar";
 import B2BMenu from "@/Components/Layout/B2BMenu";
 
-export default function ClientLayout({auth, bgImage, categories, header, children}) {
+export default function ClientLayout({auth, bgImage, categories, header, children, fixed = true}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -24,7 +24,7 @@ export default function ClientLayout({auth, bgImage, categories, header, childre
                         onMouseOver={() => setShowMenu(true)}
                         onMouseOut={() => setShowMenu(false)}
                         sx={{
-                            position: "fixed",
+                            position: fixed ? "fixed" : "absolute",
                             top: "1%",
                             bottom: "8px",
                             left: ".5%",
@@ -47,7 +47,7 @@ export default function ClientLayout({auth, bgImage, categories, header, childre
 
                     <Box
                         sx={{
-                            position: "fixed",
+                            position: fixed ? "fixed" : "absolute",
                             top: "1%",
                             right: ".5%",
                             zIndex: 1000,
