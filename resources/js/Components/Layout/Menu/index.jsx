@@ -7,7 +7,7 @@ import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Category, Dashboard, Group, QueryStats, Settings} from '@mui/icons-material';
+import {Category, ContactPage, Dashboard, Group, QueryStats, Settings} from '@mui/icons-material';
 
 export default function Menu({showContent, auth}) {
     const theme = useTheme();
@@ -71,6 +71,15 @@ export default function Menu({showContent, auth}) {
                 {/*        text={"Klienci"}*/}
                 {/*        menuIcon={Group}*/}
                 {/*    /> : ""}*/}
+                {auth.permissions.includes("showPages") ?
+                    <MainMenuLink
+                        href={route("system.pages")}
+                        active={route().current("system.pages")}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Strony"}
+                        menuIcon={ContactPage}
+                    /> : ""}
+
                 {auth.permissions.includes("showQuery") ?
                     <MainMenuLink
                         href={route("system.queries.images")}

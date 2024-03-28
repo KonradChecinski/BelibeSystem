@@ -56,8 +56,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('showDictionary', "user", 'Słowniki - wyświetlanie', 'Admin');
         Permission::findOrCreate('editDictionary', "user", 'Słowniki - edycja', 'Admin');
 
-        Permission::findOrCreate('showQuery', "user", 'Zestawienia - wyświetlanie', 'Admin');
+        Permission::findOrCreate('showQuery', "user", 'Zestawienia - wyświetlanie', 'Zestawienia');
 //        Permission::findOrCreate('editQuery', "user", 'Słowniki - edycja', 'Admin');
+
+        Permission::findOrCreate('showPages', "user", 'Strony - wyświetlanie', 'Pages');
+        Permission::findOrCreate('editPages', "user", 'Strony - edycja', 'Pages');
 
 
         // create roles and assign created permissions

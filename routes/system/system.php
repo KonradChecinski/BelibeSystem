@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;
 use App\Http\Controllers\System\Client\ClientActivityController;
@@ -217,6 +218,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     Route::group(["prefix" => "/queries"], function () {
         Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
+
+    });
+
+    Route::group(["prefix" => "/pages"], function () {
+        Route::get("/", [PagesController::class, 'index'])->name("system.pages");
 
     });
 
