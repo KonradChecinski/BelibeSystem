@@ -27,7 +27,7 @@ export default function B2bCategory(props) {
             categories={props.menu}
             bgImage={props.backgroundImage}
             header={
-                t("Category")
+                props.category.name
             }
         >
             <Head title={props.category.name}/>
@@ -150,9 +150,9 @@ export default function B2bCategory(props) {
                                         <Typography variant="body1" component={"h2"}>
                                             {model.name}
                                         </Typography>
-                                        <Typography variant="body1" component={"h2"}>
-                                            Cena katalogowa: {toLocaleString(model.price.wholesale_net_price / 100)}
-                                        </Typography>
+                                        {/*<Typography variant="body1" component={"h2"}>*/}
+                                        {/*    Cena katalogowa: {toLocaleString(model.price.wholesale_net_price / 100)}*/}
+                                        {/*</Typography>*/}
                                         <Typography variant="body1" component={"h2"}>
                                             Cena dla
                                             ciebie: {toLocaleString(model.price.discounted_wholesale_net_price / 100)}
