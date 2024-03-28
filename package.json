@@ -28,6 +28,7 @@
         "@emotion/styled": "^11.11.0",
         "@fontsource/roboto": "^5.0.3",
         "@hookform/resolvers": "^3.3.1",
+        "@measured/puck": "^0.13.1",
         "@minoru/react-dnd-treeview": "^3.4.4",
         "@mui/base": "^5.0.0-beta.5",
         "@mui/icons-material": "^5.15.10",
