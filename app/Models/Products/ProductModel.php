@@ -118,10 +118,11 @@ class ProductModel extends Model
 
     public function mainImages()
     {
-        if ($this->images()->whereIn("main", [1, 2])->count() === 0) {
+        $images = $this->images()->whereIn("main", [1, 2])->get();
+        if ($images->count() === 0) {
             return $this->images()->where("order", 0)->where("type", 1)->limit(2)->get();
         }
-        return $this->images()->whereIn("main", [1, 2])->orderBy("main")->get();
+        return $images;
     }
 
 
@@ -166,6 +167,6 @@ class ProductModel extends Model
 
     public function priceForClientB2b($client)
     {
-        return PriceForClient::getPrice($this, $client);
+        return PriceForClient::getPriceFromProductModel($this, $client);
     }
 }
