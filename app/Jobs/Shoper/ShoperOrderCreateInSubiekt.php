@@ -18,6 +18,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ShoperOrderCreateInSubiekt implements ShouldQueue
 {
@@ -46,9 +47,10 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
 
         foreach ($orders as $order) {
             $orderProducts = $order->shoperOrderProducts;
-//            dd(mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 29));
+            
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
-            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 29);
+//            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30);
+            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']), 0, 30);
             $zamowienie->LiczonyOdCenBrutto = true;
             $zamowienie->PoziomCenyId = 3;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();

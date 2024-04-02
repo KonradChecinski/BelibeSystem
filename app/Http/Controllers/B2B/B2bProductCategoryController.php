@@ -48,7 +48,7 @@ class B2bProductCategoryController extends Controller
                 'productsToB2bWithoutRelation:quantity,product_model_id',
 
             ])
-            ->paginate(18)
+            ->paginate(24)
             ->through(function ($model) use ($discounts) {
                 $mainImages = $model->mainImages();
 

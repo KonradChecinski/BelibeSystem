@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
@@ -15,6 +16,7 @@ class TestController extends Controller
      */
     public function index()
     {
+        ShoperOrderCreateInSubiekt::dispatchSync();
 //        $client = Client::find(1);
 //        $model = ProductModel::find(37);
 ////        $price = PriceForClient::getPrice($model, $client);

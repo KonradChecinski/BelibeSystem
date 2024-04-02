@@ -1,6 +1,7 @@
 import React from "react";
 
 import {Section} from "../../components/Section";
+import {Typography} from "@mui/material";
 
 export type TextProps = {
     align: "left" | "center" | "right";
@@ -13,63 +14,75 @@ export type TextProps = {
 
 export const Text = {
     fields: {
-        text: {type: "textarea"},
-        size: {
+        text: {
+            type: "textarea",
+            label: "Tekst",
+        },
+        variant: {
             type: "select",
+            label: "Wariant",
             options: [
-                {label: "S", value: "s"},
-                {label: "M", value: "m"},
+                {label: "H1", value: "h1"},
+                {label: "H2", value: "h2"},
+                {label: "H3", value: "h3"},
+                {label: "H4", value: "h4"},
+                {label: "H5", value: "h5"},
+                {label: "H6", value: "h6"},
+                {label: "subtitle1", value: "subtitle1"},
+                {label: "subtitle2", value: "subtitle1"},
+                {label: "body1", value: "body1"},
+                {label: "body2", value: "body2"},
             ],
         },
         align: {
             type: "radio",
+            label: "Wyrównanie",
             options: [
-                {label: "Left", value: "left"},
-                {label: "Center", value: "center"},
-                {label: "Right", value: "right"},
+                {label: "Do lewej", value: "left"},
+                {label: "Do środka", value: "center"},
+                {label: "Do prawej", value: "right"},
             ],
         },
         color: {
             type: "radio",
+            label: "Kolor",
             options: [
                 {label: "Default", value: "default"},
                 {label: "Muted", value: "muted"},
             ],
         },
-        padding: {type: "text"},
-        maxWidth: {type: "text"},
+        paddingX: {
+            type: "number",
+            label: "Odstęp w poziomie",
+        },
+        paddingY: {
+            type: "number",
+            label: "Odstęp w pionie",
+        },
     },
     defaultProps: {
+        text: "Przykładowy tekst",
+        variant: "body1",
         align: "left",
-        text: "Text",
-        padding: "24px",
-        size: "m",
+
+        paddingX: "24",
+        paddingY: "24",
         color: "default",
     },
-    render: ({align, color, text, size, padding, maxWidth}) => {
+    render: ({text, variant, align, paddingX, paddingY}) => {
         return (
-            <Section padding={padding} maxWidth={maxWidth}>
-        <span
-            style={{
-                color: color === "default" ? "inherit" : "var(--puck-color-grey-4)",
-                display: "flex",
-                textAlign: align,
-                width: "100%",
-                fontSize: size === "m" ? "20px" : "16px",
-                fontWeight: 300,
-                maxWidth,
-                marginLeft: "auto",
-                marginRight: "auto",
-                justifyContent:
-                    align === "center"
-                        ? "center"
-                        : align === "right"
-                            ? "flex-end"
-                            : "flex-start",
-            }}
-        >
-          {text}
-        </span>
+            <Section>
+                <Typography
+                    variant={variant}
+                    align={align}
+                    sx={{
+                        color: "",
+                        px: paddingX + "px",
+                        py: paddingY + "px",
+                    }}
+                >
+                    {text}
+                </Typography>
             </Section>
         );
     },

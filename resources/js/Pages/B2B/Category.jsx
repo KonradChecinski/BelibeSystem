@@ -83,7 +83,7 @@ export default function B2bCategory(props) {
                                                         <CardMedia
                                                             key={id}
                                                             component="img"
-                                                            image={route('images.thumbnail', {path: image.path ? image.path : "brak.jpg"})}
+                                                            image={route('images.webp', {path: image.path ? image.path : "brak.jpg"})}
                                                             alt="Zdjęcie produktu"
                                                             // sx={{
                                                             //     width: 1
@@ -99,7 +99,7 @@ export default function B2bCategory(props) {
                                                         <CardMedia
                                                             key={id}
                                                             component="img"
-                                                            image={route('images.thumbnail', {path: image.path ? image.path : "brak.jpg"})}
+                                                            image={route('images.webp', {path: image.path ? image.path : "brak.jpg"})}
                                                             alt="Zdjęcie produktu"
                                                             // sx={{
                                                             //     width: 1
@@ -110,7 +110,7 @@ export default function B2bCategory(props) {
                                                 :
                                                 <CardMedia
                                                     component="img"
-                                                    image={route('images.thumbnail', {path: "brak.jpg"})}
+                                                    image={route('images.webp', {path: "brak.jpg"})}
                                                     alt="Zdjęcie produktu"
                                                 />
                                         }
@@ -134,8 +134,8 @@ export default function B2bCategory(props) {
                                                         key={id}
                                                         sx={{
                                                             borderRadius: 1,
-                                                            width: 20,
-                                                            height: 20,
+                                                            width: "1.2rem",
+                                                            height: "1.2rem",
                                                             bgcolor: "green"
                                                         }}
                                                     />
