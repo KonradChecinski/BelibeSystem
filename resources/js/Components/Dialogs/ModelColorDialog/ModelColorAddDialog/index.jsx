@@ -34,8 +34,17 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         name: clickedColor ? clickedColor.name : '',
         b2c_product_name: clickedColor ? clickedColor.b2c_product_name : '',
 
+        color_icon: clickedColor?.color_icon ? {
+            id: clickedColor.color_icon.id,
+            name: clickedColor.color_icon.name,
+            label: clickedColor.color_icon.name,
+            type: clickedColor.color_icon.type,
+            path: clickedColor.color_icon.path,
+            hex: clickedColor.color_icon.hex,
+        } : null,
+
         b2c_name: clickedColor ? {
-            id: clickedColor.id,
+            id: clickedColor?.b2c_color_id,
             name: clickedColor.b2c_name,
             label: clickedColor.b2c_name
         } : null,
@@ -49,6 +58,13 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         setValue('b2c_shortcut', clickedColor?.b2c_shortcut);
         setValue('name', clickedColor?.name);
         setValue('b2c_product_name', clickedColor?.b2c_product_name);
+
+        setValue('color_icon', clickedColor?.color_icon ? {
+            id: clickedColor?.color_icon?.id,
+            name: clickedColor?.color_icon?.name,
+            label: clickedColor?.color_icon?.name
+        } : null);
+
         setValue('b2c_name', clickedColor?.b2c_color_id ? {
             id: clickedColor?.b2c_color_id,
             name: params.b2c.color.find((color) => {
@@ -65,6 +81,15 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
 
             name: clickedColor ? clickedColor.name : '',
             b2c_product_name: clickedColor ? clickedColor.b2c_product_name : '',
+
+            color_icon: clickedColor?.color_icon ? {
+                id: clickedColor.color_icon.id,
+                name: clickedColor.color_icon.name,
+                label: clickedColor.color_icon.name,
+                type: clickedColor.color_icon.type,
+                path: clickedColor.color_icon.path,
+                hex: clickedColor.color_icon.hex,
+            } : null,
 
             b2c_name: clickedColor?.b2c_color_id ? {
                 id: clickedColor?.b2c_color_id,
@@ -268,6 +293,89 @@ function Step1({data, setData, clickedColor = null, register, errors, params}) {
                 </Typography>
             )}
 
+            <Typography variant="body1" sx={{mt: 2, mb: 2}}>
+                Ikona koloru
+            </Typography>
+
+            <Autocomplete
+                id="color_icon"
+                options={params.productColorIcons.map((c) => ({
+                    ...c,
+                    label: c.name,
+                }))}
+                sx={{width: "30ch"}}
+                value={data.color_icon}
+                // getOptionLabel={(option) => option.id}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(e, value) => {
+                    setData({
+                        ...data,
+                        color_icon: value,
+                    })
+                }}
+                renderOption={(props, option) => {
+                    return (
+                        <Box
+                            component="li"
+                            {...props}
+                            sx={{
+                                height: 40
+                            }}
+                        >
+                            <Box sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2
+                            }}>
+                                {option.type === 1 ?
+                                    <Box
+                                        component={"img"}
+                                        src={route("images", {path: option.path})}
+                                        sx={{
+                                            width: 30,
+                                            height: 30,
+                                            borderRadius: "100%",
+                                            border: 1
+                                        }}/>
+                                    :
+                                    <Box sx={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: "100%",
+                                        bgcolor: option.hex,
+                                        border: 1
+                                    }}/>
+                                }
+                                <Typography variant="subtitle1" component="div">
+                                    {option.name}
+                                </Typography>
+                            </Box>
+
+                        </Box>
+                    );
+
+                }
+                }
+                renderInput={(params) =>
+                    <TextField
+                        {...params}
+                        label="Ikona"
+                        sx={{my: 1}}
+                        {...register("color_icon")}
+                        value={data.color_icon}
+                        color={errors.color_icon?.message && "error"}
+                    />
+                }
+            />
+            {errors.color_icon?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                    {errors.color_icon?.message.toString()}
+                </Typography>
+            )}
+
+            {/*<MuiColorInput isAlphaHidden={true} format="hex" value={data.hex}*/}
+            {/*               onChange={(color) => setData("hex", color)}/>*/}
+
 
             <Typography variant="body1" sx={{mt: 2, mb: 2}}>
                 Sklep Internetowy
@@ -358,14 +466,28 @@ function Step2({data, errors}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-            <TextField id="b2c_shortcut" label="Symbol koloru do sklepu" variant="outlined"
-                       value={data.b2c_shortcut}
+            <TextField id="name" label="Nazwa" variant="outlined"
+                       value={data.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
+            <Typography variant="body1" sx={{mt: 2, mb: 2}}>
+                Ikona koloru
+            </Typography>
 
-            <TextField id="name" label="Nazwa" variant="outlined"
-                       value={data.name}
+            <TextField id="color_icon" label="Ikona" variant="outlined"
+                       value={data.color_icon.name}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}
+            />
+
+
+            <Typography variant="body1" sx={{mt: 2, mb: 2}}>
+                Sklep Internetowy
+            </Typography>
+
+            <TextField id="b2c_shortcut" label="Symbol koloru do sklepu" variant="outlined"
+                       value={data.b2c_shortcut}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

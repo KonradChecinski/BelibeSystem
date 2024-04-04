@@ -58,7 +58,12 @@ export default function ModelColorComponent(props) {
                                         gap: 2,
                                         flexDirection: {xs: "column ", sm: "row"}
                                     }}>
-                                        <Box>
+                                        <Box sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            flexDirection: "column"
+                                        }}>
                                             <Box
                                                 component={"img"}
                                                 src={color.images.length ? route("images", {path: color.images.find(image => image.order === 0).path}) : route("images", {path: "brak.jpg"})}
@@ -67,6 +72,26 @@ export default function ModelColorComponent(props) {
                                                 width={80}
                                                 sx={{}}>
                                             </Box>
+                                            {color.color_icon?.type === 1 ?
+                                                <Box
+                                                    component={"img"}
+                                                    src={route("images", {path: color.color_icon.path})}
+                                                    sx={{
+                                                        width: 40,
+                                                        height: 40,
+                                                        borderRadius: "100%",
+                                                        border: 1
+                                                    }}/>
+                                                :
+                                                <Box sx={{
+                                                    width: 40,
+                                                    height: 40,
+                                                    borderRadius: "100%",
+                                                    bgcolor: color.color_icon?.hex,
+                                                    border: 1
+                                                }}/>
+                                            }
+
                                         </Box>
 
                                         <Box sx={{
@@ -194,8 +219,11 @@ export default function ModelColorComponent(props) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                    }} onClick={() => setOpenDialogAdd(true)}><Typography variant={"body1"}>Dodaj
-                        kolor</Typography></Button>
+                    }} onClick={() => setOpenDialogAdd(true)}>
+                        <Typography variant={"body1"}>
+                            Dodaj kolor
+                        </Typography>
+                    </Button>
                     <ModelColorAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}
                                          params={props} clickedColor={null} setClickedColor={setClickedColor}
                     />

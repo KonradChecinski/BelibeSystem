@@ -6,14 +6,20 @@ const schema = yup.object().shape({
         .required("Pole jest wymagane")
         .max(20, "Maksymalna długość symbolu to 20"),
 
+    name: yup
+        .string()
+        .required("Pole jest wymagane"),
+
+    color_icon: yup
+        .string()
+        .test('is-empty', 'Pole jest wymagane', function (value) {
+            return typeof value === 'object' || (typeof value === 'string' && value.trim() !== '');
+        }),
+
     b2c_shortcut: yup
         .string()
         .required("Pole jest wymagane")
         .max(10, "Maksymalna długość symbolu koloru do sklepu to 20"),
-
-    name: yup
-        .string()
-        .required("Pole jest wymagane"),
 
     b2c_product_name: yup
         .string()

@@ -22,7 +22,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import TextEditorAllegro from "@/Components/TextEditor/Allegro";
 
 export default function Model(props) {
-    // console.log(props);
+    console.log(props);
 
     return (
         <UserLayout auth={props.auth} errors={props.errors}

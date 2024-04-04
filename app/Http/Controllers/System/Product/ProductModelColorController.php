@@ -39,6 +39,7 @@ class ProductModelColorController extends Controller
             "b2c_product_name" => $request->b2c_product_name,
         ]);
         $color->b2cColor()->associate($request->b2c_name["id"]);
+        $color->colorIcon()->associate($request->color_icon["id"]);
         $model->colors()->save($color);
     }
 
@@ -70,6 +71,7 @@ class ProductModelColorController extends Controller
             "b2c_product_name" => $request->b2c_product_name,
         ]);
         $productModelColor->b2cColor()->associate($request->b2c_name["id"]);
+        $productModelColor->colorIcon()->associate($request->color_icon["id"]);
         $productModelColor->save();
 
         ShoperChangeName::dispatch($productModelColor);

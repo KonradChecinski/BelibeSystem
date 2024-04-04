@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('product_models', function (Blueprint $table) {
-            $table->string("slug")->nullable()->unique()->after("id");
+        Schema::table('product_model_colors', function (Blueprint $table) {
+            $table->foreignId('product_color_icon_id')->nullable()->after('name')->references('id')->on('product_color_icons')->restrictOnDelete();
         });
     }
 
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('product_models', function (Blueprint $table) {
-            $table->dropColumn("slug");
+        Schema::table('product_model_colors', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('product_color_icon_id');
         });
     }
 };

@@ -14,6 +14,7 @@ use App\Models\B2cColor;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
+use App\Models\ProductColorIcon;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
@@ -212,6 +213,7 @@ class ProductModelController extends Controller
         $gs1GPC = GS1GPC::all();
         $b2cCategory = B2cCategory::all();
         $b2cColor = B2cColor::all();
+        $productColorIcons = ProductColorIcon::all();
 
 
         return Inertia::render("System/Products/Model", [
@@ -229,6 +231,7 @@ class ProductModelController extends Controller
                 "category" => $b2cCategory,
                 "color" => $b2cColor,
             ],
+            "productColorIcons" => $productColorIcons,
         ]);
     }
 
@@ -247,6 +250,7 @@ class ProductModelController extends Controller
         $gs1GPC = GS1GPC::all();
         $b2cCategory = B2cCategory::all();
         $b2cColor = B2cColor::all();
+        $productColorIcons = ProductColorIcon::all();
 
         return Inertia::render("System/Products/Model", [
             "editing" => true,
@@ -264,6 +268,7 @@ class ProductModelController extends Controller
                 "category" => $b2cCategory,
                 "color" => $b2cColor,
             ],
+            "productColorIcons" => $productColorIcons,
         ]);
     }
 

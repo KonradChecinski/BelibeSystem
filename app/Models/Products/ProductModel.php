@@ -9,6 +9,7 @@ use App\Models\ClientDiscount;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
+use App\Models\ProductColorIcon;
 use App\Models\Products\Price\ProductModelPrice;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -63,7 +64,12 @@ class ProductModel extends Model
 
     public function colorsWithImages(): HasMany
     {
-        return $this->hasMany(ProductModelColor::class)->with("images");
+        return $this->hasMany(ProductModelColor::class)->with(["images", "colorIcon"]);
+    }
+
+    public function colorIcons(): HasManyThrough
+    {
+        return $this->hasManyThrough(ProductColorIcon::class, ProductModelColor::class, "product_model_id", "id", "id", "product_color_icon_id");
     }
 
     public function products(): HasManyThrough
