@@ -1,6 +1,6 @@
-import {Head, useForm} from "@inertiajs/react";
+import {Head, Link, useForm} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Box, Card} from "@mui/material";
+import {Box, Button, Card, Tooltip} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {Puck} from "@measured/puck";
 import "@measured/puck/puck.css";
@@ -12,6 +12,7 @@ import {Logos} from "./blocks/Logos";
 import {Text} from "./blocks/Text";
 import {VerticalSpace} from "./blocks/VerticalSpace";
 import ClientLayout from "@/Layouts/ClientLayout";
+import {ArrowBack} from "@mui/icons-material";
 
 export default function Pages(props) {
     // console.log(props)
@@ -101,6 +102,24 @@ export default function Pages(props) {
                     },
                 }}
             >
+                <Box sx={{
+                    position: "absolute",
+                    top: 18,
+                    left: 80,
+                    zIndex: 5000,
+                }}>
+                    <Tooltip title="Powrót do poprzedniej strony" arrow>
+                        <Button
+                            onClick={
+                                () => {
+                                    window.history.back();
+                                }
+                            }>
+                            <ArrowBack sx={{color: "black"}}/>
+                        </Button>
+                    </Tooltip>
+                </Box>
+
                 <Puck
                     config={config}
                     data={initialData}
