@@ -45,13 +45,17 @@ class B2bProductCategoryController extends Controller
                 'categories:id',
                 'group:id',
                 'brand:id',
-                'productsToB2bWithoutRelation:quantity,product_model_id',
-
+                'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id',
+                'productsToB2bWithoutRelation.size',
+//                'productsToB2bWithoutRelation:quantity,product_model_id',
+//                'products.size',
+                'colorIcons'
             ])
             ->paginate(24)
             ->through(function ($model) use ($discounts) {
                 $mainImages = $model->mainImages();
-
+//                if ($model->symbol === "S-0100-0104") dd($model->productsToB2bWithoutRelation);
+//                dd($model);
                 return [
                     'id' => $model->id,
                     'name' => $model->name,
@@ -60,6 +64,9 @@ class B2bProductCategoryController extends Controller
                     'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["path" => $image->path]) : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
                     'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
+                    'icons' => $model->colorIcons,
+                    'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique(),
+//                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),
                 ];
             }
             );
