@@ -51,6 +51,7 @@
         "react-dnd": "^16.0.1",
         "react-draggable": "^4.4.5",
         "react-hook-form": "^7.46.1",
+        "react-image-size": "^2.3.2",
         "react-material-ui-form-validator": "^3.0.1",
         "react-quill": "^2.0.0",
         "react-transition-group": "^4.4.5",

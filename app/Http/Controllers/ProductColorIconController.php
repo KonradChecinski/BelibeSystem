@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProductColorIcon;
 use App\Http\Requests\StoreProductColorIconRequest;
 use App\Http\Requests\UpdateProductColorIconRequest;
+use Inertia\Inertia;
 
 class ProductColorIconController extends Controller
 {
@@ -13,7 +14,11 @@ class ProductColorIconController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/ColorIcon", [
+            'productColors' => ProductColorIcon::withCount(["colors"])
+                ->with(["colors"])
+                ->get(),
+        ]);
     }
 
     /**
@@ -29,7 +34,7 @@ class ProductColorIconController extends Controller
      */
     public function store(StoreProductColorIconRequest $request)
     {
-        //
+        ProductColorIcon::create($request->validated());
     }
 
     /**
@@ -51,9 +56,15 @@ class ProductColorIconController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductColorIconRequest $request, ProductColorIcon $productColorIcon)
+    public function update(UpdateProductColorIconRequest $request)
     {
-        //
+//        dd($request->all(), $request->validated());
+        foreach ($request->validated() as $item) {
+            $productIcon = ProductColorIcon::find($item['id'])->update($item);
+            if ((int)$item["type"] === 1) {
+                dd($item);
+            }
+        }
     }
 
     /**
@@ -61,6 +72,11 @@ class ProductColorIconController extends Controller
      */
     public function destroy(ProductColorIcon $productColorIcon)
     {
-        //
+        if ($productColorIcon->colors()->count() != 0) {
+            return redirect()->back()->withErrors([
+                'error' => 'Nie można usunąć koloru, ponieważ jest przypisany do modeli produktów'
+            ]);
+        }
+        $productColorIcon->delete();
     }
 }

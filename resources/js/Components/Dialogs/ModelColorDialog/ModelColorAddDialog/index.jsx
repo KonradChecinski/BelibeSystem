@@ -373,9 +373,6 @@ function Step1({data, setData, clickedColor = null, register, errors, params}) {
                 </Typography>
             )}
 
-            {/*<MuiColorInput isAlphaHidden={true} format="hex" value={data.hex}*/}
-            {/*               onChange={(color) => setData("hex", color)}/>*/}
-
 
             <Typography variant="body1" sx={{mt: 2, mb: 2}}>
                 Sklep Internetowy

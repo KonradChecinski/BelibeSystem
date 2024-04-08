@@ -165,6 +165,12 @@ export default function Menu({showContent, auth}) {
                             />
 
                             <SubMenuLink
+                                href={route("system.settings.colorIcon")}
+                                active={route().current("system.settings.colorIcon")}
+                                text={"Ikony kolorów"}
+                            />
+
+                            <SubMenuLink
                                 href={route("system.settings.gs1.brand")}
                                 active={false}
                                 text={"GS1"}

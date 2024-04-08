@@ -11,7 +11,7 @@ class StoreProductColorIconRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreProductColorIconRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "id" => 'present|nullable',
+            "name" => 'required|string|max:255',
+            "type" => 'required|integer|min:0|max:1',
+            "hex" => 'required|string|max:7|min:7',
         ];
     }
 }

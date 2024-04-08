@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;
 use App\Http\Controllers\System\Client\ClientActivityController;
@@ -181,6 +182,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
             Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
             Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
+
+            Route::get("/color-icon/", [ProductColorIconController::class, 'index'])->name("system.settings.colorIcon");
+            Route::post("/color-icon/", [ProductColorIconController::class, 'store'])->name("system.settings.colorIcon.create");
+            Route::post("/color-icon/", [ProductColorIconController::class, 'update'])->name("system.settings.colorIcon.update");
+            Route::delete("/color-icon/{productColorIcon}/", [ProductColorIconController::class, 'destroy'])->name("system.settings.colorIcon.delete");
 
 
             Route::group(['prefix' => '/gs1'], function () {
