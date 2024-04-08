@@ -6,6 +6,7 @@ use App\Helpers\PriceForClient\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
 use App\Models\Products\ProductCategory;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class B2bProductCategoryController extends Controller
@@ -13,7 +14,7 @@ class B2bProductCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(Request $request, string $slug)
     {
         $category = ProductCategory::findBySlug($slug);
         if (!$category) {
@@ -70,6 +71,10 @@ class B2bProductCategoryController extends Controller
                 ];
             }
             );
+
+        if ($request->wantsJson()) {
+            return response()->json($models);
+        }
 
         return Inertia::render('B2B/Category', [
             "category" => [
