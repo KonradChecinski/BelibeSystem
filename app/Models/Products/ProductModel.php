@@ -62,6 +62,11 @@ class ProductModel extends Model
         return $this->hasMany(ProductModelColor::class);
     }
 
+    public function colorsWithIcons(): HasMany
+    {
+        return $this->hasMany(ProductModelColor::class)->with(["colorIcon"]);
+    }
+
     public function colorsWithImages(): HasMany
     {
         return $this->hasMany(ProductModelColor::class)->with(["images", "colorIcon"]);

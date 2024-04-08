@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProductColorIcon;
 use App\Http\Requests\StoreProductColorIconRequest;
 use App\Http\Requests\UpdateProductColorIconRequest;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductColorIconController extends Controller
@@ -16,7 +17,7 @@ class ProductColorIconController extends Controller
     {
         return Inertia::render("System/Settings/Dictionaries/ColorIcon", [
             'productColors' => ProductColorIcon::withCount(["colors"])
-                ->with(["colors"])
+                ->with(["colorsWithModels"])
                 ->get(),
         ]);
     }
@@ -58,11 +59,15 @@ class ProductColorIconController extends Controller
      */
     public function update(UpdateProductColorIconRequest $request)
     {
-//        dd($request->all(), $request->validated());
         foreach ($request->validated() as $item) {
-            $productIcon = ProductColorIcon::find($item['id'])->update($item);
-            if ((int)$item["type"] === 1) {
-                dd($item);
+            $productIcon = ProductColorIcon::find($item['id']);
+            $productIcon->update($item);
+            if ((int)$item["type"] === 1 && isset($item['files'])) {
+                foreach ($item['files'] as $id => $file) {
+                    $pathImage = Storage::putFileAs("colors/", $file, uniqid('', true) . "." . $file->getClientOriginalExtension());
+                    $productIcon->path = str_replace('/', '\\', substr($pathImage, 7));
+                    $productIcon->save();
+                }
             }
         }
     }

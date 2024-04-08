@@ -330,7 +330,7 @@ function Step1({data, setData, clickedColor = null, register, errors, params}) {
                                 {option.type === 1 ?
                                     <Box
                                         component={"img"}
-                                        src={route("images", {path: option.path})}
+                                        src={route("colorIcons", {path: option.path})}
                                         sx={{
                                             width: 30,
                                             height: 30,

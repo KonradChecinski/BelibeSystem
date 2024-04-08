@@ -26,6 +26,7 @@ export default function DropzoneIconAdd({props, editedId, setEdited, data, setDa
         const {height, width} = dimensions;
         if (width !== 80 || height !== 80) {
             refDrop.current.deleteFile(refDrop.current.state.fileObjects[0].file, 0)
+            enqueueSnackbar("Plik jest niedozwolonego rozmiaru. Plik musi być rozmiaru 80x80 px", {variant: "warning"})
             return;
         }
         setData(data.map(d => {

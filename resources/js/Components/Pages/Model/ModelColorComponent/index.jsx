@@ -75,7 +75,7 @@ export default function ModelColorComponent(props) {
                                             {color.color_icon?.type === 1 ?
                                                 <Box
                                                     component={"img"}
-                                                    src={route("images", {path: color.color_icon.path})}
+                                                    src={route("colorIcons", {path: color.color_icon.path})}
                                                     sx={{
                                                         width: 40,
                                                         height: 40,

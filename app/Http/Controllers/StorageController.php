@@ -60,4 +60,10 @@ class StorageController extends Controller
         return response($img)->header('Content-Type', $mimeType);
     }
 
+    public function colorIcons(string $path)
+    {
+        $img = Storage::get('colors/' . str_replace('\\', '/', $path));
+        $mimeType = Storage::mimeType('colors/' . str_replace('\\', '/', $path));
+        return response($img)->header('Content-Type', $mimeType);
+    }
 }

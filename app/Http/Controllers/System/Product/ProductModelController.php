@@ -41,7 +41,7 @@ class ProductModelController extends Controller
             'name',
         ];
 
-        $models = ProductModel::with(["colors:id,product_model_id,shortcut,name", "products", "group:id,name"]);
+        $models = ProductModel::with(["colorsWithIcons:id,product_model_id,product_color_icon_id,shortcut,name", "products", "group:id,name"]);
 //        dd($models->get()->toArray());
 
         if ($request->search) {

@@ -53,7 +53,7 @@ export default function ModelsTable(props) {
             headerName: "Kolory",
             sortable: false,
             renderCell: (params) => {
-                return <ColorsCell key={params.row.id} colors={params.row.colors}/>;
+                return <ColorsCell key={params.row.id} colors={params.row.colors_with_icons}/>;
             },
             flex: 1,
             filterable: false

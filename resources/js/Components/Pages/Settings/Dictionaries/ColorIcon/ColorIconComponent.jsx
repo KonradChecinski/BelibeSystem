@@ -21,6 +21,7 @@ import CategoryModelsTable from "@/Components/Table/Settings/CategoryModelsTable
 import {MuiColorInput} from "mui-color-input";
 import DropzoneIconAdd
     from "@/Components/Pages/Settings/Dictionaries/ColorIcon/DropzoneIconsAdd";
+import ColorIconsTable from "@/Components/Table/Settings/ColorIconsTable";
 
 
 export default function ColorIconComponent(props) {
@@ -187,7 +188,7 @@ export default function ColorIconComponent(props) {
                                             {color.type === 1 ?
                                                 <Box
                                                     component={"img"}
-                                                    src={route("images", {path: color.path})}
+                                                    src={route("colorIcons", {path: color.path})}
                                                     sx={{
                                                         width: 40,
                                                         height: 40,
@@ -310,55 +311,12 @@ export default function ColorIconComponent(props) {
 
 
                             </Box>
-
-                            {/*<Box sx={{p: 2}}>*/}
-                            {/*    <TextField id="slug"*/}
-                            {/*               label="Url"*/}
-                            {/*               variant="outlined"*/}
-                            {/*               value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.slug : ""}*/}
-                            {/*               onChange={(e, value) => {*/}
-                            {/*                   setData(data.map(d => {*/}
-                            {/*                       if (d.id === editedId) {*/}
-                            {/*                           d.slug = value;*/}
-                            {/*                           setEdited(true);*/}
-                            {/*                       }*/}
-                            {/*                       return d;*/}
-                            {/*                   }))*/}
-
-                            {/*               }}*/}
-                            {/*    />*/}
-
-                            {/*</Box>*/}
-                            {/*<Box sx={{p: 2}}>*/}
-                            {/*    <Typography variant={"h6"}></Typography>*/}
-                            {/*    <FormGroup>*/}
-                            {/*        <FormControlLabel*/}
-                            {/*            control={*/}
-                            {/*                <Checkbox*/}
-                            {/*                    checked={Boolean(data.find(e => e.id === editedId)?.data?.show_in_menu)}*/}
-                            {/*                    onChange={(e) => {*/}
-                            {/*                        setData(data.map(d => {*/}
-                            {/*                            if (d.id === editedId) {*/}
-                            {/*                                d.data.show_in_menu = e.target.checked;*/}
-                            {/*                                d.show_in_menu = e.target.checked;*/}
-                            {/*                                setEdited(true);*/}
-                            {/*                            }*/}
-                            {/*                            return d;*/}
-                            {/*                        }))*/}
-                            {/*                    }}*/}
-                            {/*                    sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}*/}
-                            {/*                />*/}
-                            {/*            }*/}
-                            {/*            label="Pokaż w menu"/>*/}
-                            {/*    </FormGroup>*/}
-
-                            {/*</Box>*/}
                         </Box>
 
                         <Box sx={{my: 1}}>
-                            {/*<CategoryModelsTable*/}
-                            {/*    models={editedId ? data.find(e => e.id === editedId)?.product_models : []}*/}
-                            {/*    props={props}/>*/}
+                            <ColorIconsTable
+                                colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
+                                props={props}/>
                         </Box>
                     </Box>
 

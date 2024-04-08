@@ -199,7 +199,7 @@ export default function B2bCategory(props) {
                                                                     {icon.type === 1 ?
                                                                         <Box
                                                                             component={"img"}
-                                                                            src={route("images", {path: icon.path})}
+                                                                            src={route("colorIcons", {path: icon.path})}
                                                                             sx={{
                                                                                 width: "1.4rem",
                                                                                 height: "1.4rem",

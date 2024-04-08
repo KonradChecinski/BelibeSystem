@@ -64,6 +64,7 @@ Route::get('images/basic/{path}', [StorageController::class, 'images'])->name("i
 Route::get('images/thumbnail/{path}', [StorageController::class, 'imagesThumb'])->name("images.thumbnail");
 Route::get('images/webp/{path}', [StorageController::class, 'imagesWebp'])->name("images.webp");
 Route::get('images/1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
+Route::get('color-icons/{path}', [StorageController::class, 'colorIcons'])->name("colorIcons");
 
 
 Route::group(['prefix' => '/xml'], function () {

@@ -185,7 +185,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
             Route::get("/color-icon/", [ProductColorIconController::class, 'index'])->name("system.settings.colorIcon");
             Route::post("/color-icon/", [ProductColorIconController::class, 'store'])->name("system.settings.colorIcon.create");
-            Route::post("/color-icon/", [ProductColorIconController::class, 'update'])->name("system.settings.colorIcon.update");
+            Route::post("/color-icon/update", [ProductColorIconController::class, 'update'])->name("system.settings.colorIcon.update");
             Route::delete("/color-icon/{productColorIcon}/", [ProductColorIconController::class, 'destroy'])->name("system.settings.colorIcon.delete");
 
 

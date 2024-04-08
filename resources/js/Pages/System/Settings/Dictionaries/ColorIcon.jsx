@@ -20,9 +20,6 @@ export default function Category(props) {
             <Box sx={{height: "100%", width: 1}}>
                 <ColorIconComponent {...props} />
             </Box>
-            {/*<Card >*/}
-
-            {/*</Card>*/}
         </UserLayout>
     );
 }
