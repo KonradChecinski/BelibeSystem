@@ -12,7 +12,6 @@
         "guzzlehttp/guzzle": "^7.7",
         "inertiajs/inertia-laravel": "^0.6.3",
         "intervention/image": "^2.7",
-        "itsgoingd/clockwork": "^5.2",
         "lab404/laravel-impersonate": "^1.7",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
@@ -35,7 +34,8 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "itsgoingd/clockwork": "^5.2"
     },
     "autoload": {
         "psr-4": {

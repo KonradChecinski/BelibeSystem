@@ -20,6 +20,7 @@ import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
 import SearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/SearchModelComponent";
 import SearchClientComponent from "@/Components/Layout/NavBar/SearchComponent/SearchClientComponent";
+import B2bSearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/B2bSearchModelComponent";
 
 export default function B2BNavBar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
@@ -73,8 +74,8 @@ export default function B2BNavBar({auth}) {
                     {/*    </FormControl>*/}
                     {/*</Grid>*/}
                     <Grid item xs={4} md={2}>
-                        <SearchModelComponent auth={auth} searchRoute={route("system.products.models.search")}
-                                              label={"Model"}/>
+                        <B2bSearchModelComponent searchRoute={route("b2b.model.search")}
+                                                 label={"Model"}/>
 
                     </Grid>
                     <Grid item xs={4} md={2}>

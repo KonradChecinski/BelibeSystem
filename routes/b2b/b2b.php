@@ -12,7 +12,8 @@ Route::get("/", function () {
 Route::middleware(["auth:client", "verified"])->group(function () {
     Route::group([], function () {
         Route::get("/c/{slug}", [B2bProductCategoryController::class, 'show'])->name("b2b.category");
-        Route::get("/p/{slug}", [B2bProductController::class, 'show'])->name("b2b.model");
+        Route::get("/m/{slug}", [B2bProductController::class, 'show'])->name("b2b.model");
+        Route::get("/model/search", [B2bProductController::class, 'search'])->name("b2b.model.search");
 
     });
 

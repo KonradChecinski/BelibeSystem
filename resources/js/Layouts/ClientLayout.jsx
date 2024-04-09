@@ -16,6 +16,7 @@ export default function ClientLayout({auth, bgImage, categories, header, childre
     const [showMenu, setShowMenu] = useState(
         useMediaQuery(theme.breakpoints.up("md"))
     );
+
     return (
         <Theme>
             {smBreakpointUp ? (

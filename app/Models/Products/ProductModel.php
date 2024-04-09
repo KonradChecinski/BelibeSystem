@@ -11,6 +11,7 @@ use App\Models\GS1GPC;
 use App\Models\ProductBrand;
 use App\Models\ProductColorIcon;
 use App\Models\Products\Price\ProductModelPrice;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,6 +63,13 @@ class ProductModel extends Model
         return $this->hasMany(ProductModelColor::class);
     }
 
+    public function colorsToB2b(): HasMany
+    {
+        return $this->hasMany(ProductModelColor::class)->whereHas("products", function (Builder $query) {
+            $query->where("show_in_b2b", true);
+        });
+    }
+
     public function colorsWithIcons(): HasMany
     {
         return $this->hasMany(ProductModelColor::class)->with(["colorIcon"]);
@@ -97,6 +105,18 @@ class ProductModel extends Model
         return $this->hasManyThrough(Product::class, ProductModelColor::class)->where("show_in_b2b", true);
     }
 
+    public function productsToB2bWithRelation(): HasMany
+    {
+        return $this->colors()
+            ->withWhereHas("images", function ($query) {
+                $query->where("type", 1);
+            })
+            ->with(["colorIcon", 'products', 'products.barcodes', 'products.size', 'products.unit'])
+            ->whereHas("products", function (Builder $query) {
+                $query->where("show_in_b2b", true);
+            });
+    }
+
     public function barcodes(): HasManyThrough
     {
         return $this->hasManyDeepFromRelations($this->productsWithoutRelation(), (new Product())->barcodes());
@@ -110,6 +130,16 @@ class ProductModel extends Model
     public function quantityToB2b(): int
     {
         return $this->productsToB2bWithoutRelation->sum("quantity");
+    }
+
+    public function sizes(): HasManyThrough
+    {
+        return $this->hasManyDeepFromRelations($this->productsWithoutRelation(), (new Product())->size());
+    }
+
+    public function allImagesToB2b(): HasManyThrough
+    {
+        return $this->hasManyDeepFromRelations($this->colorsToB2b(), (new ProductModelColor())->images())->where("type", 1);
     }
 
 

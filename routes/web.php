@@ -5,7 +5,8 @@ use App\Http\Controllers\System\XmlGeneratorController;
 use App\Install\ClearDBController;
 use App\Install\Install2Controller;
 use App\Install\Install3Controller;
-use App\Install\InstallController;
+use App\Install\Install1Controller;
+use App\Install\Install4Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,9 +74,10 @@ Route::group(['prefix' => '/xml'], function () {
 );
 
 
-Route::get("install", [InstallController::class, 'install'])->name("install");
+Route::get("install", [Install1Controller::class, 'install'])->name("install");
 Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
 Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
+Route::get("install4", [Install4Controller::class, 'install'])->name("install4");
 Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 
 

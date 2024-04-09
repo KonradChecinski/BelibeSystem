@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class InstallController extends Controller
+class Install1Controller extends Controller
 {
     public function install()
     {
