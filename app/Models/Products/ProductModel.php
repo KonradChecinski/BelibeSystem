@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class ProductModel extends Model
 {
@@ -111,13 +112,14 @@ class ProductModel extends Model
             ->withWhereHas("images", function ($query) {
                 $query->where("type", 1);
             })
-            ->with(["colorIcon", 'products', 'products.barcodes', 'products.size', 'products.unit'])
-            ->whereHas("products", function (Builder $query) {
+            ->withWhereHas("products", function ($query) {
                 $query->where("show_in_b2b", true);
-            });
+                $query->with(['barcodes', 'size', 'unit']);
+            })
+            ->with(["colorIcon"]);
     }
 
-    public function barcodes(): HasManyThrough
+    public function barcodes(): HasManyDeep
     {
         return $this->hasManyDeepFromRelations($this->productsWithoutRelation(), (new Product())->barcodes());
     }
@@ -132,14 +134,14 @@ class ProductModel extends Model
         return $this->productsToB2bWithoutRelation->sum("quantity");
     }
 
-    public function sizes(): HasManyThrough
+    public function sizes(): HasManyDeep
     {
         return $this->hasManyDeepFromRelations($this->productsWithoutRelation(), (new Product())->size());
     }
 
-    public function allImagesToB2b(): HasManyThrough
+    public function sizesToB2b(): HasManyDeep
     {
-        return $this->hasManyDeepFromRelations($this->colorsToB2b(), (new ProductModelColor())->images())->where("type", 1);
+        return $this->hasManyDeepFromRelationsWithConstraints([$this, 'productsToB2bWithoutRelation'], [new Product(), 'size']);
     }
 
 

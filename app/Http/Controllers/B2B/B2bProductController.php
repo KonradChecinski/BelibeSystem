@@ -65,13 +65,12 @@ class B2bProductController extends Controller
         $productModel = $productModel->load([
             'prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency',
             "productsToB2bWithRelation",
-            "sizes",
-            "allImagesToB2b"
+            "sizesToB2b",
         ]);
         $client = Client::find(auth()->user()->client_id);
 
 
-        dd($productModel->toArray());
+//        dd($productModel->toArray());
         return Inertia::render('B2B/Model',
             [
                 "model" => [
@@ -84,7 +83,10 @@ class B2bProductController extends Controller
                     'price' => array_merge($productModel->prices->toArray(), $productModel->priceForClientB2b($client)),
 //                    'quantity' => $productModel->quantityToB2b(),
                     'colors' => $productModel->productsToB2bWithRelation,
-                    'sizes' => $productModel->sizes->map(fn($size) => $size->name)->unique(),
+                    'sizes' => $productModel->sizesToB2b->map(fn($size) => [
+                        "id" => $size->id,
+                        "name" => $size->name
+                    ])->unique(),
                 ]
             ]
         );

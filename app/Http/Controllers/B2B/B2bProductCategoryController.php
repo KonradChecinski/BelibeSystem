@@ -23,9 +23,9 @@ class B2bProductCategoryController extends Controller
         $client = Client::find(auth()->user()->client_id);
         $discounts = $client->discounts;
 
-        $products = $category->productModels()->whereHas("products", function ($query) {
-            $query->where("show_in_b2b", true);
-        });
+//        $products = $category->productModels()->whereHas("products", function ($query) {
+//            $query->where("show_in_b2b", true);
+//        });
 //        $models = $category->productModels()
 //            ->with(['prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency'])
 //            ->paginate(18)
