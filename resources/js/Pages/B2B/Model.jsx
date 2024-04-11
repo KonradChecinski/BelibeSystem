@@ -66,28 +66,28 @@ export default function B2bModel(props) {
             }
         >
             <Head title={t("Model") + " " + props.model.symbol}/>
-            <Box
-                className="pswp-gallery"
-                id={"pswp-gallery"}
-                sx={{
-                    py: 1,
-                    width: 1,
-                    overflowY: "hidden",
-                    overflowX: "auto",
-                }}>
-                <Box sx={{width: 1, minHeight: 600}}>
-                    <Paper elevation={4} sx={{p: 5, display: "flex"}}>
-                        <Box
-                            sx={{
-                                width: 400,
-                                height: 1,
-                                "& .swiper-slide": {
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }
-                            }}>
 
+            <Box sx={{width: 1, minHeight: 600}}>
+                <Paper elevation={4} sx={{p: 5, display: "flex"}}>
+                    <Box
+                        sx={{
+                            width: 400,
+                            height: 1,
+                            "& .swiper-slide": {
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }
+                        }}>
+                        <Box
+                            className="pswp-gallery"
+                            id={"pswp-gallery"}
+                            sx={{
+                                py: 1,
+                                width: 1,
+                                overflowY: "hidden",
+                                overflowX: "auto",
+                            }}>
                             <Swiper
                                 // style={{
                                 //     '--swiper-navigation-color': '#fff',
@@ -142,64 +142,63 @@ export default function B2bModel(props) {
 
 
                             </Swiper>
-
-                            <Box sx={{
-                                "& .swiper-slide": {
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    height: 100,
-                                    width: "auto"
-                                }
-                            }}>
-                                <Swiper
-                                    onSwiper={setThumbsSwiper}
-                                    loop={true}
-                                    spaceBetween={5}
-                                    slidesPerView={'auto'}
-                                    freeMode={true}
-                                    watchSlidesProgress={true}
-                                    modules={[FreeMode, Navigation, Thumbs]}
-                                    className="mySwiper"
-                                >
-                                    {imageArray.map((image) => {
-                                        return (
-                                            <SwiperSlide key={image.id}>
-                                                <Box sx={{
-                                                    "& .product-image": {
-                                                        height: 100,
-                                                        maxWidth: "fit-content",
-                                                        width: 1
-                                                    }
-                                                }}>
-                                                    <img
-                                                        src={route("images.thumbnail", {path: image.path})}
-                                                        alt={"brak"}
-                                                        className={"product-image"}
-                                                        loading="lazy"
-                                                    />
-                                                </Box>
-                                            </SwiperSlide>
-                                        )
-                                    })}
-                                </Swiper>
-                            </Box>
                         </Box>
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                gutterBottom
-                                dangerouslySetInnerHTML={{__html: props.model.description_b2b}}
-                            />
+                        <Box sx={{
+                            "& .swiper-slide": {
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: 100,
+                                width: "auto"
+                            }
+                        }}>
+                            <Swiper
+                                onSwiper={setThumbsSwiper}
+                                loop={true}
+                                spaceBetween={5}
+                                slidesPerView={'auto'}
+                                freeMode={true}
+                                watchSlidesProgress={true}
+                                modules={[FreeMode, Navigation, Thumbs]}
+                                className="mySwiper"
+                            >
+                                {imageArray.map((image) => {
+                                    return (
+                                        <SwiperSlide key={image.id}>
+                                            <Box sx={{
+                                                "& .product-image": {
+                                                    height: 100,
+                                                    maxWidth: "fit-content",
+                                                    width: 1
+                                                }
+                                            }}>
+                                                <img
+                                                    src={route("images.thumbnail", {path: image.path})}
+                                                    alt={"brak"}
+                                                    className={"product-image"}
+                                                    loading="lazy"
+                                                />
+                                            </Box>
+                                        </SwiperSlide>
+                                    )
+                                })}
+                            </Swiper>
                         </Box>
-                    </Paper>
-                </Box>
-                <Box my={2}>
-                    <Typography variant="h5" gutterBottom>
-                        Zamówienie
-                    </Typography>
-                    <OrderTable model={props.model}/>
-                </Box>
+                    </Box>
+                    <Box>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            dangerouslySetInnerHTML={{__html: props.model.description_b2b}}
+                        />
+                    </Box>
+                </Paper>
+            </Box>
+            <Box my={2} sx={{overflowX: "initial"}}>
+                <Typography variant="h5" gutterBottom>
+                    Zamówienie
+                </Typography>
+                <OrderTable model={props.model}/>
             </Box>
         </ClientLayout>
     );
