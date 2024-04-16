@@ -73,14 +73,9 @@ export default function B2BNavBar({auth}) {
                     {/*        />*/}
                     {/*    </FormControl>*/}
                     {/*</Grid>*/}
-                    <Grid item xs={4} md={2}>
+                    <Grid item xs={6} md={4}>
                         <B2bSearchModelComponent searchRoute={route("b2b.model.search")}
                                                  label={"Model"}/>
-
-                    </Grid>
-                    <Grid item xs={4} md={2}>
-                        {/*<SearchClientComponent auth={auth} searchRoute={route("system.clients.search")}*/}
-                        {/*                       label={"Firma"}/>*/}
 
                     </Grid>
                     {/*<Grid item xs={4} md={2}>*/}
@@ -111,7 +106,7 @@ export default function B2BNavBar({auth}) {
                     {/*</Grid>*/}
                     <Grid
                         item
-                        xs={4}
+                        xs={6}
                         md={8}
                         justifyContent="flex-end"
                         alignItems="flex-end"

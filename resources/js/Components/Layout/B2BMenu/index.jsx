@@ -61,7 +61,7 @@ export default function B2BMenu({showContent, auth, bgImage, categories}) {
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)', // Adjust the opacity (last value) as needed
+                        backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)', // Adjust the opacity (last value) as needed
                         pointerEvents: 'none', // Allow clicks to pass through the overlay
                     }}
                 />
@@ -80,7 +80,7 @@ export default function B2BMenu({showContent, auth, bgImage, categories}) {
                     height: "100%", // Ensure content takes full height
                 }}
             >
-                <Link href={route("system.dashboard")}>
+                <Link href={route("b2b.dashboard")}>
                     <ApplicationLogo
                         className="block h-auto w-2/3 mx-auto fill-current text-gray-800 dark:text-gray-200"/>
                 </Link>
