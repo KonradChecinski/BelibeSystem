@@ -3,8 +3,8 @@ import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
-    Box,
-    debounce,
+    Box, Button,
+    debounce, Divider,
     Paper,
     Table,
     TableBody,
@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 import {sortBySizes, sortBySizesModelColorObject, sortBySizesName} from "@/Functions/sortBySizes";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
-import OrderTable from "@/Components/Pages/B2B/Model/OrderTable";
-import {useEffect, useState} from "react";
+import ProductOrderTable from "@/Components/Pages/B2B/Model/ProductOrderTable";
+import {useEffect, useRef, useState} from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import 'photoswipe/style.css';
 import {Swiper, SwiperSlide} from 'swiper/react';
@@ -27,33 +27,46 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/free-mode';
+import ProductPriceTable from "@/Components/Pages/B2B/Model/ProductPriceTable";
+import ProductSizeTable from "@/Components/Pages/B2B/Model/ProductSizeTable";
+import ProductColorTable from "@/Components/Pages/B2B/Model/ProductColorTable";
 
 export default function B2bModel(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
+    const ProductOrderTableRef = useRef(null)
     console.log(props)
 
     const imageArray = props.model.colors.sort(sortByColorShortcut).map((color) => {
         return color.images.sort((imageA, imageB) => imageA.order - imageB.order)
     }).flat();
-    console.log(imageArray)
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
+    const [lightbox, setLightBox] = useState(new PhotoSwipeLightbox({
+        gallery: "#" + "pswp-gallery", //props.galleryID,
+        children: "a",
+        pswpModule: () => import("photoswipe")
+    }));
+
     useEffect(() => {
-        let lightbox = new PhotoSwipeLightbox({
+        setLightBox(new PhotoSwipeLightbox({
             gallery: "#" + "pswp-gallery", //props.galleryID,
             children: "a",
             pswpModule: () => import("photoswipe")
-        });
+        }));
 
         lightbox.init();
 
         return () => {
             lightbox.destroy();
-            lightbox = null;
+            setLightBox(null);
         };
     }, []);
+
+    const scrollTo = () => {
+        ProductOrderTableRef.current.scrollIntoView({behavior: "smooth"});
+    }
 
     return (
         <ClientLayout
@@ -67,11 +80,12 @@ export default function B2bModel(props) {
         >
             <Head title={t("Model") + " " + props.model.symbol}/>
 
-            <Box sx={{width: 1, minHeight: 600}}>
-                <Paper elevation={4} sx={{p: 5, display: "flex"}}>
+            <Box sx={{width: 1, minHeight: 400}}>
+                <Paper elevation={4}
+                       sx={{p: 5, display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "space-around"}}>
                     <Box
                         sx={{
-                            width: 400,
+                            width: 250,
                             height: 1,
                             "& .swiper-slide": {
                                 display: "flex",
@@ -148,7 +162,7 @@ export default function B2bModel(props) {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                height: 100,
+                                height: 50,
                                 width: "auto"
                             }
                         }}>
@@ -167,9 +181,10 @@ export default function B2bModel(props) {
                                         <SwiperSlide key={image.id}>
                                             <Box sx={{
                                                 "& .product-image": {
-                                                    height: 100,
+                                                    height: 50,
                                                     maxWidth: "fit-content",
-                                                    width: 1
+                                                    width: 1,
+                                                    cursor: "pointer",
                                                 }
                                             }}>
                                                 <img
@@ -185,20 +200,107 @@ export default function B2bModel(props) {
                             </Swiper>
                         </Box>
                     </Box>
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            gutterBottom
-                            dangerouslySetInnerHTML={{__html: props.model.description_b2b}}
-                        />
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flexWrap: "wrap",
+                        gap: 2,
+                        flex: 1,
+                        minWidth: 400
+
+                    }}>
+
+
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            gap: 2,
+                            flex: 1,
+                            minWidth: 400
+
+                        }}>
+                            <Box sx={{
+                                flex: 1,
+                                minWidth: 300,
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1
+                            }}>
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 1
+                                }}>
+                                    <Typography variant="h6">
+                                        Opis produktu
+                                    </Typography>
+                                    <Divider/>
+                                    <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        dangerouslySetInnerHTML={{__html: props.model.description_b2b}}
+                                    />
+                                </Box>
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 1
+                                }}>
+                                    <Typography variant="h6">
+                                        Cena produktu
+                                    </Typography>
+                                    <Divider/>
+                                    <ProductPriceTable model={props.model}/>
+
+                                </Box>
+                            </Box>
+
+                            <Box sx={{
+                                flex: 1,
+                                minWidth: 300,
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1
+                            }}>
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 1
+                                }}>
+                                    <Typography variant="h6">
+                                        Rozmiary
+                                    </Typography>
+                                    <Divider/>
+                                    <ProductSizeTable model={props.model}/>
+                                </Box>
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 1
+                                }}>
+                                    <Typography variant="h6">
+                                        Kolory
+                                    </Typography>
+                                    <Divider/>
+                                    <ProductColorTable model={props.model} lightbox={lightbox} imageArray={imageArray}/>
+                                </Box>
+                            </Box>
+
+                        </Box>
+                        <Box>
+                            <Button variant="contained" onClick={scrollTo} sx={{my: 2, width: 1}}>
+                                Zamów
+                            </Button>
+                        </Box>
                     </Box>
                 </Paper>
             </Box>
-            <Box my={2} sx={{overflowX: "initial"}}>
+            <Box ref={ProductOrderTableRef} my={2} sx={{overflowX: "initial"}}>
                 <Typography variant="h5" gutterBottom>
                     Zamówienie
                 </Typography>
-                <OrderTable model={props.model}/>
+                <ProductOrderTable model={props.model} lightbox={lightbox} imageArray={imageArray}/>
             </Box>
         </ClientLayout>
     );

@@ -41,7 +41,7 @@ export const Node = ({node, depth}) => {
                         width: 1
                     }}>
                     <Box sx={{width: 1}} component={Link} href={route('b2b.category', {slug: node.slug})}>
-                        <Typography variant="body2">{node.name}</Typography>
+                        <Typography variant="body2" sx={{color: "menuText.main"}}>{node.name}</Typography>
                     </Box>
                 </Box>
             </Box>

@@ -43,6 +43,12 @@ export default function Theme({children}) {
         },
         field: {
             border: "rgb(229, 231, 235)"
+        },
+        disabled: {
+            background: "rgba(181,181,181,0.33)"
+        },
+        hoveredCell: {
+            background: "rgba(4,119,243,0.26)"
         }
     };
 
@@ -79,6 +85,9 @@ export default function Theme({children}) {
         },
         field: {
             border: "rgba(229, 231, 235, 0.3)"
+        },
+        disabled: {
+            background: "rgba(124,124,124,0.33)"
         }
     };
 
