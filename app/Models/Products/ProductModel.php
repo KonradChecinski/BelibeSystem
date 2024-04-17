@@ -5,6 +5,7 @@ namespace App\Models\Products;
 use App\Helpers\PriceForClient\PriceForClient;
 use App\Models\B2cCategory;
 use App\Models\B2cColor;
+use App\Models\Client\Client;
 use App\Models\ClientDiscount;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
@@ -211,5 +212,15 @@ class ProductModel extends Model
     public function priceForClientB2b($client)
     {
         return PriceForClient::getPriceFromProductModel($this, $client);
+    }
+
+    public function favoritedClients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class, "favorite_product_model")->withTimestamps();
+    }
+
+    public function isFavoritedByClient($client)
+    {
+        return $this->favoritedClients()->where("client_id", $client->id)->exists();
     }
 }

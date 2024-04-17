@@ -21,11 +21,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {useEffect, useState} from "react";
 import ModelList from "@/Components/Pages/B2B/ModelList";
 
-export default function B2bCategory(props) {
+export default function B2bFavorites(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     console.log(props)
-
 
     return (
         <ClientLayout
@@ -33,12 +32,11 @@ export default function B2bCategory(props) {
             errors={props.errors}
             categories={props.menu}
             bgImage={props.backgroundImage}
-            header={
-                props.category.name
-            }
+            header={t("Favorites")}
         >
-            <Head title={props.category.name}/>
+            <Head title={t("Favorites")}/>
             <ModelList {...props} />
+
         </ClientLayout>
     );
 }

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {useState} from "react";
 import {
-    Search, Event, ShoppingCart
+    Search, Event, ShoppingCart, Favorite
 } from "@mui/icons-material";
 import UserAvatar from "@/Components/Layout/UserAvatar";
 import UserAvatarMenu from "@/Components/Layout/UserAvatar/Menu";
@@ -20,7 +20,7 @@ import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
 import SearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/SearchModelComponent";
 import SearchClientComponent from "@/Components/Layout/NavBar/SearchComponent/SearchClientComponent";
-import B2bSearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/B2bSearchModelComponent";
+import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchComponent/B2bSearchModelComponent";
 
 export default function B2BNavBar({auth}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
@@ -155,6 +155,15 @@ export default function B2BNavBar({auth}) {
                                                     router.visit(route("telescope"));
                                                 }}>
                                         <Event sx={{fontSize: 25}}/>
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Tooltip title={"Zobacz ulubione"}>
+                                    <IconButton size={"large"}
+                                                onClick={() => {
+                                                    router.visit(route("b2b.favorites"));
+                                                }}>
+                                        <Favorite sx={{fontSize: 25}}/>
                                     </IconButton>
                                 </Tooltip>
 

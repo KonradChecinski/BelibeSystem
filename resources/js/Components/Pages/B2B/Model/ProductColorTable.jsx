@@ -44,11 +44,12 @@ export default function ProductColorTable({model, lightbox, imageArray}) {
                                 <HoveringCell column={color.id} key={color.id}>
                                     <Box component={"img"}
                                          src={route("images.webp", {path: image.path})}
-                                         width={80}
-                                         onClick={() => lightbox.loadAndOpen(imageIndex + 1)}
+                                         width={50}
+                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
                                          sx={{
                                              m: "auto",
                                              cursor: "pointer",
+                                             minWidth: 50
                                          }}
                                     />
 

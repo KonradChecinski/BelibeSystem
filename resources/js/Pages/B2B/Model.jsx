@@ -1,9 +1,9 @@
 import {Head, Link} from "@inertiajs/react";
 import ClientLayout from "@/Layouts/ClientLayout";
-import {useSnackbar} from "notistack";
+import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
-    Box, Button,
+    Box, Button, Checkbox,
     debounce, Divider,
     Paper,
     Table,
@@ -30,12 +30,30 @@ import 'swiper/css/free-mode';
 import ProductPriceTable from "@/Components/Pages/B2B/Model/ProductPriceTable";
 import ProductSizeTable from "@/Components/Pages/B2B/Model/ProductSizeTable";
 import ProductColorTable from "@/Components/Pages/B2B/Model/ProductColorTable";
+import {Favorite, FavoriteBorder} from "@mui/icons-material";
 
 export default function B2bModel(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     const ProductOrderTableRef = useRef(null)
     console.log(props)
+
+    const [isFavorited, setIsFavorited] = useState(props.model.isFavorited)
+
+    const handleFavorite = () => {
+        axios.patch(route('b2b.favorite.update', {productModel: props.model.id}))
+            .then(response => {
+                if (!isFavorited) enqueueSnackbar("Dodano do ulubionych", {variant: 'success'})
+                else
+                    enqueueSnackbar("Usunięto z ulubionych", {variant: 'info'})
+
+                setIsFavorited(!isFavorited)
+            })
+            .catch(error => {
+                enqueueSnackbar("Błąd dodaniu/usunięciu ulubionego", {variant: 'error'})
+                console.error(error)
+            });
+    }
 
     const imageArray = props.model.colors.sort(sortByColorShortcut).map((color) => {
         return color.images.sort((imageA, imageB) => imageA.order - imageB.order)
@@ -80,7 +98,7 @@ export default function B2bModel(props) {
         >
             <Head title={t("Model") + " " + props.model.symbol}/>
 
-            <Box sx={{width: 1, minHeight: 400}}>
+            <Box sx={{width: 1, minHeight: 400, position: "relative"}}>
                 <Paper elevation={4}
                        sx={{p: 5, display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "space-around"}}>
                     <Box
@@ -103,10 +121,11 @@ export default function B2bModel(props) {
                                 overflowX: "auto",
                             }}>
                             <Swiper
-                                // style={{
-                                //     '--swiper-navigation-color': '#fff',
-                                //     '--swiper-pagination-color': '#fff',
-                                // }}
+                                style={{
+                                    // '--swiper-navigation-color': '#fff',
+                                    // '--swiper-pagination-color': '#fff',
+                                    '--swiper-navigation-size': '25px',
+                                }}
                                 centeredSlides={true}
                                 // autoplay={{
                                 //     delay: 2500,
@@ -117,7 +136,7 @@ export default function B2bModel(props) {
                                     dynamicBullets: true,
                                 }}
                                 navigation={true}
-                                loop={true}
+                                loop={false}
                                 thumbs={{swiper: thumbsSwiper}}
                                 modules={[Autoplay, Pagination, Navigation, Thumbs]}
                                 className="mySwiper"
@@ -188,7 +207,7 @@ export default function B2bModel(props) {
                                                 }
                                             }}>
                                                 <img
-                                                    src={route("images.thumbnail", {path: image.path})}
+                                                    src={route("images.webp", {path: image.path})}
                                                     alt={"brak"}
                                                     className={"product-image"}
                                                     loading="lazy"
@@ -240,6 +259,15 @@ export default function B2bModel(props) {
                                         variant="body1"
                                         gutterBottom
                                         dangerouslySetInnerHTML={{__html: props.model.description_b2b}}
+                                        sx={{
+                                            "& ul": {
+                                                pl: 4,
+                                                // all: "unset",
+                                                "& li": {
+                                                    listStyleType: "disc"
+                                                }
+                                            }
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{
@@ -295,9 +323,22 @@ export default function B2bModel(props) {
                         </Box>
                     </Box>
                 </Paper>
+                <Checkbox
+                    icon={<FavoriteBorder color={"error"}/>}
+                    checkedIcon={<Favorite color={"error"}/>}
+                    checked={Boolean(isFavorited)}
+                    onChange={handleFavorite}
+                    sx={{
+                        position: "absolute",
+                        top: 15,
+                        right: 15,
+                        zIndex: 60,
+                        transform: "scale(1.5)",
+                    }}
+                />
             </Box>
             <Box ref={ProductOrderTableRef} my={2} sx={{overflowX: "initial"}}>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h4" gutterBottom sx={{ml: 1, mb: 2}}>
                     Zamówienie
                 </Typography>
                 <ProductOrderTable model={props.model} lightbox={lightbox} imageArray={imageArray}/>

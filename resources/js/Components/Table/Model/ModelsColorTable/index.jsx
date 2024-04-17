@@ -159,15 +159,33 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                             preserveScroll: true
                         })
                 };
+                const CanEdit = () => {
+                    return !Boolean(color.color_icon) ||
+                        !Boolean(props.productModel.name) ||
+                        !Boolean(props.productModel.symbol) ||
+                        !Boolean(color.name) ||
+                        !Boolean(props.productModel.description_b2b) ||
+                        !Boolean(props.productModel.categories.length) ||
+                        !Boolean(props.productModel.images.filter(i => i.main > 0).length === 2) ||
+                        !Boolean(params.row.size) ||
+                        !Boolean(params.row.barcodes.length)
+                }
 
                 return (
+                    <Tooltip
+                        title={CanEdit() ? "Sprawdź czy masz podane wszystkie dane potrzebne do b2b: " +
+                            "nazwa i symbol w module \"Podstawowe informacje\", kategoria, opis w module \"B2B\", nazwa koloru, ikona koloru w edycji koloru, " +
+                            "kod kreskowy, rozmiar w produkcie, wybrane 2 zdjęcia główne modelu" : null}
+                        arrow>
+                                <span>
                     <Checkbox
-                        disabled={readOnly}
+                        disabled={CanEdit() || readOnly}
                         checked={rowData.show_in_b2b}
                         onChange={handleChange}
                         sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
                     />
-
+   </span>
+                    </Tooltip>
                 );
 
             }

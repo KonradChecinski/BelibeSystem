@@ -103,7 +103,7 @@ export default function ProductOrderTable({model, lightbox, imageArray}) {
                                     <Box component={"img"}
                                          src={route("images.webp", {path: image.path})}
                                          width={50}
-                                         onClick={() => lightbox.loadAndOpen(imageIndex + 1)}
+                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
                                          sx={{
                                              m: "auto",
                                              cursor: "pointer",
@@ -127,15 +127,15 @@ export default function ProductOrderTable({model, lightbox, imageArray}) {
                                             quantityColor = "warning.main";
                                             break;
                                         case quantity <= 10:
-                                            quantityText = "Mało";
+                                            quantityText = "Mała ilość";
                                             quantityColor = "warning.main";
                                             break;
                                         case quantity <= 20:
-                                            quantityText = "Średnio";
+                                            quantityText = "Średnia ilość";
                                             quantityColor = "info.main";
                                             break;
                                         default:
-                                            quantityText = "Dostępny";
+                                            quantityText = "Duża ilość";
                                             quantityColor = "success.main";
                                             break;
                                     }
@@ -176,7 +176,8 @@ export default function ProductOrderTable({model, lightbox, imageArray}) {
                                                         {/*    Dostępność:*/}
                                                         {/*</Typography>*/}
                                                         <Typography variant="body2" sx={{color: quantityColor}}>
-                                                            {quantityText} ({quantity})({product.quantity})
+                                                            {quantityText}
+                                                            {/*({quantity})({product.quantity})*/}
                                                         </Typography>
                                                     </Box>
 

@@ -25,7 +25,7 @@ export default function SearchModelComponent({auth, searchRoute, label}) {
         const option = {headers: {Accept: "application/json"}};
         const response = await fetch(searchRoute + `?search=${search}`, option);
         const json = await response.json();
-        setOptions(json);
+        await setOptions(json);
         setLoading(false)
     }
 

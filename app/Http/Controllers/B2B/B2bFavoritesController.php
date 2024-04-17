@@ -5,42 +5,21 @@ namespace App\Http\Controllers\B2B;
 use App\Helpers\PriceForClient\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
-use App\Models\Products\ProductCategory;
+use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class B2bProductCategoryController extends Controller
+class B2bFavoritesController extends Controller
 {
     /**
-     * Display the specified resource.
+     * Display a listing of the resource.
      */
-    public function show(Request $request, string $slug)
+    public function index(Request $request)
     {
-        $category = ProductCategory::findBySlug($slug);
-        if (!$category) {
-            abort(404);
-        }
         $client = Client::find(auth()->user()->client_id);
         $discounts = $client->discounts;
 
-//        $products = $category->productModels()->whereHas("products", function ($query) {
-//            $query->where("show_in_b2b", true);
-//        });
-//        $models = $category->productModels()
-//            ->with(['prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency'])
-//            ->paginate(18)
-//            ->through(fn($model) => [
-//                'id' => $model->id,
-//                'name' => $model->name,
-//                'symbol' => $model->symbol,
-//                'slug' => $model->slug,
-//                'mainImages' => $model->mainImages() ? $model->mainImages()->map(fn($image) => ["path" => $image->path]) : null,
-//                'price' => array_merge($model->prices->toArray(), $model->priceForClientB2b($client)),
-//                'quantity' => $model->quantityToB2b(),
-//            ]
-//            );
-
-        $models = $category->productModels()
+        $models = $client->favorites()
             ->whereHas("productsToB2bWithoutRelation", function ($query) {
 //                $query->where("quantity", ">", 0);
                 $query->where("show_in_b2b", true);
@@ -81,15 +60,58 @@ class B2bProductCategoryController extends Controller
             return response()->json($models);
         }
 
-        return Inertia::render('B2B/Category', [
-            "category" => [
-                'id' => $category->id,
-                'name' => $category->name,
-                'slug' => $category->slug,
-            ],
+        return Inertia::render('B2B/Favorites', [
             'models' => $models
 
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, ProductModel $productModel)
+    {
+        $client = Client::find(auth()->user()->client_id);
+        $client->favorites()->toggle($productModel->id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 }

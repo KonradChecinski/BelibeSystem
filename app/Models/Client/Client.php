@@ -16,6 +16,7 @@ use App\Models\ClientObligation;
 use App\Models\ClientRecipient;
 use App\Models\ClientReceivable;
 use App\Models\ClientTask;
+use App\Models\Products\ProductModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -139,27 +140,10 @@ class Client extends Model
         ];
     }
 
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductModel::class, "favorite_product_model")->withTimestamps();
+    }
 
-
-
-//    public function colorsWithImages(): HasMany
-//    {
-//        return $this->hasMany(ProductModelColor::class)->with("images");
-//    }
-//
-//    public function group(): BelongsTo
-//    {
-//        return $this->belongsTo(ProductGroup::class, "product_group_id");
-//    }
-//
-//    public function products(): HasManyThrough
-//    {
-//        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size', 'unit']);
-//    }
-//
-//    public function prices(): HasOne
-//    {
-//        return $this->hasOne(ProductModelPrice::class);
-//    }
 
 }
