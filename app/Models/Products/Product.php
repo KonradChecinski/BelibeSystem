@@ -2,10 +2,13 @@
 
 namespace App\Models\Products;
 
+use App\Models\B2bCart;
+use App\Models\Client\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -74,5 +77,10 @@ class Product extends Model
 //        return Product::Where("subiekt_id", "=", $id)->firstOrFail();
         return Product::Where("subiekt_id", "=", $id)->first();
 
+    }
+
+    public function inClientsCart(): HasMany
+    {
+        return $this->hasMany(B2bCart::class);
     }
 }

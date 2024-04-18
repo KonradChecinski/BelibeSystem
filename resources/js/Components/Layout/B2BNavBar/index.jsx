@@ -8,7 +8,7 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    Typography, TextField, Autocomplete
+    Typography, TextField, Autocomplete, Badge
 } from "@mui/material";
 import {useState} from "react";
 import {
@@ -167,13 +167,44 @@ export default function B2BNavBar({auth}) {
                                     </IconButton>
                                 </Tooltip>
 
+
                                 <Tooltip title={"Zobacz koszyk"}>
-                                    <IconButton size={"large"}
-                                                onClick={() => {
-                                                    // router.visit(route("system.cart"));
-                                                }}>
-                                        <ShoppingCart sx={{fontSize: 25}}/>
-                                    </IconButton>
+                                    <Badge
+                                        color="secondary"
+                                        badgeContent={
+                                            <Tooltip title={"Ilość produktów w koszyku"} placement={"left"}>
+                                                <span> 12 </span>
+                                            </Tooltip>
+                                        }
+                                        overlap="circular"
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'right',
+                                        }}>
+                                        <Badge
+                                            color="secondary"
+                                            badgeContent={
+                                                <Tooltip title={"Ilość modeli w koszyku"} placement={"left"}>
+                                                    <span> 1 </span>
+                                                </Tooltip>
+                                            }
+                                            overlap="circular"
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}>
+                                            <IconButton size={"large"}
+                                                        onClick={() => {
+                                                            router.visit(route("b2b.cart"));
+                                                        }}>
+
+
+                                                <ShoppingCart sx={{fontSize: 25}}/>
+                                            </IconButton>
+                                        </Badge>
+                                    </Badge>
+
+
                                 </Tooltip>
 
                                 {/*<Tooltip title="Delete">*/}

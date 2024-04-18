@@ -2,6 +2,7 @@
 
 namespace App\Models\Client;
 
+use App\Models\B2bCart;
 use App\Models\B2bCountry;
 use App\Models\B2bIndustry;
 use App\Models\B2bPayment;
@@ -16,6 +17,7 @@ use App\Models\ClientObligation;
 use App\Models\ClientRecipient;
 use App\Models\ClientReceivable;
 use App\Models\ClientTask;
+use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -143,6 +145,11 @@ class Client extends Model
     public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(ProductModel::class, "favorite_product_model")->withTimestamps();
+    }
+
+    public function cart(): HasMany
+    {
+        return $this->hasMany(B2bCart::class);
     }
 
 
