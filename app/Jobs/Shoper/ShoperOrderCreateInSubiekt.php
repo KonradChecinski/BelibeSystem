@@ -47,7 +47,7 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
 
         foreach ($orders as $order) {
             $orderProducts = $order->shoperOrderProducts;
-            
+
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
 //            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30);
             $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']), 0, 30);
@@ -65,12 +65,14 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
                     $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
-                    $pozycja->RabatProcent = (float)0;
+//                    $pozycja->RabatProcent = (float)0;
+                    $pozycja->CenaBruttoPoRabacie = (float)$orderProduct['discounted_price'];
                 } else {
                     $pozycja = $zamowienie->Pozycje->Dodaj((int)$productSubiekt->tw_Id);
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
-                    $pozycja->RabatProcent = (float)0;
+//                    $pozycja->RabatProcent = (float)0;
+                    $pozycja->CenaBruttoPoRabacie = (float)$orderProduct['discounted_price'];
                 }
             }
 
@@ -92,8 +94,11 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
             // $zamowienie->Rezerwacja = True;
 
 
-            $date = date("Y-m-d H:i:s", time());
+            $date = date("Y-m-d H:i:s");
             $zamowienie->PoleWlasne["Czas"] = $date;
+            $uwagi = "Zamówienie z belibe.pl - " . $order["order_id"];
+            if (!is_null($order["promo_code"])) $uwagi .= " - kod rabatowy: " . $order["promo_code"];
+            $zamowienie->Uwagi = $uwagi;
 
             if ($zamowienie->WartoscBrutto != $order["sum"]) $this->fail("Niezgodne kwoty zamówienia");
             $zamowienie->Zapisz();

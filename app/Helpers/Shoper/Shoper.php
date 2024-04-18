@@ -851,6 +851,7 @@ class Shoper
 
             $shoperOrderProducts = $responseProducts->json()["list"];
 
+
             $shoperOrderModel = ShoperOrder::create([
                 "order_id" => $shoperOrder["order_id"],
                 "ordered_at" => $shoperOrder["date"],
@@ -872,6 +873,7 @@ class Shoper
                 "subiekt_number" => "",
                 "subiekt_added_at" => null
             ]);
+
             foreach ($shoperOrderProducts as $shoperOrderProduct) {
                 $code = $shoperOrderProduct["code"];
                 if (substr($code, -1) === ".") {
@@ -882,6 +884,7 @@ class Shoper
                     'code' => $code,
                     'quantity' => $shoperOrderProduct["quantity"],
                     'price' => $shoperOrderProduct["price"],
+                    'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
                 ]);
             }
 

@@ -16,6 +16,7 @@ class ShoperOrderProduct extends Model
         'code',
         'quantity',
         'price',
+        'discounted_price'
     ];
 
     public function shoperOrder(): BelongsTo
