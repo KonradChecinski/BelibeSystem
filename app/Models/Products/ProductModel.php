@@ -3,6 +3,7 @@
 namespace App\Models\Products;
 
 use App\Helpers\PriceForClient\PriceForClient;
+use App\Models\B2bCart;
 use App\Models\B2cCategory;
 use App\Models\B2cColor;
 use App\Models\Client\Client;
@@ -222,5 +223,19 @@ class ProductModel extends Model
     public function isFavoritedByClient($client)
     {
         return $this->favoritedClients()->where("client_id", $client->id)->exists();
+    }
+
+    public function carts()
+    {
+        return $this->hasManyDeepFromReverse(
+            (new B2bCart())->productModel()
+        );
+    }
+
+    public function clientsCart($client)
+    {
+        return $this->hasManyDeepFromReverse(
+            (new B2bCart())->productModel()
+        )->where("client_id", $client->id);
     }
 }

@@ -88,7 +88,8 @@ class B2bProductController extends Controller
                         "name" => $size->name
                     ])->unique(),
                     'isFavorited' => $productModel->isFavoritedByClient($client),
-                ]
+                ],
+                "cart" => $productModel->clientsCart($client)->get()
             ]
         );
     }

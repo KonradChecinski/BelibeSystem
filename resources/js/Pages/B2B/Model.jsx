@@ -341,7 +341,8 @@ export default function B2bModel(props) {
                 <Typography variant="h4" gutterBottom sx={{ml: 1, mb: 2}}>
                     Zamówienie
                 </Typography>
-                <ProductOrderTable model={props.model} lightbox={lightbox} imageArray={imageArray}/>
+                <ProductOrderTable model={props.model} cart={props.cart} lightbox={lightbox}
+                                   imageArray={imageArray}/>
             </Box>
         </ClientLayout>
     );

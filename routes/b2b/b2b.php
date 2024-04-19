@@ -20,6 +20,7 @@ Route::middleware(["auth:client", "verified"])->group(function () {
         Route::patch("/favorite/update/{productModel}", [B2bFavoritesController::class, 'update'])->name("b2b.favorite.update");
 
         Route::get("/cart", [B2bCartController::class, 'index'])->name("b2b.cart");
+        Route::post("/cart/update/{product}", [B2bCartController::class, 'update'])->name("b2b.cart.update");
 
     });
 

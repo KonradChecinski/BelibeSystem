@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Cart;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateB2bCartRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,9 @@ class UpdateB2bCartRequest extends FormRequest
      */
     public function rules(): array
     {
+        $availableQuantity = $this->product->quantity;
         return [
-            //
+            'quantity' => ['required', 'integer', 'min:0', "max:$availableQuantity"]
         ];
     }
 }
