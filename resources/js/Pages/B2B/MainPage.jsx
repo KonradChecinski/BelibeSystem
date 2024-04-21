@@ -13,6 +13,8 @@ export default function B2bMainPage(props) {
             errors={props.errors}
             categories={props.menu}
             bgImage={props.backgroundImage}
+            accountManager={props.accountManager}
+            cart={props.cartSummary}
             header={
                 t("Dashboard")
             }

@@ -1,6 +1,6 @@
-import {Head} from "@inertiajs/react";
+import {Head, router} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Grid, Paper, Typography} from "@mui/material";
+import {Button, Grid, Paper, Typography} from "@mui/material";
 import {
     PointOfSale,
     Savings,
@@ -125,6 +125,19 @@ export default function Client(props) {
 
 
             </Grid>
+            {"cos"}
+            <Button
+                variant="contained"
+                sx={{
+                    position: "absolute",
+                    top: 100,
+                    right: 15
+                }}
+                onClick={() => router.post(route("system.b2b.order.start", {client: props.client.id}))}
+            >
+                Przejdź do B2B
+            </Button>
+
 
         </UserLayout>
     );

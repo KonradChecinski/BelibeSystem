@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\B2B;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreB2bCartRequest;
 use App\Http\Requests\Cart\UpdateB2bCartRequest;
@@ -18,12 +19,22 @@ class B2bCartController extends Controller
      */
     public function index()
     {
-        $client = auth()->user()->client;
-//        dd($client->cart(), B2bCart::find(1)->productModel);
-        dd($client->cart()->with("productModel")->get()->toArray());
+        $client = Helper::getClientToB2b();
+        $cart = $client->cart()->with([
+            "product:id,symbol,quantity,product_size_id,product_unit_id",
+            "product.size:id,name",
+            "product.unit:id,name",
+            "productModel:product_models.id,product_models.name,product_models.symbol",
+            "productModelColor:product_model_colors.id,product_model_colors.shortcut,product_model_colors.name,product_model_colors.product_model_id"
+        ]);
         return Inertia::render('B2B/Cart', [
-//            'products' => $client->cart
+            "cart" => $cart->get(),
+            "cartModels" => $cart->get()->pluck("productModel")->unique("id")->values(),
+            "cartColors" => $cart->get()->pluck("productModelColor")->unique("id")->values(),
+            "client" => $client,
 
+            "locations" => $client->locations,
+            "payments" => $client->payments,
         ]);
     }
 
@@ -64,7 +75,7 @@ class B2bCartController extends Controller
      */
     public function update(UpdateB2bCartRequest $request, Product $product)
     {
-        $client = auth()->user()->client;
+        $client = Helper::getClientToB2b();
         if ($client->cart()->where("product_id", $product->id)->count() == 0) {
             $discountedPrices = $product->model->priceForClientB2b($client);
             $currency = $product->model->prices->currency;

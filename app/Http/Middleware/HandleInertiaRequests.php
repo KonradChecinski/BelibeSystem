@@ -44,13 +44,25 @@ class HandleInertiaRequests extends Middleware
             $backgroud = Helper::getBackgroundImage();
             Session::put("backgroundImage", $backgroud);
         }
-        
-        if (Helper::getSystemNameFromDomain($request) === SystemName::B2B && !str_contains($request->url(), "images")) {
 
+        if (request()->routeIs('b2b.*')) {
+            if (Helper::getSystemNameFromDomain($request) === SystemName::SYSTEM) {
+                $array = array_merge($array, [
+                    "client" => Helper::getClientToB2b(),
+                    "accountManager" => true,
+                ]);
+            }
+
+            $cart = Helper::getClientToB2b()->cart()->with("productModel");
             $array = array_merge($array, [
-                "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
+                "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
+                "cartSummary" => [
+                    "products" => $cart->sum("quantity"),
+                    "models" => $cart->get()->pluck("productModel")->flatten()->unique("id")->count(),
+                ]
             ]);
         }
+
 
         return array_merge($array, [
             "auth" => [

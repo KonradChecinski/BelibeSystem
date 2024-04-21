@@ -14,15 +14,15 @@ import {useState} from "react";
 import {
     Search, Event, ShoppingCart, Favorite
 } from "@mui/icons-material";
-import UserAvatar from "@/Components/Layout/UserAvatar";
-import UserAvatarMenu from "@/Components/Layout/UserAvatar/Menu";
 import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
 import SearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/SearchModelComponent";
 import SearchClientComponent from "@/Components/Layout/NavBar/SearchComponent/SearchClientComponent";
 import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchComponent/B2bSearchModelComponent";
+import B2bUserAvatarMenu from "@/Components/Layout/B2BNavBar/B2bUserAvatar/Menu";
+import UserAvatar from "@/Components/Layout/UserAvatar";
 
-export default function B2BNavBar({auth}) {
+export default function B2BNavBar({auth, cart}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
     const openUserAvatar = Boolean(anchorElUserAvatar);
     const handleClickUserAvatar = (event) => {
@@ -173,7 +173,7 @@ export default function B2BNavBar({auth}) {
                                         color="secondary"
                                         badgeContent={
                                             <Tooltip title={"Ilość produktów w koszyku"} placement={"left"}>
-                                                <span> 12 </span>
+                                                <span>{cart.products}</span>
                                             </Tooltip>
                                         }
                                         overlap="circular"
@@ -185,7 +185,7 @@ export default function B2BNavBar({auth}) {
                                             color="secondary"
                                             badgeContent={
                                                 <Tooltip title={"Ilość modeli w koszyku"} placement={"left"}>
-                                                    <span> 1 </span>
+                                                    <span>{cart.models}</span>
                                                 </Tooltip>
                                             }
                                             overlap="circular"
@@ -244,7 +244,7 @@ export default function B2BNavBar({auth}) {
                 </Grid>
             </Card>
 
-            <UserAvatarMenu
+            <B2bUserAvatarMenu
                 anchorEl={anchorElUserAvatar}
                 open={openUserAvatar}
                 onClose={handleCloseUserAvatar}

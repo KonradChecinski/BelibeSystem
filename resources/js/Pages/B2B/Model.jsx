@@ -92,6 +92,8 @@ export default function B2bModel(props) {
             errors={props.errors}
             categories={props.menu}
             bgImage={props.backgroundImage}
+            accountManager={props.accountManager}
+            cart={props.cartSummary}
             header={
                 t("Model") + " " + props.model.symbol + ": " + props.model.name
             }
@@ -342,7 +344,7 @@ export default function B2bModel(props) {
                     Zamówienie
                 </Typography>
                 <ProductOrderTable model={props.model} cart={props.cart} lightbox={lightbox}
-                                   imageArray={imageArray}/>
+                                   imageArray={imageArray} accountManager={props.accountManager}/>
             </Box>
         </ClientLayout>
     );

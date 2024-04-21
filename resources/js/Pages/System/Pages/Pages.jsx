@@ -46,6 +46,7 @@ export default function Pages(props) {
                         errors={props.errors}
                         categories={props.menu}
                         bgImage={props.backgroundImage}
+                        cart={props.cartSummary}
                         fixed={false}
                         header={title}
                     >

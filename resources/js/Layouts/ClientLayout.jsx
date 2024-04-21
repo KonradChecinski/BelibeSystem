@@ -9,7 +9,16 @@ import AppBar from "@/Components/Layout/AppBar";
 import B2BNavBar from "@/Components/Layout/B2BNavBar";
 import B2BMenu from "@/Components/Layout/B2BMenu";
 
-export default function ClientLayout({auth, bgImage, categories, header, children, fixed = true}) {
+export default function ClientLayout({
+                                         auth,
+                                         bgImage,
+                                         categories,
+                                         header,
+                                         children,
+                                         fixed = true,
+                                         accountManager,
+                                         cart
+                                     }) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -43,7 +52,8 @@ export default function ClientLayout({auth, bgImage, categories, header, childre
                             }
                         }}
                     >
-                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage} categories={categories}/>
+                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage} categories={categories}
+                                 accountManager={accountManager}/>
                     </Box>
 
                     <Box
@@ -60,14 +70,15 @@ export default function ClientLayout({auth, bgImage, categories, header, childre
                             }
                         }}
                     >
-                        <B2BNavBar auth={auth}/>
+                        <B2BNavBar auth={auth} cart={cart}/>
                     </Box>
                 </>
             ) : (
                 <>
                     <AppBar position={"static"}></AppBar>
                     <AppBar position={"fixed"}>
-                        <B2BMenu showContent={true} auth={auth} categories={categories}/>
+                        <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage} categories={categories}
+                                 accountManager={accountManager}/>
                     </AppBar>
                 </>
             )}

@@ -40,21 +40,32 @@ use Illuminate\Support\Facades\Route;
 | System Routes
 |--------------------------------------------------------------------------
 */
+if (request()->getHttpHost() === "system." . config("app.domain")) {
+    Route::domain("system." . config("app.domain"))->group(function () {
+        require __DIR__ . "/system/system.php";
 
-Route::domain("system." . config("app.domain"))->group(function () {
-    require __DIR__ . "/system/system.php";
-});
+        Route::middleware(["auth:user", "verified"])->group(function () {
+            require __DIR__ . "/b2b/b2b.php";
+        });
+    });
+}
+
 
 /*
 |--------------------------------------------------------------------------
 | B2b Routes
 |--------------------------------------------------------------------------
 */
+if (request()->getHttpHost() === "b2b." . config("app.domain")) {
 
-Route::domain("b2b." . config("app.domain"))->group(function () {
-    require __DIR__ . "/b2b/b2b.php";
-});
+    Route::domain("b2b." . config("app.domain"))->group(function () {
+        Route::middleware(["auth:client", "verified"])->group(function () {
+            require __DIR__ . "/b2b/b2b.php";
+        });
 
+        require __DIR__ . "/b2b/auth.php";
+    });
+}
 
 Route::get('assets/{path}', function ($path) {
 //    return response()->file(public_path("$path"));

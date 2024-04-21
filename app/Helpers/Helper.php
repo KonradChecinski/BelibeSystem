@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class Helper
 {
@@ -27,6 +28,39 @@ class Helper
             return SystemName::SYSTEM;
         }
         return SystemName::OTHER;
+    }
+
+    public static function getUserFromGuard()
+    {
+        $guard = auth()->guard();
+        if ($guard->check()) {
+            return $guard->user();
+        }
+        return null;
+    }
+
+    public static function getClientIdToB2b()
+    {
+        $guardName = auth()->guard()->name;
+        if ($guardName === "client") {
+            return auth()->user()->client_id;
+        }
+        if ($guardName === "user") {
+            return Arr::first(session("client"))->id;
+        }
+        return null;
+    }
+
+    public static function getClientToB2b()
+    {
+        $guardName = auth()->guard()->name;
+        if ($guardName === "client") {
+            return auth()->user()->client;
+        }
+        if ($guardName === "user") {
+            return Arr::first(session("client"));
+        }
+        return null;
     }
 
     public static function getBackgroundImage(): string

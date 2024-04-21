@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\B2B;
 
+use App\Helpers\Helper;
 use App\Helpers\PriceForClient\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
@@ -16,7 +17,7 @@ class B2bFavoritesController extends Controller
      */
     public function index(Request $request)
     {
-        $client = Client::find(auth()->user()->client_id);
+        $client = Client::find(Helper::getClientIdToB2b());
         $discounts = $client->discounts;
 
         $models = $client->favorites()
@@ -103,7 +104,7 @@ class B2bFavoritesController extends Controller
      */
     public function update(Request $request, ProductModel $productModel)
     {
-        $client = Client::find(auth()->user()->client_id);
+        $client = Client::find(Helper::getClientIdToB2b());
         $client->favorites()->toggle($productModel->id);
     }
 

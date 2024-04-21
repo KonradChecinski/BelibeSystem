@@ -19,28 +19,32 @@ import {enqueueSnackbar} from "notistack";
 
 export default function ModelList(props) {
     const [items, setItems] = useState(props.models.data);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(props.models.current_page !== props.models.last_page)
     const [page, setPage] = useState(props.models.current_page);
     const [totalPages, setTotalPages] = useState(props.models.last_page);
     const [totalItems, setTotalItems] = useState(props.models.total);
     const [path, setPath] = useState(props.models.path);
 
     const fetchMoreData = () => {
-        fetch(path + `?page=${page + 1}`, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.data.length === 0) setHasMore(false)
-
-                setPage(result.current_page)
-                setItems([...items, ...result.data])
-
-                if (totalPages === page) setHasMore(false)
+        if (page + 1 > totalPages) {
+            setHasMore(false)
+        } else {
+            fetch(path + `?page=${page + 1}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
             })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.data.length === 0) setHasMore(false)
+
+                    setPage(result.current_page)
+                    setItems([...items, ...result.data])
+
+                    if (totalPages === page) setHasMore(false)
+                })
+        }
     }
 
 

@@ -50,4 +50,18 @@ class B2bCart extends Model
                 'product_model_id'  // Local key on the "product_model_colors" table.
             ]);
     }
+
+
+    public function productModelColor()
+    {
+        return $this->hasOneDeep(ProductModelColor::class, [Product::class],
+            [
+                'id', // Foreign key on the "products" table.
+                'id',    // Foreign key on the "product_model_colors" table.
+            ],
+            [
+                'product_id', // Local key on the "b2b_carts" table.
+                'product_model_color_id', // Local key on the "products" table.
+            ]);
+    }
 }

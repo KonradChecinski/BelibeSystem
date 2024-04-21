@@ -18,7 +18,7 @@ import {useCallback, useMemo, useState} from "react";
 import {router} from "@inertiajs/react";
 
 
-export default function ProductOrderTable({model, cart, lightbox, imageArray}) {
+export default function ProductOrderTable({model, cart, lightbox, imageArray, accountManager = false}) {
     // const [hoveredColumn, setHoveredColumn] = useState(null);
 
     const HoveringCell = ({children, column, disabled = false, header = false, sx}) => {
@@ -112,7 +112,8 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray}) {
                                         <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
                                             {product ?
                                                 <ProductInput product={product} cart={cart} quantity={quantity}
-                                                              enqueueSnackbar={enqueueSnackbar}/>
+                                                              enqueueSnackbar={enqueueSnackbar}
+                                                              accountManager={accountManager}/>
                                                 :
                                                 ""
                                             }
@@ -131,7 +132,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray}) {
     );
 }
 
-const ProductInput = ({product, cart, quantity, enqueueSnackbar}) => {
+const ProductInput = ({product, cart, quantity, enqueueSnackbar, accountManager}) => {
 
     const [value, setValue] = useState(cart.find(c => c.product_id === product?.id)?.quantity || 0);
 
@@ -235,7 +236,7 @@ const ProductInput = ({product, cart, quantity, enqueueSnackbar}) => {
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
                     {/*({quantity})*/}
-                    {/*({product.quantity})*/}
+                    {accountManager && (" (" + product.quantity + ")")}
                 </Typography>
             </Box>
 

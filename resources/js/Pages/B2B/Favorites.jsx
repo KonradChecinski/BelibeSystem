@@ -32,6 +32,8 @@ export default function B2bFavorites(props) {
             errors={props.errors}
             categories={props.menu}
             bgImage={props.backgroundImage}
+            accountManager={props.accountManager}
+            cart={props.cartSummary}
             header={t("Favorites")}
         >
             <Head title={t("Favorites")}/>

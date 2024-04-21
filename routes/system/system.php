@@ -9,6 +9,7 @@ use App\Http\Controllers\System\Client\ClientController;
 use App\Http\Controllers\System\Client\ClientDiscountController;
 use App\Http\Controllers\System\Client\ClientLocationController;
 use App\Http\Controllers\System\Client\ClientNoteController;
+use App\Http\Controllers\System\Client\ClientOrderController;
 use App\Http\Controllers\System\Client\ClientPaymentDiscountController;
 use App\Http\Controllers\System\Client\ClientTaskController;
 use App\Http\Controllers\System\Client\ClientUserController;
@@ -126,6 +127,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::post("/clients/client/{client}/note/", [ClientNoteController::class, 'store'])->name("system.clients.client.note");
         Route::patch("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'update'])->name("system.clients.client.note.update");
         Route::delete("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'destroy'])->name("system.clients.client.note.delete");
+
+
+        Route::post("/b2b/order/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
+        Route::post("/b2b/order/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
 
     });
 

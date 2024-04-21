@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\B2B;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\SearchProductModelRequest;
 use App\Models\Client\Client;
@@ -67,7 +68,7 @@ class B2bProductController extends Controller
             "productsToB2bWithRelation",
             "sizesToB2b",
         ]);
-        $client = Client::find(auth()->user()->client_id);
+        $client = Client::find(Helper::getClientIdToB2b());
 
 
 //        dd($productModel->toArray());

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\B2B;
 
+use App\Helpers\Helper;
 use App\Helpers\PriceForClient\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
@@ -20,7 +21,7 @@ class B2bProductCategoryController extends Controller
         if (!$category) {
             abort(404);
         }
-        $client = Client::find(auth()->user()->client_id);
+        $client = Client::find(Helper::getClientIdToB2b());
         $discounts = $client->discounts;
 
 //        $products = $category->productModels()->whereHas("products", function ($query) {
