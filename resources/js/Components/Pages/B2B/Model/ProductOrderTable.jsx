@@ -111,7 +111,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                     return (
                                         <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
                                             {product ?
-                                                <ProductInput product={product} cart={cart} quantity={quantity}
+                                                <ProductInput product={product} cart={cart} maxQuantity={quantity}
                                                               enqueueSnackbar={enqueueSnackbar}
                                                               accountManager={accountManager}/>
                                                 :
@@ -132,7 +132,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
     );
 }
 
-const ProductInput = ({product, cart, quantity, enqueueSnackbar, accountManager}) => {
+const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManager}) => {
 
     const [value, setValue] = useState(cart.find(c => c.product_id === product?.id)?.quantity || 0);
 
@@ -140,19 +140,19 @@ const ProductInput = ({product, cart, quantity, enqueueSnackbar, accountManager}
     let quantityText = "";
     let quantityColor = "";
     switch (true) {
-        case quantity === 0:
+        case maxQuantity === 0:
             quantityText = "Brak";
             quantityColor = "error.main";
             break;
-        case quantity <= 5:
+        case maxQuantity <= 5:
             quantityText = "Ostatnie sztuki!";
             quantityColor = "warning.main";
             break;
-        case quantity <= 10:
+        case maxQuantity <= 10:
             quantityText = "Mała ilość";
             quantityColor = "warning.main";
             break;
-        case quantity <= 20:
+        case maxQuantity <= 20:
             quantityText = "Średnia ilość";
             quantityColor = "info.main";
             break;
@@ -193,7 +193,12 @@ const ProductInput = ({product, cart, quantity, enqueueSnackbar, accountManager}
         }
         newValue = Number(newValue);
         if (newValue < 0) newValue = 0;
-        if (newValue > quantity) newValue = quantity;
+        if (newValue > maxQuantity) newValue = maxQuantity;
+        if (newValue > maxQuantity) {
+            newValue = maxQuantity;
+            enqueueSnackbar("Maksymalna ilość dla " + product.symbol + " wynosi " + maxQuantity, {variant: 'warning'})
+        }
+        if (oldValue === newValue) return;
 
         setValue("" + newValue);
         debouncedSend(newValue, oldValue);
@@ -207,12 +212,12 @@ const ProductInput = ({product, cart, quantity, enqueueSnackbar, accountManager}
                 variant="outlined"
                 type={"number"}
                 value={value}
-                disabled={quantity === 0}
+                disabled={maxQuantity === 0}
                 onChange={handleOnChange}
                 InputProps={{
                     inputProps: {
                         min: 0,
-                        max: quantity,
+                        max: maxQuantity,
                         style: {
                             textAlign: "center",
                             fontSize: 14

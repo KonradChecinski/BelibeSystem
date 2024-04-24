@@ -1,0 +1,311 @@
+import {
+    Box, debounce,
+    IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow, TextField,
+    Typography
+} from "@mui/material";
+import {Fragment, useCallback, useMemo, useState} from "react";
+import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
+import {sortBySizesSortFunction} from "@/Functions/sortBySizes";
+import {router} from "@inertiajs/react";
+import toLocaleString from "@/Functions/toLocaleString";
+import {Delete} from "@mui/icons-material";
+import {useSnackbar} from "notistack";
+
+export default function CartItems({props, discount}) {
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+    let index = 1;
+    return (
+        <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{width: 20}} align={"center"}>Lp.</TableCell>
+                        <TableCell align={"center"}>Rozmiar</TableCell>
+                        <TableCell align={"center"}>Cena Netto</TableCell>
+                        <TableCell align={"center"}>Cena Brutto</TableCell>
+                        <TableCell align={"center"}>Ilość</TableCell>
+                        <TableCell align={"center"}>Suma Netto</TableCell>
+                        <TableCell align={"center"}>Suma Brutto</TableCell>
+                        <TableCell align={"center"}>Usuwanie</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {props.cartModels.map((model) => {
+
+                        return (
+                            <Fragment key={"model" + model.id}>
+                                <TableRow>
+                                    <td colSpan={8}>
+                                        <Box sx={{
+                                            mt: 2,
+                                            px: 2,
+                                            borderBottom: "1px solid",
+                                            borderColor: "divider",
+
+                                        }}>
+                                            <Typography variant="h4">
+                                                Model {model.symbol}
+                                            </Typography>
+                                        </Box>
+
+                                    </td>
+                                </TableRow>
+
+
+                                {props.cartColors.filter(color => color.product_model_id === model.id).sort(sortByColorShortcut).map((color) => {
+                                    return (
+                                        <Fragment key={"color" + color.id}>
+                                            <TableRow>
+                                                <td colSpan={8}>
+                                                    <Box sx={{
+                                                        mt: 2,
+                                                        px: 3,
+                                                        pb: 2,
+                                                        borderBottom: "1px solid",
+                                                        borderColor: "divider",
+                                                        display: "flex",
+                                                    }}>
+                                                        <Box component={"img"}
+                                                             src={route("images.webp", {path: color.images[0].path})}
+                                                             width={80}
+                                                             sx={{
+                                                                 // m: "auto",
+                                                                 // cursor: "pointer",
+                                                                 mr: 2
+                                                             }}
+                                                        />
+                                                        <Box sx={{
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            justifyContent: "center",
+                                                        }}>
+                                                            <Typography variant="h6" gutterBottom>
+                                                                Kolor {color.shortcut}
+                                                            </Typography>
+                                                            <Typography variant="h6" gutterBottom>
+                                                                {color.name}
+                                                            </Typography>
+                                                        </Box>
+
+
+                                                    </Box>
+
+                                                </td>
+                                            </TableRow>
+
+
+                                            {props.cart.filter(item => item.product_model_color.id === color.id).sort((a, b) => sortBySizesSortFunction(a.product.size.name, b.product.size.name)).map((item, i) => {
+                                                const product = item.product;
+                                                const deleteItem = () => {
+                                                    router.post(route('b2b.cart.update', {product: product?.id}), {
+                                                        quantity: 0
+                                                    }, {
+                                                        preserveScroll: true,
+                                                        onSuccess: (response) => {
+                                                            enqueueSnackbar("Usunięto " + product.symbol + " z koszyka", {variant: "success"})
+                                                        },
+                                                        onError: (error) => {
+                                                            enqueueSnackbar("Błąd przy usuwaniu produktu " + product.symbol + " z koszyka", {variant: 'error'})
+                                                            console.error(error)
+                                                        }
+                                                    });
+                                                }
+                                                return (
+                                                    <Fragment key={"product" + product.id}>
+                                                        <TableRow hover>
+
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {index++}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {product.size.name}
+                                                                </Typography>
+                                                            </TableCell>
+
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {toLocaleString(item.price_net / 100)}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {toLocaleString(item.price_gross / 100)}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+                                                                <ProductInput
+                                                                    product={product}
+                                                                    maxQuantity={product.quantity}
+                                                                    enqueueSnackbar={enqueueSnackbar}
+                                                                    accountManager={props.accountManager}
+                                                                    initialValue={item.quantity}
+                                                                />
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {toLocaleString(item.price_net / 100 * item.quantity)}
+                                                                </Typography>
+
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+                                                                <Typography variant="body1">
+                                                                    {toLocaleString(item.price_gross / 100 * item.quantity)}
+                                                                </Typography>
+
+                                                            </TableCell>
+                                                            <TableCell align={"center"}>
+
+                                                                <IconButton aria-label="delete"
+                                                                            onClick={deleteItem}>
+                                                                    <Delete color={"error"}/>
+                                                                </IconButton>
+                                                                {/*<IconButton aria-label="edit">*/}
+                                                                {/*    <Edit/>*/}
+                                                                {/*</IconButton>*/}
+
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </Fragment>
+
+                                                );
+                                            })}
+                                        </Fragment>
+                                    );
+                                })
+                                }
+                            </Fragment>
+                        );
+                    })}
+
+                </TableBody>
+            </Table>
+            <Typography variant="h6" sx={{my: 2, ml: 2, color: "warning.main"}}>
+                Produkty nie są rezerwowane, dlatego mogą być niedostępne w momencie złożenia zamówienia.
+            </Typography>
+        </TableContainer>
+    );
+}
+
+
+const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, initialValue}) => {
+    const [value, setValue] = useState(initialValue);
+
+    let quantityText = "";
+    let quantityColor = "";
+    switch (true) {
+        case maxQuantity === 0:
+            quantityText = "Brak";
+            quantityColor = "error.main";
+            break;
+        case maxQuantity <= 5:
+            quantityText = "Ostatnie sztuki!";
+            quantityColor = "warning.main";
+            break;
+        case maxQuantity <= 10:
+            quantityText = "Mała ilość";
+            quantityColor = "warning.main";
+            break;
+        case maxQuantity <= 20:
+            quantityText = "Średnia ilość";
+            quantityColor = "info.main";
+            break;
+        default:
+            quantityText = "Duża ilość";
+            quantityColor = "success.main";
+            break;
+    }
+    const send = useCallback((value, oldValue) => {
+        router.post(route('b2b.cart.update', {product: product?.id}), {
+            quantity: value
+        }, {
+            preserveScroll: true,
+            onSuccess: (response) => {
+                enqueueSnackbar("Zmieniono ilość produktu " + product.symbol + " w koszyku na " + value, {variant: "success"})
+            },
+            onError: (error) => {
+                enqueueSnackbar("Błąd przy zmienianiu ilości produktu " + product.symbol + " w koszyku na " + value, {variant: 'error'})
+                console.error(error.response.data.errors)
+                if (error.response.data.errors.quantity) enqueueSnackbar(error.response.data.errors.quantity[0], {variant: 'warning'})
+            }
+        });
+
+
+    }, []);
+
+    const debouncedSend = useMemo(() => {
+        return debounce(send, 1000);
+    }, [send]);
+
+    const handleOnChange = (e) => {
+        let newValue = e.target.value;
+        let oldValue = value;
+        if (newValue === "") {
+            e.target.value = 0;
+            newValue = 0;
+        }
+        newValue = Number(newValue);
+        if (newValue < 0) newValue = 0;
+        if (newValue > maxQuantity) {
+            newValue = maxQuantity;
+            enqueueSnackbar("Maksymalna ilość dla " + product.symbol + " wynosi " + maxQuantity, {variant: 'warning'})
+        }
+        if (oldValue === newValue) return;
+        setValue("" + newValue);
+        debouncedSend(newValue, oldValue);
+    }
+
+    return (
+        <>
+            <TextField
+                id="outlined-basic"
+                label="Ilość"
+                variant="outlined"
+                type={"number"}
+                value={value}
+                disabled={maxQuantity === 0}
+                onChange={handleOnChange}
+                InputProps={{
+                    inputProps: {
+                        min: 0,
+                        max: maxQuantity,
+                        style: {
+                            textAlign: "center",
+                            fontSize: 14
+                        }
+                    }
+                }}
+                sx={{
+                    width: "20ch",
+
+                }}
+            />
+            <Box sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 0.5,
+                mt: 0.5
+            }}>
+                {/*<Typography variant="caption">*/}
+                {/*    Dostępność:*/}
+                {/*</Typography>*/}
+                <Typography variant="body2" sx={{color: quantityColor}}>
+                    {quantityText}
+                    {/*({quantity})*/}
+                    {accountManager && (" (" + product.quantity + ")")}
+                </Typography>
+            </Box>
+
+        </>
+    );
+}

@@ -25,15 +25,50 @@ class B2bCartController extends Controller
             "product.size:id,name",
             "product.unit:id,name",
             "productModel:product_models.id,product_models.name,product_models.symbol",
-            "productModelColor:product_model_colors.id,product_model_colors.shortcut,product_model_colors.name,product_model_colors.product_model_id"
+            "productModelColor" => function ($query) {
+                $query->select("product_model_colors.id",
+                    "product_model_colors.shortcut",
+                    "product_model_colors.name",
+                    "product_model_colors.product_model_id");
+                $query->withWhereHas("images", function ($query) {
+                    $query->where("type", 1);
+                    $query->where("order", 0);
+                    $query->select("product_model_color_id", "path");
+                });
+            },
         ]);
+        $cartModel = $cart->get();
+        $priceSummary = $cartModel->map(function ($item) {
+            return [
+                "price_net" => $item->price_net,
+                "price_gross" => $item->price_gross,
+                "quantity" => $item->quantity,
+                "total_net" => $item->price_net * $item->quantity,
+                "total_gross" => $item->price_gross * $item->quantity,
+            ];
+        })->reduce(function ($carry, $item) {
+            $carry["total_net"] += $item["total_net"];
+            $carry["total_gross"] += $item["total_gross"];
+            return $carry;
+        }, ["total_net" => 0, "total_gross" => 0]);
+
+        if ($priceSummary["total_net"] / 100 > 500) {
+            $priceSummary["delivery_net"] = 0;
+            $priceSummary["delivery_gross"] = 0;
+
+        } else {
+            $priceSummary["delivery_net"] = 2000;
+            $priceSummary["delivery_gross"] = 2460;
+        }
+
         return Inertia::render('B2B/Cart', [
-            "cart" => $cart->get(),
-            "cartModels" => $cart->get()->pluck("productModel")->unique("id")->values(),
-            "cartColors" => $cart->get()->pluck("productModelColor")->unique("id")->values(),
+            "cart" => $cartModel,
+            "cartModels" => $cartModel->pluck("productModel")->unique("id")->values(),
+            "cartColors" => $cartModel->pluck("productModelColor")->unique("id")->values(),
+            "cartPriceSummary" => $priceSummary,
             "client" => $client,
 
-            "locations" => $client->locations,
+            "locations" => $client->locations()->with("country:id,name")->get(),
             "payments" => $client->payments,
         ]);
     }
@@ -89,9 +124,14 @@ class B2bCartController extends Controller
 //            dd($cartProduct->toArray());
             $client->cart()->save($cartProduct);
         } else {
-            $cartProduct = $client->cart()->where("product_id", $product->id)->first();
-            $cartProduct->quantity = $request->quantity;
-            $cartProduct->save();
+            if ($request->quantity == 0) {
+                $client->cart()->where("product_id", $product->id)->delete();
+            } else {
+                $cartProduct = $client->cart()->where("product_id", $product->id)->first();
+                $cartProduct->quantity = $request->quantity;
+                $cartProduct->save();
+            }
+
         }
 
     }

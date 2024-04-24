@@ -1,18 +1,43 @@
-import {Head, Link} from "@inertiajs/react";
-import {Fragment} from "react";
+import {Head, Link, router, useForm} from "@inertiajs/react";
+import {Fragment, useCallback, useMemo, useState} from "react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import {
+    Box, Button, Card, CardActionArea, CardActions, CardContent,
+    debounce, IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow, TextField,
+    Typography
+} from "@mui/material";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import {sortBySizesModelColorObject, sortBySizesSortFunction} from "@/Functions/sortBySizes";
 import toLocaleString from "@/Functions/toLocaleString";
+import {Delete, Edit, LocalShipping, Payment} from "@mui/icons-material";
+import CartItems from "@/Components/Pages/B2B/Cart/CartItems";
+import CartSummary from "@/Components/Pages/B2B/Cart/cartSummary";
+import CartPayments from "@/Components/Pages/B2B/Cart/cartPayments";
+import CartDeliveries from "@/Components/Pages/B2B/Cart/cartDeliveries";
+import CartLocations from "@/Components/Pages/B2B/Cart/CartLocations";
+import CartSubmit from "@/Components/Pages/B2B/Cart/CartSubmit";
 
 export default function B2bCart(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     console.log(props)
-    let index = 1;
+
+    const [paymentDiscount, setPaymentDiscount] = useState(0);
+
+    const {data, setData} = useForm({
+        payment: null,
+        delivery: null,
+        location: null,
+    });
 
     return (
         <ClientLayout
@@ -28,85 +53,13 @@ export default function B2bCart(props) {
         >
             <Head title={t("Cart")}/>
 
-            <Box sx={{width: 1, minHeight: 400, position: "relative"}}>
-                <Paper elevation={4}
-                       sx={{p: 5, display: "flex", gap: 2, flexDirection: "column"}}>
-
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{width: 20}}>Lp.</TableCell>
-                                    <TableCell>Rozmiar</TableCell>
-                                    <TableCell>Cena Netto</TableCell>
-                                    <TableCell>Cena Brutto</TableCell>
-                                    <TableCell>Ilość</TableCell>
-                                    <TableCell>Suma Netto</TableCell>
-                                    <TableCell>Suma Brutto</TableCell>
-                                    <TableCell>Label 6</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {props.cartModels.map((model) => {
-
-                                    return (
-                                        <Fragment key={"model" + model.id}>
-                                            <TableRow>
-                                                <td colSpan={8}>
-                                                    <Typography variant="h5" gutterBottom component="h5">
-                                                        Model {model.symbol}
-                                                    </Typography>
-                                                </td>
-                                            </TableRow>
-
-
-                                            {props.cartColors.filter(color => color.product_model_id === model.id).sort(sortByColorShortcut).map((color) => {
-                                                return (
-                                                    <Fragment key={"color" + color.id}>
-                                                        <TableRow>
-                                                            <td colSpan={8}>
-                                                                <Typography variant="h6" gutterBottom component="h5">
-                                                                    Kolor {color.shortcut} - {color.name}
-                                                                </Typography>
-                                                            </td>
-                                                        </TableRow>
-
-
-                                                        {props.cart.filter(item => item.product_model_color.id === color.id).sort((a, b) => sortBySizesSortFunction(a.product.size.name, b.product.size.name)).map((item, i) => {
-                                                            const product = item.product;
-                                                            return (
-                                                                <Fragment key={"product" + product.id}>
-                                                                    <TableRow hover>
-
-                                                                        <TableCell>{index++}</TableCell>
-                                                                        <TableCell>{product.size.name}</TableCell>
-
-                                                                        <TableCell>{toLocaleString(item.price_net / 100)}</TableCell>
-                                                                        <TableCell>{toLocaleString(item.price_gross / 100)}</TableCell>
-                                                                        <TableCell>
-                                                                            {item.quantity}
-                                                                        </TableCell>
-                                                                        <TableCell>{toLocaleString(item.price_net / 100 * item.quantity)}</TableCell>
-                                                                        <TableCell>{toLocaleString(item.price_gross / 100 * item.quantity)}</TableCell>
-                                                                        <TableCell></TableCell>
-                                                                    </TableRow>
-                                                                </Fragment>
-
-                                                            );
-                                                        })}
-                                                    </Fragment>
-                                                );
-                                            })
-                                            }
-                                        </Fragment>
-                                    );
-                                })}
-
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                </Paper>
+            <Box sx={{width: 1, minHeight: 400, position: "relative", pb: 3}}>
+                <CartItems props={props}/>
+                <CartPayments props={props} setPaymentDiscount={setPaymentDiscount} setData={setData}/>
+                <CartDeliveries props={props} setData={setData}/>
+                <CartLocations props={props} setData={setData}/>
+                <CartSummary props={props} paymentDiscount={paymentDiscount}/>
+                <CartSubmit props={props} data={data}/>
             </Box>
         </ClientLayout>
     );

@@ -45,7 +45,7 @@ class HandleInertiaRequests extends Middleware
             Session::put("backgroundImage", $backgroud);
         }
 
-        if (request()->routeIs('b2b.*')) {
+        if (request()->routeIs('b2b.*') && !$request->routeIs("b2b.login") && !$request->routeIs("b2b.register")) {
             if (Helper::getSystemNameFromDomain($request) === SystemName::SYSTEM) {
                 $array = array_merge($array, [
                     "client" => Helper::getClientToB2b(),
