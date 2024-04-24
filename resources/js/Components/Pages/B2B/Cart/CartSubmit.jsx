@@ -1,11 +1,5 @@
 import {useSnackbar} from "notistack";
-import {
-    Box, Button,
-    Card, CardActionArea, CardContent,
-    Paper,
-    Typography
-} from "@mui/material";
-import toLocaleString from "@/Functions/toLocaleString";
+import {Box, Button, Paper, Typography} from "@mui/material";
 import {Send} from "@mui/icons-material";
 
 export default function CartSubmit({props, data, post}) {

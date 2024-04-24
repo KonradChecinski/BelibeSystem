@@ -3,22 +3,7 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {
-    Box, Button, Card, CardActionArea, CardActions, CardContent,
-    debounce, IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow, TextField,
-    Typography
-} from "@mui/material";
-import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
-import {sortBySizesModelColorObject, sortBySizesSortFunction} from "@/Functions/sortBySizes";
-import toLocaleString from "@/Functions/toLocaleString";
-import {Delete, Edit, LocalShipping, Payment} from "@mui/icons-material";
+import {Box} from "@mui/material";
 import CartItems from "@/Components/Pages/B2B/Cart/CartItems";
 import CartSummary from "@/Components/Pages/B2B/Cart/cartSummary";
 import CartPayments from "@/Components/Pages/B2B/Cart/cartPayments";

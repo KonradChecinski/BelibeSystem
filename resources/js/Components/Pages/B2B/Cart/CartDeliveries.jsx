@@ -3,16 +3,10 @@ import {
     Box,
     Card, CardActionArea, CardContent,
     Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
     Typography
 } from "@mui/material";
 import toLocaleString from "@/Functions/toLocaleString";
-import {LocalShipping, Payment} from "@mui/icons-material";
+import {LocalShipping} from "@mui/icons-material";
 import {useState} from "react";
 
 export default function CartDeliveries({props, setData}) {

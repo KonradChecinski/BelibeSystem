@@ -23,11 +23,29 @@ export default function CartItems({props, discount}) {
 
     let index = 1;
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+        <TableContainer component={Paper} sx={{overflowX: "initial"}}>
+            <Table
+                aria-label="simple table"
+                stickyHeader={true}
+                sx={{
+                    "& th": {
+                        top: 81,
+                    },
+                    "& th:first-of-type": {
+                        borderRadius: 1,
+                        borderBottomRightRadius: 0,
+                        borderTopRightRadius: 0
+                    },
+                    "& th:last-of-type": {
+                        borderRadius: 1,
+                        borderBottomLeftRadius: 0,
+                        borderTopLeftRadius: 0
+                    },
+                }}
+            >
                 <TableHead>
                     <TableRow>
-                        <TableCell sx={{width: 20}} align={"center"}>Lp.</TableCell>
+                        <TableCell align={"center"} sx={{width: 20}}>Lp.</TableCell>
                         <TableCell align={"center"}>Rozmiar</TableCell>
                         <TableCell align={"center"}>Cena Netto</TableCell>
                         <TableCell align={"center"}>Cena Brutto</TableCell>
@@ -43,20 +61,22 @@ export default function CartItems({props, discount}) {
                         return (
                             <Fragment key={"model" + model.id}>
                                 <TableRow>
-                                    <td colSpan={8}>
+                                    <th colSpan={8}
+                                        // style={{position: "sticky", top: 120}}
+                                    >
                                         <Box sx={{
                                             mt: 2,
                                             px: 2,
                                             borderBottom: "1px solid",
                                             borderColor: "divider",
-
+                                            // bgcolor: "green"
                                         }}>
-                                            <Typography variant="h4">
+                                            <Typography variant="h4" align={"left"}>
                                                 Model {model.symbol}
                                             </Typography>
                                         </Box>
 
-                                    </td>
+                                    </th>
                                 </TableRow>
 
 
@@ -64,7 +84,9 @@ export default function CartItems({props, discount}) {
                                     return (
                                         <Fragment key={"color" + color.id}>
                                             <TableRow>
-                                                <td colSpan={8}>
+                                                <td colSpan={8}
+                                                    // style={{position: "sticky", top: 150}}
+                                                >
                                                     <Box sx={{
                                                         mt: 2,
                                                         px: 3,
@@ -72,10 +94,13 @@ export default function CartItems({props, discount}) {
                                                         borderBottom: "1px solid",
                                                         borderColor: "divider",
                                                         display: "flex",
+                                                        // bgcolor: "blue",
+                                                        // zIndex: 500
+
                                                     }}>
                                                         <Box component={"img"}
                                                              src={route("images.webp", {path: color.images[0].path})}
-                                                             width={80}
+                                                             width={50}
                                                              sx={{
                                                                  // m: "auto",
                                                                  // cursor: "pointer",
@@ -143,7 +168,7 @@ export default function CartItems({props, discount}) {
                                                                     {toLocaleString(item.price_gross / 100)}
                                                                 </Typography>
                                                             </TableCell>
-                                                            <TableCell align={"center"}>
+                                                            <TableCell align={"center"} sx={{p: 0}}>
                                                                 <ProductInput
                                                                     product={product}
                                                                     maxQuantity={product.quantity}
@@ -190,7 +215,7 @@ export default function CartItems({props, discount}) {
 
                 </TableBody>
             </Table>
-            <Typography variant="h6" sx={{my: 2, ml: 2, color: "warning.main"}}>
+            <Typography variant="h6" sx={{py: 2, ml: 2, color: "warning.main"}}>
                 Produkty nie są rezerwowane, dlatego mogą być niedostępne w momencie złożenia zamówienia.
             </Typography>
         </TableContainer>
@@ -266,7 +291,12 @@ const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, in
     }
 
     return (
-        <>
+        <Box sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            gap: 1,
+        }}>
             <TextField
                 id="outlined-basic"
                 label="Ilość"
@@ -281,20 +311,22 @@ const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, in
                         max: maxQuantity,
                         style: {
                             textAlign: "center",
-                            fontSize: 14
+                            fontSize: 14,
                         }
                     }
                 }}
                 sx={{
                     width: "20ch",
-
+                    transform: "scale(0.9)",
+                    height: 50,
+                    // zIndex: 50
                 }}
             />
             <Box sx={{
                 display: "flex",
                 justifyContent: "center",
-                gap: 0.5,
-                mt: 0.5
+                // gap: 0.5,
+                // mt: 0.5
             }}>
                 {/*<Typography variant="caption">*/}
                 {/*    Dostępność:*/}
@@ -306,6 +338,6 @@ const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, in
                 </Typography>
             </Box>
 
-        </>
+        </Box>
     );
 }

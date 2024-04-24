@@ -1,7 +1,7 @@
 import {useSnackbar} from "notistack";
 import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import toLocaleString from "@/Functions/toLocaleString";
-import {Business, Summarize} from "@mui/icons-material";
+import {Summarize} from "@mui/icons-material";
 
 export default function CartSummary({props, paymentDiscount}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -11,8 +11,8 @@ export default function CartSummary({props, paymentDiscount}) {
     const deliveryNet = props.cartPriceSummary.delivery_net;
     const deliveryGross = props.cartPriceSummary.delivery_gross;
 
-    const paymentNet = -1 * (props.cartPriceSummary.total_net * (paymentDiscount / 100));
-    const paymentGross = -1 * (props.cartPriceSummary.total_gross * (paymentDiscount / 100));
+    const paymentNet = paymentDiscount === 0 ? 0 : -1 * (ProductsNet * (paymentDiscount / 100));
+    const paymentGross = paymentDiscount === 0 ? 0 : -1 * (ProductsGross * (paymentDiscount / 100));
 
     const totalNet = ProductsNet + deliveryNet + paymentNet;
     const totalGross = ProductsGross + deliveryGross + paymentGross;

@@ -3,15 +3,8 @@ import {
     Box,
     Card, CardActionArea, CardContent,
     Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
     Typography
 } from "@mui/material";
-import toLocaleString from "@/Functions/toLocaleString";
 import {Payment} from "@mui/icons-material";
 import {useState} from "react";
 
