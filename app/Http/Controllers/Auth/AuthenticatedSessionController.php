@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Helpers\Helper;
+use App\Helpers\SystemName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -26,7 +27,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $route = Helper::getSystemNameFromDomain($request) === SystemName::B2B ? route("b2b.dashboard") : RouteServiceProvider::HOME;
+
+        return redirect()->intended($route);
     }
 
     /**
