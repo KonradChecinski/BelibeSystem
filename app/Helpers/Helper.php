@@ -46,11 +46,7 @@ class Helper
             return auth()->user()->client_id;
         }
         if ($guardName === "user") {
-            $clientId = Arr::first(session("client"))->id;
-            if ($clientId) {
-                return $clientId;
-            }
-            return redirect()->route("system.dashboard");
+            return Arr::first(session("client"))->id;
         }
         return null;
     }
@@ -63,10 +59,10 @@ class Helper
         }
         if ($guardName === "user") {
             $client = Arr::first(session("client"));
-            if ($client) {
+            if (!is_null($client)) {
                 return $client;
             }
-            return redirect()->route("system.dashboard");
+//            return to_route("system.dashboard");
         }
         return null;
     }

@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Helpers\SystemName;
 use App\Models\Products\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -45,7 +46,8 @@ class HandleInertiaRequests extends Middleware
             Session::put("backgroundImage", $backgroud);
         }
 
-        if (request()->routeIs('b2b.*') && !$request->routeIs("b2b.login") && !$request->routeIs("b2b.register")) {
+        $client = Helper::getClientToB2b();
+        if (request()->routeIs('b2b.*') && !$request->routeIs("b2b.login") && !$request->routeIs("b2b.register") && !is_null($client)) {
             if (Helper::getSystemNameFromDomain($request) === SystemName::SYSTEM) {
                 $array = array_merge($array, [
                     "client" => Helper::getClientToB2b(),
@@ -53,7 +55,7 @@ class HandleInertiaRequests extends Middleware
                 ]);
             }
 
-            $cart = Helper::getClientToB2b()->cart()->with("productModel");
+            $cart = $client->cart()->with("productModel");
             $array = array_merge($array, [
                 "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
                 "cartSummary" => [
