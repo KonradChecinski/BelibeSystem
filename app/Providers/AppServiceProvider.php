@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        URL::forceScheme('https');
+//        URL::forceScheme('https');
 
         Session::extend('custom-database', function ($app) {
             $table = $app['config']['session.table'];
