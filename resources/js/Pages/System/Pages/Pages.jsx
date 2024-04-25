@@ -47,6 +47,7 @@ export default function Pages(props) {
                         categories={props.menu}
                         bgImage={props.backgroundImage}
                         cart={props.cartSummary}
+                        clientId={props.clientId}
                         fixed={false}
                         header={title}
                     >

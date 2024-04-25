@@ -14,11 +14,12 @@ import {sortBySizesName} from "@/Functions/sortBySizes";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import {enqueueSnackbar} from "notistack";
 import {useTheme} from "@mui/material/styles";
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo, useRef, useState} from "react";
 import {router} from "@inertiajs/react";
+import {keyframes} from "@emotion/css";
 
 
-export default function ProductOrderTable({model, cart, lightbox, imageArray, accountManager = false}) {
+export default function ProductOrderTable({model, cart, lightbox, imageArray, accountManager = false, props}) {
     // const [hoveredColumn, setHoveredColumn] = useState(null);
 
     const HoveringCell = ({children, column, disabled = false, header = false, sx}) => {
@@ -113,7 +114,9 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                             {product ?
                                                 <ProductInput product={product} cart={cart} maxQuantity={quantity}
                                                               enqueueSnackbar={enqueueSnackbar}
-                                                              accountManager={accountManager}/>
+                                                              accountManager={accountManager}
+                                                              props={props}
+                                                />
                                                 :
                                                 ""
                                             }
@@ -132,10 +135,43 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
     );
 }
 
-const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManager}) => {
+const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManager, props}) => {
 
     const [value, setValue] = useState(cart.find(c => c.product_id === product?.id)?.quantity || 0);
+    const [runAnimation, setRunAnimation] = useState(false);
+    const inputRef = useRef(null);
 
+    Echo.private("cart." + props.clientId + ".product." + product.id).listen("CartProductUpdated", (e) => {
+        setRunAnimation(true);
+        inputRef?.current?.scrollIntoView({behavior: "smooth"});
+        setTimeout(() => {
+            setRunAnimation(false);
+            setValue(e.quantity);
+        }, 2000);
+    });
+
+    const animation = keyframes`
+        0%,
+        100% {
+            transform: translateX(0%);
+            transform-origin: 50% 50%;
+        }
+        15% {
+            transform: translateX(-30px) rotate(-6deg);
+        }
+        30% {
+            transform: translateX(15px) rotate(6deg);
+        }
+        45% {
+            transform: translateX(-15px) rotate(-3.6deg);
+        }
+        60% {
+            transform: translateX(9px) rotate(2.4deg);
+        }
+        75% {
+            transform: translateX(-6px) rotate(-1.2deg);
+        }
+    `;
 
     let quantityText = "";
     let quantityColor = "";
@@ -205,7 +241,9 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
     }
 
     return (
-        <>
+        <Box sx={{
+            animation: runAnimation ? `${animation} 0.8s linear 1s 2 both` : "none",
+        }}>
             <TextField
                 id="outlined-basic"
                 label="Ilość"
@@ -226,14 +264,15 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                 }}
                 sx={{
                     width: "20ch",
-
                 }}
+                ref={inputRef}
             />
             <Box sx={{
                 display: "flex",
                 justifyContent: "center",
                 gap: 0.5,
-                mt: 0.5
+                mt: 0.5,
+
             }}>
                 {/*<Typography variant="caption">*/}
                 {/*    Dostępność:*/}
@@ -245,6 +284,6 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                 </Typography>
             </Box>
 
-        </>
+        </Box>
     );
 }

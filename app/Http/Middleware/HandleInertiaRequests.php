@@ -58,10 +58,8 @@ class HandleInertiaRequests extends Middleware
             $cart = $client->cart()->with("productModel");
             $array = array_merge($array, [
                 "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
-                "cartSummary" => [
-                    "products" => $cart->sum("quantity"),
-                    "models" => $cart->get()->pluck("productModel")->flatten()->unique("id")->count(),
-                ]
+                "clientId" => Helper::getClientIdToB2b(),
+                "cartSummary" => Helper::getCartSummary($cart),
             ]);
         }
 

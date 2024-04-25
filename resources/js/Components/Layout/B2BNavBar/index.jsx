@@ -22,15 +22,21 @@ import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchCompone
 import B2bUserAvatarMenu from "@/Components/Layout/B2BNavBar/B2bUserAvatar/Menu";
 import UserAvatar from "@/Components/Layout/UserAvatar";
 
-export default function B2BNavBar({auth, cart}) {
+export default function B2BNavBar({auth, clientId, cart}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
     const openUserAvatar = Boolean(anchorElUserAvatar);
+
+    const [cartModel, setCartModel] = useState(cart);
     const handleClickUserAvatar = (event) => {
         setAnchorElUserAvatar(event.currentTarget);
     };
     const handleCloseUserAvatar = () => {
         setAnchorElUserAvatar(null);
     };
+
+    Echo.private("cart.summary." + clientId).listen("CartSummaryUpdated", (e) => {
+        setCartModel(e.cartSummary);
+    });
 
     return (
         <>
@@ -173,7 +179,7 @@ export default function B2BNavBar({auth, cart}) {
                                         color="secondary"
                                         badgeContent={
                                             <Tooltip title={"Ilość produktów w koszyku"} placement={"left"}>
-                                                <span>{cart.products}</span>
+                                                <span>{cartModel.products}</span>
                                             </Tooltip>
                                         }
                                         overlap="circular"
@@ -185,7 +191,7 @@ export default function B2BNavBar({auth, cart}) {
                                             color="secondary"
                                             badgeContent={
                                                 <Tooltip title={"Ilość modeli w koszyku"} placement={"left"}>
-                                                    <span>{cart.models}</span>
+                                                    <span>{cartModel.models}</span>
                                                 </Tooltip>
                                             }
                                             overlap="circular"

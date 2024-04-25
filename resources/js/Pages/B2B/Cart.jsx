@@ -3,7 +3,7 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Box} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import CartItems from "@/Components/Pages/B2B/Cart/CartItems";
 import CartSummary from "@/Components/Pages/B2B/Cart/cartSummary";
 import CartPayments from "@/Components/Pages/B2B/Cart/cartPayments";
@@ -16,6 +16,8 @@ export default function B2bCart(props) {
     const {t} = useLaravelReactI18n();
     console.log(props)
 
+    const [openReloadDialog, setOpenReloadDialog] = useState(false);
+
     const [paymentDiscount, setPaymentDiscount] = useState(0);
 
     const {data, setData} = useForm({
@@ -23,6 +25,17 @@ export default function B2bCart(props) {
         delivery: null,
         location: null,
     });
+
+    Echo.private("cart." + props.clientId + ".updated").listen("CartUpdated", (e) => {
+        setOpenReloadDialog(true);
+    });
+
+    const reloadPage = () => {
+        router.reload({only: ['cart', 'cartColors', 'cartModels', 'cartPriceSummary', 'cartSummary']})
+        setTimeout(() => {
+            setOpenReloadDialog(false)
+        }, 1000)
+    }
 
     return (
         <ClientLayout
@@ -32,6 +45,7 @@ export default function B2bCart(props) {
             bgImage={props.backgroundImage}
             accountManager={props.accountManager}
             cart={props.cartSummary}
+            clientId={props.clientId}
             header={
                 t("Cart")
             }
@@ -46,6 +60,26 @@ export default function B2bCart(props) {
                 <CartSummary props={props} paymentDiscount={paymentDiscount}/>
                 <CartSubmit props={props} data={data}/>
             </Box>
+            <Dialog
+                open={openReloadDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Koszyk został zaktualizowany
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Produkty w koszyku zostały zaktualizowane. Musisz odświeżyć stronę, aby zobaczyć zmiany.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    {/*<Button>Disagree</Button>*/}
+                    <Button autoFocus onClick={reloadPage}>Odśwież</Button>
+                </DialogActions>
+            </Dialog>
+
+
         </ClientLayout>
     );
 }

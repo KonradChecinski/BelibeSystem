@@ -88,4 +88,17 @@ class Helper
         ];
         return route("storage", ["path" => "backgrounds>" . $backgrounds[array_rand($backgrounds)]]);
     }
+
+
+    public static function getCartSummary($cart = null): array
+    {
+        if ($cart === null) {
+            $cart = self::getClientToB2b()->cart()->with("productModel");
+        }
+
+        return [
+            "products" => $cart->sum("quantity"),
+            "models" => $cart->get()->pluck("productModel")->flatten()->unique("id")->count(),
+        ];
+    }
 }

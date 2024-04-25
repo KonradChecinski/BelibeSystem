@@ -86,6 +86,7 @@ export default function B2bModel(props) {
         ProductOrderTableRef.current.scrollIntoView({behavior: "smooth"});
     }
 
+
     return (
         <ClientLayout
             auth={props.auth}
@@ -94,6 +95,7 @@ export default function B2bModel(props) {
             bgImage={props.backgroundImage}
             accountManager={props.accountManager}
             cart={props.cartSummary}
+            clientId={props.clientId}
             header={
                 t("Model") + " " + props.model.symbol + ": " + props.model.name
             }
@@ -344,7 +346,7 @@ export default function B2bModel(props) {
                     Zamówienie
                 </Typography>
                 <ProductOrderTable model={props.model} cart={props.cart} lightbox={lightbox}
-                                   imageArray={imageArray} accountManager={props.accountManager}/>
+                                   imageArray={imageArray} accountManager={props.accountManager} props={props}/>
             </Box>
         </ClientLayout>
     );

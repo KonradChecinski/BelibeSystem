@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Helper;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +14,25 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+//Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+//    return (int) $user->id === (int) $id;
+//});
+
+
+Broadcast::channel('cart.{clientId}', function ($user, $clientId) {
+    return Helper::getClientIdToB2b() === (int)$clientId;
 });
+
+Broadcast::channel('cart.{clientId}.product.{productId}', function ($user, $clientId, $productId) {
+    return Helper::getClientIdToB2b() === (int)$clientId;
+});
+
+Broadcast::channel('cart.{clientId}.updated', function ($user, $clientId) {
+    return Helper::getClientIdToB2b() === (int)$clientId;
+});
+
+Broadcast::channel('cart.summary.{clientId}', function ($user, $clientId) {
+    return Helper::getClientIdToB2b() === (int)$clientId;
+});
+
+

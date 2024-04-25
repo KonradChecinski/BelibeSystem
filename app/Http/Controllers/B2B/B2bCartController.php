@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\B2B;
 
+use App\Events\CartProductUpdated;
+use App\Events\CartSummaryUpdated;
+use App\Events\CartUpdated;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreB2bCartRequest;
@@ -133,7 +136,9 @@ class B2bCartController extends Controller
             }
 
         }
-
+        CartUpdated::dispatch($client->id);
+        CartSummaryUpdated::dispatch($client->id);
+        CartProductUpdated::dispatch($client->id, $product->id, $request->quantity);
     }
 
     /**

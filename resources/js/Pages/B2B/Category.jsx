@@ -18,6 +18,7 @@ export default function B2bCategory(props) {
             bgImage={props.backgroundImage}
             accountManager={props.accountManager}
             cart={props.cartSummary}
+            clientId={props.clientId}
             header={
                 props.category.name
             }

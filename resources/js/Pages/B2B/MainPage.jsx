@@ -15,6 +15,7 @@ export default function B2bMainPage(props) {
             bgImage={props.backgroundImage}
             accountManager={props.accountManager}
             cart={props.cartSummary}
+            clientId={props.clientId}
             header={
                 t("Dashboard")
             }

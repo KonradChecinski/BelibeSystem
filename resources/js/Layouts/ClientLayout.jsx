@@ -17,7 +17,8 @@ export default function ClientLayout({
                                          children,
                                          fixed = true,
                                          accountManager,
-                                         cart
+                                         cart,
+                                         clientId,
                                      }) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -70,7 +71,7 @@ export default function ClientLayout({
                             }
                         }}
                     >
-                        <B2BNavBar auth={auth} cart={cart}/>
+                        <B2BNavBar auth={auth} clientId={clientId} cart={cart}/>
                     </Box>
                 </>
             ) : (
