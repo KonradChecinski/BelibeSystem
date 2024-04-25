@@ -6,9 +6,6 @@ import {createInertiaApp} from "@inertiajs/react";
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import {LaravelReactI18nProvider} from "laravel-react-i18n";
 import {SnackbarProvider} from "notistack";
-
-import {DevSupport} from "@react-buddy/ide-toolbox";
-import {ComponentPreviews, useInitial} from "../../dev";
 import moment from "moment";
 import 'moment/dist/locale/pl';
 import 'moment/dist/locale/en-gb';
