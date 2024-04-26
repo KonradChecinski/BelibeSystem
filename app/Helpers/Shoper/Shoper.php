@@ -132,7 +132,7 @@ class Shoper
 
     public static function addImages(int $productShoperId, ProductModelColor $productModelColor): bool
     {
-        foreach ($productModelColor->images->sortBy("order")->values() as $image) {
+        foreach ($productModelColor->images->where("type", 1)->sortBy("order")->values() as $image) {
             try {
                 $response = Http::withoutVerifying()
                     ->withToken(self::getAccessToken())
