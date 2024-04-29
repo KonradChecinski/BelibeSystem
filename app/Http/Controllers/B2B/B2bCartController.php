@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreB2bCartRequest;
 use App\Http\Requests\Cart\UpdateB2bCartRequest;
 use App\Models\B2bCart;
+use App\Models\B2bDelivery;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
@@ -55,15 +56,6 @@ class B2bCartController extends Controller
             return $carry;
         }, ["total_net" => 0, "total_gross" => 0]);
 
-        if ($priceSummary["total_net"] / 100 > 500) {
-            $priceSummary["delivery_net"] = 0;
-            $priceSummary["delivery_gross"] = 0;
-
-        } else {
-            $priceSummary["delivery_net"] = 2000;
-            $priceSummary["delivery_gross"] = 2460;
-        }
-
         return Inertia::render('B2B/Cart', [
             "cart" => $cartModel,
             "cartModels" => $cartModel->pluck("productModel")->unique("id")->values(),
@@ -73,6 +65,12 @@ class B2bCartController extends Controller
 
             "locations" => $client->locations()->with("country:id,name")->get(),
             "payments" => $client->payments,
+            "deliveries" => B2bDelivery::all(["id", "name", "price_net", "price_gross",
+                'description',
+                'free_from',
+                'active',
+                'delivery_time_min',
+                'delivery_time_max',]),
         ]);
     }
 

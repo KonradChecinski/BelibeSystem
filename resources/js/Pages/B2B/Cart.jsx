@@ -20,10 +20,11 @@ export default function B2bCart(props) {
 
     const [paymentDiscount, setPaymentDiscount] = useState(0);
 
-    const {data, setData} = useForm({
+    const {data, setData, post} = useForm({
         payment: null,
         delivery: null,
         location: null,
+        comment: "",
     });
 
     Echo.private("cart." + props.clientId + ".updated").listen("CartUpdated", (e) => {
@@ -57,8 +58,8 @@ export default function B2bCart(props) {
                 <CartPayments props={props} setPaymentDiscount={setPaymentDiscount} setData={setData}/>
                 <CartDeliveries props={props} setData={setData}/>
                 <CartLocations props={props} setData={setData}/>
-                <CartSummary props={props} paymentDiscount={paymentDiscount}/>
-                <CartSubmit props={props} data={data}/>
+                <CartSummary props={props} data={data} paymentDiscount={paymentDiscount}/>
+                <CartSubmit props={props} data={data} setData={setData} post={post}/>
             </Box>
             <Dialog
                 open={openReloadDialog}

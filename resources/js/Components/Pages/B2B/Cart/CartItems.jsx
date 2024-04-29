@@ -10,7 +10,7 @@ import {
     TableRow, TextField,
     Typography
 } from "@mui/material";
-import {Fragment, useCallback, useMemo, useState} from "react";
+import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import {sortBySizesSortFunction} from "@/Functions/sortBySizes";
 import {router} from "@inertiajs/react";
@@ -23,208 +23,231 @@ export default function CartItems({props, discount}) {
 
     let index = 1;
     return (
-        <TableContainer component={Paper} sx={{overflowX: "initial"}}>
-            <Table
-                aria-label="simple table"
-                stickyHeader={true}
+        <Paper>
+
+            <Box
                 sx={{
-                    "& th": {
-                        top: 81,
-                    },
-                    "& th:first-of-type": {
-                        borderRadius: 1,
-                        borderBottomRightRadius: 0,
-                        borderTopRightRadius: 0
-                    },
-                    "& th:last-of-type": {
-                        borderRadius: 1,
-                        borderBottomLeftRadius: 0,
-                        borderTopLeftRadius: 0
-                    },
-                }}
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell align={"center"} sx={{width: 20}}>Lp.</TableCell>
-                        <TableCell align={"center"}>Rozmiar</TableCell>
-                        <TableCell align={"center"}>Cena Netto</TableCell>
-                        <TableCell align={"center"}>Cena Brutto</TableCell>
-                        <TableCell align={"center"}>Ilość</TableCell>
-                        <TableCell align={"center"}>Suma Netto</TableCell>
-                        <TableCell align={"center"}>Suma Brutto</TableCell>
-                        <TableCell align={"center"}>Usuwanie</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {props.cartModels.map((model) => {
-
-                        return (
-                            <Fragment key={"model" + model.id}>
-                                <TableRow>
-                                    <th colSpan={8}
-                                        // style={{position: "sticky", top: 120}}
-                                    >
-                                        <Box sx={{
-                                            mt: 2,
-                                            px: 2,
-                                            borderBottom: "1px solid",
-                                            borderColor: "divider",
-                                            // bgcolor: "green"
-                                        }}>
-                                            <Typography variant="h4" align={"left"}>
-                                                Model {model.symbol}
-                                            </Typography>
-                                        </Box>
-
-                                    </th>
-                                </TableRow>
+                    overflowY: "auto",
+                    overflowX: "auto",
+                    width: 1,
+                    minHeight: 200,
+                    maxHeight: 800
+                }}>
 
 
-                                {props.cartColors.filter(color => color.product_model_id === model.id).sort(sortByColorShortcut).map((color) => {
-                                    return (
-                                        <Fragment key={"color" + color.id}>
-                                            <TableRow>
-                                                <td colSpan={8}
-                                                    // style={{position: "sticky", top: 150}}
-                                                >
-                                                    <Box sx={{
-                                                        mt: 2,
-                                                        px: 3,
-                                                        pb: 2,
-                                                        borderBottom: "1px solid",
-                                                        borderColor: "divider",
-                                                        display: "flex",
-                                                        // bgcolor: "blue",
-                                                        // zIndex: 500
+                <TableContainer component={Paper} sx={{overflowX: "initial", width: 1}}>
+                    <Table
+                        aria-label="simple table"
+                        stickyHeader={true}
+                        sx={{
+                            "& th": {
+                                top: 0,
+                            },
+                            "& th:first-of-type": {
+                                borderRadius: 1,
+                                borderBottomRightRadius: 0,
+                                borderTopRightRadius: 0,
 
-                                                    }}>
-                                                        <Box component={"img"}
-                                                             src={route("images.webp", {path: color.images[0].path})}
-                                                             width={50}
-                                                             sx={{
-                                                                 // m: "auto",
-                                                                 // cursor: "pointer",
-                                                                 mr: 2
-                                                             }}
-                                                        />
-                                                        <Box sx={{
-                                                            display: "flex",
-                                                            flexDirection: "column",
-                                                            justifyContent: "center",
-                                                        }}>
-                                                            <Typography variant="h6" gutterBottom>
-                                                                Kolor {color.shortcut}
-                                                            </Typography>
-                                                            <Typography variant="h6" gutterBottom>
-                                                                {color.name}
-                                                            </Typography>
-                                                        </Box>
+                                borderTopLeftRadius: 0,
+                            },
+                            "& th:last-of-type": {
+                                borderRadius: 1,
+                                borderBottomLeftRadius: 0,
+                                borderTopLeftRadius: 0,
+
+                                borderTopRightRadius: 0,
+                            },
+                        }}
+                    >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align={"center"} sx={{width: 20}}>Lp.</TableCell>
+                                <TableCell align={"center"}>Rozmiar</TableCell>
+                                <TableCell align={"center"}>Cena Netto</TableCell>
+                                <TableCell align={"center"}>Cena Brutto</TableCell>
+                                <TableCell align={"center"}>Ilość</TableCell>
+                                <TableCell align={"center"}>Suma Netto</TableCell>
+                                <TableCell align={"center"}>Suma Brutto</TableCell>
+                                <TableCell align={"center"}>Usuwanie</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.cartModels.map((model) => {
+
+                                return (
+                                    <Fragment key={"model" + model.id}>
+                                        <TableRow>
+                                            <th colSpan={8}
+                                                // style={{position: "sticky", top: 120}}
+                                            >
+                                                <Box sx={{
+                                                    mt: 2,
+                                                    px: 2,
+                                                    borderBottom: "1px solid",
+                                                    borderColor: "divider",
+                                                    // bgcolor: "green"
+                                                }}>
+                                                    <Typography variant="h4" align={"left"}>
+                                                        Model {model.symbol}
+                                                    </Typography>
+                                                </Box>
+
+                                            </th>
+                                        </TableRow>
 
 
-                                                    </Box>
+                                        {props.cartColors.filter(color => color.product_model_id === model.id).sort(sortByColorShortcut).map((color) => {
+                                            return (
+                                                <Fragment key={"color" + color.id}>
+                                                    <TableRow>
+                                                        <td colSpan={8}
+                                                            // style={{position: "sticky", top: 150}}
+                                                        >
+                                                            <Box sx={{
+                                                                mt: 2,
+                                                                px: 3,
+                                                                pb: 2,
+                                                                borderBottom: "1px solid",
+                                                                borderColor: "divider",
+                                                                display: "flex",
+                                                                // bgcolor: "blue",
+                                                                // zIndex: 500
 
-                                                </td>
-                                            </TableRow>
-
-
-                                            {props.cart.filter(item => item.product_model_color.id === color.id).sort((a, b) => sortBySizesSortFunction(a.product.size.name, b.product.size.name)).map((item, i) => {
-                                                const product = item.product;
-                                                const deleteItem = () => {
-                                                    router.post(route('b2b.cart.update', {product: product?.id}), {
-                                                        quantity: 0
-                                                    }, {
-                                                        preserveScroll: true,
-                                                        onSuccess: (response) => {
-                                                            enqueueSnackbar("Usunięto " + product.symbol + " z koszyka", {variant: "success"})
-                                                        },
-                                                        onError: (error) => {
-                                                            enqueueSnackbar("Błąd przy usuwaniu produktu " + product.symbol + " z koszyka", {variant: 'error'})
-                                                            console.error(error)
-                                                        }
-                                                    });
-                                                }
-                                                return (
-                                                    <Fragment key={"product" + product.id}>
-                                                        <TableRow hover>
-
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {index++}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {product.size.name}
-                                                                </Typography>
-                                                            </TableCell>
-
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {toLocaleString(item.price_net / 100)}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {toLocaleString(item.price_gross / 100)}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell align={"center"} sx={{p: 0}}>
-                                                                <ProductInput
-                                                                    product={product}
-                                                                    maxQuantity={product.quantity}
-                                                                    enqueueSnackbar={enqueueSnackbar}
-                                                                    accountManager={props.accountManager}
-                                                                    initialValue={item.quantity}
+                                                            }}>
+                                                                <Box component={"img"}
+                                                                     src={route("images.webp", {path: color.images[0].path})}
+                                                                     width={50}
+                                                                     sx={{
+                                                                         // m: "auto",
+                                                                         // cursor: "pointer",
+                                                                         mr: 2
+                                                                     }}
                                                                 />
-                                                            </TableCell>
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {toLocaleString(item.price_net / 100 * item.quantity)}
-                                                                </Typography>
+                                                                <Box sx={{
+                                                                    display: "flex",
+                                                                    flexDirection: "column",
+                                                                    justifyContent: "center",
+                                                                }}>
+                                                                    <Typography variant="h6" gutterBottom>
+                                                                        Kolor {color.shortcut}
+                                                                    </Typography>
+                                                                    <Typography variant="h6" gutterBottom>
+                                                                        {color.name}
+                                                                    </Typography>
+                                                                </Box>
 
-                                                            </TableCell>
-                                                            <TableCell align={"center"}>
-                                                                <Typography variant="body1">
-                                                                    {toLocaleString(item.price_gross / 100 * item.quantity)}
-                                                                </Typography>
 
-                                                            </TableCell>
-                                                            <TableCell align={"center"}>
+                                                            </Box>
 
-                                                                <IconButton aria-label="delete"
-                                                                            onClick={deleteItem}>
-                                                                    <Delete color={"error"}/>
-                                                                </IconButton>
-                                                                {/*<IconButton aria-label="edit">*/}
-                                                                {/*    <Edit/>*/}
-                                                                {/*</IconButton>*/}
+                                                        </td>
+                                                    </TableRow>
 
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    </Fragment>
 
-                                                );
-                                            })}
-                                        </Fragment>
-                                    );
-                                })
-                                }
-                            </Fragment>
-                        );
-                    })}
+                                                    {props.cart.filter(item => item.product_model_color.id === color.id).sort((a, b) => sortBySizesSortFunction(a.product.size.name, b.product.size.name)).map((item, i) => {
+                                                        const product = item.product;
+                                                        const deleteItem = () => {
+                                                            router.post(route('b2b.cart.update', {product: product?.id}), {
+                                                                quantity: 0
+                                                            }, {
+                                                                preserveScroll: true,
+                                                                onSuccess: (response) => {
+                                                                    enqueueSnackbar("Usunięto " + product.symbol + " z koszyka", {variant: "success"})
+                                                                },
+                                                                onError: (error) => {
+                                                                    enqueueSnackbar("Błąd przy usuwaniu produktu " + product.symbol + " z koszyka", {variant: 'error'})
+                                                                    console.error(error)
+                                                                }
+                                                            });
+                                                        }
+                                                        return (
+                                                            <Fragment key={"product" + product.id}>
+                                                                <TableRow hover>
 
-                </TableBody>
-            </Table>
-            <Typography variant="h6" sx={{py: 2, ml: 2, color: "warning.main"}}>
-                Produkty nie są rezerwowane, dlatego mogą być niedostępne w momencie złożenia zamówienia.
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {index++}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {product.size.name}
+                                                                        </Typography>
+                                                                    </TableCell>
+
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {toLocaleString(item.price_net / 100)}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {toLocaleString(item.price_gross / 100)}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"} sx={{p: 0}}>
+                                                                        <ProductInput
+                                                                            product={product}
+                                                                            maxQuantity={product.quantity}
+                                                                            enqueueSnackbar={enqueueSnackbar}
+                                                                            accountManager={props.accountManager}
+                                                                            initialValue={item.quantity}
+                                                                        />
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {toLocaleString(item.price_net / 100 * item.quantity)}
+                                                                        </Typography>
+
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"}>
+                                                                        <Typography variant="body1">
+                                                                            {toLocaleString(item.price_gross / 100 * item.quantity)}
+                                                                        </Typography>
+
+                                                                    </TableCell>
+                                                                    <TableCell align={"center"}>
+
+                                                                        <IconButton aria-label="delete"
+                                                                                    onClick={deleteItem}>
+                                                                            <Delete color={"error"}/>
+                                                                        </IconButton>
+                                                                        {/*<IconButton aria-label="edit">*/}
+                                                                        {/*    <Edit/>*/}
+                                                                        {/*</IconButton>*/}
+
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            </Fragment>
+
+                                                        );
+                                                    })}
+                                                </Fragment>
+                                            );
+                                        })
+                                        }
+                                    </Fragment>
+                                );
+                            })}
+
+                        </TableBody>
+                    </Table>
+
+                </TableContainer>
+            </Box>
+            <Typography variant="h6" sx={{py: 2, px: 2, color: "warning.main", boxShadow: 15}}>
+                Produkty nie są rezerwowane. Mogą zostać zamówione przez innych użytkowników do momentu złożenia
+                zamówienia.
             </Typography>
-        </TableContainer>
+        </Paper>
     );
 }
 
 
 const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, initialValue}) => {
     const [value, setValue] = useState(initialValue);
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
 
     let quantityText = "";
     let quantityColor = "";

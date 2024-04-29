@@ -14,6 +14,7 @@ use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
 use App\Models\ClientObligation;
+use App\Models\ClientOrder;
 use App\Models\ClientRecipient;
 use App\Models\ClientReceivable;
 use App\Models\ClientTask;
@@ -117,6 +118,11 @@ class Client extends Model
     public function recipient(): HasOne
     {
         return $this->hasOne(ClientRecipient::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(ClientOrder::class);
     }
 
     public function invoices(): HasMany

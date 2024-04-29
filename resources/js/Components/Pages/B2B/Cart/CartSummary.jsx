@@ -3,13 +3,13 @@ import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tabl
 import toLocaleString from "@/Functions/toLocaleString";
 import {Summarize} from "@mui/icons-material";
 
-export default function CartSummary({props, paymentDiscount}) {
+export default function CartSummary({props, data, paymentDiscount}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const ProductsNet = props.cartPriceSummary.total_net;
     const ProductsGross = props.cartPriceSummary.total_gross;
-    const deliveryNet = props.cartPriceSummary.delivery_net;
-    const deliveryGross = props.cartPriceSummary.delivery_gross;
+    const deliveryNet = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_net : 0;
+    const deliveryGross = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_gross : 0;
 
     const paymentNet = paymentDiscount === 0 ? 0 : -1 * (ProductsNet * (paymentDiscount / 100));
     const paymentGross = paymentDiscount === 0 ? 0 : -1 * (ProductsGross * (paymentDiscount / 100));

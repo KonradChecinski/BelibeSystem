@@ -5,6 +5,7 @@ use App\Http\Controllers\B2B\B2bFavoritesController;
 use App\Http\Controllers\B2B\B2bMainPageController;
 use App\Http\Controllers\B2B\B2bProductCategoryController;
 use App\Http\Controllers\B2B\B2bProductController;
+use App\Http\Controllers\B2bOrderController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +22,8 @@ Route::group([], function () {
 
     Route::get("/cart", [B2bCartController::class, 'index'])->name("b2b.cart");
     Route::post("/cart/update/{product}", [B2bCartController::class, 'update'])->name("b2b.cart.update");
+
+    Route::post("/order/store", [B2bOrderController::class, 'store'])->name("b2b.order.store");
 
 });
 

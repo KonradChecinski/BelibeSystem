@@ -14,9 +14,9 @@ export default function CartDeliveries({props, setData}) {
 
     const [deliveryMethod, setDeliveryMethod] = useState(0);
 
-    const handleDeliveryChange = (deliveryId) => {
-        setDeliveryMethod(deliveryId);
-        setData("delivery", deliveryId)
+    const handleDeliveryChange = (delivery) => {
+        setDeliveryMethod(delivery.id);
+        setData("delivery", delivery)
     }
 
     return (
@@ -31,29 +31,42 @@ export default function CartDeliveries({props, setData}) {
                 </Typography>
             </Box>
             <Box sx={{display: "flex", flexWrap: "wrap", gap: 2}}>
-                <Card variant="outlined"
-                      sx={{width: 400, height: 100, bgcolor: deliveryMethod === 1 ? "successBg.main" : ""}}>
-                    <CardActionArea sx={{width: 1, height: 1}} onClick={() => setDeliveryMethod(1)}>
-                        <CardContent>
-                            <Typography variant="h6">
-                                Dostawa kurierem
-                            </Typography>
-                            <Typography variant="body1">
-                                Dostawa kurierem GLS
-                            </Typography>
-                            <Typography variant="body2">
-                                Koszt: {toLocaleString(props.cartPriceSummary.delivery_net / 100)} ({toLocaleString(props.cartPriceSummary.delivery_gross / 100)} Brutto)
-                            </Typography>
-                            {props.cartPriceSummary.total_net <= 50000 &&
-                                (
-                                    <Typography variant="body2">
-                                        Dostawa za darmo po przekroczeniu 500 zł Netto
+                {props.deliveries.map((delivery) => {
+
+                    return (
+                        <Card variant="outlined"
+                              sx={{
+                                  width: 400,
+                                  height: 130,
+                                  bgcolor: deliveryMethod === delivery.id ? "successBg.main" : ""
+                              }}>
+                            <CardActionArea sx={{width: 1, height: 1}} onClick={() => handleDeliveryChange(delivery)}>
+                                <CardContent>
+                                    <Typography variant="h6">
+                                        {delivery.name}
                                     </Typography>
-                                )
-                            }
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
+                                    <Typography variant="body1">
+                                        {delivery.description}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Koszt: {toLocaleString(delivery.price_net / 100)} ({toLocaleString(delivery.price_gross / 100)} Brutto)
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Cza dostawy: {delivery.delivery_time_min} - {delivery.delivery_time_max}
+                                    </Typography>
+                                    {props.cartPriceSummary.total_net <= delivery.free_from &&
+                                        (
+                                            <Typography variant="body2">
+                                                Dostawa za darmo po
+                                                przekroczeniu {toLocaleString(delivery.free_from / 100)} Netto
+                                            </Typography>
+                                        )
+                                    }
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    )
+                })}
             </Box>
 
 
