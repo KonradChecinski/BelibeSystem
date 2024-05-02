@@ -7,6 +7,7 @@ use App\Http\Requests\StoreClientOrderRequest;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderProduct;
+use App\Models\Products\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -80,6 +81,12 @@ class B2bOrderController extends Controller
         if ($discountedTotalNet > $deliveryModel->free_from) {
             $deliveryNet = 0;
             $deliveryGross = 0;
+        }
+
+        foreach ($cartModel as $item) {
+            if ($item->quantity > Product::find($item->product_id)->quantity) {
+                return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
+            }
         }
 
         $order = new ClientOrder([

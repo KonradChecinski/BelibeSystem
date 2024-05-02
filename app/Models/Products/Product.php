@@ -42,8 +42,6 @@ class Product extends Model
 
     protected function quantity(): Attribute
     {
-
-
         return new Attribute(
             get: function (string $value, array $attributes) {
 //                dd($attributes);
