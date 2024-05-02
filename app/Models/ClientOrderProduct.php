@@ -17,10 +17,11 @@ class ClientOrderProduct extends Model
         "price_gross",
         "total_net",
         "total_gross",
+        "currency",
     ];
 
     public function orders()
     {
-        return $this->belongsTo(ClientOrder::class);
+        return $this->belongsTo(ClientOrder::class, "client_order_id");
     }
 }

@@ -321,9 +321,13 @@ export default function B2bModel(props) {
 
                         </Box>
                         <Box>
-                            <Button variant="contained" onClick={scrollTo} sx={{my: 2, width: 1}}>
-                                Zamów
-                            </Button>
+                            {Boolean(props.blacklist) === false &&
+                                (
+                                    <Button variant="contained" onClick={scrollTo} sx={{my: 2, width: 1}}>
+                                        Zamów
+                                    </Button>
+                                )
+                            }
                         </Box>
                     </Box>
                 </Paper>
@@ -342,11 +346,28 @@ export default function B2bModel(props) {
                 />
             </Box>
             <Box ref={ProductOrderTableRef} my={2} sx={{overflowX: "initial"}}>
-                <Typography variant="h4" gutterBottom sx={{ml: 1, mb: 2}}>
-                    Zamówienie
-                </Typography>
-                <ProductOrderTable model={props.model} cart={props.cart} lightbox={lightbox}
-                                   imageArray={imageArray} accountManager={props.accountManager} props={props}/>
+                {Boolean(props.blacklist) === false ?
+                    (
+                        <>
+                            <Typography variant="h4" gutterBottom sx={{ml: 1, mb: 2}}>
+                                Zamówienie
+                            </Typography>
+                            <ProductOrderTable model={props.model} cart={props.cart} lightbox={lightbox}
+                                               imageArray={imageArray} accountManager={props.accountManager}
+                                               props={props}/>
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            <Typography variant="h6" align={"center"}>
+                                Nie możesz składać zamówień w naszym sklepie
+                            </Typography>
+                        </>
+                    )
+
+                }
+
             </Box>
         </ClientLayout>
     );

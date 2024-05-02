@@ -59,6 +59,7 @@ class HandleInertiaRequests extends Middleware
             $array = array_merge($array, [
                 "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
                 "clientId" => Helper::getClientIdToB2b(),
+                "blacklist" => Helper::getClientToB2b()->blacklist,
                 "cartSummary" => Helper::getCartSummary($cart),
             ]);
         }

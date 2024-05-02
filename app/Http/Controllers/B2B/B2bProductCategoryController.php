@@ -51,7 +51,7 @@ class B2bProductCategoryController extends Controller
                 'categories:id',
                 'group:id',
                 'brand:id',
-                'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id',
+                'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id,products.id',
                 'productsToB2bWithoutRelation.size',
 //                'productsToB2bWithoutRelation:quantity,product_model_id',
 //                'products.size',

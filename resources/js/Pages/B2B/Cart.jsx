@@ -3,7 +3,16 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Typography
+} from "@mui/material";
 import CartItems from "@/Components/Pages/B2B/Cart/CartItems";
 import CartSummary from "@/Components/Pages/B2B/Cart/cartSummary";
 import CartPayments from "@/Components/Pages/B2B/Cart/cartPayments";
@@ -52,14 +61,36 @@ export default function B2bCart(props) {
             }
         >
             <Head title={t("Cart")}/>
-
             <Box sx={{width: 1, minHeight: 400, position: "relative", pb: 3}}>
-                <CartItems props={props}/>
-                <CartPayments props={props} setPaymentDiscount={setPaymentDiscount} setData={setData}/>
-                <CartDeliveries props={props} setData={setData}/>
-                <CartLocations props={props} setData={setData}/>
-                <CartSummary props={props} data={data} paymentDiscount={paymentDiscount}/>
-                <CartSubmit props={props} data={data} setData={setData} post={post}/>
+                {Boolean(props.blacklist) === false ?
+                    props.cartSummary.products > 0 ?
+                        (
+                            <>
+                                <CartItems props={props}/>
+                                <CartPayments props={props} setPaymentDiscount={setPaymentDiscount} setData={setData}/>
+                                <CartDeliveries props={props} setData={setData}/>
+                                <CartLocations props={props} setData={setData}/>
+                                <CartSummary props={props} data={data} paymentDiscount={paymentDiscount}/>
+                                <CartSubmit props={props} data={data} setData={setData} post={post}/>
+                            </>
+                        )
+                        :
+                        (
+                            <>
+                                <Typography variant="h6" align={"center"}>
+                                    Brak produktów w koszyku
+                                </Typography>
+                            </>
+                        )
+                    :
+                    (
+                        <>
+                            <Typography variant="h6" align={"center"}>
+                                Nie możesz składać zamówień w naszym sklepie
+                            </Typography>
+                        </>
+                    )
+                }
             </Box>
             <Dialog
                 open={openReloadDialog}

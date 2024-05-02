@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer("price_gross");
             $table->integer("total_net");
             $table->integer("total_gross");
+            $table->string("currency");
             $table->timestamps();
         });
     }

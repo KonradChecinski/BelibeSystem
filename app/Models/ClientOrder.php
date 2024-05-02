@@ -19,11 +19,28 @@ class ClientOrder extends Model
         "payment_id",
         "delivery_id",
         "client_location_id",
+        "total_quantity",
         "total_net",
         "total_gross",
-        "total_quantity",
+        "discount",
+        "discounted_total_net",
+        "discounted_total_gross",
+        "delivery_net",
+        "delivery_gross",
+        "currency",
         "comment",
+        "subiekt_number",
+        "subiekt_added_at",
     ];
+
+//    status
+//    1 złożone
+//    2 zaakceptowane do realizacji
+//    3 przesłane do subiekta
+//    4 w trakcie kompletacji
+//    5 zrealizowane
+//    6 anulowane
+
 
     public function products(): HasMany
     {

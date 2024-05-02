@@ -6,6 +6,8 @@ use App\Helpers\Helper;
 use App\Http\Requests\StoreClientOrderRequest;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
+use App\Models\ClientOrderProduct;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class B2bOrderController extends Controller
@@ -35,8 +37,12 @@ class B2bOrderController extends Controller
 
         $deliveries = B2bDelivery::all();
         $client->load(["payments", "locations"]);
-        dd($deliveries, $client->payments, $client->locations);
-//Sprawdzic czy klient ma dostepne te metody platnosci i dostawy
+
+        if (!$deliveries->contains($request->validated()["delivery"]["id"]) || !$client->payments->contains($request->validated()["payment"]["id"]) || !$client->locations->contains($request->validated()["location"]["id"])) {
+            return redirect()->back()->withErrors(["message" => "Client does not have access to this delivery, payment or location"], 403);
+        }
+
+
         $cart = $client->cart();
         $cartModel = $cart->get();
 
@@ -56,21 +62,64 @@ class B2bOrderController extends Controller
 
         $quantity = $cartModel->sum("quantity");
 
+        $discountModel = $client->payments->find($request->validated()["payment"]["id"])->discount;
+        $discount = (bool)$discountModel->discount;
+        $discountValue = $discountModel->discount_value;
+
+        if ($discount) {
+            $discountedTotalNet = round($priceSummary["total_net"] - ($priceSummary["total_net"] * $discountValue / 100));
+            $discountedTotalGross = round($priceSummary["total_gross"] - ($priceSummary["total_gross"] * $discountValue / 100));
+        } else {
+            $discountedTotalNet = $priceSummary["total_net"];
+            $discountedTotalGross = $priceSummary["total_gross"];
+        }
+
+        $deliveryModel = $deliveries->find($request->validated()["delivery"]["id"]);
+        $deliveryNet = $deliveryModel->price_net;
+        $deliveryGross = $deliveryModel->price_gross;
+        if ($discountedTotalNet > $deliveryModel->free_from) {
+            $deliveryNet = 0;
+            $deliveryGross = 0;
+        }
 
         $order = new ClientOrder([
-            "number" => "",
+            "number" => "B2B-" . Carbon::now()->format("Y.m.d H:i"),
             "status" => 1,
+            "total_quantity" => $quantity,
             "total_net" => $priceSummary["total_net"],
             "total_gross" => $priceSummary["total_gross"],
-            "total_quantity" => $quantity,
+
+            "discount" => $discount === true ? $discountValue : 0,
+            "discounted_total_net" => $discountedTotalNet,
+            "discounted_total_gross" => $discountedTotalGross,
+
+            "delivery_net" => $deliveryNet,
+            "delivery_gross" => $deliveryGross,
+
+            "currency" => $cartModel[0]->currency,
             "comment" => $request->comment,
         ]);
         $order->client()->associate($client);
         $order->payment()->associate($request->payment["id"]);
         $order->delivery()->associate($request->delivery["id"]);
         $order->location()->associate($request->location["id"]);
-        dd($request->all(), $order);
         $order->save();
+
+        foreach ($cartModel as $item) {
+            $orderProduct = new ClientOrderProduct([
+                "product_id" => $item->product_id,
+                "quantity" => $item->quantity,
+                "price_net" => $item->price_net,
+                "price_gross" => $item->price_gross,
+                "total_net" => $item->quantity * $item->total_net,
+                "total_gross" => $item->quantity * $item->total_gross,
+                "currency" => $item->currency,
+            ]);
+            $order->products()->save($orderProduct);
+        }
+
+        $cart->delete();
+        return redirect()->route("b2b.dashboard")->with("success", "Order has been placed successfully");
     }
 
     /**

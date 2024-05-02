@@ -18,10 +18,18 @@ return new class extends Migration {
             $table->foreignId("payment_id")->references("id")->on("b2b_payments")->restrictOnDelete();
             $table->foreignId("delivery_id")->references("id")->on("b2b_deliveries")->restrictOnDelete();
             $table->foreignId("client_location_id")->references("id")->on("client_locations")->restrictOnDelete();
+            $table->integer("total_quantity");
             $table->integer("total_net");
             $table->integer("total_gross");
-            $table->integer("total_quantity");
+            $table->integer("discount");
+            $table->integer("discounted_total_net");
+            $table->integer("discounted_total_gross");
+            $table->integer("delivery_net");
+            $table->integer("delivery_gross");
+            $table->string("currency");
             $table->text("comment")->nullable();
+            $table->string("subiekt_number")->nullable();
+            $table->timestamp("subiekt_added_at")->nullable();
             $table->timestamps();
         });
     }
