@@ -131,6 +131,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::post("/b2b/order/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
         Route::post("/b2b/order/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
+        Route::get("/b2b/order/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.b2b.order");
 
     });
 

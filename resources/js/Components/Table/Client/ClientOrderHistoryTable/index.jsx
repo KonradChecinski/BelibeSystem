@@ -1,198 +1,505 @@
 import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
-import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
-import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {
+    Box, Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Tooltip,
+} from "@mui/material";
+import {Close, Delete, Done, DownloadDone, Edit, ListAlt,} from "@mui/icons-material";
 import {useTheme} from "@mui/material/styles";
-import {router, useForm} from "@inertiajs/react";
-import {enqueueSnackbar} from "notistack";
-import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
-import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
-import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
-import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import moment from "moment/moment";
+import toLocaleString from "@/Functions/toLocaleString";
+import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import {router} from "@inertiajs/react";
 
-export default function ClientOrderHistoryTable({history, readOnly, color, props}) {
+export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
-    const [openDialogAdd, setOpenDialogAdd] = useState(false);
+    const data = history;
+    // console.log(data);
+
+    const sumWN = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.total_net), 0),
+        [],
+    );
+    const sumWB = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.total_gross), 0),
+        [],
+    );
+
+    const sumQ = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.total_quantity), 0),
+        [],
+    );
+
+    const sumWNR = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.discounted_total_net), 0),
+        [],
+    );
+    const sumWBR = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.discounted_total_gross), 0),
+        [],
+    );
+
+    const sumDN = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.delivery_net), 0),
+        [],
+    );
+    const sumDB = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.delivery_gross), 0),
+        [],
+    );
+
+    const columns = useMemo(
+        //column definitions...
+        () => [
+            {
+                accessorKey: 'id',
+                header: 'Id',
+                size: 10,
+
+            },
+            {
+                accessorKey: 'number',
+                header: 'Numer',
+                size: 35,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'payment_id',
+                header: 'Płatność',
+                Cell: ({cell}) => cell.getValue() ? props.payment.find(p => p.id === cell.getValue()).name : "",
+                size: 10,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'client_location_id',
+                header: 'Punkt',
+                Cell: ({cell}) => cell.getValue() ? props.client.locations.find(l => l.id === cell.getValue()).note : "",
+                size: 10,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'total_quantity',
+                header: 'Ilość produktów',
+                muiTableBodyCellProps: {
+                    align: 'center',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>IP</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"center"}>{Number(sumQ)}</Box>
+                ),
+                size: 5,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'total_net',
+                header: 'Wartość Netto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>WN</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWN) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'total_gross',
+                header: 'Wartość Brutto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>WB</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'discount',
+                header: 'Zniżka z płatności',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'center',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => Number(cell.getValue()) + "%",
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>Z</Box>
+                    </Tooltip>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'discounted_total_net',
+                header: 'Wartość Netto po rabacie',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>WN (R)</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWNR) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'discounted_total_gross',
+                header: 'Wartość Brutto po rabacie',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>WB (R)</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWBR) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+
+            {
+                accessorKey: 'delivery_net',
+                header: 'Dostawa Netto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>DN</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDN) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'delivery_gross',
+                header: 'Dostawa Brutto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>DB</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDB) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'currency',
+                header: 'Waluta',
+                size: 5,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'comment',
+                header: 'Komentarz',
+                // Header: ({column}) => (
+                //     <Tooltip title={column.columnDef.header} placement="top" arrow>
+                //         <Box>R</Box>
+                //     </Tooltip>
+                // ),
+                size: 5,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'status',
+                header: 'Status',
+                size: 5,
+                Cell: ({cell}) => {
+                    let text = "";
+                    let color = "";
+                    switch (cell.getValue()) {
+                        case 1:
+                            text = "Złożone";
+                            color = "success.main";
+                            break;
+                        case 2:
+                            text = "Zaakceptowane do realizacji";
+                            color = "info.main";
+                            break;
+                        case 3:
+                            text = "Przesłane do subiekta";
+                            color = "info.main";
+                            break;
+                        case 4:
+                            text = "W trakcie kompletacji";
+                            color = "warning.main";
+                            break;
+                        case 5:
+                            text = "Zrealizowane";
+                            color = "";
+                            break;
+                        case 6:
+                            text = "Anulowane";
+                            color = "error.main";
+                            break;
+                    }
+
+                    return (
+                        <Box sx={{color: color}}>{text}</Box>
+                    );
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'subiekt_number',
+                header: 'Numer zamówienia w Subiekcie',
+                size: 5,
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>NS</Box>
+                    </Tooltip>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'subiekt_added_at',
+                header: 'Data dodania do Subiekta',
+                size: 5,
+                Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "",
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>DS</Box>
+                    </Tooltip>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'created_at',
+                header: 'Data złożenia',
+                size: 5,
+                Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "",
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'action',
+                header: 'Akcje',
+                columnDefType: 'display',
+                muiTableBodyCellProps: {
+                    align: 'center',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell, row}) => {
+                    const [open, setOpen] = useState(false);
+                    const [data, setData] = useState(null)
+
+                    const getData = () => {
+                        router.get(route("system.b2b.order", {clientOrder: row.original.id}))
+                    }
+
+                    const handleClickOpen = () => {
+                        setOpen(true);
+                    };
+
+                    const handleClose = () => {
+                        setOpen(false);
+                    };
 
 
-    const {data, setData, re} = useForm([])
+                    useEffect(() => {
+                        if (open === true && data === null) {
+                            console.log("cvos")
+                            setData("lala")
+                            getData()
+                        }
+                    }, [open]);
 
-    useEffect(() => {
-        setData(history)
-    }, [history]);
+                    return (
+                        <>
+                            <Box>
+                                <Tooltip title="Szczegóły zamówienia">
+                                    <IconButton aria-label="edit" onClick={handleClickOpen}>
+                                        <ListAlt/>
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
 
+                            <Dialog
+                                fullWidth={true}
+                                maxWidth={"xl"}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <DialogTitle>Szczegóły zamówienia - {row?.original?.number}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        You can set my maximum width and whether to adapt or not.
+                                    </DialogContentText>
+                                    <Box
+                                        noValidate
+                                        component="form"
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            m: 'auto',
+                                            width: 'fit-content',
+                                        }}
+                                    >
+                                        as
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Zamknij</Button>
+                                </DialogActions>
+                            </Dialog>
 
-    const column = [
-        // {field: "id", headerName: "Id"},
-        // {
-        //     field: "client_user_name",
-        //     headerName: "Użytkownik",
-        //     renderCell: (params) => {
-        //         return (
-        //             <Box>
-        //                 <Typography>{params.row?.name}</Typography>
-        //             </Box>
-        //         );
-        //     }
-        // },
-        // {field: "description", headerName: "Opis", width: 350},
-        // {
-        //     field: "date",
-        //     headerName: "Data",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "time",
-        //     headerName: "Godzina",
-        //     sortable: false,
-        //     filterable: false,
-        //     // width: 160
-        // },
-        // {
-        //     field: "client_user_email",
-        //     headerName: "Email", sortable: false,
-        //     filterable: false,
-        //     renderCell: (params) => {
-        //         return (
-        //             <Box>
-        //                 <Typography>{params.row?.email}</Typography>
-        //             </Box>
-        //         );
-        //     }
-        //     // width: 300
-        // },
-    ];
+                        </>
+                    )
 
+                },
+                size: 10,
+            },
+        ],
+        [],
+        //end
+    );
 
-    const columnWithAction = [
-        ...column,
-        {
-            field: "action",
-            headerName: "Akcje",
-            width: 120,
-            sortable: false,
-            renderCell: (params) => {
-                const [openDialogDelete, setOpenDialogDelete] = useState(false);
-                const [openDialogAdd, setOpenDialogAdd] = useState(false);
-
-
-                const onEditClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-                    setOpenDialogAdd(true)
-                };
-
-                const onDeleteClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    setOpenDialogDelete(true);
-                };
-
-                return (
-                    <>
-                        <Tooltip title="Edycja">
-                            <IconButton aria-label="edit" onClick={onEditClick}>
-                                <Edit/>
-                            </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Usuń">
-                            <IconButton aria-label="delete" onClick={onDeleteClick}>
-                                <Delete/>
-                            </IconButton>
-                        </Tooltip>
-
-                        {/*<ProductsDeleteDialog open={openDialogDelete} setOpen={setOpenDialogDelete}*/}
-                        {/*                      product={params.row} last={products.length === 1}/>*/}
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
-                    </>
-
-                );
-
-            }
-        }
-    ];
-    const columnVisibility = {
-        id: false,
-    };
-    const [columnVisibilityModel, setColumnVisibilityModel] = useState({
-        ...columnVisibility
+    const table = useMaterialReactTable({
+        data,
+        columns,
+        enableTopToolbar: true,
+        enableBottomToolbar: true,
+        enableGrouping: true,
+        enableStickyHeader: true,
+        enableStickyFooter: true,
+        localization: MRT_Localization_PL,
+        initialState: {
+            columnVisibility: {id: false, subiekt_added_at: false},
+            density: 'compact',
+            pagination: {pageSize: 30, pageIndex: 0},
+            sorting: [
+                {
+                    id: 'id',
+                    desc: true,
+                },
+            ]
+        },
+        muiTableContainerProps: {
+            sx: {maxHeight: '400px'}
+        },
+        muiTablePaperProps: ({table}) => ({
+            sx: {
+                pl: 1
+            },
+            style: {
+                zIndex: table.getState().isFullScreen ? 2000 : undefined,
+            },
+        }),
+        muiTableBodyRowProps: ({row}) => {
+            // console.log(row.original, row.original.Rozliczenie, row.original.Wartosc, row.original.DniSpoznienia)
+            return ({
+                sx: {
+                    bgcolor: row.original.Rozliczenie != 2 ? row.original.DniSpoznienia != null ? Number(row.original.Wartosc) > 0 ? "errorBg.main" : "" : "" : ""
+                },
+            })
+        },
     });
-    const [rowCountState, setRowCountState] = useState(data.length);
 
 
     return (
-        <>
-            <DataGrid
-                rows={data}
-                // rows={sortByDateAndTimeObject(data)}
-                columns={readOnly ? column : columnWithAction}
-                columnVisibilityModel={columnVisibilityModel}
-                onColumnVisibilityModelChange={(newModel) =>
-                    setColumnVisibilityModel(newModel)
-                }
-                rowCount={rowCountState}
-                pageSizeOptions={[5, 20, 50, 100]}
-                editMode="row"
+        <MaterialReactTable table={table}/>
 
-                // slots={{ toolbar: GridToolbar }}
-                // slotProps={{
-                //     toolbar: {
-                //         showQuickFilter: true,
-                //         quickFilterProps: {debounceMs: 500}
-                //     }
-                // }}
-                disableColumnFilter
-                // disableColumnSelector
-                disableDensitySelector
-                // disableColumnMenu
-                disableVirtualization
-                autoHeight
-                localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-                sx={{
-
-                    boxShadow: 2,
-                    border: 2,
-                    borderColor: "primary.main",
-                    "& .MuiDataGrid-toolbarContainer": {
-                        "& .MuiButton-root": {
-                            color: "text.primary"
-                        }
-                    },
-                    "& .MuiToolbar-gutters": {
-                        display: "none"
-                    },
-                    "& .MuiDataGrid-selectedRowCount": {
-                        display: "none"
-                    },
-                    "& .MuiDataGrid-row.Mui-selected": {
-                        bgcolor: "rgba(255,255,255,0.25)"
-                    },
-                    "& .MuiDataGrid-row:hover": {
-                        bgcolor: "primary"
-                    }
-                }}
-            />
-            {!readOnly ?
-                <>
-                    <Box sx={{position: "absolute", bottom: -10, right: 0, zIndex: 20}}>
-                        <Fab color="primary" aria-label="add" onClick={() => setOpenDialogAdd(true)}>
-                            <Add/>
-                        </Fab>
-
-                    </Box>
-
-                    {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color} method={"create"}*/}
-                    {/*                   props={props}/>*/}
-                </>
-                : ""
-            }
-
-        </>
     );
 }

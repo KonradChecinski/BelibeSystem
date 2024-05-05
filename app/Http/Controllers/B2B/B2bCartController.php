@@ -63,7 +63,7 @@ class B2bCartController extends Controller
             "cartPriceSummary" => $priceSummary,
             "client" => $client,
 
-            "locations" => $client->locations()->with("country:id,name")->get(),
+            "locations" => $client->locations()->where("active", true)->with("country:id,name")->get(),
             "payments" => $client->payments,
             "deliveries" => B2bDelivery::all(["id", "name", "price_net", "price_gross",
                 'description',

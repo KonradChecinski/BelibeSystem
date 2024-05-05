@@ -77,7 +77,6 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
 
                     setOpenDialogDelete(true);
                 };
-
                 return (
                     <>
                         <Tooltip title="Edycja">

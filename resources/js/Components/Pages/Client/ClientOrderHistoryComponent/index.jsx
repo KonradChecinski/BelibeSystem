@@ -61,19 +61,19 @@ export default function ClientOrderHistoryComponent(props) {
         //     preserveScroll: true
         // })
     }
-    // console.log("")
+    console.log(props)
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
-            <Typography
-                sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                <HistoryIcon fontSize={"large"}/>
-                Historia zamówień klienta
-            </Typography>
+            {/*<Typography*/}
+            {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
+            {/*    <HistoryIcon fontSize={"large"}/>*/}
+            {/*    Historia zamówień klienta*/}
+            {/*</Typography>*/}
 
             <Box sx={{pr: 0}}>
-                <ClientOrderHistoryTable history={[]} readOnly={!props.editing}/>
+                <ClientOrderHistoryTable history={props.client.orders} readOnly={!props.editing} props={props}/>
             </Box>
         </Box>
 
