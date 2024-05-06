@@ -3,16 +3,16 @@ import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tabl
 import toLocaleString from "@/Functions/toLocaleString";
 import {Summarize} from "@mui/icons-material";
 
-export default function CartSummary({props, data, paymentDiscount}) {
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+export default function OrderSummary({data}) {
 
-    const ProductsNet = props.cartPriceSummary.total_net;
-    const ProductsGross = props.cartPriceSummary.total_gross;
-    const deliveryNet = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_net : 0;
-    const deliveryGross = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_gross : 0;
+    const ProductsNet = data?.order.total_net;
+    const ProductsGross = data?.order.total_gross;
 
-    const paymentNet = paymentDiscount === 0 ? 0 : -1 * (ProductsNet * (paymentDiscount / 100));
-    const paymentGross = paymentDiscount === 0 ? 0 : -1 * (ProductsGross * (paymentDiscount / 100));
+    const deliveryNet = data?.order.delivery_net;
+    const deliveryGross = data?.order.delivery_gross;
+
+    const paymentNet = data?.order.discounted_total_net - data?.order.total_net;
+    const paymentGross = data?.order.discounted_total_gross - data?.order.total_gross;
 
     const totalNet = ProductsNet + deliveryNet + paymentNet;
     const totalGross = ProductsGross + deliveryGross + paymentGross;
@@ -76,7 +76,7 @@ export default function CartSummary({props, data, paymentDiscount}) {
                     <TableRow hover>
                         <TableCell>
                             <Typography variant="body1">
-                                Płatność {paymentDiscount !== 0 && `(${paymentDiscount}%)`}
+                                Płatność ({data?.order.discount}%)
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>

@@ -1,22 +1,40 @@
 import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
-    Box, Button,
+    Box, Button, CircularProgress, ClickAwayListener,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
-    IconButton,
-    Tooltip,
+    DialogTitle, Divider, Grow,
+    IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Paper, Popper,
+    Tooltip, Typography,
 } from "@mui/material";
-import {Close, Delete, Done, DownloadDone, Edit, ListAlt,} from "@mui/icons-material";
+import {
+    Cancel,
+    Close, Cloud, ContentCopy, ContentCut, ContentPaste,
+    Delete,
+    Done,
+    DownloadDone,
+    Edit,
+    ListAlt, MoreVert,
+    SettingsBackupRestore,
+    TaskAlt,
+} from "@mui/icons-material";
 import {useTheme} from "@mui/material/styles";
 import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import {router} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
+import {ExampleLoaderComponent} from "../../../../../../dev/palette";
+import OrderItems from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderItems";
+import OrderPayments from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderPayments";
+import OrderDeliveries from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDeliveries";
+import OrderLocations from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderLocations";
+import OrderSummary from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderSummary";
+import OrderComment from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderComment";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -385,8 +403,25 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     const [open, setOpen] = useState(false);
                     const [data, setData] = useState(null)
 
+                    const [anchorEl, setAnchorEl] = useState(null);
+                    const openMenu = Boolean(anchorEl);
+                    const handleMenuClick = (event) => {
+                        setAnchorEl(event.currentTarget);
+                    };
+                    const handleMenuClose = (event) => {
+                        setAnchorEl(null);
+                    };
+
+
                     const getData = () => {
-                        router.get(route("system.b2b.order", {clientOrder: row.original.id}))
+                        // router.get(route("system.b2b.order", {clientOrder: row.original.id}))
+                        axios.get(route("system.b2b.order", {clientOrder: row.original.id}))
+                            .then(response => {
+                                setData(response.data)
+                            })
+                            .catch(error => {
+                                console.error(error)
+                            });
                     }
 
                     const handleClickOpen = () => {
@@ -400,20 +435,59 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
 
                     useEffect(() => {
                         if (open === true && data === null) {
-                            console.log("cvos")
-                            setData("lala")
                             getData()
                         }
                     }, [open]);
 
+                    // console.log(row.original)
                     return (
                         <>
                             <Box>
                                 <Tooltip title="Szczegóły zamówienia">
-                                    <IconButton aria-label="edit" onClick={handleClickOpen}>
+                                    <IconButton aria-label="show order" onClick={handleClickOpen}>
                                         <ListAlt/>
                                     </IconButton>
                                 </Tooltip>
+
+
+                                <IconButton
+                                    aria-label="more"
+                                    onClick={handleMenuClick}
+                                >
+                                    <MoreVert/>
+                                </IconButton>
+
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={openMenu}
+                                    onClose={handleMenuClose}
+                                >
+
+                                    <MenuItem disabled={![1].includes(row.original.status)}
+                                              onClick={handleClickOpen}>
+                                        <ListItemIcon><TaskAlt/></ListItemIcon>
+                                        <ListItemText>Zaakceptuj zamówienie</ListItemText>
+                                    </MenuItem>
+                                    <MenuItem disabled={![3, 4].includes(row.original.status)}
+                                              onClick={handleClickOpen}>
+                                        <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
+                                        <ListItemText>Ponów dodawanie do subiekta</ListItemText>
+                                    </MenuItem>
+
+                                    <MenuItem disabled={![1, 2, 3].includes(row.original.status)}
+                                              onClick={handleClickOpen}>
+                                        <ListItemIcon><Cancel/></ListItemIcon>
+                                        <ListItemText>Anuluj zamówienie</ListItemText>
+                                    </MenuItem>
+
+                                    <MenuItem disabled={![1].includes(row.original.status)}
+                                              onClick={handleClickOpen}>
+                                        <ListItemIcon><Edit/></ListItemIcon>
+                                        <ListItemText>Edytuj</ListItemText>
+                                    </MenuItem>
+
+                                    <Divider/>
+                                </Menu>
                             </Box>
 
                             <Dialog
@@ -424,21 +498,43 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                             >
                                 <DialogTitle>Szczegóły zamówienia - {row?.original?.number}</DialogTitle>
                                 <DialogContent>
-                                    <DialogContentText>
-                                        You can set my maximum width and whether to adapt or not.
-                                    </DialogContentText>
-                                    <Box
-                                        noValidate
-                                        component="form"
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            m: 'auto',
-                                            width: 'fit-content',
-                                        }}
-                                    >
-                                        as
-                                    </Box>
+                                    {data ?
+                                        (
+                                            <>
+                                                <OrderItems data={data}/>
+                                                <Box sx={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    flexWrap: "wrap",
+                                                    justifyContent: "space-between",
+                                                    gap: 2,
+                                                    my: 2,
+                                                }}>
+                                                    <OrderPayments data={data}/>
+                                                    <OrderDeliveries data={data}/>
+                                                    <OrderLocations data={data}/>
+                                                </Box>
+                                                <OrderComment data={data}/>
+                                                <OrderSummary data={data}/>
+
+                                            </>
+                                        )
+                                        :
+                                        (
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    m: 'auto',
+                                                    width: 'fit-content',
+                                                }}
+                                            >
+                                                <CircularProgress/>
+                                            </Box>
+
+
+                                        )}
+
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Zamknij</Button>

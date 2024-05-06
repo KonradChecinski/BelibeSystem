@@ -122,7 +122,7 @@ class B2bOrderController extends Controller
                 "total_gross" => $item->quantity * $item->total_gross,
                 "currency" => $item->currency,
             ]);
-            $order->products()->save($orderProduct);
+            $order->orderProducts()->save($orderProduct);
         }
 
         $cart->delete();

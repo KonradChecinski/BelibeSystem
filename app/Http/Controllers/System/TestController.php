@@ -7,6 +7,7 @@ use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -16,7 +17,7 @@ class TestController extends Controller
      */
     public function index()
     {
-        ShoperOrderCreateInSubiekt::dispatchSync();
+//        ShoperOrderCreateInSubiekt::dispatchSync();
 //        $client = Client::find(1);
 //        $model = ProductModel::find(37);
 ////        $price = PriceForClient::getPrice($model, $client);

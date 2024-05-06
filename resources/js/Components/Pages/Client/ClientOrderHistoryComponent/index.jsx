@@ -11,67 +11,10 @@ import ClientOrderHistoryTable from "@/Components/Table/Client/ClientOrderHistor
 
 
 export default function ClientOrderHistoryComponent(props) {
-    // const [edited, setEdited] = useState(false);
-    //
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     errors: fieldErrors,
-    //     setValue,
-    //     clearErrors,
-    // } = useNotesClientForm()
-    //
-    // const {data, setData, processing, post} = useForm({
-    //     'notes': '',
-    // })
-    //
-    // const initializeFieldValues = () => {
-    //     setValue('notes', data.notes)
-    // }
-    //
-    // useEffect(() => {
-    //     // inicjacja wartości pól
-    //     initializeFieldValues()
-    // }, [setValue]);
-
-    const onSubmit = (formData) => {
-        saveBasic()
-    }
-
-    // const resetForm = () => {
-    //     setData({
-    //         'notes': '',
-    //     });
-    //
-    //     initializeFieldValues()
-    //     setEdited(false);
-    //
-    //     clearErrors('notes')
-    // };
-    const saveBasic = () => {
-        // post(route("system.products.model.update.basic", {productModel: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
-    }
     console.log(props)
     return (
 
         <Box sx={{display: "flex", flexDirection: "column"}}>
-
-            {/*<Typography*/}
-            {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
-            {/*    <HistoryIcon fontSize={"large"}/>*/}
-            {/*    Historia zamówień klienta*/}
-            {/*</Typography>*/}
-
             <Box sx={{pr: 0}}>
                 <ClientOrderHistoryTable history={props.client.orders} readOnly={!props.editing} props={props}/>
             </Box>

@@ -17,7 +17,41 @@ class ClientOrderController extends Controller
      */
     public function show(ClientOrder $clientOrder)
     {
-        dd($clientOrder, $clientOrder->products, $clientOrder->client, $clientOrder->payment, $clientOrder->delivery, $clientOrder->location);
+        $clientOrder->load([
+            "orderProducts",
+            "payment",
+            "delivery",
+            "location",
+            "location.country:id,name",
+            "products:products.id,products.symbol,products.product_size_id,products.product_unit_id,products.product_model_color_id",
+            "products.size:id,name",
+            "products.unit:id,name",
+            "productModels:product_models.id,product_models.name,product_models.symbol",
+            "productModelColors" => function ($query) {
+                $query->select("product_model_colors.id",
+                    "product_model_colors.shortcut",
+                    "product_model_colors.name",
+                    "product_model_colors.product_model_id");
+                $query->withWhereHas("images", function ($query) {
+                    $query->where("type", 1);
+                    $query->where("order", 0);
+                    $query->select("product_model_color_id", "path");
+                });
+            },
+        ]);
+        $clientOrderModel = collect([$clientOrder]);
+
+
+        return response()->json([
+            "order" => $clientOrder,
+            "orderProducts" => $clientOrder->orderProducts,
+            "products" => $clientOrderModel->pluck("products")->flatten(),
+            "productModels" => $clientOrderModel->pluck("productModels")->flatten()->unique("id")->values(),
+            "productColors" => $clientOrderModel->pluck("productModelColors")->flatten()->unique("id")->values(),
+            "payment" => $clientOrder->payment,
+            "delivery" => $clientOrder->delivery,
+            "location" => $clientOrder->location,
+        ]);
 
     }
 
