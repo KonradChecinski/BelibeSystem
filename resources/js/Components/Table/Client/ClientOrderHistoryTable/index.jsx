@@ -29,12 +29,13 @@ import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import {router} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {ExampleLoaderComponent} from "../../../../../../dev/palette";
-import OrderItems from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderItems";
-import OrderPayments from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderPayments";
-import OrderDeliveries from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDeliveries";
-import OrderLocations from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderLocations";
-import OrderSummary from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderSummary";
-import OrderComment from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderComment";
+import OrderItems from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderItems";
+import OrderPayments from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderPayments";
+import OrderDeliveries from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderDeliveries";
+import OrderLocations from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderLocations";
+import OrderSummary from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderSummary";
+import OrderComment from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderComment";
+import OrderMenu from "@/Components/Pages/Client/ClientOrderHistoryComponent/Menu/OrderMenu";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -400,148 +401,8 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
-                    const [open, setOpen] = useState(false);
-                    const [data, setData] = useState(null)
-
-                    const [anchorEl, setAnchorEl] = useState(null);
-                    const openMenu = Boolean(anchorEl);
-                    const handleMenuClick = (event) => {
-                        setAnchorEl(event.currentTarget);
-                    };
-                    const handleMenuClose = (event) => {
-                        setAnchorEl(null);
-                    };
-
-
-                    const getData = () => {
-                        // router.get(route("system.b2b.order", {clientOrder: row.original.id}))
-                        axios.get(route("system.b2b.order", {clientOrder: row.original.id}))
-                            .then(response => {
-                                setData(response.data)
-                            })
-                            .catch(error => {
-                                console.error(error)
-                            });
-                    }
-
-                    const handleClickOpen = () => {
-                        setOpen(true);
-                    };
-
-                    const handleClose = () => {
-                        setOpen(false);
-                    };
-
-
-                    useEffect(() => {
-                        if (open === true && data === null) {
-                            getData()
-                        }
-                    }, [open]);
-
-                    // console.log(row.original)
                     return (
-                        <>
-                            <Box>
-                                <Tooltip title="Szczegóły zamówienia">
-                                    <IconButton aria-label="show order" onClick={handleClickOpen}>
-                                        <ListAlt/>
-                                    </IconButton>
-                                </Tooltip>
-
-
-                                <IconButton
-                                    aria-label="more"
-                                    onClick={handleMenuClick}
-                                >
-                                    <MoreVert/>
-                                </IconButton>
-
-                                <Menu
-                                    anchorEl={anchorEl}
-                                    open={openMenu}
-                                    onClose={handleMenuClose}
-                                >
-
-                                    <MenuItem disabled={![1].includes(row.original.status)}
-                                              onClick={handleClickOpen}>
-                                        <ListItemIcon><TaskAlt/></ListItemIcon>
-                                        <ListItemText>Zaakceptuj zamówienie</ListItemText>
-                                    </MenuItem>
-                                    <MenuItem disabled={![3, 4].includes(row.original.status)}
-                                              onClick={handleClickOpen}>
-                                        <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
-                                        <ListItemText>Ponów dodawanie do subiekta</ListItemText>
-                                    </MenuItem>
-
-                                    <MenuItem disabled={![1, 2, 3].includes(row.original.status)}
-                                              onClick={handleClickOpen}>
-                                        <ListItemIcon><Cancel/></ListItemIcon>
-                                        <ListItemText>Anuluj zamówienie</ListItemText>
-                                    </MenuItem>
-
-                                    <MenuItem disabled={![1].includes(row.original.status)}
-                                              onClick={handleClickOpen}>
-                                        <ListItemIcon><Edit/></ListItemIcon>
-                                        <ListItemText>Edytuj</ListItemText>
-                                    </MenuItem>
-
-                                    <Divider/>
-                                </Menu>
-                            </Box>
-
-                            <Dialog
-                                fullWidth={true}
-                                maxWidth={"xl"}
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <DialogTitle>Szczegóły zamówienia - {row?.original?.number}</DialogTitle>
-                                <DialogContent>
-                                    {data ?
-                                        (
-                                            <>
-                                                <OrderItems data={data}/>
-                                                <Box sx={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    flexWrap: "wrap",
-                                                    justifyContent: "space-between",
-                                                    gap: 2,
-                                                    my: 2,
-                                                }}>
-                                                    <OrderPayments data={data}/>
-                                                    <OrderDeliveries data={data}/>
-                                                    <OrderLocations data={data}/>
-                                                </Box>
-                                                <OrderComment data={data}/>
-                                                <OrderSummary data={data}/>
-
-                                            </>
-                                        )
-                                        :
-                                        (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    m: 'auto',
-                                                    width: 'fit-content',
-                                                }}
-                                            >
-                                                <CircularProgress/>
-                                            </Box>
-
-
-                                        )}
-
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>Zamknij</Button>
-                                </DialogActions>
-                            </Dialog>
-
-                        </>
+                        <OrderMenu row={row}/>
                     )
 
                 },
