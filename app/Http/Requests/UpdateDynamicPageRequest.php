@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Cart;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateB2bCartRequest extends FormRequest
+class UpdateDynamicPageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->hasPermissionTo("editPages", "user");
     }
 
     /**
@@ -21,9 +21,13 @@ class UpdateB2bCartRequest extends FormRequest
      */
     public function rules(): array
     {
-        $availableQuantity = $this->product->available;
         return [
-            'quantity' => ['required', 'integer', 'min:0', "max:$availableQuantity"]
+            "content" => "required|array",
+            "content.*.type" => "required|string",
+            "content.*.props" => "required|array",
+            "root.props.title" => "required|string",
+            "root.props.slug" => "nullable|string",
+            "zones" => "nullable|array",
         ];
     }
 }

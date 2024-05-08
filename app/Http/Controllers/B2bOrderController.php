@@ -84,7 +84,7 @@ class B2bOrderController extends Controller
         }
 
         foreach ($cartModel as $item) {
-            if ($item->quantity > Product::find($item->product_id)->quantity) {
+            if ($item->quantity > Product::find($item->product_id)->available) {
                 return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
             }
         }

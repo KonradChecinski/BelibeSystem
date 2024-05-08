@@ -187,8 +187,7 @@ export default function CartItems({props, discount}) {
                                                                     <TableCell align={"center"} sx={{p: 0}}>
                                                                         <ProductInput
                                                                             product={product}
-                                                                            maxQuantity={product.quantity}
-                                                                            enqueueSnackbar={enqueueSnackbar}
+                                                                            maxQuantity={product.available}
                                                                             accountManager={props.accountManager}
                                                                             initialValue={item.quantity}
                                                                         />
@@ -243,7 +242,9 @@ export default function CartItems({props, discount}) {
 }
 
 
-const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, initialValue}) => {
+const ProductInput = ({product, maxQuantity, accountManager, initialValue}) => {
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
     const [value, setValue] = useState(initialValue);
     useEffect(() => {
         setValue(initialValue);
@@ -283,8 +284,8 @@ const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, in
             },
             onError: (error) => {
                 enqueueSnackbar("Błąd przy zmienianiu ilości produktu " + product.symbol + " w koszyku na " + value, {variant: 'error'})
-                console.error(error.response.data.errors)
-                if (error.response.data.errors.quantity) enqueueSnackbar(error.response.data.errors.quantity[0], {variant: 'warning'})
+                console.error(error)
+                if (error.quantity) enqueueSnackbar(error.quantity, {variant: 'warning'})
             }
         });
 
@@ -357,7 +358,7 @@ const ProductInput = ({product, maxQuantity, enqueueSnackbar, accountManager, in
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
                     {/*({quantity})*/}
-                    {accountManager && (" (" + product.quantity + ")")}
+                    {accountManager && (" (" + product.available + ")")}
                 </Typography>
             </Box>
 

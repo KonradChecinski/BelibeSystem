@@ -63,6 +63,9 @@ class B2bProductController extends Controller
     public function show(string $slug)
     {
         $productModel = ProductModel::findBySlug($slug);
+        if (!$productModel) {
+            abort(404);
+        }
         $productModel = $productModel->load([
             'prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency',
             "productsToB2bWithRelation",

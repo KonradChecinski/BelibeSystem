@@ -106,7 +106,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                 </HoveringCell>
                                 {sortBySizesName(model.sizes).map((size, id) => {
                                     const product = color.products.find(p => p.size.id === size.id);
-                                    let quantity = product?.quantity;
+                                    let quantity = product?.available;
                                     if (quantity > 30) quantity = 30;
 
                                     return (
@@ -280,7 +280,7 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
                     {/*({quantity})*/}
-                    {accountManager && (" (" + product.quantity + ")")}
+                    {accountManager && (" (" + product.available + ")")}
                 </Typography>
             </Box>
 

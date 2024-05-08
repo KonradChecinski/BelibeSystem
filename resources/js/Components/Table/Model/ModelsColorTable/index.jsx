@@ -20,7 +20,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     useEffect(() => {
         setData(products)
     }, [products]);
-
+    console.log(data)
 
     const column = [
         {field: "id", headerName: "Id"},
@@ -52,6 +52,14 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
         {
             field: "quantity",
             headerName: "Stan",
+            sortable: false,
+            filterable: false,
+            type: "number",
+            width: 70
+        },
+        {
+            field: "available",
+            headerName: "Dostępne",
             sortable: false,
             filterable: false,
             type: "number",

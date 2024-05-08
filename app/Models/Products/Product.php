@@ -40,23 +40,19 @@ class Product extends Model
         'show_in_subiekt',
     ];
 
-    protected function quantity(): Attribute
-    {
-        return new Attribute(
-            get: function (string $value, array $attributes) {
-//                dd($attributes);
+    protected $appends = ["available"];
 
-                $baseQuantity = $value;
-                $orderProductsQuantity = ClientOrderProduct::query()->where("product_id", $attributes["id"])->whereHas("orders", function (Builder $query) {
-                    $query->whereIn("status", [1, 2, 3, 4]);
-                })->sum("quantity");
-                $sum = $baseQuantity - $orderProductsQuantity;
-                if ($sum < 0) {
-                    return 0;
-                }
-                return $sum;
-            }
-        );
+    public function getAvailableAttribute()
+    {
+        $baseQuantity = $this->quantity;
+        $orderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
+            $query->whereIn("status", [1, 2, 3, 4]);
+        })->sum("quantity");
+        $sum = $baseQuantity - $orderProductsQuantity;
+        if ($sum < 0) {
+            return 0;
+        }
+        return $sum;
     }
 
     public function color(): BelongsTo

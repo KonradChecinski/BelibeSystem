@@ -35,6 +35,7 @@ export default function CartDeliveries({props, setData}) {
 
                     return (
                         <Card variant="outlined"
+                              key={delivery.id}
                               sx={{
                                   width: 400,
                                   height: 130,

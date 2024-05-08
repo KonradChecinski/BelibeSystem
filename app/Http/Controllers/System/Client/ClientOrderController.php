@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
 use App\Models\ClientOrder;
+use App\Models\Products\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -23,7 +24,7 @@ class ClientOrderController extends Controller
             "delivery",
             "location",
             "location.country:id,name",
-            "products:products.id,products.symbol,products.product_size_id,products.product_unit_id,products.product_model_color_id",
+            "products:products.id,products.symbol,products.quantity,products.product_size_id,products.product_unit_id,products.product_model_color_id",
             "products.size:id,name",
             "products.unit:id,name",
             "productModels:product_models.id,product_models.name,product_models.symbol",
@@ -55,6 +56,15 @@ class ClientOrderController extends Controller
 
     }
 
+    public function update(Request $request, ClientOrder $clientOrder)
+    {
+        dd($request->all(), $clientOrder);
+    }
+
+    public function updateProduct(Request $request, ClientOrder $clientOrder, Product $product)
+    {
+        dd($request->all(), $clientOrder, $product);
+    }
 
     /**
      * Store a newly created resource in storage.
