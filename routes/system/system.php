@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
@@ -44,6 +45,12 @@ use App\Http\Controllers\System\Settings\SettingsUsersAccountManagerController;
 use App\Http\Controllers\System\Settings\SettingsUsersActiveController;
 use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
+use App\Http\Controllers\System\XmlGeneratorController;
+use App\Install\ClearDBController;
+use App\Install\Install1Controller;
+use App\Install\Install2Controller;
+use App\Install\Install3Controller;
+use App\Install\Install4Controller;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -131,7 +138,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::post("/b2b/order/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
         Route::post("/b2b/order/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
+
         Route::get("/b2b/order/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.b2b.order");
+        Route::get("/b2b/order/{clientOrder}/edit", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
+        Route::patch("/b2b/order/{clientOrder}", [ClientOrderController::class, 'update'])->name("system.b2b.order.update");
+        Route::patch("/b2b/order/{clientOrder}/{product}", [ClientOrderController::class, 'updateProduct'])->name("system.b2b.order.update.product");
 
     });
 
@@ -234,7 +245,12 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     });
 
     Route::group(["prefix" => "/pages"], function () {
-        Route::get("/", [PagesController::class, 'index'])->name("system.pages");
+        Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");
+        Route::get("/page", [DynamicPageController::class, 'create'])->name("system.pages.page");
+        Route::post("/create", [DynamicPageController::class, 'store'])->name("system.pages.page.create");
+        Route::get("/{dynamicPage}/edit", [DynamicPageController::class, 'edit'])->name("system.pages.page.edit");
+        Route::patch("/{dynamicPage}", [DynamicPageController::class, 'update'])->name("system.pages.page.update");
+        Route::delete("/{dynamicPage}", [DynamicPageController::class, 'destroy'])->name("system.pages.page.delete");
 
     });
 
@@ -254,6 +270,19 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     })->name("system.phpinfo");
     Route::get("test", [TestController::class, 'index'])->name("system.test");
     Route::get("barcode", [TestController::class, 'store'])->name("system.test.barcodes");
+
+
+    Route::group(['prefix' => '/xml'], function () {
+        Route::get("merkandi", [XmlGeneratorController::class, "merkandiGenerateProductsXML"])->name("xml.merkandi");
+    }
+    );
+
+
+    Route::get("install", [Install1Controller::class, 'install'])->name("install");
+    Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
+    Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
+    Route::get("install4", [Install4Controller::class, 'install'])->name("install4");
+    Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 });
 
 

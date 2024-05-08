@@ -79,17 +79,4 @@ Route::get('images/1x1/{path}', [StorageController::class, 'imagesSquare'])->nam
 Route::get('color-icons/{path}', [StorageController::class, 'colorIcons'])->name("colorIcons");
 
 
-Route::group(['prefix' => '/xml'], function () {
-    Route::get("merkandi", [XmlGeneratorController::class, "merkandiGenerateProductsXML"])->name("xml.merkandi");
-}
-);
-
-
-Route::get("install", [Install1Controller::class, 'install'])->name("install");
-Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
-Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
-Route::get("install4", [Install4Controller::class, 'install'])->name("install4");
-Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
-
-
 require __DIR__ . "/auth.php";

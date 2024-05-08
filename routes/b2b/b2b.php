@@ -6,6 +6,7 @@ use App\Http\Controllers\B2B\B2bMainPageController;
 use App\Http\Controllers\B2B\B2bProductCategoryController;
 use App\Http\Controllers\B2B\B2bProductController;
 use App\Http\Controllers\B2bOrderController;
+use App\Http\Controllers\B2bPageController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,6 +15,7 @@ Route::group([], function () {
 
     Route::get("/c/{slug}", [B2bProductCategoryController::class, 'show'])->name("b2b.category");
     Route::get("/m/{slug}", [B2bProductController::class, 'show'])->name("b2b.model");
+    Route::get("/p/{slug}", [B2bPageController::class, 'show'])->name("b2b.page");
 
     Route::get("/model/search", [B2bProductController::class, 'search'])->name("b2b.model.search");
 

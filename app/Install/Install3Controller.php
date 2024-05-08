@@ -69,27 +69,31 @@ class Install3Controller extends Controller
             "type" => 1,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 3",
+            "name" => "Termin 3 dni",
             "type" => 2,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 7",
+            "name" => "Termin 7 dni",
             "type" => 2,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 14",
+            "name" => "Termin 14 dni",
             "type" => 2,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 21",
+            "name" => "Termin 21 dni",
             "type" => 2,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 30",
+            "name" => "Termin 30 dni",
             "type" => 2,
         ]);
         B2bPayment::create([
-            "name" => "Przelew 60",
+            "name" => "Termin 45 dni",
+            "type" => 2,
+        ]);
+        B2bPayment::create([
+            "name" => "Termin 60 dni",
             "type" => 2,
         ]);
 
