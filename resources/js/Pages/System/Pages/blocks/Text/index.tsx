@@ -71,19 +71,19 @@ export const Text = {
     },
     render: ({text, variant, align, paddingX, paddingY}) => {
         return (
-            <Section>
-                <Typography
-                    variant={variant}
-                    align={align}
-                    sx={{
-                        color: "",
-                        px: paddingX + "px",
-                        py: paddingY + "px",
-                    }}
-                >
-                    {text}
-                </Typography>
-            </Section>
+            // <Section>
+            <Typography
+                variant={variant}
+                align={align}
+                sx={{
+                    color: "",
+                    px: paddingX + "px",
+                    py: paddingY + "px",
+                }}
+            >
+                {text}
+            </Typography>
+            // </Section>
         );
     },
 };

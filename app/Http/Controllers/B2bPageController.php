@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products\ProductCategory;
+use App\Models\DynamicPage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class PagesController extends Controller
+class B2bPageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render("System/Pages/Pages", [
-            "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
-        ]);
+        //
     }
 
     /**
@@ -37,9 +35,15 @@ class PagesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        $page = DynamicPage::findBySlug($slug);
+        if (!$page) {
+            abort(404);
+        }
+        return Inertia::render('B2B/DynamicPage', [
+            'page' => $page->only(['title', 'content']),
+        ]);
     }
 
     /**

@@ -64,32 +64,35 @@ class HandleInertiaRequests extends Middleware
             ]);
         }
 
+        if (Helper::getSystemNameFromDomain($request) === SystemName::SYSTEM) {
+            $array = array_merge($array, [
+                "auth" => [
+                    "user" => $request->user(),
+                    "roles" => $request->user()
+                        ? $request->user()->roles->pluck("name")
+                        : [],
+                    "permissions" => $request->user()
+                        ? $request
+                            ->user()
+                            ->getPermissionsViaRoles()
+                            ->pluck("name")
+                            ->merge($request->user()->permissions->pluck("name"))
+                        : [],
+                ],
+            ]);
+        }
 
-        return array_merge($array, [
-            "auth" => [
-                "user" => $request->user(),
-                "roles" => $request->user()
-                    ? $request->user()->roles->pluck("name")
-                    : [],
-                "permissions" => $request->user()
-                    ? $request
-                        ->user()
-                        ->getPermissionsViaRoles()
-                        ->pluck("name")
-                        ->merge($request->user()->permissions->pluck("name"))
-                    : [],
-            ],
+        // Add the Ziggy route helper to the page (for use in Vue components
+
+        $array = array_merge($array, [
             "ziggy" => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
                     "location" => $request->url(),
                 ]);
             },
             "backgroundImage" => $backgroud,
-//            'flash' => [
-////                'type' => fn() => $request->session()->get("toast-type"),
-////                'message' => fn() => $request->session()->get("toast-message")
-//                'message' => fn() => $request->session()->get("toast")
-//            ]
         ]);
+
+        return $array;
     }
 }

@@ -1,4 +1,4 @@
-import {Head, Link, useForm} from "@inertiajs/react";
+import {Head, Link, router, useForm} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Box, Button, Card, Tooltip} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
@@ -13,13 +13,16 @@ import {Text} from "./blocks/Text";
 import {VerticalSpace} from "./blocks/VerticalSpace";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {ArrowBack} from "@mui/icons-material";
+import {enqueueSnackbar} from "notistack";
+import {useEffect, useState} from "react";
 
-export default function Pages(props) {
-    // console.log(props)
+export default function Page(props) {
+    const [pageData, setPageData] = useState(props?.page);
+    console.log(props)
     const {t} = useLaravelReactI18n();
-    const {data, setData, post, put, loading, errors} = useForm();
 
-    const config = {
+
+    const [config, setConfig] = useState({
         components: {
             ButtonGroup,
             Hero,
@@ -56,33 +59,51 @@ export default function Pages(props) {
                 );
             }
         }
-    };
+    });
 
 // Describe the initial data
-    const initialData = {
-        content: [],
-        root: {title: "Tytuł"},
-    };
-
+    const [initialData, setInitialData] = useState({
+        content: pageData?.content ? pageData?.content : [],
+        root: {
+            props: {
+                title: pageData?.title ? pageData?.title : "",
+                slug: pageData?.slug ? pageData?.slug : "",
+            }
+        },
+    });
 // Save the data to your database
     const save = (data) => {
-        console.log(data)
+        // console.log(data, pageData.id)
+        if (pageData.id) {
+            router.patch(route("system.pages.page.update", {dynamicPage: pageData.id}), data, {
+                onSuccess: () => {
+                    enqueueSnackbar("Strona została zaktualizowana", {variant: "success"})
+                    router.visit(route("system.pages.page.edit", {dynamicPage: pageData.id}));
+                },
+                onError: (error) => {
+                    console.error(error)
+                    enqueueSnackbar("Wystąpił błąd podczas aktualizacji strony", {variant: "error"})
+                }
+
+            })
+        } else {
+            console.log("create")
+            router.post(route("system.pages.page.create"), data, {
+                onSuccess: () => {
+                    enqueueSnackbar("Strona została utworzona", {variant: "success"});
+                },
+                onError: (error) => {
+                    console.error(error)
+                    enqueueSnackbar("Wystąpił błąd podczas tworzenia strony", {variant: "error"})
+                }
+
+            })
+        }
     };
 
     return (
         <>
-            {/*// <UserLayout*/}
-            {/*//     auth={props.auth}*/}
-            {/*//     errors={props.errors}*/}
-            {/*//     header={*/}
-            {/*//         t("Pages")*/}
-            {/*//     }*/}
-            {/*// >*/}
             <Head title={t("Nowa strona")}/>
-            {/*//     <Card sx={{height: "100%", width: 1}}>*/}
-            {/*//*/}
-            {/*//     </Card>*/}
-            {/*// </UserLayout>*/}
             <Box
                 sx={{
                     "& .Puck div": {
@@ -114,7 +135,7 @@ export default function Pages(props) {
                         <Button
                             onClick={
                                 () => {
-                                    window.history.back();
+                                    router.visit(route("system.pages"));
                                 }
                             }>
                             <ArrowBack sx={{color: "black"}}/>
@@ -126,7 +147,6 @@ export default function Pages(props) {
                     config={config}
                     data={initialData}
                     onPublish={save}
-                    // onChange={(value) => setData(value)}
                     style={{
                         border: "none",
                         boxShadow: "none",
