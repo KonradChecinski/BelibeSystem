@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group([], function () {
-    Route::get("/dashboard", [B2bMainPageController::class, 'index'])->name("b2b.dashboard");
+    Route::get("/", [B2bMainPageController::class, 'index'])->name("b2b.main");
 
     Route::get("/c/{slug}", [B2bProductCategoryController::class, 'show'])->name("b2b.category");
     Route::get("/m/{slug}", [B2bProductController::class, 'show'])->name("b2b.model");

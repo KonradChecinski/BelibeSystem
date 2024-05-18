@@ -72,7 +72,7 @@ class ClientOrderController extends Controller
     public function store(Request $request, Client $client)
     {
         $request->session()->push('client', $client);
-        return Redirect::route("b2b.dashboard");
+        return Redirect::route("b2b.main");
     }
 
     /**

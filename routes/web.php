@@ -45,8 +45,12 @@ if (request()->getHttpHost() === "system." . config("app.domain")) {
         require __DIR__ . "/system/system.php";
 
         Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
-            require __DIR__ . "/b2b/b2b.php";
+            Route::group(["prefix" => "/b2b"], function () {
+                require __DIR__ . "/b2b/b2b.php";
+            });
+
         });
+
     });
 }
 

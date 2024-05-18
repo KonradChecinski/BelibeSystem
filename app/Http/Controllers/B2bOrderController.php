@@ -126,7 +126,7 @@ class B2bOrderController extends Controller
         }
 
         $cart->delete();
-        return redirect()->route("b2b.dashboard")->with("success", "Order has been placed successfully");
+        return redirect()->route("b2b.main")->with("success", "Order has been placed successfully");
     }
 
     /**
