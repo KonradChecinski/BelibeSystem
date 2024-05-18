@@ -73,8 +73,8 @@ export default function Menu({showContent, auth}) {
                     }}
                 />
                 <MainMenuLink
-                    href={route("system.dashboard")}
-                    active={route().current("system.dashboard")}
+                    href={route("system.orders")}
+                    active={route().current("system.orders")}
                     showContent={smBreakpointUp || showContent}
                     text={t("Orders")}
                     menuIcon={ShoppingCart}
@@ -95,7 +95,7 @@ export default function Menu({showContent, auth}) {
                         href={route("system.products.models")}
                         active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                         showContent={smBreakpointUp || showContent}
-                        text={"Modele"}
+                        text={t("Models")}
                         menuIcon={Inventory}
                     /> : ""}
                 {auth.permissions.includes("showClient") ?
@@ -103,7 +103,7 @@ export default function Menu({showContent, auth}) {
                         href={route("system.clients")}
                         active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}
                         showContent={smBreakpointUp || showContent}
-                        text={"Klienci"}
+                        text={t("Clients")}
                         menuIcon={Group}
                     /> : ""}
 
@@ -124,14 +124,14 @@ export default function Menu({showContent, auth}) {
                         href={route("system.pages")}
                         active={route().current("system.pages")}
                         showContent={smBreakpointUp || showContent}
-                        text={"Strony"}
+                        text={t("Pages")}
                         menuIcon={ContactPage}
                     /> : ""}
                 <MainMenuLink
                     href={route("system.settings.category")}
                     active={route().current("system.settings.category")}
                     showContent={smBreakpointUp || showContent}
-                    text={"Kategorie"}
+                    text={t("Categories")}
                     menuIcon={Category}
                 />
 
@@ -151,7 +151,7 @@ export default function Menu({showContent, auth}) {
                     href={route("system.settings.category")}
                     active={route().current("system.settings.category")}
                     showContent={smBreakpointUp || showContent}
-                    text={"Partnerzy"}
+                    text={t("Partners")}
                     menuIcon={Handshake}
                 />
 
@@ -171,13 +171,13 @@ export default function Menu({showContent, auth}) {
                         href={route("system.queries.images")}
                         active={false}
                         showContent={smBreakpointUp || showContent}
-                        text={"Zestawienia"}
+                        text={t("Queries")}
                         menuIcon={QueryStats}
                     >
                         <SubMenuLink
                             href={route("system.queries.images")}
                             active={route().current("system.queries.images")}
-                            text={"Zdjęcia"}
+                            text={t("Images")}
                         />
                     </MainMenuLink> : ""}
 
@@ -198,7 +198,7 @@ export default function Menu({showContent, auth}) {
                         href={route("system.settings")}
                         active={route().current("system.settings")}
                         showContent={smBreakpointUp || showContent}
-                        text={"Ustawienia"}
+                        text={t("Settings")}
                         menuIcon={Settings}
                     >
                         <SubMenuLink
