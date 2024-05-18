@@ -59,6 +59,7 @@ export default function ModelsTable(props) {
             filterable: false
         },
         {field: "quantity", headerName: "Stan", filterable: false},
+        {field: "available", headerName: "Dostępne", filterable: false},
         {
             field: "action",
             headerName: "Akcje",
@@ -138,7 +139,7 @@ export default function ModelsTable(props) {
     };
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
-        pageSize: 100,
+        pageSize: 20,
         orderBy: null,
         order: null,
         search: [],
@@ -214,10 +215,13 @@ export default function ModelsTable(props) {
             for (const model of json[0].data) {
                 // console.log(model)
                 let quantity = 0;
+                let available = 0;
                 for (const product of model.products) {
                     quantity += product.quantity
+                    available += product.available
                 }
                 model.quantity = quantity
+                model.available = available
             }
             ;
         };
