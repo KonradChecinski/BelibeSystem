@@ -4,7 +4,11 @@ namespace App\Install;
 ini_set('max_execution_time', 600);
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
+use Illuminate\Support\Facades\DB;
 
 
 class Install4Controller extends Controller
@@ -14,6 +18,36 @@ class Install4Controller extends Controller
         foreach (ProductModel::all() as $productModel) {
             $productModel->generateSlug();
             $productModel->save();
+        }
+
+        $orders = DB::table("shoper_orders")->get();
+        $orderProducts = DB::table("shoper_order_products")->get();
+
+        foreach ($orders as $order) {
+            Order::create([
+                ...(array)$order,
+                "type" => 1
+            ]);
+        }
+
+        foreach ($orderProducts as $orderProduct) {
+
+            $product = Product::query()->where("symbol", $orderProduct->code)->first();
+
+            if (is_null($product)) {
+                OrderProduct::create([
+                    ...(array)$orderProduct,
+                    "order_id" => $orderProduct->shoper_order_id,
+                    "product_code" => $orderProduct->code,
+
+                ]);
+            } else {
+                OrderProduct::create([
+                    ...(array)$orderProduct,
+                    "order_id" => $orderProduct->shoper_order_id,
+                    "product_id" => $product->id,
+                ]);
+            }
         }
 
 

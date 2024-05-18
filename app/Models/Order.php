@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ShoperOrder extends Model
+class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        "type",
         "order_id",
         "ordered_at",
         "sum",
@@ -32,9 +33,12 @@ class ShoperOrder extends Model
         "subiekt_number",
         "subiekt_added_at"
     ];
+//    Typ
+//1-shoper
+//2-allegro
 
-    public function shoperOrderProducts(): HasMany
+    public function orderProducts(): HasMany
     {
-        return $this->hasMany(ShoperOrderProduct::class);
+        return $this->hasMany(OrderProduct::class);
     }
 }

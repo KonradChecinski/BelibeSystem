@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Shoper;
 
+use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
@@ -852,7 +853,8 @@ class Shoper
             $shoperOrderProducts = $responseProducts->json()["list"];
 
 
-            $shoperOrderModel = ShoperOrder::create([
+            $shoperOrderModel = Order::create([
+                "type" => 1,
                 "order_id" => $shoperOrder["order_id"],
                 "ordered_at" => $shoperOrder["date"],
                 "sum" => $shoperOrder["sum"],
@@ -879,13 +881,24 @@ class Shoper
                 if (substr($code, -1) === ".") {
                     $code = substr($code, 0, -1);
                 }
+                $product = Product::query()->where("symbol", $code)->first();
+                if (is_null($product)) {
+                    $shoperOrderModel->orderProducts()->create([
+                        'product_code' => $code,
+                        'quantity' => $shoperOrderProduct["quantity"],
+                        'price' => $shoperOrderProduct["price"],
+                        'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
+                    ]);
+                } else {
+                    $shoperOrderModel->orderProducts()->create([
+                        'product_id' => $product->id,
+                        'quantity' => $shoperOrderProduct["quantity"],
+                        'price' => $shoperOrderProduct["price"],
+                        'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
+                    ]);
+                }
 
-                $shoperOrderModel->shoperOrderProducts()->create([
-                    'code' => $code,
-                    'quantity' => $shoperOrderProduct["quantity"],
-                    'price' => $shoperOrderProduct["price"],
-                    'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
-                ]);
+
             }
 
             self::changeOrderStatus($shoperOrder["order_id"]);

@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ShoperOrderProduct extends Model
+class OrderProduct extends Model
 {
     use HasFactory;
 
 
     protected $fillable = [
-        'shoper_order_id',
-        'code',
+        'order_id',
+        'product_id',
+        'product_code',
         'quantity',
         'price',
         'discounted_price'
     ];
 
-    public function shoperOrder(): BelongsTo
+    public function order(): BelongsTo
     {
-        return $this->belongsTo(ShoperOrder::class);
+        return $this->belongsTo(Order::class);
     }
 }

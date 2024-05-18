@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DynamicPageController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
@@ -146,6 +147,32 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     });
 
+    Route::group(["prefix" => "/orders"], function () {
+        Route::get("/", [OrderController::class, 'index'])->name("system.orders");
+
+    });
+
+
+    Route::group(["prefix" => "/queries"], function () {
+        Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
+
+    });
+
+    Route::group(["prefix" => "/pages"], function () {
+        Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");
+        Route::get("/page", [DynamicPageController::class, 'create'])->name("system.pages.page");
+        Route::post("/create", [DynamicPageController::class, 'store'])->name("system.pages.page.create");
+        Route::get("/{dynamicPage}/edit", [DynamicPageController::class, 'edit'])->name("system.pages.page.edit");
+        Route::patch("/{dynamicPage}", [DynamicPageController::class, 'update'])->name("system.pages.page.update");
+        Route::delete("/{dynamicPage}", [DynamicPageController::class, 'destroy'])->name("system.pages.page.delete");
+
+    });
+
+    Route::group(['prefix' => '/profile'], function () {
+        Route::get("/", [ProfileController::class, "edit"])->name("profile.edit");
+        Route::patch("/", [ProfileController::class, "update"])->name("profile.update");
+        Route::delete("/", [ProfileController::class, "destroy"])->name("profile.destroy");
+    });
 
     Route::group(['prefix' => '/settings'], function () {
         Route::get("/", function () {
@@ -238,29 +265,6 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
 
     });
-
-    Route::group(["prefix" => "/queries"], function () {
-        Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
-
-    });
-
-    Route::group(["prefix" => "/pages"], function () {
-        Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");
-        Route::get("/page", [DynamicPageController::class, 'create'])->name("system.pages.page");
-        Route::post("/create", [DynamicPageController::class, 'store'])->name("system.pages.page.create");
-        Route::get("/{dynamicPage}/edit", [DynamicPageController::class, 'edit'])->name("system.pages.page.edit");
-        Route::patch("/{dynamicPage}", [DynamicPageController::class, 'update'])->name("system.pages.page.update");
-        Route::delete("/{dynamicPage}", [DynamicPageController::class, 'destroy'])->name("system.pages.page.delete");
-
-    });
-
-    Route::group(['prefix' => '/profile'], function () {
-        Route::get("/", [ProfileController::class, "edit"])->name("profile.edit");
-        Route::patch("/", [ProfileController::class, "update"])->name("profile.update");
-        Route::delete("/", [ProfileController::class, "destroy"])->name("profile.destroy");
-    });
-
-
 });
 
 Route::middleware(["auth:user", "verified"])->group(function () {

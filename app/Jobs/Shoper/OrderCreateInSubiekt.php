@@ -7,6 +7,7 @@ use App\Jobs\ToSubiekt\Towar\ChangeBasicInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeSubiektInModelInSubiekt;
+use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\ShoperOrder;
 use App\Models\Subiekt\ModelTw;
@@ -20,7 +21,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ShoperOrderCreateInSubiekt implements ShouldQueue
+class OrderCreateInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -43,14 +44,16 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
-        $orders = ShoperOrder::where('subiekt_added_at', null)->get();
+        $orders = Order::where('subiekt_added_at', null)->get();
 
         foreach ($orders as $order) {
-            $orderProducts = $order->shoperOrderProducts;
+            $prefix = "";
+            if ($order->type == 1) $prefix = "SHP ";
+            $orderProducts = $order->orderProducts;
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
 //            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30);
-            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']), 0, 30);
+            $zamowienie->NumerOryginalny = mb_substr($prefix . $order['order_id'] . " - " . Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']), 0, 30);
             $zamowienie->LiczonyOdCenBrutto = true;
             $zamowienie->PoziomCenyId = 3;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
@@ -58,8 +61,15 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
             $zamowienie->PlatnoscKartaId = 15;
 
             foreach ($orderProducts as $orderProduct) {
-                $productSubiekt = Towar::where("tw_Symbol", $orderProduct->code)->first();
-                if (is_null($productSubiekt)) {
+                if ($orderProduct->product_id != null) {
+                    $productSubiektId = Product::find($orderProduct->product_id)->subiekt_id;
+                } else {
+                    $productSubiekt = Towar::where("tw_Symbol", $orderProduct->product_code)->first();
+                    $productSubiektId = is_null($productSubiekt) ? null : $productSubiekt->tw_Id;
+                }
+
+
+                if (is_null($productSubiektId)) {
                     $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
                     $pozycja->UslJednNazwa = substr($orderProduct["code"], 0, 50);
                     $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');
@@ -68,7 +78,7 @@ class ShoperOrderCreateInSubiekt implements ShouldQueue
 //                    $pozycja->RabatProcent = (float)0;
                     $pozycja->CenaBruttoPoRabacie = (float)$orderProduct['discounted_price'];
                 } else {
-                    $pozycja = $zamowienie->Pozycje->Dodaj((int)$productSubiekt->tw_Id);
+                    $pozycja = $zamowienie->Pozycje->Dodaj((int)$productSubiektId);
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
 //                    $pozycja->RabatProcent = (float)0;

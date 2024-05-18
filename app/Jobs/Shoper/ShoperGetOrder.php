@@ -39,7 +39,7 @@ class ShoperGetOrder implements ShouldQueue
         if (!$result) {
             $this->fail('getting orders failed');
         }
-        ShoperOrderCreateInSubiekt::dispatch();
+        OrderCreateInSubiekt::dispatch();
 
     }
 }

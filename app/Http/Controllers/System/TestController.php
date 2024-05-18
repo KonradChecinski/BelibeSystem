@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\Shoper\ShoperOrderCreateInSubiekt;
+use App\Jobs\Shoper\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
