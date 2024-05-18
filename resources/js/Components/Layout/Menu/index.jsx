@@ -7,7 +7,16 @@ import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Category, ContactPage, Dashboard, Group, QueryStats, Settings} from '@mui/icons-material';
+import {
+    Category,
+    ContactPage,
+    Dashboard,
+    Group, Handshake,
+    Inventory,
+    QueryStats,
+    Settings,
+    ShoppingCart
+} from '@mui/icons-material';
 
 export default function Menu({showContent, auth}) {
     const theme = useTheme();
@@ -31,8 +40,6 @@ export default function Menu({showContent, auth}) {
             <Divider
                 component="div"
                 sx={{
-                    // background:
-                    //     "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
                     background: theme.palette.gradient.divider,
                     height: "2px",
                     width: "80%",
@@ -55,22 +62,63 @@ export default function Menu({showContent, auth}) {
                     text={t("Dashboard")}
                     menuIcon={Dashboard}
                 />
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
+                <MainMenuLink
+                    href={route("system.dashboard")}
+                    active={route().current("system.dashboard")}
+                    showContent={smBreakpointUp || showContent}
+                    text={t("Orders")}
+                    menuIcon={ShoppingCart}
+                />
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
                 {auth.permissions.includes("showModel") ?
                     <MainMenuLink
                         href={route("system.products.models")}
                         active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
                         showContent={smBreakpointUp || showContent}
-                        text={"Produkty"}
-                        menuIcon={Category}
+                        text={"Modele"}
+                        menuIcon={Inventory}
                     /> : ""}
-                {/*{auth.permissions.includes("showClient") ?*/}
-                {/*    <MainMenuLink*/}
-                {/*        href={route("system.clients")}*/}
-                {/*        active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}*/}
-                {/*        showContent={smBreakpointUp || showContent}*/}
-                {/*        text={"Klienci"}*/}
-                {/*        menuIcon={Group}*/}
-                {/*    /> : ""}*/}
+                {auth.permissions.includes("showClient") ?
+                    <MainMenuLink
+                        href={route("system.clients")}
+                        active={route().current("system.clients") || route().current("system.clients.edit") || route().current("system.clients")}
+                        showContent={smBreakpointUp || showContent}
+                        text={"Klienci"}
+                        menuIcon={Group}
+                    /> : ""}
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
+
+
                 {auth.permissions.includes("showPages") ?
                     <MainMenuLink
                         href={route("system.pages")}
@@ -79,6 +127,44 @@ export default function Menu({showContent, auth}) {
                         text={"Strony"}
                         menuIcon={ContactPage}
                     /> : ""}
+                <MainMenuLink
+                    href={route("system.settings.category")}
+                    active={route().current("system.settings.category")}
+                    showContent={smBreakpointUp || showContent}
+                    text={"Kategorie"}
+                    menuIcon={Category}
+                />
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
+
+
+                <MainMenuLink
+                    href={route("system.settings.category")}
+                    active={route().current("system.settings.category")}
+                    showContent={smBreakpointUp || showContent}
+                    text={"Partnerzy"}
+                    menuIcon={Handshake}
+                />
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
 
                 {auth.permissions.includes("showQuery") ?
                     <MainMenuLink
@@ -94,6 +180,19 @@ export default function Menu({showContent, auth}) {
                             text={"Zdjęcia"}
                         />
                     </MainMenuLink> : ""}
+
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
+
                 {auth.permissions.includes("showSetting") ?
                     <MainMenuLink
                         href={route("system.settings")}
@@ -113,7 +212,7 @@ export default function Menu({showContent, auth}) {
                             text={"Użytkownicy i uprawnienia"}
                         >
                             {auth.permissions.includes("showRole") ?
-                                <React.Fragment>
+                                <>
                                     <SubMenuLink
                                         href={route("system.settings.users")}
                                         active={route().current("system.settings.users")}
@@ -125,7 +224,7 @@ export default function Menu({showContent, auth}) {
                                         active={route().current("system.settings.roles")}
                                         text={"Role systemowe"}
                                     />
-                                </React.Fragment>
+                                </>
                                 : ""}
                         </SubMenuLink>
                         <SubMenuLink

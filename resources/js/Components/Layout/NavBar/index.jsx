@@ -79,7 +79,7 @@ export default function Navbar({auth}) {
                     </Grid>
                     <Grid item xs={4} md={2}>
                         <SearchClientComponent auth={auth} searchRoute={route("system.clients.search")}
-                                               label={"Firma"}/>
+                                               label={"Klient"}/>
 
                     </Grid>
                     {/*<Grid item xs={4} md={2}>*/}
