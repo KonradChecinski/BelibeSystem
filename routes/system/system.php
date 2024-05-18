@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PagesController;
@@ -53,14 +54,10 @@ use App\Install\Install2Controller;
 use App\Install\Install3Controller;
 use App\Install\Install4Controller;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get("/", function () {
-    return Inertia::render("System/Dashboard");
-})->middleware(["auth:user", "verified"])->name("system.dashboard");
 
 
 Route::middleware(["auth:user", "verified"])->group(function () {
+    Route::get("/", [DashboardController::class, 'index'])->name("system.dashboard");
     Route::group([], function () {
         Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
         Route::get("/models/data", [ProductModelController::class, 'data']);
