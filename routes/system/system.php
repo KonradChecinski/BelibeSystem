@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;
@@ -58,6 +59,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("/", [DashboardController::class, 'index'])->name("system.dashboard");
+
     Route::group([], function () {
         Route::get("/models", [ProductModelController::class, 'index'])->name("system.products.models");
         Route::get("/models/data", [ProductModelController::class, 'data']);
@@ -146,6 +148,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     Route::group(["prefix" => "/orders"], function () {
         Route::get("/", [OrderController::class, 'index'])->name("system.orders");
+
+    });
+
+    Route::group(["prefix" => "/partners"], function () {
+        Route::get("/", [PartnersController::class, 'index'])->name("system.partners");
 
     });
 

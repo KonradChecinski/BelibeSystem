@@ -148,8 +148,8 @@ export default function Menu({showContent, auth}) {
 
 
                 <MainMenuLink
-                    href={route("system.settings.category")}
-                    active={route().current("system.settings.category")}
+                    href={route("system.partners")}
+                    active={route().current("system.partners")}
                     showContent={smBreakpointUp || showContent}
                     text={t("Partners")}
                     menuIcon={Handshake}
