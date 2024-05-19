@@ -38,6 +38,7 @@
         "@mui/x-charts": "^7.5.0",
         "@mui/x-data-grid": "^6.9.0",
         "@mui/x-date-pickers": "^6.19.4",
+        "@php-etl/material-ui-cron": "^0.2.0",
         "barcode-validator": "^1.0.2",
         "copy-image-clipboard": "^2.1.2",
         "is-hotkey": "^0.2.0",
