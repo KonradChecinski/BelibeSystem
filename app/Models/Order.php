@@ -12,6 +12,7 @@ class Order extends Model
 
     protected $fillable = [
         "type",
+        "status",
         "order_id",
         "ordered_at",
         "sum",

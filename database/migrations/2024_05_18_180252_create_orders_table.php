@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('type');
+            $table->integer('status');
             $table->bigInteger('order_id')->unique();
             $table->timestamp('ordered_at');
             $table->float("sum");
