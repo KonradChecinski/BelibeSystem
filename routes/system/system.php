@@ -4,6 +4,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\PartnerExportProductController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
@@ -152,7 +154,15 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     });
 
     Route::group(["prefix" => "/partners"], function () {
-        Route::get("/", [PartnersController::class, 'index'])->name("system.partners");
+        Route::get("/", [PartnerController::class, 'index'])->name("system.partners");
+        Route::post("/", [PartnerController::class, 'store'])->name("system.partners.create");
+        Route::get("/{partner}", [PartnerController::class, 'edit'])->name("system.partners.partner.edit");
+        Route::patch("/{partner}", [PartnerController::class, 'update'])->name("system.partners.partner.update");
+        Route::delete("/{partner}", [PartnerController::class, 'destroy'])->name("system.partners.partner.delete");
+
+        Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");
+        Route::delete("/{partner}/products/{product}", [PartnerExportProductController::class, 'destroy'])->name("system.partners.partner.products.delete");
+        Route::get("/products/search", [PartnerExportProductController::class, 'search'])->name("system.partners.products.search");
 
     });
 
