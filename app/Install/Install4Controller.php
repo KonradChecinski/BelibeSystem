@@ -24,10 +24,14 @@ class Install4Controller extends Controller
         $orderProducts = DB::table("shoper_order_products")->get();
 
         foreach ($orders as $order) {
-            Order::create([
+            $newOrder = Order::create([
                 ...(array)$order,
-                "type" => 1
+                "type" => 1,
+                "status" => 5,
             ]);
+//            $newOrder->update([
+//                "created_at" => $order->created_at,
+//            ]);
         }
 
         foreach ($orderProducts as $orderProduct) {
