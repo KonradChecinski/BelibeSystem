@@ -11,7 +11,7 @@ class StorePartnerExportRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editPartners", "user");
     }
 
     /**
@@ -22,7 +22,8 @@ class StorePartnerExportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => 'required|integer|min:1|max:2',
+            "cron" => 'required|string|max:25',
         ];
     }
 }

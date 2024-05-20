@@ -22,8 +22,10 @@
         "league/flysystem-sftp-v3": "3.6.0",
         "pusher/pusher-php-server": "^7.2",
         "react/promise": "3.1",
+        "spatie/array-to-xml": "^3.3",
         "spatie/laravel-permission": "^5.9",
         "spatie/laravel-sluggable": "*",
+        "spatie/simple-excel": "^3.6",
         "staudenmeir/eloquent-has-many-deep": "1.18",
         "stevebauman/purify": "^6.2",
         "tightenco/ziggy": "^1.0"

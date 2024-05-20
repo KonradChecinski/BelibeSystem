@@ -7,10 +7,12 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\UpdateSubiektIdWhereNull;
+use App\Models\PartnerExport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -39,6 +41,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('telescope:prune')->daily();
         //Websocket
         $schedule->command('websockets:clean')->daily();
+
+        $partnerExports = PartnerExport::all();
+        foreach ($partnerExports as $partnerExport) {
+            $schedule->job(new MakePartnerExportFile($partnerExport->partner, $partnerExport))->cron($partnerExport->cron);
+        }
     }
 
     /**

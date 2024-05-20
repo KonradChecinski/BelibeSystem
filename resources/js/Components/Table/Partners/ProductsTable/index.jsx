@@ -82,9 +82,11 @@ export default function ProductsTable({products, readOnly, props, partner}) {
                     }
                     return (
                         <Box>
-                            <IconButton aria-label="delete" onClick={handleDelete}>
-                                <Delete color={"error"}/>
-                            </IconButton>
+                            <Tooltip title="Usuń" arrow>
+                                <IconButton aria-label="delete" onClick={handleDelete}>
+                                    <Delete color={"error"}/>
+                                </IconButton>
+                            </Tooltip>
                         </Box>
                     )
 

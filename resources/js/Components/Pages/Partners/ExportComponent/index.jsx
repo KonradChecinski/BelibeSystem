@@ -15,7 +15,7 @@ export default function ExportComponent({partner, exports}) {
                     <ImportExport fontSize={"large"}/>
                     Export informacji o produktach
                 </Typography>
-                <ExportTable exports={exports} readOnly={false}/>
+                <ExportTable exports={exports} readOnly={false} partner={partner}/>
             </Box>
         </Card>
     );

@@ -5,6 +5,7 @@ use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\PartnerExportController;
 use App\Http\Controllers\PartnerExportProductController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ProductColorIconController;
@@ -164,6 +165,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::delete("/{partner}/products/{product}", [PartnerExportProductController::class, 'destroy'])->name("system.partners.partner.products.delete");
         Route::get("/products/search", [PartnerExportProductController::class, 'search'])->name("system.partners.products.search");
 
+        Route::post("/{partner}/export/", [PartnerExportController::class, 'store'])->name("system.partners.partner.export.create");
+        Route::patch("/{partner}/export/{export}", [PartnerExportController::class, 'update'])->name("system.partners.partner.export.update");
+        Route::delete("/{partner}/export/{export}", [PartnerExportController::class, 'destroy'])->name("system.partners.partner.export.delete");
+        Route::post("/{partner}/export/{export}/runUpdate", [PartnerExportController::class, 'runUpdate'])->name("system.partners.partner.export.runUpdate");
+
     });
 
 
@@ -301,6 +307,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
     Route::get("install4", [Install4Controller::class, 'install'])->name("install4");
     Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
+});
+
+Route::group(["prefix" => "/partner"], function () {
+    Route::get("/{uuid}", [PartnerExportController::class, 'show'])->name("system.partner.show");
 });
 
 
