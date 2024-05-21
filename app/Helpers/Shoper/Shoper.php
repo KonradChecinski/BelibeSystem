@@ -855,6 +855,7 @@ class Shoper
 
             $shoperOrderModel = Order::create([
                 "type" => 1,
+                "status" => 2,
                 "order_id" => $shoperOrder["order_id"],
                 "ordered_at" => $shoperOrder["date"],
                 "sum" => $shoperOrder["sum"],

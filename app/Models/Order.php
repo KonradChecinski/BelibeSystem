@@ -38,6 +38,13 @@ class Order extends Model
 //1-shoper
 //2-allegro
 
+//    status
+//    1 złożone
+//    2 zaakceptowane do realizacji
+//    3 przesłane do subiekta
+//    4 w trakcie kompletacji
+//    5 zrealizowane
+//    6 anulowane
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);

@@ -18,8 +18,10 @@ class OrderController extends Controller
         $modelsB2bOrders = ClientOrder::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->get();
         $modelsOtherOrders = Order::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->get();
         return Inertia::render("System/Orders/OrderList", [
-            "modelsB2bOrders" => $modelsB2bOrders,
-            "modelsOtherOrders" => $modelsOtherOrders,
+            "orders" => [
+                "b2b" => $modelsB2bOrders,
+                "other" => $modelsOtherOrders,
+            ]
         ]);
     }
 

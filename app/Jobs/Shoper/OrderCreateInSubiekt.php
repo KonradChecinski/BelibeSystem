@@ -44,7 +44,7 @@ class OrderCreateInSubiekt implements ShouldQueue
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
-        $orders = Order::where('subiekt_added_at', null)->get();
+        $orders = Order::where('subiekt_added_at', null)->where("status", 2)->get();
 
         foreach ($orders as $order) {
             $prefix = "";
@@ -114,7 +114,8 @@ class OrderCreateInSubiekt implements ShouldQueue
             $zamowienie->Zapisz();
             $order->update([
                 'subiekt_number' => $zamowienie->NumerPelny,
-                'subiekt_added_at' => $date
+                'subiekt_added_at' => $date,
+                "status" => 5 //Do poprawy
             ]);
         }
     }
