@@ -36,7 +36,6 @@ class Install4Controller extends Controller
 //                "created_at" => $order->created_at,
 //            ]);
         }
-        print_r($arrayIds);
 
         foreach ($orderProducts as $orderProduct) {
 
