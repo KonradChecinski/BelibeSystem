@@ -23,12 +23,15 @@ class Install4Controller extends Controller
         $orders = DB::table("shoper_orders")->get();
         $orderProducts = DB::table("shoper_order_products")->get();
 
+        $arrayIds = [];
         foreach ($orders as $order) {
             $newOrder = Order::create([
                 ...(array)$order,
                 "type" => 1,
                 "status" => 5,
             ]);
+            $arrayIds[$order->id] = $newOrder->id;
+
 //            $newOrder->update([
 //                "created_at" => $order->created_at,
 //            ]);
@@ -41,7 +44,7 @@ class Install4Controller extends Controller
             if (is_null($product)) {
                 OrderProduct::create([
                     ...(array)$orderProduct,
-                    "order_id" => $orderProduct->shoper_order_id,
+                    "order_id" => $arrayIds[$orderProduct->shoper_order_id],
                     "product_code" => $orderProduct->code,
 
                 ]);
