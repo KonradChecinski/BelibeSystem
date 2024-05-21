@@ -14,9 +14,9 @@ import {
     Typography
 } from "@mui/material";
 import CartItems from "@/Components/Pages/B2B/Cart/CartItems";
-import CartSummary from "@/Components/Pages/B2B/Cart/cartSummary";
-import CartPayments from "@/Components/Pages/B2B/Cart/cartPayments";
-import CartDeliveries from "@/Components/Pages/B2B/Cart/cartDeliveries";
+import CartSummary from "@/Components/Pages/B2B/Cart/CartSummary";
+import CartPayments from "@/Components/Pages/B2B/Cart/CartPayments";
+import CartDeliveries from "@/Components/Pages/B2B/Cart/CartDeliveries";
 import CartLocations from "@/Components/Pages/B2B/Cart/CartLocations";
 import CartSubmit from "@/Components/Pages/B2B/Cart/CartSubmit";
 
