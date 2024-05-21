@@ -36,6 +36,7 @@ class Install4Controller extends Controller
 //                "created_at" => $order->created_at,
 //            ]);
         }
+        print_r($arrayIds);
 
         foreach ($orderProducts as $orderProduct) {
 
@@ -51,7 +52,7 @@ class Install4Controller extends Controller
             } else {
                 OrderProduct::create([
                     ...(array)$orderProduct,
-                    "order_id" => $orderProduct->shoper_order_id,
+                    "order_id" => $arrayIds[$orderProduct->shoper_order_id],
                     "product_id" => $product->id,
                 ]);
             }
