@@ -17,6 +17,8 @@ class PartnerExportFile
                 return self::makeXmlFile($partnerExport, $partner->products);
             case 2:
                 return self::makeExcelFile($partnerExport, $partner->products);
+            case 3:
+                return self::makeCsvFile($partnerExport, $partner->products);
         }
 
         return false;
@@ -68,6 +70,32 @@ class PartnerExportFile
                 $options = $writer->getOptions();
                 $options->setColumnWidth(30, 1);
             })
+                ->addHeader(['updated_at', now()->toDateTimeString()])
+                ->addHeader(['symbol', 'availability'])
+                ->addRows($products->toArray());
+            $partnerExport->update([
+                'completed_at' => now(),
+            ]);
+
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function makeCSVFile($partnerExport, $products): bool
+    {
+        try {
+            $products = $products->map(function ($product) {
+                return [
+                    'symbol' => $product->symbol,
+                    'availability' => $product->available,
+                ];
+            });
+
+            $path = storage_path("app/partners/{$partnerExport->path}.csv");
+            SimpleExcelWriter::create(file: $path)
                 ->addHeader(['updated_at', now()->toDateTimeString()])
                 ->addHeader(['symbol', 'availability'])
                 ->addRows($products->toArray());

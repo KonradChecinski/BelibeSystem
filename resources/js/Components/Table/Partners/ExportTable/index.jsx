@@ -14,6 +14,9 @@ import cronstrue from 'cronstrue';
 import 'cronstrue/locales/pl';
 import PartnersExportAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersExportAddDialog";
 import {enqueueSnackbar} from "notistack";
+import {CSV} from "@/Icons/CSV";
+import {Excel} from "@/Icons/Excel";
+import {XML} from "@/Icons/XML";
 
 
 export default function ExportTable({exports, partner, readOnly, props}) {
@@ -39,12 +42,17 @@ export default function ExportTable({exports, partner, readOnly, props}) {
                         <Box>
                             {cell.getValue() === 1 && (
                                 <Tooltip title="XML">
-                                    <Code color={"success"}/>
+                                    <XML color={"info"}/>
                                 </Tooltip>
                             )}
                             {cell.getValue() === 2 && (
                                 <Tooltip title="Excel">
-                                    <BorderAll color={"success"}/>
+                                    <Excel color={"success"}/>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 3 && (
+                                <Tooltip title="CSV">
+                                    <CSV color={"warning"}/>
                                 </Tooltip>
                             )}
                         </Box>

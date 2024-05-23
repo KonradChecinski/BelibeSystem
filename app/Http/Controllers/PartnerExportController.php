@@ -96,7 +96,7 @@ class PartnerExportController extends Controller
     {
         $exists = $partner->partnerExports()->where('id', $export->id)->exists();
         if ($exists) {
-            MakePartnerExportFile::dispatchSync($partner, $export);
+            MakePartnerExportFile::dispatch($partner, $export);
             return redirect()->back();
         }
 

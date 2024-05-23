@@ -76,6 +76,16 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
         }
     }
 
+    const getLabel = (option) => {
+        switch (option) {
+            case 1:
+                return "XML"
+            case 2:
+                return "Excel"
+            case 3:
+                return "CSV"
+        }
+    }
 
     return (
 
@@ -103,8 +113,8 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
                 </Stepper>
 
                 {activeStep === 0 ?
-                    <Step1 data={data} setData={setData}/> : null}
-                {activeStep === 1 ? <Step2 data={data} setData={setData}/> : null}
+                    <Step1 data={data} setData={setData} getLabel={getLabel}/> : null}
+                {activeStep === 1 ? <Step2 data={data} setData={setData} getLabel={getLabel}/> : null}
 
 
             </DialogContent>
@@ -132,9 +142,10 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
     );
 }
 
-function Step1({data, setData}) {
+function Step1({data, setData, getLabel}) {
 
     const [error, onError] = useState()
+
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -142,11 +153,11 @@ function Step1({data, setData}) {
                 disablePortal
                 id="type"
                 options={[
-                    1, 2
+                    1, 2, 3
                 ]}
                 sx={{width: "30ch"}}
                 value={data.type}
-                getOptionLabel={(option) => (option === 1 ? "XML" : "Excel")}
+                getOptionLabel={getLabel}
                 isOptionEqualToValue={(option, value) => option === value}
                 onChange={(e, value) => setData("type", value)}
                 renderInput={(params) =>
@@ -188,11 +199,11 @@ function Step1({data, setData}) {
     );
 }
 
-function Step2({data}) {
+function Step2({data, getLabel}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <TextField id="type" label="Typ" variant="outlined"
-                       value={data.type === 1 ? "XML" : "Excel"}
+                       value={getLabel(data.type)}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

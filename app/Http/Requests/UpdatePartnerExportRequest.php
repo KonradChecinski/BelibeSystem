@@ -22,7 +22,7 @@ class UpdatePartnerExportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'required|integer|min:1|max:2',
+            'type' => 'required|integer|min:1|max:3',
             "cron" => 'required|string|max:25',
         ];
     }
