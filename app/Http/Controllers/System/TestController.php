@@ -7,6 +7,7 @@ use App\Jobs\Shoper\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ class TestController extends Controller
      */
     public function index()
     {
+        $image = ProductImage::find(130);
+        dd(route("images", ['path' => $image->path]));
 //        ShoperOrderCreateInSubiekt::dispatchSync();
 //        $client = Client::find(1);
 //        $model = ProductModel::find(37);
