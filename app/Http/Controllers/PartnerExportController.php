@@ -49,7 +49,19 @@ class PartnerExportController extends Controller
     {
         $partner = PartnerExport::where('path', $uuid)->first();
         if ($partner) {
-            $extension = $partner->type === 1 ? 'xml' : 'xlsx';
+            $extension = "";
+            switch ($partner->type) {
+                case 1:
+                    $extension = 'xml';
+                    break;
+                case 2:
+                    $extension = 'xlsx';
+                    break;
+                case 3:
+                    $extension = 'csv';
+                    break;
+            }
+
             $fileExist = Storage::exists("partners/{$partner->path}." . $extension);
             if ($fileExist) {
                 return Storage::download("partners/{$partner->path}." . $extension);
