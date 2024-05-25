@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\FromSubiekt;
 
-use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
-use DragonCode\Support\Helpers\Boolean;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

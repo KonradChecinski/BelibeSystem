@@ -1,16 +1,10 @@
 <?php
 
-namespace App\Jobs\Shoper;
+namespace App\Jobs\ToSubiekt;
 
-use App\Jobs\ToSubiekt\Towar\ChangeB2CInModelInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeBasicInModelInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeSubiektInModelInSubiekt;
 use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\ShoperOrder;
-use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
@@ -18,7 +12,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class OrderCreateInSubiekt implements ShouldQueue

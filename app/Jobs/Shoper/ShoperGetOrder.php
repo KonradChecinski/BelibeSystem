@@ -3,11 +3,8 @@
 namespace App\Jobs\Shoper;
 
 use App\Helpers\Shoper\Shoper;
-use App\Models\Products\Price\ProductModelPrice;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
+use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
