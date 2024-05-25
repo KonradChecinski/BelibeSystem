@@ -33,7 +33,7 @@ export default function Theme({children}) {
         },
         gradient: {
             divider:
-                "linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(31,40,62,1) 50%, rgba(255,255,255,0.5) 100%)"
+                "linear-gradient(90deg, #038ce3 0%, #014875 50%, #038ce3 100%)"
         },
         menuText: {
             main: "#ffffff",
@@ -75,7 +75,7 @@ export default function Theme({children}) {
         },
         gradient: {
             divider:
-                "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)"
+                "linear-gradient(90deg, #1f2937 0%, #2a3441 50%, #1f2937 100%)"
         },
         menuText: {
             main: "#ffffff",

@@ -172,7 +172,6 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     });
 
-
     Route::group(["prefix" => "/queries"], function () {
         Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
 

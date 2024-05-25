@@ -122,11 +122,42 @@ export default function Menu({showContent, auth}) {
                 {auth.permissions.includes("showPages") ?
                     <MainMenuLink
                         href={route("system.pages")}
-                        active={route().current("system.pages")}
+                        // active={route().current("system.pages")}
                         showContent={smBreakpointUp || showContent}
                         text={t("Pages")}
                         menuIcon={ContactPage}
-                    /> : ""}
+                    >
+                        <SubMenuLink
+                            href={route("system.pages")}
+                            active={route().current("system.pages")}
+                            text={t("Pages")}
+                        />
+                        <Divider
+                            component="div"
+                            sx={{
+                                background: theme.palette.gradient.divider,
+                                height: "2px",
+                                width: "80%",
+                                mx: "auto",
+                                my: 1
+                            }}
+                        />
+                        <SubMenuLink
+                            href={route("system.pages")}
+                            active={route().current("system.pages")}
+                            text={t("Header")}
+                        />
+                        <SubMenuLink
+                            href={route("system.pages")}
+                            active={route().current("system.pages")}
+                            text={t("Footer")}
+                        />
+
+
+                    </MainMenuLink>
+                    : ""}
+
+
                 <MainMenuLink
                     href={route("system.settings.category")}
                     active={route().current("system.settings.category")}
