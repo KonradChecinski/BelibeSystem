@@ -24,7 +24,7 @@ import 'cronstrue/locales/pl';
 import {enqueueSnackbar} from "notistack";
 
 
-export default function OrderListTable({orders = [], readOnly, props}) {
+export default function OrderListOtherTable({orders = [], readOnly, props}) {
     const theme = useTheme();
     const data = orders
     console.log(data)
@@ -38,30 +38,6 @@ export default function OrderListTable({orders = [], readOnly, props}) {
                 size: 10,
             },
             {
-                accessorKey: 'status',
-                header: 'Status',
-                size: 10,
-                // Cell: ({cell, row}) => {
-                //     // console.log(row.original)
-                //     return (
-                //         <Box>
-                //             {cell.getValue() === 0 && (
-                //                 <Tooltip title="B2b">
-                //                     <Sell color={"info"}/>
-                //                 </Tooltip>
-                //             )}
-                //             {cell.getValue() === 1 && (
-                //                 <Tooltip title="Shoper">
-                //                     <ShoppingCart color={"success"}/>
-                //                 </Tooltip>
-                //             )}
-                //         </Box>
-                //     )
-                //
-                // }
-            },
-
-            {
                 accessorKey: 'type',
                 header: 'Typ',
                 size: 10,
@@ -70,20 +46,62 @@ export default function OrderListTable({orders = [], readOnly, props}) {
                     return (
                         <Box>
                             {cell.getValue() === 0 && (
-                                <Tooltip title="B2b">
+                                <Tooltip title="B2B">
                                     <Sell color={"info"}/>
                                 </Tooltip>
                             )}
-                            {cell.getValue() === 1 && (
-                                <Tooltip title="Shoper">
-                                    <ShoppingCart color={"success"}/>
-                                </Tooltip>
-                            )}
+                            {/*{cell.getValue() === 1 && (*/}
+                            {/*    <Tooltip title="Shoper">*/}
+                            {/*        <ShoppingCart color={"success"}/>*/}
+                            {/*    </Tooltip>*/}
+                            {/*)}*/}
                         </Box>
                     )
 
                 }
             },
+            {
+                accessorKey: 'status',
+                header: 'Status',
+                size: 10,
+                Cell: ({cell, row}) => {
+                    let text = "";
+                    let color = "";
+                    switch (cell.getValue()) {
+                        case 1:
+                            text = "Złożone";
+                            color = "success.main";
+                            break;
+                        case 2:
+                            text = "Zaakceptowane do realizacji";
+                            color = "info.main";
+                            break;
+                        case 3:
+                            text = "Przesłane do subiekta";
+                            color = "info.main";
+                            break;
+                        case 4:
+                            text = "W trakcie kompletacji";
+                            color = "warning.main";
+                            break;
+                        case 5:
+                            text = "Zrealizowane";
+                            color = "";
+                            break;
+                        case 6:
+                            text = "Anulowane";
+                            color = "error.main";
+                            break;
+                    }
+
+                    return (
+                        <Box sx={{color: color}}>{text}</Box>
+                    );
+
+                }
+            },
+
+
             {
                 accessorKey: 'ordered_at',
                 header: 'Data',

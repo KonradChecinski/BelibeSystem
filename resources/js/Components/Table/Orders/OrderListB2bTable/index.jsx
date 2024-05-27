@@ -1,49 +1,35 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Box, Tooltip,} from "@mui/material";
-
+import {useMemo, useState} from "react";
+import {Box, Button, Fab, IconButton, Tooltip, Typography,} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import moment from "moment/moment";
-import toLocaleString from "@/Functions/toLocaleString";
+import {
+    Done,
+    Close,
+    DownloadDone,
+    BorderAll,
+    Code,
+    Add,
+    Delete,
+    Edit,
+    ContentCopy,
+    Upgrade,
+    Sell, ShoppingCart, Info
+} from '@mui/icons-material';
+import moment from "moment";
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+} from 'material-react-table';
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
-import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import 'cronstrue/locales/pl';
+import {enqueueSnackbar} from "notistack";
+import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Client/ClientOrderHistoryComponent/Menu/OrderMenu";
 
-export default function ClientOrderHistoryTable({history, readOnly, props}) {
+
+export default function OrderListB2bTable({orders = [], readOnly, props}) {
     const theme = useTheme();
-    const data = history;
-    // console.log(data);
-
-    const sumWN = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.total_net), 0),
-        [],
-    );
-    const sumWB = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.total_gross), 0),
-        [],
-    );
-
-    const sumQ = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.total_quantity), 0),
-        [],
-    );
-
-    const sumWNR = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.discounted_total_net), 0),
-        [],
-    );
-    const sumWBR = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.discounted_total_gross), 0),
-        [],
-    );
-
-    const sumDN = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.delivery_net), 0),
-        [],
-    );
-    const sumDB = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.delivery_gross), 0),
-        [],
-    );
+    const data = orders
+    console.log(data)
 
     const columns = useMemo(
         //column definitions...
@@ -52,30 +38,87 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 accessorKey: 'id',
                 header: 'Id',
                 size: 10,
+            },
+            {
+                accessorKey: 'type',
+                header: 'Typ',
+                size: 10,
+                Cell: ({cell, row}) => {
+                    // console.log(row.original)
+                    return (
+                        <Box>
+                            {cell.getValue() === 0 && (
+                                <Tooltip title="B2B">
+                                    <Sell color={"info"}/>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
 
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'status',
+                header: 'Status',
+                size: 10,
+                Cell: ({cell, row}) => {
+                    let text = "";
+                    let color = "";
+                    switch (cell.getValue()) {
+                        case 1:
+                            text = "Złożone";
+                            color = "success.main";
+                            break;
+                        case 2:
+                            text = "Zaakceptowane do realizacji";
+                            color = "info.main";
+                            break;
+                        case 3:
+                            text = "Przesłane do subiekta";
+                            color = "info.main";
+                            break;
+                        case 4:
+                            text = "W trakcie kompletacji";
+                            color = "warning.main";
+                            break;
+                        case 5:
+                            text = "Zrealizowane";
+                            color = "";
+                            break;
+                        case 6:
+                            text = "Anulowane";
+                            color = "error.main";
+                            break;
+                    }
+
+                    return (
+                        <Box sx={{color: color}}>{text}</Box>
+                    );
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+
+
+            {
+                accessorKey: 'created_at',
+                header: 'Data',
+                // columnDefType: 'display',
+                width: 20,
+                Cell: ({cell, row}) => moment(cell.getValue()).format("DD-MM-YYYY HH:mm:ss"),
+                enableColumnActions: false,
+                enableColumnDragging: true,
+                enableSorting: true,
             },
             {
                 accessorKey: 'number',
                 header: 'Numer',
-                size: 35,
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
-            {
-                accessorKey: 'payment_id',
-                header: 'Płatność',
-                Cell: ({cell}) => cell.getValue() ? props.payment.find(p => p.id === cell.getValue()).name : "",
-                size: 10,
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
-            {
-                accessorKey: 'client_location_id',
-                header: 'Punkt',
-                Cell: ({cell}) => cell.getValue() ? props.client.locations.find(l => l.id === cell.getValue()).note : "",
-                size: 10,
+                width: 10,
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
@@ -94,9 +137,6 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>IP</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"center"}>{Number(sumQ)}</Box>
-                ),
                 size: 5,
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -105,7 +145,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
             {
                 accessorKey: 'total_net',
                 header: 'Wartość Netto',
-                size: 5,
+                // size: 2,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -118,9 +158,6 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>WN</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWN) / 100)}</Box>
-                ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
@@ -128,7 +165,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
             {
                 accessorKey: 'total_gross',
                 header: 'Wartość Brutto',
-                size: 5,
+                // size: 2,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -140,9 +177,6 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
                         <Box>WB</Box>
                     </Tooltip>
-                ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -184,12 +218,9 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>WN (R)</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWNR) / 100)}</Box>
-                ),
                 enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
+                enableColumnDragging: true,
+                enableSorting: true,
             },
             {
                 accessorKey: 'discounted_total_gross',
@@ -207,18 +238,14 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>WB (R)</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWBR) / 100)}</Box>
-                ),
                 enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
+                enableColumnDragging: true,
+                enableSorting: true,
             },
-
             {
                 accessorKey: 'delivery_net',
                 header: 'Dostawa Netto',
-                size: 5,
+                width: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -231,17 +258,14 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>DN</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDN) / 100)}</Box>
-                ),
                 enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
+                enableColumnDragging: true,
+                enableSorting: true,
             },
             {
                 accessorKey: 'delivery_gross',
                 header: 'Dostawa Brutto',
-                size: 5,
+                width: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -254,12 +278,9 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                         <Box>DB</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDB) / 100)}</Box>
-                ),
                 enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
+                enableColumnDragging: true,
+                enableSorting: true,
             },
             {
                 accessorKey: 'currency',
@@ -270,65 +291,8 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 enableSorting: false,
             },
             {
-                accessorKey: 'comment',
-                header: 'Komentarz',
-                // Header: ({column}) => (
-                //     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                //         <Box>R</Box>
-                //     </Tooltip>
-                // ),
-                size: 5,
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
-            {
-                accessorKey: 'status',
-                header: 'Status',
-                size: 5,
-                Cell: ({cell}) => {
-                    let text = "";
-                    let color = "";
-                    switch (cell.getValue()) {
-                        case 1:
-                            text = "Złożone";
-                            color = "success.main";
-                            break;
-                        case 2:
-                            text = "Zaakceptowane do realizacji";
-                            color = "info.main";
-                            break;
-                        case 3:
-                            text = "Przesłane do subiekta";
-                            color = "info.main";
-                            break;
-                        case 4:
-                            text = "W trakcie kompletacji";
-                            color = "warning.main";
-                            break;
-                        case 5:
-                            text = "Zrealizowane";
-                            color = "";
-                            break;
-                        case 6:
-                            text = "Anulowane";
-                            color = "error.main";
-                            break;
-                    }
-
-                    return (
-                        <Box sx={{color: color}}>{text}</Box>
-                    );
-
-                },
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
-            {
                 accessorKey: 'subiekt_number',
                 header: 'Numer zamówienia w Subiekcie',
-                size: 5,
                 Header: ({column}) => (
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
                         <Box>NS</Box>
@@ -341,26 +305,39 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
             {
                 accessorKey: 'subiekt_added_at',
                 header: 'Data dodania do Subiekta',
-                size: 5,
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "",
                 Header: ({column}) => (
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
                         <Box>DS</Box>
                     </Tooltip>
                 ),
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
             },
-            {
-                accessorKey: 'created_at',
-                header: 'Data złożenia',
-                size: 5,
-                Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "",
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
+            // {
+            //     accessorKey: 'comment',
+            //     header: 'K',
+            //     columnDefType: 'display',
+            //
+            //     width: 25,
+            //     Cell: ({cell}) => {
+            //         return (
+            //             <>
+            //                 {cell.getValue() && (
+            //                     <Tooltip title={cell.getValue()} arrow placement={"left"}>
+            //
+            //                         <IconButton aria-label="info">
+            //                             <Info/>
+            //                         </IconButton>
+            //
+            //                     </Tooltip>
+            //                 )}
+            //             </>
+            //
+            //         )
+            //     },
+            //     enableColumnActions: false,
+            //     enableColumnDragging: false,
+            //     enableSorting: false,
+            // },
             {
                 accessorKey: 'action',
                 header: 'Akcje',
@@ -373,9 +350,19 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 },
                 Cell: ({cell, row}) => {
                     return (
-                        <OrderMenu row={row}/>
-                    )
+                        <Box sx={{display: "flex", justifyContent: "flex-end"}}>
+                            {row.original.comment && (
+                                <Tooltip title={row.original.comment} arrow placement={"left"}>
 
+                                    <IconButton aria-label="info">
+                                        <Info/>
+                                    </IconButton>
+
+                                </Tooltip>
+                            )}
+                            <OrderMenu row={row}/>
+                        </Box>
+                    )
                 },
                 size: 10,
             },
@@ -391,43 +378,48 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
         enableBottomToolbar: true,
         enableGrouping: true,
         enableStickyHeader: true,
-        enableStickyFooter: true,
+        // enableStickyFooter: true,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {id: false, subiekt_added_at: false},
+            columnVisibility: {
+                id: false,
+                total_gross: false,
+                total_net: false,
+                subiekt_number: false,
+                subiekt_added_at: false,
+
+            },
             density: 'compact',
-            pagination: {pageSize: 30, pageIndex: 0},
+            pagination: {pageSize: 50, pageIndex: 0},
             sorting: [
                 {
-                    id: 'id',
+                    id: 'created_at',
                     desc: true,
                 },
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: '400px'}
+            sx: {height: "calc(100% - 110px)"},
         },
+        // muiTableProps: {
+        //     sx: {height: 1}
+        // },
         muiTablePaperProps: ({table}) => ({
             sx: {
-                pl: 1
+                pl: 1,
+                height: 1
             },
             style: {
                 zIndex: table.getState().isFullScreen ? 2000 : undefined,
             },
         }),
-        muiTableBodyRowProps: ({row}) => {
-            // console.log(row.original, row.original.Rozliczenie, row.original.Wartosc, row.original.DniSpoznienia)
-            return ({
-                sx: {
-                    bgcolor: row.original.Rozliczenie != 2 ? row.original.DniSpoznienia != null ? Number(row.original.Wartosc) > 0 ? "errorBg.main" : "" : "" : ""
-                },
-            })
-        },
     });
 
 
     return (
-        <MaterialReactTable table={table}/>
+        <>
+            <MaterialReactTable table={table}/>
+        </>
 
     );
 }

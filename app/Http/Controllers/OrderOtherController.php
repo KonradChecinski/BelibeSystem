@@ -8,14 +8,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class OrderController extends Controller
+class OrderOtherController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-//
+        $modelsOtherOrders = Order::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->get();
+        return Inertia::render("System/Orders/OrderListOther", [
+            "orders" => $modelsOtherOrders,
+        ]);
     }
 
     /**

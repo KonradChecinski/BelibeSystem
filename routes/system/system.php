@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
+use App\Http\Controllers\OrderB2bController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderOtherController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PartnerExportController;
@@ -150,7 +152,8 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     });
 
     Route::group(["prefix" => "/orders"], function () {
-        Route::get("/", [OrderController::class, 'index'])->name("system.orders");
+        Route::get("/b2b", [OrderB2bController::class, 'index'])->name("system.orders.b2b");
+        Route::get("/other", [OrderOtherController::class, 'index'])->name("system.orders.other");
 
     });
 

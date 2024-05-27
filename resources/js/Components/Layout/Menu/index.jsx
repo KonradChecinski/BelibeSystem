@@ -73,10 +73,18 @@ export default function Menu({showContent, auth}) {
                     }}
                 />
                 <MainMenuLink
-                    href={route("system.orders")}
-                    active={route().current("system.orders")}
+                    href={route("system.orders.b2b")}
+                    active={route().current("system.orders.b2b")}
                     showContent={smBreakpointUp || showContent}
-                    text={t("Orders")}
+                    text={t("Orders B2B")}
+                    menuIcon={ShoppingCart}
+                />
+
+                <MainMenuLink
+                    href={route("system.orders.other")}
+                    active={route().current("system.orders.other")}
+                    showContent={smBreakpointUp || showContent}
+                    text={t("Orders Other")}
                     menuIcon={ShoppingCart}
                 />
 

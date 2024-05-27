@@ -74,7 +74,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![1].includes(row.original.status)}
+                <MenuItem disabled={![1, 2, 3, 4, 5, 6].includes(row.original.status)}
                           onClick={handleOpenDetails}>
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
