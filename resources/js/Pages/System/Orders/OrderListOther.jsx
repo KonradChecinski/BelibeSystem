@@ -14,8 +14,8 @@ export default function OrderListOther(props) {
 
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={t("Orders")}>
-            <Head title={t("Orders")}/>
+        <UserLayout auth={props.auth} errors={props.errors} header={t("Orders Other")}>
+            <Head title={t("Orders Other")}/>
 
             <Card sx={{height: "100%", width: 1}}>
                 <OrderListOtherTable orders={data} readOnly={props.readOnly}

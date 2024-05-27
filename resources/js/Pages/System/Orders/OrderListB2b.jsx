@@ -14,8 +14,8 @@ export default function OrderListB2b(props) {
 
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={t("Orders")}>
-            <Head title={t("Orders")}/>
+        <UserLayout auth={props.auth} errors={props.errors} header={t("Orders B2B")}>
+            <Head title={t("Orders B2B")}/>
 
             <Card sx={{height: "100%", width: 1}}>
                 <OrderListB2bTable orders={data} readOnly={props.readOnly}

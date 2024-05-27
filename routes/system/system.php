@@ -59,6 +59,7 @@ use App\Install\Install1Controller;
 use App\Install\Install2Controller;
 use App\Install\Install3Controller;
 use App\Install\Install4Controller;
+use App\Install\Install5Controller;
 use Illuminate\Support\Facades\Route;
 
 
@@ -141,13 +142,15 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::delete("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'destroy'])->name("system.clients.client.note.delete");
 
 
-        Route::post("/b2b/order/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
-        Route::post("/b2b/order/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
+        Route::post("/order/b2b/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
+        Route::post("/order/b2b/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
 
-        Route::get("/b2b/order/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.b2b.order");
-        Route::get("/b2b/order/{clientOrder}/edit", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
-        Route::patch("/b2b/order/{clientOrder}", [ClientOrderController::class, 'update'])->name("system.b2b.order.update");
-        Route::patch("/b2b/order/{clientOrder}/{product}", [ClientOrderController::class, 'updateProduct'])->name("system.b2b.order.update.product");
+        Route::get("/order/b2b/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.b2b.order");
+        Route::get("/order/b2b/{clientOrder}/edit", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
+        Route::patch("/order/b2b/{clientOrder}", [ClientOrderController::class, 'update'])->name("system.b2b.order.update");
+        Route::patch("/order/b2b/{clientOrder}/{product}", [ClientOrderController::class, 'updateProduct'])->name("system.b2b.order.update.product");
+
+        Route::get("/order/other/{order}", [OrderOtherController::class, 'show'])->name("system.order.other");
 
     });
 
@@ -308,6 +311,9 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("install2", [Install2Controller::class, 'install'])->name("install2");
     Route::get("install3", [Install3Controller::class, 'install'])->name("install3");
     Route::get("install4", [Install4Controller::class, 'install'])->name("install4");
+
+    Route::get("install5", [Install5Controller::class, 'install'])->name("install5");
+
     Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 });
 

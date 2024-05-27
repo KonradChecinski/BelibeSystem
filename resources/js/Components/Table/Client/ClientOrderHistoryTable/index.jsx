@@ -6,7 +6,7 @@ import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
-import OrderMenu from "@/Components/Pages/Client/ClientOrderHistoryComponent/Menu/OrderMenu";
+import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();

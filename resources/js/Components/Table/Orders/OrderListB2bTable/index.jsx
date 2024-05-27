@@ -23,7 +23,7 @@ import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import 'cronstrue/locales/pl';
 import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
-import OrderMenu from "@/Components/Pages/Client/ClientOrderHistoryComponent/Menu/OrderMenu";
+import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
 
 
 export default function OrderListB2bTable({orders = [], readOnly, props}) {

@@ -1,21 +1,23 @@
 import {Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import OrderItems from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderItems";
-import OrderPayments from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderPayments";
-import OrderDeliveries from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderDeliveries";
-import OrderLocations from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderLocations";
-import OrderComment from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderComment";
-import OrderSummary from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails/OrderSummary";
+import OrderItems from "@/Components/Pages/Orders/Other/OrderDetails/OrderItems";
+import OrderPayments from "@/Components/Pages/Orders/Other/OrderDetails/OrderPayments";
+import OrderDeliveries from "@/Components/Pages/Orders/Other/OrderDetails/OrderDeliveries";
+import OrderLocations from "@/Components/Pages/Orders/Other/OrderDetails/OrderLocations";
+import OrderSummary from "@/Components/Pages/Orders/Other/OrderDetails/OrderSummary";
 import {useEffect, useState} from "react";
+import {router} from "@inertiajs/react";
+import OrderCode from "@/Components/Pages/Orders/Other/OrderDetails/OrderCode";
 
 
 export default function OrderDetails({row, open, handleClose}) {
     const [data, setData] = useState(null)
 
     const getData = () => {
-        // router.get(route("system.b2b.order", {clientOrder: row.original.id}))
-        axios.get(route("system.b2b.order", {clientOrder: row.original.id}))
+        // router.get(route("system.order.other", {order: row.original.id}))
+        axios.get(route("system.order.other", {order: row.original.id}))
             .then(response => {
                 setData(response.data)
+                console.log(response.data)
             })
             .catch(error => {
                 console.error(error)
@@ -43,6 +45,7 @@ export default function OrderDetails({row, open, handleClose}) {
                     (
                         <>
                             <OrderItems data={data}/>
+                            <OrderLocations data={data}/>
                             <Box sx={{
                                 display: "flex",
                                 flexDirection: "row",
@@ -53,9 +56,8 @@ export default function OrderDetails({row, open, handleClose}) {
                             }}>
                                 <OrderPayments data={data}/>
                                 <OrderDeliveries data={data}/>
-                                <OrderLocations data={data}/>
+                                <OrderCode data={data}/>
                             </Box>
-                            <OrderComment data={data}/>
                             <OrderSummary data={data}/>
 
                         </>

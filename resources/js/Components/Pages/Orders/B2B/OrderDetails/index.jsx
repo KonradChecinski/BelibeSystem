@@ -1,17 +1,14 @@
 import {Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import OrderItems from "@/Components/Pages/Orders/B2B/OrderDetails/OrderItems";
+import OrderPayments from "@/Components/Pages/Orders/B2B/OrderDetails/OrderPayments";
+import OrderDeliveries from "@/Components/Pages/Orders/B2B/OrderDetails/OrderDeliveries";
+import OrderLocations from "@/Components/Pages/Orders/B2B/OrderDetails/OrderLocations";
+import OrderComment from "@/Components/Pages/Orders/B2B/OrderDetails/OrderComment";
+import OrderSummary from "@/Components/Pages/Orders/B2B/OrderDetails/OrderSummary";
 import {useEffect, useState} from "react";
-import OrderPaymentsEdit
-    from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderPaymentsEdit";
-import OrderDeliveriesEdit
-    from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderDeliveriesEdit";
-import OrderLocationsEdit
-    from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderLocationsEdit";
-import OrderCommentEdit from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderCommentEdit";
-import OrderSummaryEdit from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderSummaryEdit";
-import OrderItemsEdit from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit/OrderItemsEdit";
 
 
-export default function OrderDetailsEdit({row, open, handleClose}) {
+export default function OrderDetails({row, open, handleClose}) {
     const [data, setData] = useState(null)
 
     const getData = () => {
@@ -40,12 +37,12 @@ export default function OrderDetailsEdit({row, open, handleClose}) {
             open={open}
             onClose={handleClose}
         >
-            <DialogTitle>Edycja zamówienia - {row?.original?.number}</DialogTitle>
+            <DialogTitle>Szczegóły zamówienia - {row?.original?.number}</DialogTitle>
             <DialogContent>
                 {data ?
                     (
                         <>
-                            <OrderItemsEdit data={data}/>
+                            <OrderItems data={data}/>
                             <Box sx={{
                                 display: "flex",
                                 flexDirection: "row",
@@ -54,12 +51,12 @@ export default function OrderDetailsEdit({row, open, handleClose}) {
                                 gap: 2,
                                 my: 2,
                             }}>
-                                <OrderPaymentsEdit data={data}/>
-                                <OrderDeliveriesEdit data={data}/>
-                                <OrderLocationsEdit data={data}/>
+                                <OrderPayments data={data}/>
+                                <OrderDeliveries data={data}/>
+                                <OrderLocations data={data}/>
                             </Box>
-                            <OrderCommentEdit data={data}/>
-                            <OrderSummaryEdit data={data}/>
+                            <OrderComment data={data}/>
+                            <OrderSummary data={data}/>
 
                         </>
                     )
@@ -82,7 +79,6 @@ export default function OrderDetailsEdit({row, open, handleClose}) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Zamknij</Button>
-                <Button onClick={handleClose}>Zapisz</Button>
             </DialogActions>
         </Dialog>
 

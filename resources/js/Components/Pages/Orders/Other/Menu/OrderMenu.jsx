@@ -1,8 +1,7 @@
 import {Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {Cancel, Edit, ListAlt, MoreVert, SettingsBackupRestore, TaskAlt} from "@mui/icons-material";
 import {useEffect, useState} from "react";
-import OrderDetails from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetails";
-import OrderDetailsEdit from "@/Components/Pages/Client/ClientOrderHistoryComponent/OrderDetailsEdit";
+import OrderDetails from "@/Components/Pages/Orders/Other/OrderDetails";
 
 export default function OrderMenu({row}) {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -79,14 +78,13 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1].includes(row.original.status)}
-                          onClick={handleOpenDetailsEdit}>
-                    <ListItemIcon><Edit/></ListItemIcon>
-                    <ListItemText>Edytuj</ListItemText>
-                </MenuItem>
+                {/*<MenuItem disabled={![1].includes(row.original.status)}*/}
+                {/*          onClick={handleOpenDetailsEdit}>*/}
+                {/*    <ListItemIcon><Edit/></ListItemIcon>*/}
+                {/*    <ListItemText>Edytuj</ListItemText>*/}
+                {/*</MenuItem>*/}
             </Menu>
             <OrderDetails open={openDetails} handleClose={handleCloseDetails} row={row}/>
-            <OrderDetailsEdit open={openDetailsEdit} handleClose={handleCloseDetailsEdit} row={row}/>
         </>
     );
 

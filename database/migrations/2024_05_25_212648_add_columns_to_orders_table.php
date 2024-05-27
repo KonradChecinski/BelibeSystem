@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string("number")->after("id");//->unique();
+            $table->integer("total_quantity")->after("ordered_at");
             $table->renameColumn("shipping_cost", "delivery_gross");
             $table->renameColumn("shiping_name", "delivery_name");
             $table->renameColumn("sum", "total_gross");
