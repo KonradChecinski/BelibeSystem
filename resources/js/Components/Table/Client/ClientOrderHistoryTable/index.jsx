@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Box, Tooltip,} from "@mui/material";
+import {Box, Divider, IconButton, Tooltip, Typography,} from "@mui/material";
 
 import {useTheme} from "@mui/material/styles";
 import moment from "moment/moment";
@@ -7,6 +7,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
+import {ReceiptLong} from "@mui/icons-material";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -357,6 +358,58 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 header: 'Data złożenia',
                 size: 5,
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "",
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'invoice',
+                header: 'FV',
+                size: 10,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    // console.log(row.original)
+                    return (
+                        <Box>
+                            {cell.getValue() && (
+                                <Tooltip arrow title={
+                                    <>
+                                        <Typography variant={"body1"}>
+                                            Faktura: {cell.getValue().number}
+                                        </Typography>
+                                        <Typography variant={"body2"}>
+                                            Wygenerowana: {moment(cell.getValue().created_at).format("DD-MM-YYYY HH:mm:ss")}
+                                        </Typography>
+                                        <Divider sx={{my: 1}}/>
+
+                                        <Typography variant={"body2"} color={"warning.main"}>
+                                            Wartość Netto: {toLocaleString(Number(cell.getValue().net_value) / 100)}
+                                        </Typography>
+                                        <Typography variant={"body1"} color={"warning.main"}>
+                                            Wartość Brutto: {toLocaleString(Number(cell.getValue().gross_value) / 100)}
+                                        </Typography>
+
+                                        <Divider sx={{my: 1}}/>
+
+                                        <Typography variant={"body2"}>
+                                            Kliknij w przycisk by otworzyć podgląd faktury
+                                        </Typography>
+                                    </>
+                                }>
+                                    <a
+                                        href={route("system.invoices.invoice", {invoice: cell.getValue().id})}
+                                        target={"_blank"}
+                                    >
+                                        <IconButton aria-label="showInvoice">
+                                            <ReceiptLong color={"success"}/>
+                                        </IconButton>
+                                    </a>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                },
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,

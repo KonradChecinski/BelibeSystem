@@ -12,7 +12,7 @@ import {
     EventAvailable,
     NoteAdd,
     AddBox,
-    History
+    History, Description, ReceiptLong
 } from "@mui/icons-material";
 
 import IconGrid from "@/Components/Layout/IconGrid";
@@ -87,9 +87,9 @@ export default function Client(props) {
                     <ClientOrderHistoryComponent {...props} />
                 </IconGrid>
 
-                {/*<IconGrid xs={12} md={12} title={"Faktury klienta"} icon={<Description/>} iconColor={"magenta"}>*/}
-                {/*    <ClientInvoicesComponent {...props} />*/}
-                {/*</IconGrid>*/}
+                <IconGrid xs={12} md={12} title={"Faktury klienta"} icon={<ReceiptLong/>} iconColor={"magenta"}>
+                    <ClientInvoicesComponent {...props} />
+                </IconGrid>
 
                 <IconGrid xs={12} md={12} title={"Rozliczenia klienta"} icon={<Payment/>} iconColor={"magenta"}>
                     <Grid container spacing={2}>
