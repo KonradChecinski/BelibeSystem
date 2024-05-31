@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ClientOrder extends Model
 {
@@ -32,6 +33,7 @@ class ClientOrder extends Model
         "delivery_gross",
         "currency",
         "comment",
+        "subiekt_id",
         "subiekt_number",
         "subiekt_added_at",
     ];
@@ -39,8 +41,8 @@ class ClientOrder extends Model
 //    status
 //    1 złożone
 //    2 zaakceptowane do realizacji
-//    3 przesłane do subiekta
-//    4 w trakcie kompletacji
+//    3 w trakcie kompletacji
+//    4 przesłane do subiekta
 //    5 zrealizowane
 //    6 anulowane
 
@@ -114,5 +116,10 @@ class ClientOrder extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(ClientLocation::class, "client_location_id");
+    }
+
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(ClientInvoice::class);
     }
 }

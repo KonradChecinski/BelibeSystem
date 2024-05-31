@@ -36,6 +36,7 @@ class Order extends Model
         "country",
         "phone",
         "tax_id",
+        "subiekt_id",
         "subiekt_number",
         "subiekt_added_at"
     ];
@@ -46,8 +47,8 @@ class Order extends Model
 //    status
 //    1 złożone
 //    2 zaakceptowane do realizacji
-//    3 przesłane do subiekta
-//    4 w trakcie kompletacji
+//    3 w trakcie kompletacji
+//    4 przesłane do subiekta
 //    5 zrealizowane
 //    6 anulowane
     public function orderProducts(): HasMany

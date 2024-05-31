@@ -10,6 +10,7 @@ class B2bDelivery extends Model
     use HasFactory;
 
     protected $fillable = [
+        'subiekt_id',
         'name',
         'description',
         'price_net',
@@ -23,5 +24,5 @@ class B2bDelivery extends Model
     protected $casts = [
         'active' => 'boolean',
     ];
-    
+
 }

@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientOrder;
-use App\Models\Order;
-use Carbon\Carbon;
+use App\Models\ClientInvoice;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
-class OrderB2bController extends Controller
+class InvoiceB2bController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $modelsB2bOrders = ClientOrder::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->with("invoice")->get();
-        return Inertia::render("System/Orders/OrderListB2b", [
-            "orders" => $modelsB2bOrders,
-        ]);
+        dd("c");
     }
 
     /**
@@ -40,9 +35,11 @@ class OrderB2bController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ClientInvoice $invoice)
     {
-        //
+        $pdf = Storage::get($invoice->path);
+        $mimeType = Storage::mimeType($invoice->path);
+        return response($pdf)->header('Content-Type', $mimeType);
     }
 
     /**

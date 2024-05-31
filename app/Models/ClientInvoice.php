@@ -14,6 +14,7 @@ class ClientInvoice extends Model
 
     protected $fillable = [
         'client_id',
+        'client_order_id',
         'type',
         'number',
         'net_value',
@@ -24,10 +25,20 @@ class ClientInvoice extends Model
     protected $casts = [
         'datetime' => 'datetime',
     ];
+    
+    //Type
+    //1 - Faktura
+    //2 - Paragon
+    //3 - Faktura korygująca
 
 
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function clientOrder(): BelongsTo
+    {
+        return $this->belongsTo(ClientOrder::class);
     }
 }

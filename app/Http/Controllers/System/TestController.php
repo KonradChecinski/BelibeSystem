@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\FromSubiekt\GenerateInvoiceFromClientOrderInSubiekt;
+use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\Shoper\OrderCreateInSubiekt;
+use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductImage;
@@ -18,8 +22,10 @@ class TestController extends Controller
      */
     public function index()
     {
-
-
+//        ClientOrder::find(10)->update(["status" => 2]);
+//        ClientOrderCreateInSubiekt::dispatchSync();
+//        UpdateClientOrderStatus::dispatchSync();
+        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
     }
 
     /**

@@ -99,16 +99,17 @@ class OrderCreateInSubiekt implements ShouldQueue
 
             $date = date("Y-m-d H:i:s");
             $zamowienie->PoleWlasne["Czas"] = $date;
-            $uwagi = "Zamówienie z belibe.pl - " . $order["order_id"];
-            if (!is_null($order["promo_code"])) $uwagi .= " - kod rabatowy: " . $order["promo_code"];
+            $uwagi = Str::ascii("Zamówienie z belibe.pl - " . $order["order_id"]);
+            if ($order["promo_code"] !== "") $uwagi .= " - kod rabatowy: " . $order["promo_code"];
             $zamowienie->Uwagi = $uwagi;
 
-            if ($zamowienie->WartoscBrutto != $order["sum"]) $this->fail("Niezgodne kwoty zamówienia");
+            if ($zamowienie->WartoscBrutto != $order["total_gross"]) $this->fail("Niezgodne kwoty zamówienia");
             $zamowienie->Zapisz();
             $order->update([
+                'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,
                 'subiekt_added_at' => $date,
-                "status" => 5 //Do poprawy
+                "status" => 4
             ]);
         }
     }

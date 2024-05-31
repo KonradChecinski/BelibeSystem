@@ -1,8 +1,19 @@
 import {Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
-import {Cancel, Edit, ListAlt, MoreVert, SettingsBackupRestore, TaskAlt} from "@mui/icons-material";
+import {
+    Cancel,
+    Edit,
+    ListAlt,
+    MoreVert,
+    Receipt,
+    ReceiptLong,
+    SettingsBackupRestore,
+    TaskAlt
+} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import OrderDetails from "@/Components/Pages/Orders/B2B/OrderDetails";
 import OrderDetailsEdit from "@/Components/Pages/Orders/B2B/OrderDetailsEdit";
+import {router} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 export default function OrderMenu({row}) {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -37,6 +48,87 @@ export default function OrderMenu({row}) {
     };
 
 
+    const handleAccept = () => {
+        router.patch(
+            route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
+            {
+                status: 2
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    handleMenuClose()
+                    enqueueSnackbar("Zaakceptowano zamówienie", {variant: 'success'})
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar("Błąd przy akceptacji zamówienia", {variant: 'error'})
+                }
+            }
+        )
+    };
+
+    const handleCancel = () => {
+        router.patch(
+            route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
+            {
+                status: 6
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    handleMenuClose()
+                    enqueueSnackbar("Anulowano zamówienie", {variant: 'success'})
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar("Błąd przy anulowaniu zamówienia", {variant: 'error'})
+                }
+            }
+        )
+    };
+
+    const handleProcessAgain = () => {
+        router.patch(
+            route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
+            {
+                status: 2
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    handleMenuClose()
+                    enqueueSnackbar("Zlecono zamówienie do ponownej realizacji", {variant: 'success'})
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar("Błąd przy zlecaniu zamówienia do ponownej realizacji", {variant: 'error'})
+                }
+            }
+        )
+    };
+
+    const handleGetInvoice = () => {
+        console.log('handleGetInvoice')
+        router.post(
+            route("system.orders.order.b2b.create.invoice", {clientOrder: row.original.id}),
+            {
+                // status: 2
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    handleMenuClose()
+                    enqueueSnackbar("Zlecono wygenerowanie faktury", {variant: 'success'})
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar("Błąd przy zlecaniu wygenerowania faktury", {variant: 'error'})
+                }
+            }
+        )
+    };
+
     return (
         <>
             <Box>
@@ -54,12 +146,12 @@ export default function OrderMenu({row}) {
             >
 
                 <MenuItem disabled={![1].includes(row.original.status)}
-                          onClick={() => console.log("accept")}>
+                          onClick={handleAccept}>
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
                 <MenuItem disabled={![1, 2, 3, 4].includes(row.original.status)}
-                          onClick={() => console.log("cancel")}>
+                          onClick={handleCancel}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
                 </MenuItem>
@@ -67,9 +159,17 @@ export default function OrderMenu({row}) {
                 <Divider/>
 
                 <MenuItem disabled={![3, 4].includes(row.original.status)}
-                          onClick={() => console.log("subiekt")}>
+                          onClick={handleProcessAgain}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
+                </MenuItem>
+
+                <Divider/>
+
+                <MenuItem disabled={![5].includes(row.original.status)}
+                          onClick={handleGetInvoice}>
+                    <ListItemIcon><ReceiptLong/></ListItemIcon>
+                    <ListItemText>Wygeneruj fakturę do zamówienia</ListItemText>
                 </MenuItem>
 
                 <Divider/>

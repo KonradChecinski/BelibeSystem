@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
+use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderOtherController;
@@ -141,22 +142,30 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::patch("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'update'])->name("system.clients.client.note.update");
         Route::delete("/clients/client/{client}/note/{clientNote}", [ClientNoteController::class, 'destroy'])->name("system.clients.client.note.delete");
 
-
         Route::post("/order/b2b/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
         Route::post("/order/b2b/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
-
-        Route::get("/order/b2b/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.b2b.order");
-        Route::get("/order/b2b/{clientOrder}/edit", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
-        Route::patch("/order/b2b/{clientOrder}", [ClientOrderController::class, 'update'])->name("system.b2b.order.update");
-        Route::patch("/order/b2b/{clientOrder}/{product}", [ClientOrderController::class, 'updateProduct'])->name("system.b2b.order.update.product");
-
-        Route::get("/order/other/{order}", [OrderOtherController::class, 'show'])->name("system.order.other");
 
     });
 
     Route::group(["prefix" => "/orders"], function () {
         Route::get("/b2b", [OrderB2bController::class, 'index'])->name("system.orders.b2b");
         Route::get("/other", [OrderOtherController::class, 'index'])->name("system.orders.other");
+
+        Route::get("/b2b/{clientOrder}", [ClientOrderController::class, 'show'])->name("system.orders.order.b2b");
+        Route::get("/b2b/{clientOrder}/edit", [ClientOrderController::class, 'edit'])->name("system.orders.order.b2b.edit");
+        Route::patch("/b2b/{clientOrder}", [ClientOrderController::class, 'update'])->name("system.orders.order.b2b.update");
+        Route::patch("/b2b/{clientOrder}/product/{product}", [ClientOrderController::class, 'updateProduct'])->name("system.orders.order.b2b.update.product");
+
+        Route::patch("/b2b/{clientOrder}/status", [ClientOrderController::class, 'updateStatus'])->name("system.orders.order.b2b.update.status");
+        Route::post("/b2b/{clientOrder}/invoice", [ClientOrderController::class, 'createInvoice'])->name("system.orders.order.b2b.create.invoice");
+
+
+        Route::get("/other/{order}", [OrderOtherController::class, 'show'])->name("system.orders.order.other");
+
+    });
+
+    Route::group(["prefix" => "/invoices"], function () {
+        Route::get("/{invoice}", [InvoiceB2bController::class, 'show'])->name("system.invoices.invoice");
 
     });
 

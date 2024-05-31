@@ -13,8 +13,8 @@ export default function OrderDetails({row, open, handleClose}) {
     const [data, setData] = useState(null)
 
     const getData = () => {
-        // router.get(route("system.order.other", {order: row.original.id}))
-        axios.get(route("system.order.other", {order: row.original.id}))
+        // router.get(route("system.orders.order.other", {order: row.original.id}))
+        axios.get(route("system.orders.order.other", {order: row.original.id}))
             .then(response => {
                 setData(response.data)
                 console.log(response.data)

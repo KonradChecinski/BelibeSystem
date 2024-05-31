@@ -13,6 +13,7 @@ class B2bPayment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'subiekt_id',
         'name',
         'type'
     ];

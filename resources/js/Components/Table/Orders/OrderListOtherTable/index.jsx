@@ -77,11 +77,11 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                             color = "info.main";
                             break;
                         case 3:
-                            text = "Przesłane do subiekta";
+                            text = "W trakcie kompletacji";
                             color = "info.main";
                             break;
                         case 4:
-                            text = "W trakcie kompletacji";
+                            text = "Przesłane do subiekta";
                             color = "warning.main";
                             break;
                         case 5:

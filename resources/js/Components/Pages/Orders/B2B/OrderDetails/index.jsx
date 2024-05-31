@@ -12,8 +12,8 @@ export default function OrderDetails({row, open, handleClose}) {
     const [data, setData] = useState(null)
 
     const getData = () => {
-        // router.get(route("system.b2b.order", {clientOrder: row.original.id}))
-        axios.get(route("system.b2b.order", {clientOrder: row.original.id}))
+        // router.get(route("system.orders.order.b2b", {clientOrder: row.original.id}))
+        axios.get(route("system.orders.order.b2b", {clientOrder: row.original.id}))
             .then(response => {
                 setData(response.data)
             })

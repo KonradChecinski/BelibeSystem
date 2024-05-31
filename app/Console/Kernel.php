@@ -6,10 +6,13 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
+use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
+use App\Jobs\FromSubiekt\UpdateOrderStatus;
 use App\Jobs\FromSubiekt\UpdateSubiektIdWhereNull;
 use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
+use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Models\PartnerExport;
 use Illuminate\Console\Scheduling\Schedule;
@@ -31,10 +34,15 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CreateTwFromSubiekt)->everyMinute();
         $schedule->job(new UpdateTwFromSubiekt)->everyMinute();
 
+        //ClientOrder
+        $schedule->job(new ClientOrderCreateInSubiekt)->everyMinute();
+        $schedule->job(new UpdateClientOrderStatus)->everyMinute();
+
 
         // Shoper
         $schedule->job(new ShoperLogin)->MonthlyOn(1);
         $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
+        $schedule->job(new UpdateOrderStatus)->everyMinute();
 
         //Telescope
         $schedule->command('telescope:prune')->daily();

@@ -1,5 +1,5 @@
 import {useMemo, useState} from "react";
-import {Box, Button, Fab, IconButton, Tooltip, Typography,} from "@mui/material";
+import {Box, Button, Divider, Fab, IconButton, Tooltip, Typography,} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {
     Done,
@@ -12,7 +12,7 @@ import {
     Edit,
     ContentCopy,
     Upgrade,
-    Sell, ShoppingCart, Info
+    Sell, ShoppingCart, Info, ReceiptLong
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -24,6 +24,7 @@ import 'cronstrue/locales/pl';
 import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
+import {Link} from "@inertiajs/react";
 
 
 export default function OrderListB2bTable({orders = [], readOnly, props}) {
@@ -43,6 +44,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                 accessorKey: 'type',
                 header: 'Typ',
                 size: 10,
+                columnDefType: 'display',
                 Cell: ({cell, row}) => {
                     // console.log(row.original)
                     return (
@@ -50,6 +52,58 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             {cell.getValue() === 0 && (
                                 <Tooltip title="B2B">
                                     <Sell color={"info"}/>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'invoice',
+                header: 'FV',
+                size: 10,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    // console.log(row.original)
+                    return (
+                        <Box>
+                            {cell.getValue() && (
+                                <Tooltip arrow title={
+                                    <>
+                                        <Typography variant={"body1"}>
+                                            Faktura: {cell.getValue().number}
+                                        </Typography>
+                                        <Typography variant={"body2"}>
+                                            Wygenerowana: {moment(cell.getValue().created_at).format("DD-MM-YYYY HH:mm:ss")}
+                                        </Typography>
+                                        <Divider sx={{my: 1}}/>
+
+                                        <Typography variant={"body2"} color={"warning.main"}>
+                                            Wartość Netto: {toLocaleString(Number(cell.getValue().net_value) / 100)}
+                                        </Typography>
+                                        <Typography variant={"body1"} color={"warning.main"}>
+                                            Wartość Brutto: {toLocaleString(Number(cell.getValue().gross_value) / 100)}
+                                        </Typography>
+
+                                        <Divider sx={{my: 1}}/>
+
+                                        <Typography variant={"body2"}>
+                                            Kliknij w przycisk by otworzyć podgląd faktury
+                                        </Typography>
+                                    </>
+                                }>
+                                    <a
+                                        href={route("system.invoices.invoice", {invoice: cell.getValue().id})}
+                                        target={"_blank"}
+                                    >
+                                        <IconButton aria-label="showInvoice">
+                                            <ReceiptLong color={"success"}/>
+                                        </IconButton>
+                                    </a>
                                 </Tooltip>
                             )}
                         </Box>
@@ -77,11 +131,11 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             color = "info.main";
                             break;
                         case 3:
-                            text = "Przesłane do subiekta";
+                            text = "W trakcie kompletacji";
                             color = "info.main";
                             break;
                         case 4:
-                            text = "W trakcie kompletacji";
+                            text = "Przesłane do subiekta";
                             color = "warning.main";
                             break;
                         case 5:

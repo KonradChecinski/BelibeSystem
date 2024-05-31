@@ -4,6 +4,9 @@ namespace App\Http\Controllers\System\Client;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateStatusClientOrderRequest;
+use App\Jobs\FromSubiekt\GenerateInvoiceFromClientOrderInSubiekt;
+use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Models\Client\Client;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
@@ -64,6 +67,28 @@ class ClientOrderController extends Controller
     public function updateProduct(Request $request, ClientOrder $clientOrder, Product $product)
     {
         dd($request->all(), $clientOrder, $product);
+    }
+
+    public function updateStatus(UpdateStatusClientOrderRequest $request, ClientOrder $clientOrder)
+    {
+        if ($request->status === 2) {
+            $clientOrder->status = 2;
+            $clientOrder->subiekt_number = null;
+            $clientOrder->subiekt_added_at = null;
+            $clientOrder->save();
+        }
+
+        if ($request->status === 6) {
+            $clientOrder->status = 6;
+            $clientOrder->save();
+        }
+    }
+
+    public function createInvoice(ClientOrder $clientOrder)
+    {
+        if ($clientOrder->status === 5) {
+            GenerateInvoiceFromClientOrderInSubiekt::dispatch($clientOrder);
+        }
     }
 
     /**
