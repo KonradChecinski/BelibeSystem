@@ -52,20 +52,23 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
             $zamowienie->NumerOryginalny = mb_substr(Str::ascii($order->number), 0, 30);
-            $zamowienie->LiczonyOdCenBrutto = true;
+            $zamowienie->LiczonyOdCenBrutto = false;
             $zamowienie->PoziomCenyId = 2;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
+
+            //TODO: Dodać kategorie handlowca
 //            $zamowienie->KategoriaId = 115;
 
 
             foreach ($orderProducts as $orderProduct) {
-
+                $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
+//                dd($orderProduct->product, $orderProduct->productModel->priceForClientB2b($client), $wholesale_gross_price_after_payment_discount);
                 $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
+//                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
+                $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                 $pozycja->IloscJm = (int)$orderProduct->quantity;
-//                $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
 //                    $pozycja->RabatProcent = (float)0;
-                $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct->price_gross / 100;
-
             }
 
             if ($order->discounted_total_net < $delivery->free_shipping_from) {
@@ -109,7 +112,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $uwagi .= "Uwagi: " . Str::ascii($order->comment);
             $zamowienie->Uwagi = mb_substr($uwagi, 0, 255);
 
-            if ($zamowienie->WartoscBrutto != $order["total_gross"]) $this->fail("Niezgodne kwoty zamówienia");
+            if ($zamowienie->WartoscNetto != $order["total_net"]) $this->fail("Niezgodne kwoty zamówienia");
 
             $zamowienie->Zapisz();
 
@@ -117,6 +120,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $zamowienie->Rozliczony = false;
             $zamowienie->Zapisz();
 
+            dd("cos");
             $order->update([
                 'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,
@@ -131,8 +135,6 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             // dok_StatusEx
             // 1 - zrealizowane częściowo
             // 4 - zrealizowane
-
-            die("dodano");
         }
     }
 }

@@ -49,11 +49,23 @@ export default function CartDeliveries({props, setData}) {
                                     <Typography variant="body1">
                                         {delivery.description}
                                     </Typography>
+                                    {
+                                        props.cartPriceSummary.total_net <= delivery.free_from ?
+                                            (
+                                                <Typography variant="body2">
+                                                    Koszt: {toLocaleString(delivery.price_net / 100)} ({toLocaleString(delivery.price_gross / 100)} Brutto)
+                                                </Typography>
+                                            )
+                                            :
+                                            (
+                                                <Typography variant="body2">
+                                                    Koszt: {toLocaleString(0)} ({toLocaleString(0)} Brutto)
+                                                </Typography>
+                                            )
+                                    }
+
                                     <Typography variant="body2">
-                                        Koszt: {toLocaleString(delivery.price_net / 100)} ({toLocaleString(delivery.price_gross / 100)} Brutto)
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Cza dostawy: {delivery.delivery_time_min} - {delivery.delivery_time_max}
+                                        Czas dostawy: {delivery.delivery_time_min} - {delivery.delivery_time_max}
                                     </Typography>
                                     {props.cartPriceSummary.total_net <= delivery.free_from &&
                                         (

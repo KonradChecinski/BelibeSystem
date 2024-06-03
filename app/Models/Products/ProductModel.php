@@ -210,9 +210,14 @@ class ProductModel extends Model
         return $this->hasMany(ClientDiscount::class);
     }
 
-    public function priceForClientB2b($client)
+    public function priceForClientB2b(Client $client)
     {
         return PriceForClient::getPriceFromProductModel($this, $client);
+    }
+
+    public function priceForClientB2bWithExtraDiscount(Client $client, int $extraDiscountPercent)
+    {
+        return PriceForClient::getPriceFromProductModel($this, $client, $extraDiscountPercent);
     }
 
     public function favoritedClients(): BelongsToMany

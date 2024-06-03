@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 
 class PriceForClient
 {
-    public static function getPriceFromProductModel(ProductModel $productModel, Client $client)
+    public static function getPriceFromProductModel(ProductModel $productModel, Client $client, int $extraDiscountPercent = 0)
     {
         $discounts = $client->discounts;
 
@@ -27,13 +27,12 @@ class PriceForClient
         $price = $productModel->prices;
         $vat = $price->vat_rate;
         $priceNet = $price->wholesale_net_price;
-        $priceGross = $price->wholesale_gross_price;
 
 
         if (!is_null($productModel)) {
             $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
             if ($discountsForProductModel->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -42,7 +41,7 @@ class PriceForClient
 
             if ($discountsForCategories->isNotEmpty()) {
                 $discountValue = $discountsForCategories->max("value");
-                return self::calculatePrices($priceNet, $discountValue, $vat);
+                return self::calculatePrices($priceNet, $discountValue + $extraDiscountPercent, $vat);
             }
         }
 
@@ -50,7 +49,7 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForGroup->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForGroup->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -58,7 +57,7 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForBrand->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForBrand->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -66,13 +65,15 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForEverything->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForEverything->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
         return [
             "discounted_wholesale_net_price" => $priceNet,
-            "discounted_wholesale_gross_price" => $priceGross
+            "discounted_wholesale_gross_price" => round($priceNet * (1 + $vat / 100)),
+            "discount" => 0,
+            "vat_rate" => $vat
         ];
     }
 
@@ -85,7 +86,7 @@ class PriceForClient
      * @param Collection|ClientDiscount[] $discounts
      * @return array
      */
-    public static function getPrice(?ProductModel $productModel, array|Collection|null $categories, ?ProductGroup $group, ?ProductBrand $brand, ProductModelPrice $price, array|Collection $discounts): array
+    public static function getPrice(?ProductModel $productModel, array|Collection|null $categories, ?ProductGroup $group, ?ProductBrand $brand, ProductModelPrice $price, array|Collection $discounts, int $extraDiscountPercent = 0): array
     {
 //        $discounts = $client->discounts;
 
@@ -99,13 +100,12 @@ class PriceForClient
 //        $price = $productModel->prices;
         $vat = $price->vat_rate;
         $priceNet = $price->wholesale_net_price;
-        $priceGross = $price->wholesale_gross_price;
 
 
         if (!is_null($productModel)) {
             $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
             if ($discountsForProductModel->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -114,7 +114,7 @@ class PriceForClient
 
             if ($discountsForCategories->isNotEmpty()) {
                 $discountValue = $discountsForCategories->max("value");
-                return self::calculatePrices($priceNet, $discountValue, $vat);
+                return self::calculatePrices($priceNet, $discountValue + $extraDiscountPercent, $vat);
             }
         }
 
@@ -122,7 +122,7 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForGroup->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForGroup->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -130,7 +130,7 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForBrand->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForBrand->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
@@ -138,13 +138,15 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForEverything->first()->value, $vat);
+                return self::calculatePrices($priceNet, $discountsForEverything->first()->value + $extraDiscountPercent, $vat);
             }
         }
 
         return [
             "discounted_wholesale_net_price" => $priceNet,
-            "discounted_wholesale_gross_price" => $priceGross
+            "discounted_wholesale_gross_price" => round($priceNet * (1 + $vat / 100)),
+            "discount" => 0,
+            "vat_rate" => $vat
         ];
     }
 
@@ -152,7 +154,9 @@ class PriceForClient
     {
         return [
             "discounted_wholesale_net_price" => round($priceNet - ($priceNet * ($discount / 100))),
-            "discounted_wholesale_gross_price" => round(($priceNet - ($priceNet * ($discount / 100))) * (1 + $vat / 100))
+            "discounted_wholesale_gross_price" => round(round($priceNet - ($priceNet * ($discount / 100))) * (1 + $vat / 100)),
+            "discount" => $discount,
+            "vat_rate" => $vat
         ];
     }
 }

@@ -23,9 +23,9 @@ class TestController extends Controller
     public function index()
     {
 //        ClientOrder::find(10)->update(["status" => 2]);
-//        ClientOrderCreateInSubiekt::dispatchSync();
+        ClientOrderCreateInSubiekt::dispatchSync();
 //        UpdateClientOrderStatus::dispatchSync();
-        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
+//        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
     }
 
     /**

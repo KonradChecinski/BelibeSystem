@@ -118,7 +118,7 @@ class B2bCartController extends Controller
             $cartProduct = new B2bCart([
                 "quantity" => $request->quantity,
                 'price_net' => $discountedPrices['discounted_wholesale_net_price'],
-                'price_gross' => $discountedPrices['discounted_wholesale_gross_price'],
+                'vat_rate' => $discountedPrices['vat_rate'],
                 'currency' => $currency,
             ]);
             $cartProduct->product()->associate($product);

@@ -22,7 +22,7 @@ class B2bCart extends Model
         'product_id',
         'quantity',
         'price_net',
-        'price_gross',
+        'vat_rate',
         'currency',
     ];
 
