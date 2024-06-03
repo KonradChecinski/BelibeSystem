@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $route = Helper::getSystemNameFromDomain($request) === SystemName::B2B ? route("b2b.dashboard") : RouteServiceProvider::HOME;
+        $route = Helper::getSystemNameFromDomain($request) === SystemName::B2B ? route("b2b.main") : RouteServiceProvider::HOME;
 
         return redirect()->intended($route);
     }
