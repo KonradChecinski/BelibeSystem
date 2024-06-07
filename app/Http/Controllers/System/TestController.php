@@ -8,6 +8,7 @@ use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\Shoper\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Models\B2bCart;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
@@ -26,6 +27,22 @@ class TestController extends Controller
         ClientOrderCreateInSubiekt::dispatchSync();
 //        UpdateClientOrderStatus::dispatchSync();
 //        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
+
+
+//        $order = ClientOrder::find(33);
+//        $orderProducts = $order->orderProducts;
+//
+//        foreach ($orderProducts as $orderProduct) {
+//            B2bCart::create([
+//                'client_id' => 1,
+//                'product_id' => $orderProduct->product_id,
+//                'quantity' => $orderProduct->quantity,
+//                'price_net' => $orderProduct->price_net,
+//                'vat_rate' => $orderProduct->vat_rate,
+//                'currency' => $orderProduct->currency,
+//            ]);
+//        }
+
     }
 
     /**

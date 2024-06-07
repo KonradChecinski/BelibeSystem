@@ -46,6 +46,15 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
         [],
     );
 
+    const sumSN = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.delivery_net) + Number(obj.discounted_total_net), 0),
+        [],
+    );
+    const sumSB = useMemo(
+        () => data.reduce((acc, obj) => acc + Number(obj.delivery_gross) + Number(obj.discounted_total_gross), 0),
+        [],
+    );
+
     const columns = useMemo(
         //column definitions...
         () => [
@@ -262,6 +271,63 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 enableColumnDragging: false,
                 enableSorting: false,
             },
+            {
+                accessorKey: 'summary_net',
+                header: 'Suma Netto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell, row}) =>
+                    (
+                        <Box sx={{color: "info.main"}}>
+                            {toLocaleString((Number(row.original.delivery_net) + Number(row.original.discounted_total_net)) / 100)}
+                        </Box>
+                    ),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>SN</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumSN) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'summary_gross',
+                header: 'Suma Brutto',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell, row}) =>
+                    (
+                        <Box sx={{color: "success.main"}}>
+                            {toLocaleString((Number(row.original.delivery_gross) + Number(row.original.discounted_total_gross)) / 100)}
+                        </Box>
+                    ),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>SB</Box>
+                    </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumSB) / 100)}</Box>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+
             {
                 accessorKey: 'currency',
                 header: 'Waluta',

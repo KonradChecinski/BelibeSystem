@@ -48,22 +48,45 @@ class B2bOrderController extends Controller
         $cart = $client->cart();
         $cartModel = $cart->get();
 
-        $priceSummary = $cartModel->map(function ($item) {
-            return [
-//                "price_net" => $item->price_net,
-//                "price_gross" => $item->price_gross,
-//                "quantity" => $item->quantity,
-                "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
+        $priceSummaryGrouped = $cartModel->map(function ($item) {
+            return collect([
+                "quantity" => $item->quantity,
+                "total_net" => $item->price_net,
+//                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
+                "vat_rate" => $item->vat_rate,
+            ]);
+        })->groupBy("vat_rate");
+
+        $priceSummaryGroupByVat = collect();
+        foreach ($priceSummaryGrouped as $vat_rate => $items) {
+            $total_net = $items->reduce(function ($carry, $item) {
+                $carry += $item["total_net"] * $item["quantity"];
+                return $carry;
+            }, 0);
+            $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+
+            $priceSummaryGroupByVat[$vat_rate] = [
+                "total_net" => $total_net,
+                "total_gross" => $total_gross,
+                "vat_rate" => $vat_rate,
             ];
-        })->reduce(function ($carry, $item) {
+        }
+        $priceSummary = $priceSummaryGroupByVat->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
             $carry["total_gross"] += $item["total_gross"];
-
             return $carry;
-        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
-            return round($item, 0);
-        });
+        }, ["total_net" => 0, "total_gross" => 0]);
+
+//        $total_net = round($total_net, 0);
+//        $total_gross = round($total_gross, 0);
+//        $priceSummary = $priceSummary->reduce(function ($carry, $item) {
+//            $carry["total_net"] += $item["total_net"];
+//
+//            return $carry;
+//        }, collect(["total_net" => 0, "total_gross" => 0, "vat_rate" => 0]))->map(function ($item) {
+//            return round($item, 0);
+//        });
+//        $priceSummary->total_gross
 
         $quantity = $cartModel->sum("quantity");
 
@@ -75,15 +98,17 @@ class B2bOrderController extends Controller
 //            $discountedTotalNet = round($priceSummary["total_net"] - ($priceSummary["total_net"] * $discountValue / 100));
 //            $discountedTotalGross = round($priceSummary["total_gross"] - ($priceSummary["total_gross"] * $discountValue / 100));
 
-            $discountedNet = 0;
-            $discountedGross = 0;
-            foreach ($cartModel as $item) {
-                $discountedNet += ($item->price_net * $item->quantity) - (round($item->price_net * (100 - $discountValue) / 100) * $item->quantity);
-                $discountedGross += round($item->price_net * $item->quantity * (1 + $item->vat_rate / 100)) -
-                    round(round($item->price_net * (100 - $discountValue) / 100) * $item->quantity * (1 + $item->vat_rate / 100));
-            }
-            $discountedTotalNet = $priceSummary["total_net"] - floor($discountedNet);
-            $discountedTotalGross = $priceSummary["total_gross"] - floor($discountedGross);
+//            $discountedNet = 0;
+//            $discountedGross = 0;
+//            foreach ($cartModel as $item) {
+//                $discountedNet += ($item->price_net * $item->quantity) - (round($item->price_net * (100 - $discountValue) / 100) * $item->quantity);
+//                $discountedGross += round($item->price_net * $item->quantity * (1 + $item->vat_rate / 100)) -
+//                    round(round($item->price_net * (100 - $discountValue) / 100) * $item->quantity * (1 + $item->vat_rate / 100));
+//            }
+//            $discountedTotalNet = $priceSummary["total_net"] - floor($discountedNet);
+//            $discountedTotalGross = $priceSummary["total_gross"] - floor($discountedGross);
+
+
 //            dd([
 //                "total" => $priceSummary["total_net"] / 100,
 //                "discount" => $discountedNet / 100,
@@ -94,15 +119,38 @@ class B2bOrderController extends Controller
 //                    "discount" => floor($discountedGross) / 100,
 //                    "discounted_total" => $discountedTotalGross / 100
 //                ]);
+
+            $discountedPriceSummaryGroupByVat = collect();
+            foreach ($priceSummaryGrouped as $vat_rate => $items) {
+                $total_net = $items->reduce(function ($carry, $item) use ($discountValue) {
+                    $carry += (round($item["total_net"] * (100 - $discountValue) / 100) * $item["quantity"]);
+                    return $carry;
+                }, 0);
+                $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+
+                $discountedPriceSummaryGroupByVat[$vat_rate] = [
+                    "total_net" => $total_net,
+                    "total_gross" => $total_gross,
+                    "vat_rate" => $vat_rate,
+                ];
+            }
+            $discountedPriceSummary = $discountedPriceSummaryGroupByVat->reduce(function ($carry, $item) {
+                $carry["total_net"] += $item["total_net"];
+                $carry["total_gross"] += $item["total_gross"];
+                return $carry;
+            }, ["total_net" => 0, "total_gross" => 0]);
+
+
         } else {
-            $discountedTotalNet = $priceSummary["total_net"];
-            $discountedTotalGross = $priceSummary["total_gross"];
+            $discountedPriceSummary = $priceSummary;
+//            $discountedTotalNet = $priceSummary["total_net"];
+//            $discountedTotalGross = $priceSummary["total_gross"];
         }
 
         $deliveryModel = $deliveries->find($request->validated()["delivery"]["id"]);
         $deliveryNet = $deliveryModel->price_net;
         $deliveryGross = $deliveryModel->price_gross;
-        if ($discountedTotalNet > $deliveryModel->free_from) {
+        if ($discountedPriceSummary["total_net"] > $deliveryModel->free_from) {
             $deliveryNet = 0;
             $deliveryGross = 0;
         }
@@ -121,8 +169,8 @@ class B2bOrderController extends Controller
             "total_gross" => $priceSummary["total_gross"],
 
             "discount" => $discount === true ? $discountValue : 0,
-            "discounted_total_net" => $discountedTotalNet,
-            "discounted_total_gross" => $discountedTotalGross,
+            "discounted_total_net" => $discountedPriceSummary["total_net"],
+            "discounted_total_gross" => $discountedPriceSummary["total_gross"],
 
             "delivery_net" => $deliveryNet,
             "delivery_gross" => $deliveryGross,

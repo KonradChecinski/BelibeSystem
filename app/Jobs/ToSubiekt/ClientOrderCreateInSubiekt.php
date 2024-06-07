@@ -83,13 +83,12 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
 //                $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
                         $wholesale_net_price_after_payment_discount = round($orderProduct->price_net * (100 - $order->discount) / 100);
 
-//                dd($orderProduct->price_net, $order->discount, $wholesale_net_price_after_payment_discount);
                         $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
                         $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
-//                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
+//                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
                         $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                         $pozycja->IloscJm = (int)$orderProduct->quantity;
-//                    $pozycja->RabatProcent = (float)0;
+//                        $pozycja->RabatProcent = (float)0;
 
 
                         $percent = (float)$pozycja->RabatProcent;

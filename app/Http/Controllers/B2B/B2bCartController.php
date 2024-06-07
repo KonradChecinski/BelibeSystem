@@ -42,21 +42,49 @@ class B2bCartController extends Controller
             },
         ]);
         $cartModel = $cart->get();
-        $priceSummary = $cartModel->map(function ($item) {
-            return [
-//                "price_net" => $item->price_net,
-//                "price_gross" => round($item->price_net * (1 + $item->vat_rate / 100)),
-//                "quantity" => $item->quantity,
-                "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
+//        $priceSummary = $cartModel->map(function ($item) {
+//            return [
+////                "price_net" => $item->price_net,
+////                "price_gross" => round($item->price_net * (1 + $item->vat_rate / 100)),
+////                "quantity" => $item->quantity,
+//                "total_net" => $item->price_net * $item->quantity,
+//                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
+//            ];
+//        })->reduce(function ($carry, $item) {
+//            $carry["total_net"] += $item["total_net"];
+//            $carry["total_gross"] += $item["total_gross"];
+//            return $carry;
+//        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
+//            return round($item, 0);
+//        });
+        $priceSummaryGrouped = $cartModel->map(function ($item) {
+            return collect([
+                "quantity" => $item->quantity,
+                "total_net" => $item->price_net,
+//                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
+                "vat_rate" => $item->vat_rate,
+            ]);
+        })->groupBy("vat_rate");
+
+        $priceSummaryGroupByVat = collect();
+        foreach ($priceSummaryGrouped as $vat_rate => $items) {
+            $total_net = $items->reduce(function ($carry, $item) {
+                $carry += $item["total_net"] * $item["quantity"];
+                return $carry;
+            }, 0);
+            $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+
+            $priceSummaryGroupByVat[$vat_rate] = [
+                "total_net" => $total_net,
+                "total_gross" => $total_gross,
+                "vat_rate" => $vat_rate,
             ];
-        })->reduce(function ($carry, $item) {
+        }
+        $priceSummary = $priceSummaryGroupByVat->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
             $carry["total_gross"] += $item["total_gross"];
             return $carry;
-        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
-            return round($item, 0);
-        });
+        }, ["total_net" => 0, "total_gross" => 0]);
 
 //        dd($priceSummary);
 

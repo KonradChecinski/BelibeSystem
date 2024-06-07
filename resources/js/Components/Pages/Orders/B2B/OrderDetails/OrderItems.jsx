@@ -67,11 +67,6 @@ export default function OrderItems({data}) {
                                 <TableCell align={"center"}>Ilość</TableCell>
                                 <TableCell align={"center"}>Suma Netto</TableCell>
                                 <TableCell align={"center"}>Suma Brutto</TableCell>
-
-                                <TableCell align={"center"}>Netto bez rabatu</TableCell>
-                                <TableCell align={"center"}>Brutto bez rabatu</TableCell>
-                                <TableCell align={"center"}>Netto z rabatem</TableCell>
-                                <TableCell align={"center"}>Brutto z rabatem</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -191,32 +186,7 @@ export default function OrderItems({data}) {
                                                                         </Typography>
 
                                                                     </TableCell>
-                                                                    <TableCell align={"center"}>
-                                                                        <Typography variant="body1">
-                                                                            {toLocaleString(item.price_net * item.quantity / 100)}
-                                                                        </Typography>
-
-                                                                    </TableCell>
-
-                                                                    <TableCell align={"center"}>
-                                                                        <Typography variant="body1">
-                                                                            {toLocaleString(Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) / 100)}
-                                                                        </Typography>
-
-                                                                    </TableCell>
-
-                                                                    <TableCell align={"center"}>
-                                                                        <Typography variant="body1">
-                                                                            {toLocaleString(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity / 100)}
-                                                                        </Typography>
-
-                                                                    </TableCell>
-                                                                    <TableCell align={"center"}>
-                                                                        <Typography variant="body1">
-                                                                            {toLocaleString(Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)) / 100)}
-                                                                        </Typography>
-
-                                                                    </TableCell>
+                                                     
                                                                 </TableRow>
                                                             </Fragment>
 

@@ -12,36 +12,65 @@ export default function CartSummary({props, data, paymentDiscount}) {
     const deliveryNet = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_net : 0;
     const deliveryGross = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_gross : 0;
 
-    const paymentNet = paymentDiscount === 0 ? 0 : -1 * (
-        props.cart.reduce((acc, item) => {
-            // console.log(
-            //     item.price_net,
-            //     item.quantity,
-            //     Math.round(item.price_net * (100 - paymentDiscount) / 100),
-            //     Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
-            //     item.price_net * item.quantity,
-            //     item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
-            //     Math.round(item.price_net * (paymentDiscount) / 100),
-            //     Math.round(item.price_net * (paymentDiscount) / 100) * item.quantity
-            // )
-            return Number(acc) + (item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity);
-        }, 0)
-    );
-    const paymentGross = paymentDiscount === 0 ? 0 : -1 * (
-        props.cart.reduce((acc, item) => {
-            // console.log(
-            //     Math.round(item.price_net * (1 + item.vat_rate / 100)),
-            //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)),
-            //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * (1 + item.vat_rate / 100)),
-            //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)),
-            //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100))
-            // )
-            return Number(acc) + (Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)));
-        }, 0)
-    );
+    // const paymentNet = paymentDiscount === 0 ? 0 : -1 * (
+    //     props.cart.reduce((acc, item) => {
+    //         // console.log(
+    //         //     item.price_net,
+    //         //     item.quantity,
+    //         //     Math.round(item.price_net * (100 - paymentDiscount) / 100),
+    //         //     Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
+    //         //     item.price_net * item.quantity,
+    //         //     item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
+    //         //     Math.round(item.price_net * (paymentDiscount) / 100),
+    //         //     Math.round(item.price_net * (paymentDiscount) / 100) * item.quantity
+    //         // )
+    //         return Number(acc) + (item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity);
+    //     }, 0)
+    // );
+    // const paymentGross = paymentDiscount === 0 ? 0 : -1 * (
+    //     props.cart.reduce((acc, item) => {
+    //         // console.log(
+    //         //     Math.round(item.price_net * (1 + item.vat_rate / 100)),
+    //         //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)),
+    //         //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * (1 + item.vat_rate / 100)),
+    //         //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)),
+    //         //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100))
+    //         // )
+    //         return Number(acc) + (Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)));
+    //     }, 0)
+    // );
 
-    const totalNet = ProductsNet + deliveryNet + paymentNet;
-    const totalGross = ProductsGross + deliveryGross + paymentGross;
+    const cartGroupedByVat = Object.groupBy(props.cart, (entries, index) => {
+        return entries.vat_rate;
+    })
+    const discountedPriceSummaryGroupByVat = []
+    for (const vat_rate in cartGroupedByVat) {
+        let totalNet = cartGroupedByVat[vat_rate].reduce((acc, item) => {
+            acc += (Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity)
+            return acc
+        }, 0)
+        let totalGross = Math.round(totalNet * (1 + vat_rate / 100));
+
+        discountedPriceSummaryGroupByVat[vat_rate] = {
+            totalNet: totalNet,
+            totalGross: totalGross,
+            vatRate: vat_rate
+        }
+    }
+    const discountedPriceSummary = discountedPriceSummaryGroupByVat.reduce((acc, item) => {
+        acc.totalNet += item.totalNet
+        acc.totalGross += item.totalGross
+        return acc
+    }, {totalNet: 0, totalGross: 0})
+
+    const paymentNet = paymentDiscount === 0 ? 0 : discountedPriceSummary.totalNet - ProductsNet
+    const paymentGross = paymentDiscount === 0 ? 0 : discountedPriceSummary.totalGross - ProductsGross
+
+    const totalNet = discountedPriceSummary.totalNet
+    const totalGross = discountedPriceSummary.totalGross
+
+    const totalNetWithDelivery = totalNet + deliveryNet;
+    const totalGrossWithDelivery = totalGross + deliveryGross;
 
     return (
         <TableContainer component={Paper} sx={{my: 2}}>
@@ -151,17 +180,17 @@ export default function CartSummary({props, data, paymentDiscount}) {
                         </TableCell>
                         <TableCell align={"center"}>
                             <Typography variant="body1">
-                                {toLocaleString(totalNet / 100)}
+                                {toLocaleString(totalNetWithDelivery / 100)}
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>
                             <Typography variant="body1">
-                                {toLocaleString((totalGross - totalNet) / 100)}
+                                {toLocaleString((totalGrossWithDelivery - totalNetWithDelivery) / 100)}
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>
                             <Typography variant="body1">
-                                {toLocaleString(totalGross / 100)}
+                                {toLocaleString(totalGrossWithDelivery / 100)}
                             </Typography>
                         </TableCell>
                     </TableRow>
