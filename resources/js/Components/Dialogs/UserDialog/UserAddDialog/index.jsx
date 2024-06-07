@@ -28,6 +28,8 @@ export default function UserAddDialog({open, setOpen, reloadData, roles, clicked
         name: clickedUser?.name ? clickedUser?.name : '',
         email: clickedUser?.email ? clickedUser?.email : '',
         password: '',
+        phone: clickedUser?.phone ? clickedUser?.phone : '',
+        subiekt_category_name: clickedUser?.subiekt_category_name ? clickedUser?.subiekt_category_name : '',
         roles: clickedUser?.roles ? clickedUser?.roles.map((role) => role.id) : Array(),
     })
 
@@ -198,7 +200,7 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                 {...register("name")}
                 defaultValue={data.name}
                 sx={{width: "30ch", my: 1}}
-                disabled={clickedUser.id === 1}
+                disabled={clickedUser?.id === 1}
             />
             {errors.name?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>
@@ -236,6 +238,35 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                 </Typography>
             )}
 
+            <TextField
+                type="phone"
+                id="phone"
+                label="Telefon"
+                color={errors.phone?.message && "error"}
+                {...register("phone")}
+                defaultValue={data.phone}
+                sx={{width: "30ch", my: 1, mt: 2}}
+            />
+            {errors.phone?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.phone?.message.toString()}
+                </Typography>
+            )}
+            <TextField
+                type="text"
+                id="subiekt_category_name"
+                label="Nazwa kategorii Subiekt"
+                color={errors.subiekt_category_name?.message && "error"}
+                {...register("subiekt_category_name")}
+                defaultValue={data.subiekt_category_name}
+                sx={{width: "30ch", my: 1, mt: 2}}
+            />
+            {errors.subiekt_category_name?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1}}>
+                    {errors.subiekt_category_name?.message.toString()}
+                </Typography>
+            )}
+
             <FormControl sx={{width: "30ch", mt: 2}}>
                 <InputLabel>Role</InputLabel>
                 <Select
@@ -247,7 +278,7 @@ function Step1({register, errors, data, roles, setData, clickedUser}) {
                     onChange={onChangeSelect}
                     value={data.roles}
                     renderValue={renderCell}
-                    disabled={clickedUser.id === 1}
+                    disabled={clickedUser?.id === 1}
                 >
                     {roles.map(role => {
                         return (
@@ -289,6 +320,14 @@ function Step2({data, roles, errors}) {
                        sx={{width: "30ch", my: 1}}/>
             <TextField id="password" label="Hasło" variant="outlined"
                        value={data.password}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+            <TextField id="phone" label="Telefon" variant="outlined"
+                       value={data.phone}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+            <TextField id="subiekt_category_name" label="Nazwa kategorii Subiekt" variant="outlined"
+                       value={data.subiekt_category_name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
             <TextField

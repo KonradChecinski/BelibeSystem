@@ -198,7 +198,6 @@ export default function CartItems({props, discount}) {
                                                                         </Typography>
 
                                                                     </TableCell>
-                                                                    {console.log(item)}
                                                                     <TableCell align={"center"}>
                                                                         <Typography variant="body1">
                                                                             {toLocaleString(item.price_net * (1 + item.vat_rate / 100) / 100 * item.quantity)}

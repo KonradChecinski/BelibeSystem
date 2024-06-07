@@ -44,11 +44,11 @@ class B2bCartController extends Controller
         $cartModel = $cart->get();
         $priceSummary = $cartModel->map(function ($item) {
             return [
-                "price_net" => $item->price_net,
-                "price_gross" => $item->price_gross,
-                "quantity" => $item->quantity,
+//                "price_net" => $item->price_net,
+//                "price_gross" => round($item->price_net * (1 + $item->vat_rate / 100)),
+//                "quantity" => $item->quantity,
                 "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => $item->price_gross * $item->quantity,
+                "total_gross" => floor($item->price_net * (1 + $item->vat_rate / 100) * $item->quantity),
             ];
         })->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];

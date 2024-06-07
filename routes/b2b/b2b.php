@@ -26,6 +26,7 @@ Route::group([], function () {
     Route::post("/cart/update/{product}", [B2bCartController::class, 'update'])->name("b2b.cart.update");
 
     Route::post("/order/store", [B2bOrderController::class, 'store'])->name("b2b.order.store");
+    Route::get("/order/success", [B2bOrderController::class, 'show'])->name("b2b.order.success");
 
 });
 

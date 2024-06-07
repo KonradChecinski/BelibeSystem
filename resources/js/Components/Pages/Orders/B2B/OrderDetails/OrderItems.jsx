@@ -165,7 +165,7 @@ export default function OrderItems({data}) {
                                                                     </TableCell>
                                                                     <TableCell align={"center"}>
                                                                         <Typography variant="body1">
-                                                                            {toLocaleString(item.price_gross / 100)}
+                                                                            {toLocaleString(item.price_net * (1 + item.vat_rate / 100) / 100)}
                                                                         </Typography>
                                                                     </TableCell>
                                                                     <TableCell align={"center"} sx={{p: 0}}>
@@ -181,7 +181,7 @@ export default function OrderItems({data}) {
                                                                     </TableCell>
                                                                     <TableCell align={"center"}>
                                                                         <Typography variant="body1">
-                                                                            {toLocaleString(item.price_gross / 100 * item.quantity)}
+                                                                            {toLocaleString(item.price_net * (1 + item.vat_rate / 100) / 100 * item.quantity)}
                                                                         </Typography>
 
                                                                     </TableCell>

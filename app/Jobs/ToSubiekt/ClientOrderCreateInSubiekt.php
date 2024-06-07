@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ClientOrderCreateInSubiekt implements ShouldQueue
@@ -56,22 +57,26 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $zamowienie->PoziomCenyId = 2;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
 
-            //TODO: Dodać kategorie handlowca
-//            $zamowienie->KategoriaId = 115;
-
+            if (!is_null($client->accountManager->subiekt_category_name)) {
+                $categoryName = $client->accountManager->subiekt_category_name;
+                $categorySubiekt = DB::connection("subiekt")->table("sl_Kategoria")->where("kat_Nazwa", $categoryName)->first();
+                if ($categorySubiekt) {
+                    $zamowienie->KategoriaId = (int)$categorySubiekt->kat_Id;
+                }
+            }
 
             foreach ($orderProducts as $orderProduct) {
                 $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
 //                dd($orderProduct->product, $orderProduct->productModel->priceForClientB2b($client), $wholesale_gross_price_after_payment_discount);
                 $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
-//                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
-                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
+                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+//                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
                 $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                 $pozycja->IloscJm = (int)$orderProduct->quantity;
 //                    $pozycja->RabatProcent = (float)0;
             }
 
-            if ($order->discounted_total_net < $delivery->free_shipping_from) {
+            if ($order->discounted_total_net < $delivery->free_from) {
 //                $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
 //                $pozycja->UslJednNazwa = substr($delivery->name, 0, 50);
 ////                $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');

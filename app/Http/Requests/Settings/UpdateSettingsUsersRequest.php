@@ -27,20 +27,22 @@ class UpdateSettingsUsersRequest extends FormRequest
     {
         return [
             "name" => "required|string|max:255",
-            "email" =>[
+            "email" => [
                 "required",
                 "email",
                 "max:255",
-                    Rule::unique("users")->ignore($this->user->email, "email")
+                Rule::unique("users")->ignore($this->user->email, "email")
             ],
+            "phone" => "nullable|string|max:12|min:12",
+            "subiekt_category_name" => "nullable|string|max:255",
             "password" => [
                 Rule::when($this->password == null,
-                [
+                    [
 
-                ],
-                [
-                    Password::defaults()
-                ]),
+                    ],
+                    [
+                        Password::defaults()
+                    ]),
             ],
             "roles" => "required|array"
         ];

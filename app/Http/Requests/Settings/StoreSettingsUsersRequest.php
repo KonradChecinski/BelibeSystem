@@ -31,6 +31,8 @@ class StoreSettingsUsersRequest extends FormRequest
                 ClientUser::class .
                 "|unique:" .
                 User::class,
+            "phone" => "nullable|string|max:12|min:12",
+            "subiekt_category_name" => "nullable|string|max:255",
             "password" => ["required", Password::defaults()],
             "roles" => "required|array"
         ];

@@ -1,0 +1,28 @@
+import {Head, Link} from "@inertiajs/react";
+import ClientLayout from "@/Layouts/ClientLayout";
+import {useSnackbar} from "notistack";
+import {useLaravelReactI18n} from "laravel-react-i18n";
+
+export default function B2bOrderSuccess(props) {
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {t} = useLaravelReactI18n();
+    console.log(props)
+    return (
+        <ClientLayout
+            auth={props.auth}
+            errors={props.errors}
+            categories={props.menu}
+            bgImage={props.backgroundImage}
+            accountManager={props.accountManager}
+            cart={props.cartSummary}
+            clientId={props.clientId}
+            header={
+                t("Zamówienie: ") + 1 + " " + t("zostało złożone")
+            }
+        >
+            <Head title={t("Zamówienie: ") + 1 + " " + t("zostało złożone")}/>
+
+
+        </ClientLayout>
+    );
+}

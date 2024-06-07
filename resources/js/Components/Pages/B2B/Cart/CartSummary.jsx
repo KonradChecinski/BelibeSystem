@@ -8,11 +8,20 @@ export default function CartSummary({props, data, paymentDiscount}) {
 
     const ProductsNet = props.cartPriceSummary.total_net;
     const ProductsGross = props.cartPriceSummary.total_gross;
+
     const deliveryNet = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_net : 0;
     const deliveryGross = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_gross : 0;
 
-    const paymentNet = paymentDiscount === 0 ? 0 : -1 * (ProductsNet * (paymentDiscount / 100));
-    const paymentGross = paymentDiscount === 0 ? 0 : -1 * (ProductsGross * (paymentDiscount / 100));
+    const paymentNet = paymentDiscount === 0 ? 0 : -1 * (
+        props.cart.reduce((acc, item) => {
+            return Number(acc) + Math.round(item.price_net * (paymentDiscount / 100)) * item.quantity;
+        }, 0)
+    );
+    const paymentGross = paymentDiscount === 0 ? 0 : -1 * (
+        Math.floor(props.cart.reduce((acc, item) => {
+            return Number(acc) + Math.round(item.price_net * (paymentDiscount / 100)) * (1 + item.vat_rate / 100) * item.quantity;
+        }, 0))
+    );
 
     const totalNet = ProductsNet + deliveryNet + paymentNet;
     const totalGross = ProductsGross + deliveryGross + paymentGross;

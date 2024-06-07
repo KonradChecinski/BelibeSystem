@@ -10,6 +10,7 @@ use App\Models\ClientOrderProduct;
 use App\Models\Products\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class B2bOrderController extends Controller
 {
@@ -49,15 +50,16 @@ class B2bOrderController extends Controller
 
         $priceSummary = $cartModel->map(function ($item) {
             return [
-                "price_net" => $item->price_net,
-                "price_gross" => $item->price_gross,
-                "quantity" => $item->quantity,
+//                "price_net" => $item->price_net,
+//                "price_gross" => $item->price_gross,
+//                "quantity" => $item->quantity,
                 "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => $item->price_gross * $item->quantity,
+                "total_gross" => floor($item->price_net * (1 + $item->vat_rate / 100) * $item->quantity),
             ];
         })->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
             $carry["total_gross"] += $item["total_gross"];
+
             return $carry;
         }, ["total_net" => 0, "total_gross" => 0]);
 
@@ -68,8 +70,27 @@ class B2bOrderController extends Controller
         $discountValue = $discountModel->discount_value;
 
         if ($discount) {
-            $discountedTotalNet = round($priceSummary["total_net"] - ($priceSummary["total_net"] * $discountValue / 100));
-            $discountedTotalGross = round($priceSummary["total_gross"] - ($priceSummary["total_gross"] * $discountValue / 100));
+//            $discountedTotalNet = round($priceSummary["total_net"] - ($priceSummary["total_net"] * $discountValue / 100));
+//            $discountedTotalGross = round($priceSummary["total_gross"] - ($priceSummary["total_gross"] * $discountValue / 100));
+
+            $discountedNet = 0;
+            $discountedGross = 0;
+            foreach ($cartModel as $item) {
+                $discountedNet += round($item->price_net * ($discountValue / 100)) * $item->quantity;
+                $discountedGross += round($item->price_net * ($discountValue / 100)) * (1 + $item->vat_rate / 100) * $item->quantity;
+            }
+            $discountedTotalNet = $priceSummary["total_net"] - floor($discountedNet);
+            $discountedTotalGross = $priceSummary["total_gross"] - floor($discountedGross);
+//            dd([
+//                "total" => $priceSummary["total_net"],
+//                "discount" => $discountedNet,
+//                "discounted_total" => $discountedTotalNet
+//            ],
+//                [
+//                    "total" => $priceSummary["total_gross"],
+//                    "discount" => floor($discountedGross),
+//                    "discounted_total" => $discountedTotalGross
+//                ]);
         } else {
             $discountedTotalNet = $priceSummary["total_net"];
             $discountedTotalGross = $priceSummary["total_gross"];
@@ -117,24 +138,22 @@ class B2bOrderController extends Controller
                 "product_id" => $item->product_id,
                 "quantity" => $item->quantity,
                 "price_net" => $item->price_net,
-                "price_gross" => $item->price_gross,
-                "total_net" => $item->quantity * $item->total_net,
-                "total_gross" => $item->quantity * $item->total_gross,
+                "vat_rate" => $item->vat_rate,
                 "currency" => $item->currency,
             ]);
             $order->orderProducts()->save($orderProduct);
         }
 
         $cart->delete();
-        return redirect()->route("b2b.main")->with("success", "Order has been placed successfully");
+        return redirect()->route("b2b.order.success")->with("success", "Order has been placed successfully");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        return Inertia::render("B2B/OrderSuccess");
     }
 
     /**

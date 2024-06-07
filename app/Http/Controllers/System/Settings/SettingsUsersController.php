@@ -30,6 +30,7 @@ class SettingsUsersController extends Controller
             'id',
             'name',
             'email',
+            'phone',
             'active',
             'account_manager'
         ];
@@ -124,7 +125,7 @@ class SettingsUsersController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get()->toArray());
-        $models = $models->paginate($request->limit, ['id', 'name', 'email', 'email_verified_at', 'active', 'account_manager']);
+        $models = $models->paginate($request->limit, ['id', 'name', 'email', 'email_verified_at', 'active', 'account_manager', 'phone', 'subiekt_category_name']);
         return response()->json([$models]);
     }
 
@@ -146,6 +147,8 @@ class SettingsUsersController extends Controller
             "name" => $request->name,
             "email" => $request->email,
             "password" => Hash::make($request->password),
+            "phone" => $request->phone,
+            "subiekt_category_name" => $request->subiekt_category_name,
         ];
 
         $user = User::create($validatedUserCredential);
@@ -183,6 +186,8 @@ class SettingsUsersController extends Controller
             $validatedUserCredential = [
                 "name" => $request->name,
                 "email" => $request->email,
+                "phone" => $request->phone,
+                "subiekt_category_name" => $request->subiekt_category_name,
             ];
         }
 

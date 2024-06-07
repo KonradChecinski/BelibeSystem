@@ -29,7 +29,7 @@ export default function B2bCart(props) {
 
     const [paymentDiscount, setPaymentDiscount] = useState(0);
 
-    const {data, setData, post} = useForm({
+    const {data, setData, post, processing} = useForm({
         payment: null,
         delivery: null,
         location: null,
@@ -71,7 +71,8 @@ export default function B2bCart(props) {
                                 <CartDeliveries props={props} setData={setData}/>
                                 <CartLocations props={props} setData={setData}/>
                                 <CartSummary props={props} data={data} paymentDiscount={paymentDiscount}/>
-                                <CartSubmit props={props} data={data} setData={setData} post={post}/>
+                                <CartSubmit props={props} data={data} setData={setData} post={post}
+                                            processing={processing}/>
                             </>
                         )
                         :

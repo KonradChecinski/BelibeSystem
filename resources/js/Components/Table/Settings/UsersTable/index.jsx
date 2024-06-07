@@ -29,12 +29,12 @@ export default function UsersTable(props) {
         {
             field: "name",
             headerName: "Nazwa",
-            width: 300
+            width: 200
         },
         {
             field: "email",
             headerName: "Email",
-            width: 300
+            width: 200
         },
         {
             field: "email_verified_at",
@@ -124,6 +124,20 @@ export default function UsersTable(props) {
                     />
                 );
             }
+        },
+        {
+            field: "phone",
+            headerName: "Numer telefonu",
+            width: 150,
+            sortable: false,
+            filterable: false,
+        },
+        {
+            field: "subiekt_category_name",
+            headerName: "Kategoria Subiekt",
+            width: 150,
+            sortable: false,
+            filterable: false,
         },
         {
             field: "roles",

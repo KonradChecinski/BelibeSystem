@@ -2,7 +2,7 @@ import {enqueueSnackbar, useSnackbar} from "notistack";
 import {Box, Button, Paper, TextField, Typography} from "@mui/material";
 import {Send} from "@mui/icons-material";
 
-export default function CartSubmit({props, data, setData, post}) {
+export default function CartSubmit({props, data, setData, post, processing}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const canSend = () => {
@@ -67,7 +67,8 @@ export default function CartSubmit({props, data, setData, post}) {
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined" size={"large"} endIcon={<Send/>} onClick={send}>
+                    {/*Todo: zablokowac klikanie po 1 kliknieciu - do sprawdzenia*/}
+                    <Button variant="outlined" size={"large"} endIcon={<Send/>} onClick={send} disabled={processing}>
                         Zamów
                     </Button>
                 </Box>
