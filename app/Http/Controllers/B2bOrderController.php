@@ -54,14 +54,16 @@ class B2bOrderController extends Controller
 //                "price_gross" => $item->price_gross,
 //                "quantity" => $item->quantity,
                 "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => floor($item->price_net * (1 + $item->vat_rate / 100) * $item->quantity),
+                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
             ];
         })->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
             $carry["total_gross"] += $item["total_gross"];
 
             return $carry;
-        }, ["total_net" => 0, "total_gross" => 0]);
+        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
+            return round($item, 0);
+        });
 
         $quantity = $cartModel->sum("quantity");
 
@@ -76,20 +78,21 @@ class B2bOrderController extends Controller
             $discountedNet = 0;
             $discountedGross = 0;
             foreach ($cartModel as $item) {
-                $discountedNet += round($item->price_net * ($discountValue / 100)) * $item->quantity;
-                $discountedGross += round($item->price_net * ($discountValue / 100)) * (1 + $item->vat_rate / 100) * $item->quantity;
+                $discountedNet += ($item->price_net * $item->quantity) - (round($item->price_net * (100 - $discountValue) / 100) * $item->quantity);
+                $discountedGross += round($item->price_net * $item->quantity * (1 + $item->vat_rate / 100)) -
+                    round(round($item->price_net * (100 - $discountValue) / 100) * $item->quantity * (1 + $item->vat_rate / 100));
             }
             $discountedTotalNet = $priceSummary["total_net"] - floor($discountedNet);
             $discountedTotalGross = $priceSummary["total_gross"] - floor($discountedGross);
 //            dd([
-//                "total" => $priceSummary["total_net"],
-//                "discount" => $discountedNet,
-//                "discounted_total" => $discountedTotalNet
+//                "total" => $priceSummary["total_net"] / 100,
+//                "discount" => $discountedNet / 100,
+//                "discounted_total" => $discountedTotalNet / 100
 //            ],
 //                [
-//                    "total" => $priceSummary["total_gross"],
-//                    "discount" => floor($discountedGross),
-//                    "discounted_total" => $discountedTotalGross
+//                    "total" => $priceSummary["total_gross"] / 100,
+//                    "discount" => floor($discountedGross) / 100,
+//                    "discounted_total" => $discountedTotalGross / 100
 //                ]);
         } else {
             $discountedTotalNet = $priceSummary["total_net"];

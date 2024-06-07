@@ -14,13 +14,30 @@ export default function CartSummary({props, data, paymentDiscount}) {
 
     const paymentNet = paymentDiscount === 0 ? 0 : -1 * (
         props.cart.reduce((acc, item) => {
-            return Number(acc) + Math.round(item.price_net * (paymentDiscount / 100)) * item.quantity;
+            // console.log(
+            //     item.price_net,
+            //     item.quantity,
+            //     Math.round(item.price_net * (100 - paymentDiscount) / 100),
+            //     Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
+            //     item.price_net * item.quantity,
+            //     item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
+            //     Math.round(item.price_net * (paymentDiscount) / 100),
+            //     Math.round(item.price_net * (paymentDiscount) / 100) * item.quantity
+            // )
+            return Number(acc) + (item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity);
         }, 0)
     );
     const paymentGross = paymentDiscount === 0 ? 0 : -1 * (
-        Math.floor(props.cart.reduce((acc, item) => {
-            return Number(acc) + Math.round(item.price_net * (paymentDiscount / 100)) * (1 + item.vat_rate / 100) * item.quantity;
-        }, 0))
+        props.cart.reduce((acc, item) => {
+            // console.log(
+            //     Math.round(item.price_net * (1 + item.vat_rate / 100)),
+            //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)),
+            //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * (1 + item.vat_rate / 100)),
+            //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)),
+            //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100))
+            // )
+            return Number(acc) + (Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)));
+        }, 0)
     );
 
     const totalNet = ProductsNet + deliveryNet + paymentNet;

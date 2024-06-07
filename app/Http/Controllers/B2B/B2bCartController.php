@@ -48,13 +48,17 @@ class B2bCartController extends Controller
 //                "price_gross" => round($item->price_net * (1 + $item->vat_rate / 100)),
 //                "quantity" => $item->quantity,
                 "total_net" => $item->price_net * $item->quantity,
-                "total_gross" => floor($item->price_net * (1 + $item->vat_rate / 100) * $item->quantity),
+                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
             ];
         })->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
             $carry["total_gross"] += $item["total_gross"];
             return $carry;
-        }, ["total_net" => 0, "total_gross" => 0]);
+        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
+            return round($item, 0);
+        });
+
+//        dd($priceSummary);
 
         return Inertia::render('B2B/Cart', [
             "cart" => $cartModel,

@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ToSubiekt;
 
+use App\Helpers\Helper;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
@@ -65,16 +66,50 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 }
             }
 
-            foreach ($orderProducts as $orderProduct) {
-                $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
-//                dd($orderProduct->product, $orderProduct->productModel->priceForClientB2b($client), $wholesale_gross_price_after_payment_discount);
-                $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
-                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+            $orderProducts->load(['product', 'productModel', 'productModelColor', 'product.size']);
+            $orderModels = $orderProducts->pluck("productModel")->unique("id")->values();
+
+
+            foreach ($orderModels as $orderModel) {
+                $orderColors = $orderProducts->where("productModel.id", $orderModel->id)->pluck("productModelColor")->unique("id")->values();
+                $orderColors = $orderColors->sort(fn($a, $b) => Helper::sortByProductShortcut($a, $b))->values();
+
+                foreach ($orderColors as $orderColor) {
+                    $orderColorProducts = $orderProducts->where("productModel.id", $orderModel->id)->where("productModelColor.id", $orderColor->id);
+                    $orderColorProducts = $orderColorProducts->sort(fn($a, $b) => Helper::sortByProductSize($a, $b))->values();
+
+
+                    foreach ($orderColorProducts as $orderProduct) {
+//                $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
+                        $wholesale_net_price_after_payment_discount = round($orderProduct->price_net * (100 - $order->discount) / 100);
+
+//                dd($orderProduct->price_net, $order->discount, $wholesale_net_price_after_payment_discount);
+                        $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
+                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
 //                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
-                $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
-                $pozycja->IloscJm = (int)$orderProduct->quantity;
+                        $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
+                        $pozycja->IloscJm = (int)$orderProduct->quantity;
 //                    $pozycja->RabatProcent = (float)0;
+
+
+                        $percent = (float)$pozycja->RabatProcent;
+                        if ($percent > 0 && round($percent) !== round($percent, 2)) {
+                            $roundedPercent = round($percent, 0);
+                            $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+                            $pozycja->RabatProcent = $roundedPercent;
+
+                            if ((float)$pozycja->CenaNettoPoRabacie !== $wholesale_net_price_after_payment_discount / 100) {
+                                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+                                $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
+                            }
+
+                        }
+
+
+                    }
+                }
             }
+
 
             if ($order->discounted_total_net < $delivery->free_from) {
 //                $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
