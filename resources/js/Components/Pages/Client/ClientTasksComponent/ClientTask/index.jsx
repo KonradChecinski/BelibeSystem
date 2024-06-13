@@ -9,13 +9,15 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
-import {Add, Delete, Edit} from "@mui/icons-material";
+import {Add, Delete, Done, Edit} from "@mui/icons-material";
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
 import DeleteClientNotesDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientNotesDialog";
 import ClientAddEditNotesDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditNotesDialog";
 import DeleteClientTaskDialog from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientTaskDialog";
 import ClientAddEditTasksDialog from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditTasksDialog";
+import {router} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientTasks({tasks, readOnly, color, props}) {
     const theme = useTheme();
@@ -44,6 +46,23 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                     const isDone = () => {
                         return Boolean(task.done)
                     }
+                    const onDoneClick = (e) => {
+                        router.post(route('system.clients.client.task.done', {
+                                client: props.client.id,
+                                clientTask: task.id
+                            }), {},
+                            {
+                                preserveScroll: true,
+                                onSuccess: (e) => {
+                                    enqueueSnackbar("Zakończono zadanie", {variant: 'success'})
+                                },
+                                onError: errors => {
+                                    enqueueSnackbar("Błąd przy kończeniu zadania", {variant: 'error'})
+                                    console.error(errors)
+                                },
+                            }
+                        )
+                    };
 
                     const onEditClick = (e) => {
                         // setOpenDialogAdd(true)
@@ -111,7 +130,7 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                                     <Box sx={{
                                         display: 'inline-flex',
                                         gap: 1,
-                                        mt: 1
+                                        mt: 2
                                     }}>
                                         <Typography sx={{fontSize: "10px"}}>
                                             {task.user.name}
@@ -145,6 +164,13 @@ export default function ClientTasks({tasks, readOnly, color, props}) {
                                                  right: 10,
                                              }}
                                 >
+                                    <Tooltip title="Zakończ zadanie">
+                                        <IconButton aria-label="done"
+                                                    onClick={onDoneClick}
+                                        >
+                                            <Done/>
+                                        </IconButton>
+                                    </Tooltip>
                                     <Tooltip title="Edycja">
                                         <IconButton aria-label="edit"
                                                     onClick={onEditClick}

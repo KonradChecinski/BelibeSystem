@@ -25,6 +25,7 @@ class StoreClientTaskRequest extends FormRequest
             'title' => 'required|string',
             'text' => 'required|string',
             'datetime' => 'required|date',
+            'user' => 'nullable|array',
         ];
     }
 }

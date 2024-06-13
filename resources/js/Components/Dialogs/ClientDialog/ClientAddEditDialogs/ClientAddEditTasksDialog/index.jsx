@@ -360,7 +360,7 @@ function Step2({data, params, errors}) {
 
             {params.auth.permissions.includes("changeUserInClientRelation") ?
                 <TextField id="user" label="Użytkownik" variant="outlined"
-                           value={data.user.label}
+                           value={data.user?.label}
                            disabled={true}
                            sx={{width: "30ch", my: 1}}/>
                 : null

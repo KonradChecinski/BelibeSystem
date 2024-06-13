@@ -9,14 +9,17 @@ use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\FromSubiekt\UpdateOrderStatus;
 use App\Jobs\FromSubiekt\UpdateSubiektIdWhereNull;
+use App\Jobs\Mail\SendClientTaskMail;
 use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
+use App\Models\ClientTask;
 use App\Models\PartnerExport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -52,6 +55,24 @@ class Kernel extends ConsoleKernel
         $partnerExports = PartnerExport::all();
         foreach ($partnerExports as $partnerExport) {
             $schedule->job(new MakePartnerExportFile($partnerExport->partner, $partnerExport))->cron($partnerExport->cron);
+        }
+
+        $clientTasks = ClientTask::where('done', null)->get();
+        foreach ($clientTasks as $clientTask) {
+            $now = Carbon::now();
+            $dayBefore = Carbon::parse($clientTask->datetime)->subDay();
+            $hourBefore = Carbon::parse($clientTask->datetime)->subHour();
+            $exactTime = Carbon::parse($clientTask->datetime);
+
+            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $dayBefore) {
+                return $now->isSameYear($dayBefore) && $now->isSameMonth($dayBefore) && $now->isSameDay($dayBefore) && $now->isSameHour($dayBefore) && $now->isSameMinute($dayBefore);
+            });
+            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $hourBefore) {
+                return $now->isSameYear($hourBefore) && $now->isSameMonth($hourBefore) && $now->isSameDay($hourBefore) && $now->isSameHour($hourBefore) && $now->isSameMinute($hourBefore);
+            });
+            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $exactTime) {
+                return $now->isSameYear($exactTime) && $now->isSameMonth($exactTime) && $now->isSameDay($exactTime) && $now->isSameHour($exactTime) && $now->isSameMinute($exactTime);
+            });
         }
     }
 

@@ -19,6 +19,7 @@ class ClientTask extends Model
         'done',
         'user_id',
     ];
+    
     protected $casts = [
         'datetime' => 'datetime',
         'done' => 'datetime',

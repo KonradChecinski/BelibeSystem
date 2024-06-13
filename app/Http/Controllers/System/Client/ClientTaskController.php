@@ -7,6 +7,8 @@ use App\Http\Requests\Client\StoreClientTaskRequest;
 use App\Http\Requests\Client\UpdateClientTaskRequest;
 use App\Models\Client\Client;
 use App\Models\ClientTask;
+use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Request;
 
 class ClientTaskController extends Controller
 {
@@ -31,15 +33,35 @@ class ClientTaskController extends Controller
      */
     public function store(StoreClientTaskRequest $request, Client $client)
     {
-        $clientTask = new ClientTask($request->all());
+        $clientTask = new ClientTask([
+            'title' => $request->title,
+            'text' => $request->text,
+            "datetime" => Carbon::parse($request->datetime)->setTimezone('Europe/Warsaw'),
+        ]);
         $clientTask->client()->associate($client);
 
         if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
-            $clientTask->user()->associate($request->user["id"]);
+            if ($request->user == null) {
+                $userId = auth()->user()->id;
+            } else {
+                $userId = $request->user["id"];
+            }
+            $clientTask->user()->associate($userId);
         } else {
             $clientTask->user()->associate(auth()->user());
         }
         $clientTask->save();
+    }
+
+    public function done(Request $request, Client $client, ClientTask $clientTask)
+    {
+        if ($clientTask->client != $client) abort(403);
+
+        if (auth()->user()->id != $clientTask->user->id) abort(403);
+
+        $clientTask->update([
+            'done' => Carbon::now(),
+        ]);
     }
 
     /**
@@ -65,10 +87,19 @@ class ClientTaskController extends Controller
     {
         if ($clientTask->client != $client) abort(403);
 
-        $clientTask->update($request->all());
+        $clientTask->update([
+            'title' => $request->title,
+            'text' => $request->text,
+            "datetime" => Carbon::parse($request->datetime)->setTimezone('Europe/Warsaw'),
+        ]);
 
         if (auth()->user()->hasPermissionTo("changeUserInClientRelation", "user")) {
-            $clientTask->user()->associate($request->user["id"]);
+            if ($request->user == null) {
+                $userId = auth()->user()->id;
+            } else {
+                $userId = $request->user["id"];
+            }
+            $clientTask->user()->associate($userId);
             $clientTask->save();
         }
 //        $clientTask->save();
