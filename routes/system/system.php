@@ -136,6 +136,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::post("/clients/client/{client}/task/", [ClientTaskController::class, 'store'])->name("system.clients.client.task");
         Route::patch("/clients/client/{client}/task/{clientTask}", [ClientTaskController::class, 'update'])->name("system.clients.client.task.update");
+        Route::post("/clients/client/{client}/task/{clientTask}", [ClientTaskController::class, 'done'])->name("system.clients.client.task.done");
         Route::delete("/clients/client/{client}/task/{clientTask}", [ClientTaskController::class, 'destroy'])->name("system.clients.client.task.delete");
 
         Route::post("/clients/client/{client}/note/", [ClientNoteController::class, 'store'])->name("system.clients.client.note");
