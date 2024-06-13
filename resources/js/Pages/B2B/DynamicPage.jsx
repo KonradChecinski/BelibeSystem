@@ -48,6 +48,7 @@ export default function DynamicPage(props) {
             accountManager={props.accountManager}
             cart={props.cartSummary}
             clientId={props.clientId}
+            blacklist={props.blacklist}
             header={
                 t(props.page?.title)
             }

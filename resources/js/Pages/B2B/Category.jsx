@@ -19,6 +19,7 @@ export default function B2bCategory(props) {
             accountManager={props.accountManager}
             cart={props.cartSummary}
             clientId={props.clientId}
+            blacklist={props.blacklist}
             header={
                 props.category.name
             }

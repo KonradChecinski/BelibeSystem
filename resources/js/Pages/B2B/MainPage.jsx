@@ -16,6 +16,7 @@ export default function B2bMainPage(props) {
             accountManager={props.accountManager}
             cart={props.cartSummary}
             clientId={props.clientId}
+            blacklist={props.blacklist}
             header={
                 t("Dashboard")
             }

@@ -96,6 +96,7 @@ export default function B2bModel(props) {
             accountManager={props.accountManager}
             cart={props.cartSummary}
             clientId={props.clientId}
+            blacklist={props.blacklist}
             header={
                 t("Model") + " " + props.model.symbol + ": " + props.model.name
             }

@@ -19,6 +19,7 @@ export default function ClientLayout({
                                          accountManager,
                                          cart,
                                          clientId,
+                                         blacklist
                                      }) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -71,6 +72,24 @@ export default function ClientLayout({
                             }
                         }}
                     >
+                        {Boolean(blacklist) && (
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                bgcolor: "red",
+                                borderRadius: 1,
+                                my: 1,
+                                p: 0.5
+                            }}>
+                                <Typography variant="h6" component="h6">
+                                    Twoje konto zostało zablokowane. Nie masz możliwości składania zamówień. W razie
+                                    pytań
+                                    skontaktuj się z opiekunem.
+                                </Typography>
+                            </Box>
+                        )}
+
                         <B2BNavBar auth={auth} clientId={clientId} cart={cart}/>
                     </Box>
                 </>

@@ -51,6 +51,7 @@ export default function Page(props) {
                         bgImage={props.backgroundImage}
                         cart={props.cartSummary}
                         clientId={props.clientId}
+                        blacklist={false}
                         fixed={false}
                         header={title}
                     >
