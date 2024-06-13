@@ -5,8 +5,10 @@ use App\Http\Controllers\B2B\B2bFavoritesController;
 use App\Http\Controllers\B2B\B2bMainPageController;
 use App\Http\Controllers\B2B\B2bProductCategoryController;
 use App\Http\Controllers\B2B\B2bProductController;
+use App\Http\Controllers\B2bInvoicesController;
 use App\Http\Controllers\B2bOrderController;
 use App\Http\Controllers\B2bPageController;
+use App\Http\Controllers\B2bSettlementsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +23,10 @@ Route::group([], function () {
 
     Route::get("/favorites", [B2bFavoritesController::class, 'index'])->name("b2b.favorites");
     Route::patch("/favorite/update/{productModel}", [B2bFavoritesController::class, 'update'])->name("b2b.favorite.update");
+
+    Route::get("/invoices", [B2bInvoicesController::class, 'index'])->name("b2b.invoices");
+    Route::get("/orders", [B2bOrderController::class, 'index'])->name("b2b.orders");
+    Route::get("/settlements", [B2bSettlementsController::class, 'index'])->name("b2b.settlements");
 
     Route::get("/cart", [B2bCartController::class, 'index'])->name("b2b.cart");
     Route::post("/cart/update/{product}", [B2bCartController::class, 'update'])->name("b2b.cart.update");

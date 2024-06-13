@@ -19,7 +19,11 @@ class B2bOrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Helper::getClientToB2b()->orders()->with(["payment", "delivery", "location", "orderProducts.product"])->get();
+//        dd($orders);
+        return Inertia::render('B2B/Orders', [
+            "orders" => $orders
+        ]);
     }
 
     /**
@@ -196,7 +200,7 @@ class B2bOrderController extends Controller
         }
 
         $cart->delete();
-        return redirect()->route("b2b.order.success")->with("success", "Order has been placed successfully");
+        return redirect()->route("b2b.order.success")->with(["order" => $order]);
     }
 
     /**
@@ -204,7 +208,36 @@ class B2bOrderController extends Controller
      */
     public function show(Request $request)
     {
-        return Inertia::render("B2B/OrderSuccess");
+//        $order = session()->get("order");
+        $order = Helper::getClientToB2b()->orders()->latest()->first();
+        $order->load([
+            "delivery:id,name,description,delivery_time_max,delivery_time_min",
+            "location:id,street,city,postal_code,apartment_number,building_number",
+        ]);
+
+        dd(
+            Helper::calculateProcessingTime($order->created_at),
+            Helper::calculateProcessingTime("2024-06-11 12:00:00"),
+            Helper::calculateProcessingTime("2024-06-11 09:00:00"),
+        );
+        $processTime = 0;
+
+
+        $order = $order->only([
+            "number",
+            "total_quantity",
+            "discounted_total_net",
+            "discounted_total_gross",
+            "delivery_net",
+            "delivery_gross",
+            "delivery",
+            "location",
+            "created_at",
+        ]);
+        return Inertia::render("B2B/OrderSuccess", [
+            "order" => $order,
+            "processTime" => $processTime
+        ]);
     }
 
     /**
