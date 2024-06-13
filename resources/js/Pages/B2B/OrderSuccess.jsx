@@ -17,11 +17,24 @@ import {
 import {DeliveryAnimation} from "@/Icons/DeliveryAnimation";
 import {CheckCircle, Home} from "@mui/icons-material";
 import toLocaleString from "@/Functions/toLocaleString";
+import moment from "moment";
 
 export default function B2bOrderSuccess(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     console.log(props)
+
+    const dayNames = [
+        "niedzielę",
+        "poniedziałek",
+        "wtorek",
+        "środę",
+        "czwartek",
+        "piątek",
+        "sobotę",
+    ]
+
+
     return (
         <ClientLayout
             auth={props.auth}
@@ -108,8 +121,12 @@ export default function B2bOrderSuccess(props) {
                     }}>
                         <DeliveryAnimation style={{width: "100%", height: "100%", transform: "scale(1)"}}/>
                         <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
-                            {}
-                            Czas realizacji wraz z dostawą wynosi 3-5 dni roboczych.
+                            Czas realizacji tego zamówienia wraz z dostawą
+                            wynosi {props.processTime.min}-{props.processTime.max} dni.
+                        </Typography>
+                        <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
+                            A to oznacza, że twoja paczka powinna być w wyznaczonym przez Ciebie punkcie
+                            w {dayNames[moment(props.order.created_at).add(props.processTime.min, 'days').day()]} - {dayNames[moment(props.order.created_at).add(props.processTime.max, 'days').day()]}.
                         </Typography>
                     </Box>
 

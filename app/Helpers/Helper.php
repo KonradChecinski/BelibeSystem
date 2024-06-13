@@ -153,49 +153,125 @@ class Helper
 
     }
 
-    public static function calculateProcessingTime(string $orderPlacedTime)
+//    public static function calculateProcessingTime(string $orderPlacedTime)
+//    {
+//        // Ustawienie strefy czasowej
+//        Carbon::setLocale('pl');
+////        date_default_timezone_set('Europe/Warsaw');
+//
+//        // Konwersja stringa na obiekt Carbon
+//        $orderDate = Carbon::parse($orderPlacedTime)->timezone('Europe/Warsaw');
+//
+//        // Godziny pracy firmy
+//        $workStartHour = 8;
+//        $workEndHour = 12;
+//
+//        // Jeśli zamówienie złożone w weekend, przesunięcie na poniedziałek 8:00
+//        if ($orderDate->isWeekend()) {
+//            $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
+//        } elseif ($orderDate->hour < $workStartHour) {
+//            // Jeśli zamówienie złożone przed rozpoczęciem pracy, ustaw na ten dzień 8:00
+//            $orderDate->setTime($workStartHour, 0);
+//        } elseif ($orderDate->hour >= $workEndHour) {
+//            // Jeśli zamówienie złożone po godzinach pracy, przesunięcie na następny dzień roboczy 8:00
+//            $orderDate->addDay()->setTime($workStartHour, 0);
+//            if ($orderDate->isWeekend()) {
+//                $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
+//            }
+//        }
+//
+//        // Obliczanie liczby dni roboczych do momentu obsługi zamówienia
+//        $processingDays = 0;
+//        while ($orderDate->isWeekday() && $orderDate->lessThan(Carbon::now())) {
+//            $processingDays++;
+//            $orderDate->addDay();
+//            if ($orderDate->isWeekend()) {
+//                $orderDate->next(Carbon::MONDAY);
+//            }
+//        }
+//
+//        // Dodanie jednego dnia roboczego, jeśli przetwarzanie nie rozpoczęło się tego samego dnia
+//        if ($orderDate->greaterThan(Carbon::now()->setTime($workStartHour, 0))) {
+//            $processingDays++;
+//        }
+//
+//        return $processingDays;
+//    }
+
+    public static function calculateProcessingTime(Carbon $orderDate)
     {
-        // Ustawienie strefy czasowej
-        Carbon::setLocale('pl');
-//        date_default_timezone_set('Europe/Warsaw');
+        // Company working hours settings
+        $workingHoursFrom = 8;
+        $workingHoursTo = 12;
+        $workingDays = [Carbon::MONDAY, Carbon::TUESDAY, Carbon::WEDNESDAY, Carbon::THURSDAY, Carbon::FRIDAY];
 
-        // Konwersja stringa na obiekt Carbon
-        $orderDate = Carbon::parse($orderPlacedTime)->timezone('Europe/Warsaw');
+        // Convert order date to Carbon object
+//        $order = Carbon::parse($orderDate);
+        $order = $orderDate;
 
-        // Godziny pracy firmy
-        $workStartHour = 8;
-        $workEndHour = 12;
+        // Check if the order was placed during working hours
+        if (in_array($order->dayOfWeek, $workingDays) &&
+            $order->hour >= $workingHoursFrom &&
+            $order->hour < $workingHoursTo) {
+            // Order placed within working hours
+            return 0;
+        }
 
-        // Jeśli zamówienie złożone w weekend, przesunięcie na poniedziałek 8:00
-        if ($orderDate->isWeekend()) {
-            $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
-        } elseif ($orderDate->hour < $workStartHour) {
-            // Jeśli zamówienie złożone przed rozpoczęciem pracy, ustaw na ten dzień 8:00
-            $orderDate->setTime($workStartHour, 0);
-        } elseif ($orderDate->hour >= $workEndHour) {
-            // Jeśli zamówienie złożone po godzinach pracy, przesunięcie na następny dzień roboczy 8:00
-            $orderDate->addDay()->setTime($workStartHour, 0);
-            if ($orderDate->isWeekend()) {
-                $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
+        // Find the next working day
+        $nextWorkingDay = $order->copy();
+        do {
+            $nextWorkingDay->addDay();
+        } while (!in_array($nextWorkingDay->dayOfWeek, $workingDays));
+
+        // Calculate the difference in days
+        $daysDifference = $nextWorkingDay->diffInDays($order);
+
+        return $daysDifference;
+    }
+
+    public static function calculateDeliveryTime(Carbon $orderDate, $minDeliveryDays = 1, $maxDeliveryDays = 2)
+    {
+        // Company working days settings
+        $workingDays = [Carbon::MONDAY, Carbon::TUESDAY, Carbon::WEDNESDAY, Carbon::THURSDAY, Carbon::FRIDAY];
+
+        // Convert order date to Carbon object
+        $order = Carbon::parse($orderDate);
+
+        // Find the next working day if the order is placed on a non-working day
+        if (!in_array($order->dayOfWeek, $workingDays)) {
+            do {
+                $order->addDay();
+            } while (!in_array($order->dayOfWeek, $workingDays));
+        }
+
+        // Calculate the minimum delivery time (minDeliveryDays working days after order date)
+        $minDeliveryDate = $order->copy();
+        $minDeliveryCounter = 0;
+        while ($minDeliveryCounter < $minDeliveryDays) {
+            $minDeliveryDate->addDay();
+            if (in_array($minDeliveryDate->dayOfWeek, $workingDays)) {
+                $minDeliveryCounter++;
             }
         }
 
-        // Obliczanie liczby dni roboczych do momentu obsługi zamówienia
-        $processingDays = 0;
-        while ($orderDate->isWeekday() && $orderDate->lessThan(Carbon::now())) {
-            $processingDays++;
-            $orderDate->addDay();
-            if ($orderDate->isWeekend()) {
-                $orderDate->next(Carbon::MONDAY);
+        // Calculate the maximum delivery time (maxDeliveryDays working days after order date)
+        $maxDeliveryDate = $order->copy();
+        $maxDeliveryCounter = 0;
+        while ($maxDeliveryCounter < $maxDeliveryDays) {
+            $maxDeliveryDate->addDay();
+            if (in_array($maxDeliveryDate->dayOfWeek, $workingDays)) {
+                $maxDeliveryCounter++;
             }
         }
 
-        // Dodanie jednego dnia roboczego, jeśli przetwarzanie nie rozpoczęło się tego samego dnia
-        if ($orderDate->greaterThan(Carbon::now()->setTime($workStartHour, 0))) {
-            $processingDays++;
-        }
+        // Calculate the total delivery time in days from the order date
+        $totalMinDeliveryTimeDays = $minDeliveryDate->diffInDays($order);
+        $totalMaxDeliveryTimeDays = $maxDeliveryDate->diffInDays($order);
 
-        return $processingDays;
+        return (object)[
+            'min_delivery_time' => $totalMinDeliveryTimeDays,
+            'max_delivery_time' => $totalMaxDeliveryTimeDays
+        ];
     }
 
 }

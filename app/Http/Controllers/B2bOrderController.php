@@ -8,8 +8,8 @@ use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderProduct;
 use App\Models\Products\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class B2bOrderController extends Controller
@@ -215,13 +215,10 @@ class B2bOrderController extends Controller
             "location:id,street,city,postal_code,apartment_number,building_number",
         ]);
 
-        dd(
-            Helper::calculateProcessingTime($order->created_at),
-            Helper::calculateProcessingTime("2024-06-11 12:00:00"),
-            Helper::calculateProcessingTime("2024-06-11 09:00:00"),
-        );
-        $processTime = 0;
-
+        $orderCreatedTime = Carbon::parse($order->created_at);
+        $processTime = Helper::calculateProcessingTime($orderCreatedTime);
+        $deliveryTime = Helper::calculateDeliveryTime($orderCreatedTime->addDays($processTime), $order->delivery->delivery_time_min, $order->delivery->delivery_time_max);
+//        dd($order, $processTime, $deliveryTime);
 
         $order = $order->only([
             "number",
@@ -236,7 +233,10 @@ class B2bOrderController extends Controller
         ]);
         return Inertia::render("B2B/OrderSuccess", [
             "order" => $order,
-            "processTime" => $processTime
+            "processTime" => [
+                "min" => $processTime + $deliveryTime->min_delivery_time,
+                "max" => $processTime + $deliveryTime->max_delivery_time,
+            ],
         ]);
     }
 
