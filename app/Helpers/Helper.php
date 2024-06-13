@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 class Helper
 {
@@ -150,6 +151,51 @@ class Helper
 
         return array_search($a, $ORDER) - array_search($b, $ORDER);
 
+    }
+
+    public static function calculateProcessingTime(string $orderPlacedTime)
+    {
+        // Ustawienie strefy czasowej
+        Carbon::setLocale('pl');
+//        date_default_timezone_set('Europe/Warsaw');
+
+        // Konwersja stringa na obiekt Carbon
+        $orderDate = Carbon::parse($orderPlacedTime)->timezone('Europe/Warsaw');
+
+        // Godziny pracy firmy
+        $workStartHour = 8;
+        $workEndHour = 12;
+
+        // Jeśli zamówienie złożone w weekend, przesunięcie na poniedziałek 8:00
+        if ($orderDate->isWeekend()) {
+            $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
+        } elseif ($orderDate->hour < $workStartHour) {
+            // Jeśli zamówienie złożone przed rozpoczęciem pracy, ustaw na ten dzień 8:00
+            $orderDate->setTime($workStartHour, 0);
+        } elseif ($orderDate->hour >= $workEndHour) {
+            // Jeśli zamówienie złożone po godzinach pracy, przesunięcie na następny dzień roboczy 8:00
+            $orderDate->addDay()->setTime($workStartHour, 0);
+            if ($orderDate->isWeekend()) {
+                $orderDate->next(Carbon::MONDAY)->setTime($workStartHour, 0);
+            }
+        }
+
+        // Obliczanie liczby dni roboczych do momentu obsługi zamówienia
+        $processingDays = 0;
+        while ($orderDate->isWeekday() && $orderDate->lessThan(Carbon::now())) {
+            $processingDays++;
+            $orderDate->addDay();
+            if ($orderDate->isWeekend()) {
+                $orderDate->next(Carbon::MONDAY);
+            }
+        }
+
+        // Dodanie jednego dnia roboczego, jeśli przetwarzanie nie rozpoczęło się tego samego dnia
+        if ($orderDate->greaterThan(Carbon::now()->setTime($workStartHour, 0))) {
+            $processingDays++;
+        }
+
+        return $processingDays;
     }
 
 }
