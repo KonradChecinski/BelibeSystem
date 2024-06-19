@@ -59,11 +59,11 @@ export default function ModelColorAddDialog({open, setOpen, reloadData, roles, p
         setValue('name', clickedColor?.name);
         setValue('b2c_product_name', clickedColor?.b2c_product_name);
 
-        setValue('color_icon', clickedColor?.color_icon ? {
-            id: clickedColor?.color_icon?.id,
-            name: clickedColor?.color_icon?.name,
-            label: clickedColor?.color_icon?.name
-        } : null);
+        setValue('color_icon', clickedColor?.color_icon ? //{
+            // id: clickedColor?.color_icon?.id,
+            /* name:*/ clickedColor?.color_icon?.name/*,*/
+            /*    label: clickedColor?.color_icon?.name
+            }*/ : null);
 
         setValue('b2c_name', clickedColor?.b2c_color_id ? {
             id: clickedColor?.b2c_color_id,
