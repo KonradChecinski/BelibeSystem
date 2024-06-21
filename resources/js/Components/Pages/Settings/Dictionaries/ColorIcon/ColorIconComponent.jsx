@@ -118,7 +118,7 @@ export default function ColorIconComponent(props) {
 
     return (
         <Grid container columnSpacing={2} sx={{height: "100%"}}>
-            <Grid item xs={12} lg={6} sx={{position: "relative", mb: lgBreakpointDown ? 2 : 0}}>
+            <Grid item xs={12} lg={6} sx={{position: "relative", height: 1, mb: lgBreakpointDown ? 2 : 0}}>
                 <Paper sx={{height: 1, p: 1}}>
                     <Box
                         sx={{
@@ -233,7 +233,7 @@ export default function ColorIconComponent(props) {
 
 
             </Grid>
-            <Grid item xs={12} lg={6} sx={{position: "relative"}}>
+            <Grid item xs={12} lg={6} sx={{position: "relative", height: 1}}>
                 <Paper sx={{height: 1, p: 1, pt: 2}}>
                     <Box>
                         <Typography variant={"h6"}>Edycja
