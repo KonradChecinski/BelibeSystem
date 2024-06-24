@@ -45,9 +45,9 @@ export default function B2bOrderSuccess(props) {
             cart={props.cartSummary}
             clientId={props.clientId}
             blacklist={props.blacklist}
-            header={
-                t("Zamówienie: ") + 1 + " " + t("zostało złożone")
-            }
+            // header={
+            //     t("Zamówienie: ") + 1 + " " + t("zostało złożone")
+            // }
         >
             <Head title={t("Zamówienie: ") + 1 + " " + t("zostało złożone")}/>
             <Paper sx={{minWidth: 1, minHeight: 1, mb: 1}}>
