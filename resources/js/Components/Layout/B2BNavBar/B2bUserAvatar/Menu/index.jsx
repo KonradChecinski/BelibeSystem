@@ -2,8 +2,11 @@ import {Avatar, Divider, ListItemIcon, Menu, MenuItem} from "@mui/material";
 import {Link} from "@inertiajs/react";
 import {Logout, Settings} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
+import {useLaravelReactI18n} from "laravel-react-i18n";
 
 export default function B2bUserAvatarMenu(props) {
+    const {t} = useLaravelReactI18n();
+
     return (
         <Menu
             anchorEl={props.anchorEl}
@@ -68,7 +71,7 @@ export default function B2bUserAvatarMenu(props) {
                     <ListItemIcon>
                         <Logout fontSize="small"/>
                     </ListItemIcon>
-                    Logout
+                    {t("Logout")}
                 </Link>
             </MenuItem>
         </Menu>

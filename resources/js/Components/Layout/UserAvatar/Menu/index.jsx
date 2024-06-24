@@ -1,9 +1,12 @@
-import { Avatar, Divider, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { Link } from "@inertiajs/react";
-import { Logout, Settings } from "@mui/icons-material";
+import {Avatar, Divider, ListItemIcon, Menu, MenuItem} from "@mui/material";
+import {Link} from "@inertiajs/react";
+import {Logout, Settings} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
+import {useLaravelReactI18n} from "laravel-react-i18n";
 
 export default function UserAvatarMenu(props) {
+    const {t} = useLaravelReactI18n();
+
     return (
         <Menu
             anchorEl={props.anchorEl}
@@ -50,25 +53,25 @@ export default function UserAvatarMenu(props) {
         >
             <Link href={route("profile.edit")}>
                 <MenuItem onClick={props.onClose}>
-                    <Avatar /> Profile
+                    <Avatar/>{t("Profile")}
                 </MenuItem>
             </Link>
 
-            <Divider />
+            <Divider/>
             <MenuItem onClick={props.onClose}>
                 <Link href={route("system.settings.main")} as="button">
                     <ListItemIcon>
-                        <Settings fontSize="small" />
+                        <Settings fontSize="small"/>
                     </ListItemIcon>
-                    Settings
+                    {t("Settings")}
                 </Link>
             </MenuItem>
             <MenuItem onClick={props.onClose}>
                 <Link href={route("logout")} method="post" as="button">
                     <ListItemIcon>
-                        <Logout fontSize="small" />
+                        <Logout fontSize="small"/>
                     </ListItemIcon>
-                    Logout
+                    {t("Logout")}
                 </Link>
             </MenuItem>
         </Menu>
