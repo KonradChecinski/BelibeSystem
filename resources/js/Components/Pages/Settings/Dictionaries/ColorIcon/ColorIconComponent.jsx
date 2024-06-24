@@ -224,7 +224,7 @@ export default function ColorIconComponent(props) {
                         }
 
                     </Box>
-                    <Box sx={{position: "absolute", bottom: -5, right: -5, zIndex: 20}}>
+                    <Box sx={{position: "absolute", bottom: -5, right: -25, zIndex: 20}}>
                         <Fab color="primary" aria-label="add" onClick={handleAdd}>
                             <Add/>
                         </Fab>
