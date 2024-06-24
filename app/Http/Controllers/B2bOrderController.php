@@ -164,9 +164,13 @@ class B2bOrderController extends Controller
                 return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
             }
         }
+        $lastOrder = ClientOrder::query()->latest()->first();
+        $lastNumber = $lastOrder->number ?? 1000;
+        $lastNumber = (int)$lastNumber;
+        $lastNumber++;
 
         $order = new ClientOrder([
-            "number" => "B2B-" . Carbon::now()->format("Y.m.d H:i"),
+            "number" => $lastNumber,
             "status" => 1,
             "total_quantity" => $quantity,
             "total_net" => $priceSummary["total_net"],
