@@ -4,15 +4,14 @@ import {Avatar} from "@mui/material";
 import stringToColor from "@/Functions/stringToColor";
 
 export default function UserAvatar({user}) {
-    let src = "/storage/favicons/B.png";
-    // let src = "";
+    // let src = "/storage/favicons/B.png";
 
     return (
         <Avatar
-            src={src}
+            src={user.icon}
             sx={{
                 boxShadow: 5,
-                bgcolor: src ? "" : stringToColor(user.name)
+                bgcolor: user.icon ? "" : stringToColor(user.name)
             }}
             title={user.name}
         >

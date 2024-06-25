@@ -1,29 +1,20 @@
 import {
-
     Card,
     Grid,
     IconButton,
     Tooltip,
-    InputAdornment,
-    FormControl,
-    InputLabel,
-    OutlinedInput,
-    Typography, TextField, Autocomplete, Badge, Avatar
+    Typography, Badge, Avatar
 } from "@mui/material";
 import React, {useState} from "react";
 import {
-    Search, Event, ShoppingCart, Favorite
+    Search, Event, ShoppingCart, Favorite, Person
 } from "@mui/icons-material";
 import {router} from "@inertiajs/react";
 import Countdown from 'react-countdown';
-import SearchModelComponent from "@/Components/Layout/NavBar/SearchComponent/SearchModelComponent";
-import SearchClientComponent from "@/Components/Layout/NavBar/SearchComponent/SearchClientComponent";
 import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchComponent/B2bSearchModelComponent";
 import B2bUserAvatarMenu from "@/Components/Layout/B2BNavBar/B2bUserAvatar/Menu";
-import UserAvatar from "@/Components/Layout/UserAvatar";
-import stringToColor from "@/Functions/stringToColor";
 
-export default function B2BNavBar({auth, clientId, cart}) {
+export default function B2BNavBar({auth, clientId, cart, user, accountManager}) {
     const [anchorElUserAvatar, setAnchorElUserAvatar] = useState(null);
     const openUserAvatar = Boolean(anchorElUserAvatar);
 
@@ -243,11 +234,12 @@ export default function B2BNavBar({auth, clientId, cart}) {
                                         }
                                     >
                                         <Avatar
-                                            src={"/storage/favicons/B.png"}
+                                            // src={"/storage/favicons/B.png"}
                                             sx={{
                                                 boxShadow: 5,
                                             }}
                                         >
+                                            <Person fontSize={"large"}/>
                                         </Avatar>
                                     </IconButton>
                                 </Tooltip>
@@ -261,6 +253,7 @@ export default function B2BNavBar({auth, clientId, cart}) {
                 anchorEl={anchorElUserAvatar}
                 open={openUserAvatar}
                 onClose={handleCloseUserAvatar}
+                accountManager={accountManager}
             />
         </>
     );

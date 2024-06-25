@@ -90,7 +90,8 @@ export default function ClientLayout({
                             </Box>
                         )}
 
-                        <B2BNavBar auth={auth} clientId={clientId} cart={cart}/>
+                        <B2BNavBar auth={auth} clientId={clientId} cart={cart} auth={auth}
+                                   accountManager={accountManager}/>
                     </Box>
                 </>
             ) : (

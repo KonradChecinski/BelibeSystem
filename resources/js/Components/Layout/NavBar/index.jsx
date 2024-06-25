@@ -203,6 +203,7 @@ export default function Navbar({auth}) {
                 anchorEl={anchorElUserAvatar}
                 open={openUserAvatar}
                 onClose={handleCloseUserAvatar}
+                user={auth.user}
             />
         </>
     );
