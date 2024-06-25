@@ -5,6 +5,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import moment from "moment";
 import toLocaleString from "@/Functions/toLocaleString";
+import B2bOrdersTable from "@/Components/Table/B2B/Orders";
 
 export default function B2bOrders(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -25,8 +26,9 @@ export default function B2bOrders(props) {
             }
         >
             <Head title={t("Orders")}/>
-            <Paper sx={{width: 1, height: 1}}>
-
+            <B2bOrdersTable orders={props.orders} props={props}/>
+            {/*<Paper sx={{width: 1, height: 1}}>*/}
+            {/*
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
@@ -88,6 +90,7 @@ export default function B2bOrders(props) {
                                                 {statusText}
                                             </Typography>
                                         </TableCell>
+
                                         <TableCell>{order.total_quantity}</TableCell>
                                         <TableCell>Dostawa</TableCell>
                                         <TableCell>{order.delivery.name}</TableCell>
@@ -101,8 +104,8 @@ export default function B2bOrders(props) {
 
                         </TableBody>
                     </Table>
-                </TableContainer>
-            </Paper>
+                </TableContainer>*/}
+            {/*</Paper>*/}
 
         </ClientLayout>
     );
