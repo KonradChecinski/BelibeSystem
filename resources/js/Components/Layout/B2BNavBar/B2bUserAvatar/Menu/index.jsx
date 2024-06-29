@@ -1,8 +1,9 @@
 import {Avatar, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {Link, router} from "@inertiajs/react";
-import {History, Logout, Payment, ReceiptLong, Savings, Settings} from "@mui/icons-material";
+import {History, Logout, Payment, Person, ReceiptLong, Savings, Settings} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
 import {useLaravelReactI18n} from "laravel-react-i18n";
+import UserAvatar from "@/Components/Layout/UserAvatar";
 
 export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManager, props}) {
     const {t} = useLaravelReactI18n();
@@ -59,6 +60,21 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
                 vertical: "bottom"
             }}
         >
+            <Link href={route("b2b.client")}>
+                <MenuItem onClick={onClose}>
+                    <ListItemIcon sx={{mr: 2}}>
+
+                        <Avatar>
+                            <Person fontSize={"large"}/>
+                        </Avatar>
+                    </ListItemIcon>
+
+                    <ListItemText>{t("Client zone")}</ListItemText>
+                </MenuItem>
+            </Link>
+
+            <Divider/>
+
             <Link href={route("b2b.orders")}>
                 <MenuItem onClick={onClose}>
                     <ListItemIcon>

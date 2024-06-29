@@ -5,6 +5,7 @@ use App\Http\Controllers\B2B\B2bFavoritesController;
 use App\Http\Controllers\B2B\B2bMainPageController;
 use App\Http\Controllers\B2B\B2bProductCategoryController;
 use App\Http\Controllers\B2B\B2bProductController;
+use App\Http\Controllers\B2bClientController;
 use App\Http\Controllers\B2bInvoicesController;
 use App\Http\Controllers\B2bOrderController;
 use App\Http\Controllers\B2bPageController;
@@ -38,6 +39,9 @@ Route::group([], function () {
     Route::get("/invoices/{invoice}", [B2bInvoicesController::class, 'show'])->name("b2b.invoices.invoice");
 
     Route::get("/settlements", [B2bSettlementsController::class, 'index'])->name("b2b.settlements");
+
+    Route::get("/client", [B2bClientController::class, 'index'])->name("b2b.client");
+
 });
 
 
