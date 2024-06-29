@@ -13,7 +13,7 @@ export default function B2bOrderDetails({row, open, handleClose}) {
     const [data, setData] = useState(null)
 
     const getData = () => {
-        // router.get(route("b2b.order", {clientOrder: row.original.id}))
+        // router.get(route("b2b.order.show", {clientOrder: row.original.id}))
         axios.get(route("b2b.order.show", {clientOrder: row.original.id}))
             .then(response => {
                 setData(response.data)

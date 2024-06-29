@@ -33,6 +33,7 @@ class B2bOrderController extends Controller
         return Inertia::render('B2B/Orders', [
             "orders" => $orders->map(function ($item) {
                 return $item->only([
+                    "id",
                     "created_at",
                     "number",
                     "status",
