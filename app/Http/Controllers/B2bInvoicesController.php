@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\ClientInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class B2bInvoicesController extends Controller
@@ -24,7 +26,7 @@ class B2bInvoicesController extends Controller
             "invoices" => $invoices->map(function ($item) {
                 return $item;
                 //->only([
-                
+
                 //]);
             }
             )
@@ -50,9 +52,16 @@ class B2bInvoicesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, ClientInvoice $invoice)
     {
-        //
+        $clientId = Helper::getClientIdToB2b();
+        if ($invoice->client_id !== $clientId) {
+            abort(403);
+        }
+
+        $pdf = Storage::get($invoice->path);
+        $mimeType = Storage::mimeType($invoice->path);
+        return response($pdf)->header('Content-Type', $mimeType);
     }
 
     /**

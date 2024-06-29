@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
@@ -6,11 +6,9 @@ use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderOtherController;
-use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PartnerExportController;
 use App\Http\Controllers\PartnerExportProductController;
-use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;

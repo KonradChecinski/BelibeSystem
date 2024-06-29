@@ -129,14 +129,14 @@ export default function B2bInvoicesTable({invoices, props}) {
                     return (
                         <>
                             <Tooltip title="Pobierz dokument" arrow>
-                                {/*<a*/}
-                                {/*    href={route("system.invoices.invoice", {invoice: row.original.id})}*/}
-                                {/*    target={"_blank"}*/}
-                                {/*>*/}
-                                <IconButton aria-label="download">
-                                    <ReceiptLong color={"success"}/>
-                                </IconButton>
-                                {/*</a>*/}
+                                <a
+                                    href={route("b2b.invoices.invoice", {invoice: row.original.id})}
+                                    target={"_blank"}
+                                >
+                                    <IconButton aria-label="download">
+                                        <ReceiptLong color={"success"}/>
+                                    </IconButton>
+                                </a>
                             </Tooltip>
 
                         </>
