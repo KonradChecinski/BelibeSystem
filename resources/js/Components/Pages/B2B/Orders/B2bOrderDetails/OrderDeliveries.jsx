@@ -39,7 +39,7 @@ export default function OrderDeliveries({data}) {
                             Koszt: {toLocaleString(data?.order?.delivery_net / 100)} ({toLocaleString(data?.order?.delivery_gross / 100)} Brutto)
                         </Typography>
                         <Typography variant="body2">
-                            Czas dostawy: {data?.delivery?.delivery_time_min} - {data?.delivery?.delivery_time_max}
+                            Cza dostawy: {data?.delivery?.delivery_time_min} - {data?.delivery?.delivery_time_max}
                         </Typography>
                     </CardContent>
                 </Card>

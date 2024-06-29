@@ -1,13 +1,15 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Box, Divider, IconButton, Tooltip, Typography,} from "@mui/material";
+import {Box, Button, Divider, IconButton, Tooltip, Typography,} from "@mui/material";
 
 import {useTheme} from "@mui/material/styles";
 import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
-import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
-import {ReceiptLong} from "@mui/icons-material";
+import {Add, ReceiptLong, Replay, Visibility} from "@mui/icons-material";
+import B2bOrderDetails from "@/Components/Pages/B2B/Orders/B2bOrderDetails";
+import {enqueueSnackbar} from "notistack";
+import AgainOrderDialog from "@/Components/Dialogs/B2bAgainOrderDialog/AgainOrderDialog";
 
 export default function B2bOrdersTable({orders, props}) {
     const theme = useTheme();
@@ -84,7 +86,13 @@ export default function B2bOrdersTable({orders, props}) {
                 size: 10,
                 enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
+                muiTableBodyCellProps: {
+                    align: 'center',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
             },
             {
                 accessorKey: 'location',
@@ -180,6 +188,9 @@ export default function B2bOrdersTable({orders, props}) {
                 accessorKey: 'discounted_total_net',
                 header: 'Wartość Netto',
                 size: 5,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: true,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -187,9 +198,6 @@ export default function B2bOrdersTable({orders, props}) {
                     align: 'right',
                 },
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
             },
             {
                 accessorKey: 'discounted_total_gross',
@@ -204,7 +212,7 @@ export default function B2bOrdersTable({orders, props}) {
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
                 enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
 
             // {
@@ -233,9 +241,38 @@ export default function B2bOrdersTable({orders, props}) {
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
+                    const order = row.original
+
+                    const [openDetails, setOpenDetails] = useState(false);
+                    const [openAgainDialog, setOpenAgainDialog] = useState(false);
+                    const handleOpenDetails = () => {
+                        setOpenDetails(true);
+                    };
+                    const handleCloseDetails = () => {
+                        setOpenDetails(false);
+                    };
+
+                    const handleAgainOrder = () => {
+                        setOpenAgainDialog(true);
+                    };
+
                     return (
-                        // <OrderMenu row={row}/>
                         <>
+                            <Tooltip title="Pokaż zamówienie" arrow>
+                                <IconButton aria-label="visibility" onClick={handleOpenDetails}>
+                                    <Visibility/>
+                                </IconButton>
+                            </Tooltip>
+
+                            <Tooltip title="Ponów zamówienie" arrow>
+                                <IconButton aria-label="repeat" onClick={handleAgainOrder}>
+                                    <Replay/>
+                                </IconButton>
+                            </Tooltip>
+
+                            <B2bOrderDetails open={openDetails} handleClose={handleCloseDetails} row={row}/>
+                            <AgainOrderDialog open={openAgainDialog} setOpen={setOpenAgainDialog} row={row}
+                                              params={props}/>
                         </>
                     )
 
@@ -268,11 +305,14 @@ export default function B2bOrdersTable({orders, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: 1}
+            sx: {height: 1}
         },
         muiTablePaperProps: ({table}) => ({
             sx: {
-                pl: 1
+                // pl: 1,
+                height: 1,
+                display: "flex",
+                flexDirection: "column",
             },
             style: {
                 zIndex: table.getState().isFullScreen ? 2000 : undefined,

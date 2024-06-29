@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Http\Requests\B2bAgainOrderRequest;
+use App\Http\Requests\B2bShowOrderRequest;
 use App\Http\Requests\StoreClientOrderRequest;
+use App\Models\B2bCart;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderProduct;
@@ -19,10 +22,33 @@ class B2bOrderController extends Controller
      */
     public function index()
     {
-        $orders = Helper::getClientToB2b()->orders()->with(["payment", "delivery", "location", "orderProducts.product"])->get();
+        $client = Helper::getClientToB2b();
+        $orders = $client->orders()->with([
+            "payment:id,name",
+            "delivery:id,name,description",
+            "location:id,street,city,postal_code,apartment_number,building_number,note",
+        ])
+            ->where("created_at", ">", Carbon::now()->subYear())->get();
 //        dd($orders);
         return Inertia::render('B2B/Orders', [
-            "orders" => $orders
+            "orders" => $orders->map(function ($item) {
+                return $item->only([
+                    "created_at",
+                    "number",
+                    "status",
+                    "total_quantity",
+                    "location",
+                    "delivery",
+                    "delivery_net",
+                    "delivery_gross",
+                    "payment",
+                    "discount",
+                    "discounted_total_net",
+                    "discounted_total_gross",
+
+                ]);
+            }
+            )
         ]);
     }
 
@@ -210,7 +236,56 @@ class B2bOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+
+    public function show(B2bShowOrderRequest $request, ClientOrder $clientOrder)
+    {
+        $clientOrder->load([
+            "orderProducts:client_order_id,product_id,quantity,price_net,vat_rate,currency",
+            "payment:id,name",
+            "delivery:id,name,description,delivery_time_max,delivery_time_min",
+            "location:id,street,city,postal_code,apartment_number,building_number,country_id,note",
+            "location.country:id,name",
+            "products:products.id,products.symbol,products.quantity,products.product_size_id,products.product_unit_id,products.product_model_color_id",
+            "products.size:id,name",
+            "products.unit:id,name",
+            "productModels:product_models.id,product_models.name,product_models.symbol",
+            "productModelColors" => function ($query) {
+                $query->select("product_model_colors.id",
+                    "product_model_colors.shortcut",
+                    "product_model_colors.name",
+                    "product_model_colors.product_model_id");
+                $query->withWhereHas("images", function ($query) {
+                    $query->where("type", 1);
+                    $query->where("order", 0);
+                    $query->select("product_model_color_id", "path");
+                });
+            },
+        ]);
+        $clientOrderModel = collect([$clientOrder]);
+
+        return response()->json([
+            "order" => $clientOrder->only([
+                "discount",
+                "delivery_net",
+                "delivery_gross",
+                "comment",
+                "total_net",
+                "total_gross",
+                "discounted_total_net",
+                "discounted_total_gross",
+            ]),
+            "orderProducts" => $clientOrder->orderProducts,
+            "products" => $clientOrderModel->pluck("products")->flatten(),
+            "productModels" => $clientOrderModel->pluck("productModels")->flatten()->unique("id")->values(),
+            "productColors" => $clientOrderModel->pluck("productModelColors")->flatten()->unique("id")->values(),
+            "payment" => $clientOrder->payment,
+            "delivery" => $clientOrder->delivery,
+            "location" => $clientOrder->location,
+        ]);
+
+    }
+
+    public function success(Request $request)
     {
 //        $order = session()->get("order");
         $order = Helper::getClientToB2b()->orders()->latest()->first();
@@ -249,7 +324,7 @@ class B2bOrderController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
     }
 
     /**
@@ -266,5 +341,27 @@ class B2bOrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    public function again(B2bAgainOrderRequest $request, ClientOrder $clientOrder)
+    {
+        $client = Helper::getClientToB2b();
+        $client->cart()->delete();
+
+        foreach ($clientOrder->orderProducts as $orderProduct) {
+            $discountedPrices = $orderProduct->productModel->priceForClientB2b($client);
+            $cartProduct = new B2bCart([
+                "quantity" => $orderProduct->quantity,
+                'price_net' => $discountedPrices['discounted_wholesale_net_price'],
+                'vat_rate' => $discountedPrices['vat_rate'],
+                'currency' => $orderProduct->currency,
+            ]);
+            $cartProduct->product()->associate($orderProduct->product_id);
+
+            $client->cart()->save($cartProduct);
+        }
+
+
     }
 }

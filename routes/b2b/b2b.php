@@ -31,8 +31,10 @@ Route::group([], function () {
     Route::get("/cart", [B2bCartController::class, 'index'])->name("b2b.cart");
     Route::post("/cart/update/{product}", [B2bCartController::class, 'update'])->name("b2b.cart.update");
 
+    Route::get("/order/show/{clientOrder}", [B2bOrderController::class, 'show'])->name("b2b.order.show");
     Route::post("/order/store", [B2bOrderController::class, 'store'])->name("b2b.order.store");
-    Route::get("/order/success", [B2bOrderController::class, 'show'])->name("b2b.order.success");
+    Route::get("/order/success", [B2bOrderController::class, 'success'])->name("b2b.order.success");
+    Route::post("/order/again/{clientOrder}", [B2bOrderController::class, 'again'])->name("b2b.order.again");
 
 });
 
