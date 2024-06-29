@@ -5,7 +5,7 @@ import {
     Tooltip,
     Typography, Badge, Avatar
 } from "@mui/material";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Search, Event, ShoppingCart, Favorite, Person
 } from "@mui/icons-material";
@@ -29,6 +29,10 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
     Echo.private("cart.summary." + clientId).listen("CartSummaryUpdated", (e) => {
         setCartModel(e.cartSummary);
     });
+
+    useEffect(() => {
+        setCartModel(cart);
+    }, [cart]);
 
     return (
         <>

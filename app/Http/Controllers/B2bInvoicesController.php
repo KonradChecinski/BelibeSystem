@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class B2bInvoicesController extends Controller
@@ -12,7 +14,21 @@ class B2bInvoicesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('B2B/Invoices');
+        $client = Helper::getClientToB2b();
+        $invoices = $client->invoices()->with([
+            "clientOrder:id,number"
+        ])
+            ->where("created_at", ">", Carbon::now()->subYear())->get();
+//        dd($invoices);
+        return Inertia::render('B2B/Invoices', [
+            "invoices" => $invoices->map(function ($item) {
+                return $item;
+                //->only([
+                
+                //]);
+            }
+            )
+        ]);
     }
 
     /**
