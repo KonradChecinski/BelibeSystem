@@ -28,6 +28,7 @@ export default function ColorIconComponent(props) {
 
     const [edited, setEdited] = useState(false);
     const [editedId, setEditedId] = useState(null);
+    const [created, setCreated] = useState(false)
 
     const theme = useTheme();
     const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
@@ -41,9 +42,15 @@ export default function ColorIconComponent(props) {
         transform
     } = useForm(JSON.parse(JSON.stringify(props.productColors.map(c => ({...c, files: []})))));
 
-    const {data: dataAdd, setData: setDataAdd, post: postAdd} = useForm({
+    const {
+        data: dataAdd,
+        setData: setDataAdd,
+        post: postAdd,
+        transform: transformAdd,
+        processing: processingAdd
+    } = useForm({
         id: null,
-        name: "Nowy kolor",
+        name: "",
         type: 0,
         hex: "#000000",
     })
@@ -103,10 +110,17 @@ export default function ColorIconComponent(props) {
         })
     }
     const handleAdd = () => {
-
+        console.log(dataAdd)
         postAdd(route("system.settings.colorIcon.create"), {
             onSuccess: params => {
                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
+                setDataAdd({
+                    id: null,
+                    name: "",
+                    type: 0,
+                    hex: "#000000",
+                })
+                setCreated(false)
             },
             onError: params => {
                 console.error(params)
@@ -120,12 +134,13 @@ export default function ColorIconComponent(props) {
         <Grid container columnSpacing={2} sx={{height: "100%"}}>
             <Grid item xs={12} lg={6} sx={{position: "relative", height: 1, mb: lgBreakpointDown ? 2 : 0}}>
                 <Paper sx={{height: 1, p: 1}}>
-                    <Box
-                        sx={{
-                            overflowY: "auto",
-                            height: 1,
+                    <Box sx={{height: 1, display: "flex", flexDirection: "column"}}>
+                        <Box sx={{
+                            height: "content-fit",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center"
                         }}>
-                        <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <Typography variant={"h6"}>Kolory</Typography>
                             <Box>
                                 <Fade in={edited}>
@@ -159,73 +174,86 @@ export default function ColorIconComponent(props) {
                         </Box>
 
                         <Divider sx={{mb: 1}}/>
+                        <Box
+                            sx={{
+                                overflowY: "auto",
+                                height: 1,
+                            }}>
 
-                        {
-                            data.map((color, index) => {
-                                return (
-                                    <Paper
-                                        key={index}
-                                        elevation={4}
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                            p: 1,
-                                            my: 1,
-                                            gap: 2,
-                                            borderRadius: 1,
-                                            boxShadow: 1,
-                                            position: "relative"
-                                        }}
-                                    >
-                                        <Box sx={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            gap: 2
 
-                                        }}>
-                                            {color.type === 1 ?
-                                                <Box
-                                                    component={"img"}
-                                                    src={route("colorIcons", {path: color.path})}
-                                                    sx={{
+                            {
+                                data.map((color, index) => {
+                                    return (
+                                        <Paper
+                                            key={index}
+                                            elevation={4}
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                p: 1,
+                                                my: 1,
+                                                gap: 2,
+                                                borderRadius: 1,
+                                                boxShadow: 1,
+                                                position: "relative"
+                                            }}
+                                        >
+                                            <Box sx={{
+                                                display: "flex",
+                                                justifyContent: "flex-start",
+                                                alignItems: "center",
+                                                gap: 2
+
+                                            }}>
+                                                {color.type === 1 ?
+                                                    <Box
+                                                        component={"img"}
+                                                        src={route("colorIcons", {path: color.path})}
+                                                        sx={{
+                                                            width: 40,
+                                                            height: 40,
+                                                            borderRadius: "100%",
+                                                            border: 1
+                                                        }}/>
+                                                    :
+                                                    <Box sx={{
                                                         width: 40,
                                                         height: 40,
                                                         borderRadius: "100%",
+                                                        bgcolor: color.hex,
                                                         border: 1
                                                     }}/>
-                                                :
-                                                <Box sx={{
-                                                    width: 40,
-                                                    height: 40,
-                                                    borderRadius: "100%",
-                                                    bgcolor: color.hex,
-                                                    border: 1
-                                                }}/>
-                                            }
-                                            <Divider flexItem orientation={"vertical"}/>
+                                                }
+                                                <Divider flexItem orientation={"vertical"}/>
 
-                                            <Typography variant="h5">
-                                                {color.name}
-                                            </Typography>
-                                        </Box>
+                                                <Typography variant="h5">
+                                                    {color.name}
+                                                </Typography>
+                                            </Box>
 
-                                        <Box>
-                                            <IconButton aria-label="edit" size={"small"}
-                                                        onClick={() => setEditedId(color.id)}>
-                                                <Edit/>
-                                            </IconButton>
-                                        </Box>
+                                            <Box>
+                                                <IconButton aria-label="edit" size={"small"}
+                                                            onClick={() => {
+                                                                setEditedId(color.id)
+                                                                setCreated(false)
+                                                            }}>
+                                                    <Edit/>
+                                                </IconButton>
+                                            </Box>
 
-                                    </Paper>
-                                );
-                            })
-                        }
-
+                                        </Paper>
+                                    );
+                                })
+                            }
+                        </Box>
                     </Box>
                     <Box sx={{position: "absolute", bottom: -5, right: -25, zIndex: 20}}>
-                        <Fab color="primary" aria-label="add" onClick={handleAdd}>
+                        <Fab color="primary" aria-label="add" onClick={() => {
+                            setCreated(true)
+                            setEditedId(null)
+                            setEdited(false)
+                        }}>
                             <Add/>
                         </Fab>
                     </Box>
@@ -235,90 +263,168 @@ export default function ColorIconComponent(props) {
             </Grid>
             <Grid item xs={12} lg={6} sx={{position: "relative", height: 1}}>
                 <Paper sx={{height: 1, p: 1, pt: 2}}>
-                    <Box>
-                        <Typography variant={"h6"}>Edycja
-                            koloru {editedId ? editedId + " - " + data.find(e => e.id === editedId)?.name : ""} </Typography>
-                        <Divider sx={{my: 1}}/>
-                        <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Box sx={{p: 2}}>
-                                <TextField id="name"
-                                           label="Nazwa koloru"
-                                           variant="outlined"
-                                           value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.name : ""}
-                                           onChange={(e) => {
-                                               setData(data.map(d => {
-                                                   if (d.id === editedId) {
-                                                       d.name = e.target.value;
-                                                       setEdited(true);
-                                                   }
-                                                   return d;
-                                               }))
-
-                                           }}
-                                           sx={{width: "40ch"}}
-                                />
-
-                            </Box>
-
-                            <Box sx={{p: 2}}>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                    <Typography>Kolor</Typography>
-                                    <Switch inputProps={{'aria-label': 'design'}}
-                                            checked={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).type !== null ? Boolean(data.find(e => e.id === editedId).type) : false}
-                                            onChange={(e, value) => {
-                                                setData(data.map(d => {
-                                                    if (d.id === editedId) {
-                                                        d.type = value;
-                                                        setEdited(true);
-                                                    }
-                                                    return d;
-                                                }))
-
-                                            }}
-                                    />
-                                    <Typography>Druk</Typography>
-                                </Stack>
-                            </Box>
-                            <Box sx={{p: 2}}>
-                                {data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) === true ?
+                    {created ?
+                        (
+                            <>
+                                <Box sx={{
+                                    height: "content-fit",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}>
+                                    <Typography variant={"h6"}>Dodanie koloru </Typography>
                                     <Box>
-                                        <DropzoneIconAdd props={props}
-                                                         editedId={editedId}
-                                                         setEdited={setEdited}
-                                                         data={data}
-                                                         setData={setData}
-                                                         disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== true}/>
+                                        <Fade in={created}>
+                                            <Tooltip title={"Zapisz"}>
+                                                <IconButton
+                                                    type="submit"
+                                                    color="success"
+                                                    size={"small"}
+                                                    disabled={processingAdd}
+                                                    onClick={handleAdd}
+                                                >
+                                                    <Save fontSize={"large"}/>
+                                                </IconButton>
+                                            </Tooltip>
+
+                                        </Fade>
+
                                     </Box>
-                                    :
-                                    <Box>
-                                        <MuiColorInput isAlphaHidden={true} format="hex"
-                                                       value={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).hex ? data.find(e => e.id === editedId)?.hex : "#000000"}
-                                                       onChange={(color) => {
+                                </Box>
+
+                                <Divider sx={{my: 1}}/>
+                                <Box sx={{display: "flex", flexDirection: "column"}}>
+                                    <Box sx={{p: 2}}>
+                                        <TextField id="name"
+                                                   label="Nazwa koloru"
+                                                   variant="outlined"
+                                                   value={dataAdd.name}
+                                                   onChange={(e) => {
+                                                       setDataAdd("name", e.target.value)
+                                                   }}
+                                                   sx={{width: "40ch"}}
+                                        />
+
+                                    </Box>
+
+                                    <Box sx={{p: 2}}>
+                                        <Stack direction="row" spacing={1} alignItems="center">
+                                            <Typography>Kolor</Typography>
+                                            <Switch inputProps={{'aria-label': 'design'}}
+                                                    checked={false}
+                                                    disabled={true}
+                                            />
+                                            <Typography>Druk</Typography>
+                                        </Stack>
+                                    </Box>
+                                    <Box sx={{p: 2}}>
+
+                                        <Box>
+                                            <MuiColorInput isAlphaHidden={true} format="hex"
+                                                           value={dataAdd.hex}
+                                                           onChange={(color) => {
+                                                               setDataAdd("hex", color)
+                                                           }}
+                                            />
+                                        </Box>
+
+
+                                    </Box>
+                                </Box>
+                            </>
+                        )
+                        :
+                        (
+                            <>
+                                <Box>
+                                    <Typography variant={"h6"}>Edycja
+                                        koloru {editedId ? editedId + " - " + data.find(e => e.id === editedId)?.name : ""} </Typography>
+                                    <Divider sx={{my: 1}}/>
+                                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                                        <Box sx={{p: 2}}>
+                                            <TextField id="name"
+                                                       label="Nazwa koloru"
+                                                       variant="outlined"
+                                                       value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.name : ""}
+                                                       onChange={(e) => {
                                                            setData(data.map(d => {
                                                                if (d.id === editedId) {
-                                                                   d.hex = color;
+                                                                   d.name = e.target.value;
                                                                    setEdited(true);
                                                                }
                                                                return d;
                                                            }))
 
                                                        }}
-                                                       disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== false}
-                                        />
+                                                       sx={{width: "40ch"}}
+                                            />
+
+                                        </Box>
+
+                                        <Box sx={{p: 2}}>
+                                            <Stack direction="row" spacing={1} alignItems="center">
+                                                <Typography>Kolor</Typography>
+                                                <Switch inputProps={{'aria-label': 'design'}}
+                                                        checked={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).type !== null ? Boolean(data.find(e => e.id === editedId).type) : false}
+                                                        onChange={(e, value) => {
+                                                            setData(data.map(d => {
+                                                                if (d.id === editedId) {
+                                                                    d.type = value;
+                                                                    setEdited(true);
+                                                                }
+                                                                return d;
+                                                            }))
+
+                                                        }}
+                                                />
+                                                <Typography>Druk</Typography>
+                                            </Stack>
+                                        </Box>
+                                        <Box sx={{p: 2}}>
+
+                                            {data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) === true ?
+                                                <Box>
+                                                    <DropzoneIconAdd props={props}
+                                                                     editedId={editedId}
+                                                                     setEdited={setEdited}
+                                                                     data={data}
+                                                                     setData={setData}
+                                                                     disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== true}/>
+                                                </Box>
+                                                :
+                                                <Box>
+                                                    <MuiColorInput isAlphaHidden={true} format="hex"
+                                                                   value={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).hex ? data.find(e => e.id === editedId)?.hex : "#000000"}
+                                                                   onChange={(color) => {
+                                                                       setData(data.map(d => {
+                                                                           if (d.id === editedId) {
+                                                                               d.hex = color;
+                                                                               setEdited(true);
+                                                                           }
+                                                                           return d;
+                                                                       }))
+
+                                                                   }}
+                                                                   disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== false}
+                                                    />
+                                                </Box>
+
+                                            }
+
+
+                                        </Box>
                                     </Box>
 
-                                }
+                                    <Box sx={{my: 1}}>
+                                        <ColorIconsTable
+                                            colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
+                                            props={props}/>
+                                    </Box>
+                                </Box>
+                            </>
+                        )
+                    }
 
-
-                            </Box>
-                        </Box>
-
-                        <Box sx={{my: 1}}>
-                            <ColorIconsTable
-                                colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
-                                props={props}/>
-                        </Box>
-                    </Box>
 
                 </Paper>
                 <Fade in={Boolean(editedId)}>
