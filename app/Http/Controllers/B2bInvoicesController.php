@@ -24,10 +24,16 @@ class B2bInvoicesController extends Controller
 //        dd($invoices);
         return Inertia::render('B2B/Invoices', [
             "invoices" => $invoices->map(function ($item) {
-                return $item;
-                //->only([
-
-                //]);
+                return $item
+                    ->only([
+                        "id",
+                        "datetime",
+                        "type",
+                        "number",
+                        "clientOrder",
+                        "net_value",
+                        "gross_value",
+                    ]);
             }
             )
         ]);

@@ -1,10 +1,7 @@
-import {Head, Link} from "@inertiajs/react";
+import {Head} from "@inertiajs/react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
-import moment from "moment";
-import toLocaleString from "@/Functions/toLocaleString";
 import B2bOrdersTable from "@/Components/Table/B2B/Orders";
 
 export default function B2bOrders(props) {

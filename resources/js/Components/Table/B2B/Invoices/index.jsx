@@ -1,15 +1,12 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Box, Button, Divider, IconButton, Tooltip, Typography,} from "@mui/material";
+import {useMemo} from "react";
+import {Box, IconButton, Tooltip} from "@mui/material";
 
 import {useTheme} from "@mui/material/styles";
 import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
-import {Add, ReceiptLong, Replay, Visibility} from "@mui/icons-material";
-import B2bOrderDetails from "@/Components/Pages/B2B/Orders/B2bOrderDetails";
-import {enqueueSnackbar} from "notistack";
-import AgainOrderDialog from "@/Components/Dialogs/B2bAgainOrderDialog/AgainOrderDialog";
+import {ReceiptLong} from "@mui/icons-material";
 
 export default function B2bInvoicesTable({invoices, props}) {
     const theme = useTheme();
@@ -75,7 +72,7 @@ export default function B2bInvoicesTable({invoices, props}) {
                 enableSorting: true,
             },
             {
-                accessorKey: 'client_order.number',
+                accessorKey: 'clientOrder.number',
                 header: 'Numer zamówienia',
                 size: 35,
                 enableColumnActions: false,
