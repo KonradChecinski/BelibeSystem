@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\System\Client;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreClientObligationRequest;
-use App\Http\Requests\UpdateClientObligationRequest;
-use App\Models\ClientObligation;
+use App\Models\ClientSettlement;
+use App\Http\Requests\StoreClientSettlementRequest;
+use App\Http\Requests\UpdateClientSettlementRequest;
 
-class ClientObligationController extends Controller
+class ClientSettlementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +27,7 @@ class ClientObligationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientObligationRequest $request)
+    public function store(StoreClientSettlementRequest $request)
     {
         //
     }
@@ -36,7 +35,7 @@ class ClientObligationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ClientObligation $clientObligation)
+    public function show(ClientSettlement $clientSettlement)
     {
         //
     }
@@ -44,7 +43,7 @@ class ClientObligationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ClientObligation $clientObligation)
+    public function edit(ClientSettlement $clientSettlement)
     {
         //
     }
@@ -52,7 +51,7 @@ class ClientObligationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientObligationRequest $request, ClientObligation $clientObligation)
+    public function update(UpdateClientSettlementRequest $request, ClientSettlement $clientSettlement)
     {
         //
     }
@@ -60,7 +59,7 @@ class ClientObligationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClientObligation $clientObligation)
+    public function destroy(ClientSettlement $clientSettlement)
     {
         //
     }

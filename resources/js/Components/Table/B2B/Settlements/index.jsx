@@ -1,25 +1,18 @@
 import {useMemo} from "react";
-import {Box, Tooltip, Typography,} from "@mui/material";
+import {Box, IconButton, Tooltip} from "@mui/material";
+
 import {useTheme} from "@mui/material/styles";
-import {Done, Close, DownloadDone} from '@mui/icons-material';
-import moment from "moment";
-import {
-    MaterialReactTable,
-    useMaterialReactTable,
-} from 'material-react-table';
-import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
+import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
+import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import {Close, Done, DownloadDone, ReceiptLong} from "@mui/icons-material";
 
-
-export default function ClientSettlementsTable({settlement, readOnly, props}) {
+export default function B2bSettlementsTable({settlements, props}) {
     const theme = useTheme();
-    const data = settlement;
+    const data = settlements;
     // console.log(data);
 
-    const sumWartoscPierwotna = useMemo(
-        () => data.reduce((acc, obj) => acc + Number(obj.original_value / 100), 0),
-        [],
-    );
     const sumWartosc = useMemo(
         () => data.reduce((acc, obj) => acc + Number(obj.value / 100), 0),
         [],
@@ -28,11 +21,6 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
     const columns = useMemo(
         //column definitions...
         () => [
-            {
-                accessorKey: 'id',
-                header: 'Id',
-                size: 10,
-            },
             {
                 accessorKey: 'settlement',
                 header: 'Rozliczenie',
@@ -64,7 +52,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     </Tooltip>
                 ),
                 size: 5,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
             },
@@ -73,15 +61,15 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 header: 'Data',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'number',
                 header: 'Dokument',
                 size: 60,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
             },
@@ -90,7 +78,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 header: 'Termin',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
 
@@ -105,9 +93,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 ),
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
 
             },
             {
@@ -124,10 +112,10 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     <Box sx={{color: "error.main"}}>{Number(cell.getValue())}</Box> : "",
                 Header: ({column}) => (
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                        <Box>S</Box>
+                        <Box>Spóźnienie</Box>
                     </Tooltip>
                 ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
             },
@@ -145,15 +133,12 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
                 Header: ({column}) => (
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                        <Box>WP</Box>
+                        <Box>Wartość początkowa</Box>
                     </Tooltip>
                 ),
-                Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWartoscPierwotna))}</Box>
-                ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'value',
@@ -168,16 +153,16 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 Cell: ({cell}) => toLocaleString(Number(cell.getValue()) / 100),
                 Header: ({column}) => (
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                        <Box>WB</Box>
+                        <Box>Wartość bieżąca</Box>
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color={Number(sumWartosc) == 0 ? "success.main" : "error.main"}
+                    <Box color={Number(sumWartosc) === 0 ? "success.main" : "error.main"}
                          textAlign={"right"}>{toLocaleString(Number(sumWartosc))}</Box>
                 ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
         ],
         [],
@@ -194,7 +179,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
         enableStickyFooter: true,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {nzf_Id: false},
+            columnVisibility: {id: false, subiekt_added_at: false},
             density: 'compact',
             pagination: {pageSize: 30, pageIndex: 0},
             sorting: [
@@ -205,11 +190,14 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: '500px', height: '500px'}
+            sx: {height: 1}
         },
         muiTablePaperProps: ({table}) => ({
             sx: {
-                pl: 1
+                // pl: 1,
+                height: 1,
+                display: "flex",
+                flexDirection: "column",
             },
             style: {
                 zIndex: table.getState().isFullScreen ? 2000 : undefined,

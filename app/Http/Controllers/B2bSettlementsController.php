@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +13,25 @@ class B2bSettlementsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('B2B/Settlements');
+        $client = Helper::getClientToB2b();
+//        dd($client->receivables->toArray(), $client->obligations->toArray());
+        $settlements = $client->receivables()->where("datetime", ">", now()->subYears(2))->get();
+        return Inertia::render('B2B/Settlements', [
+            "settlements" => $settlements->map(function ($item) {
+                return $item
+                    ->only([
+                        "settlement",
+                        "datetime",
+                        "number",
+                        "date_of_payment",
+                        "date_of_last_payment",
+                        "days_of_delay",
+                        "original_value",
+                        "value",
+                    ]);
+            }
+            )
+        ]);
     }
 
     /**

@@ -29,7 +29,7 @@ import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesCom
 
 
 export default function Client(props) {
-    // console.log("Propsy: ", props);
+    console.log("Propsy: ", props);
 
 
     return (

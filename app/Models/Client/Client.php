@@ -13,10 +13,11 @@ use App\Models\ClientDiscount;
 use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
-use App\Models\ClientObligation;
+use App\Models\ClientSettlement;
+use App\Models\SubiektObligation;
 use App\Models\ClientOrder;
 use App\Models\ClientRecipient;
-use App\Models\ClientReceivable;
+use App\Models\SubiektReceivable;
 use App\Models\ClientTask;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
@@ -132,12 +133,14 @@ class Client extends Model
 
     public function receivables(): HasMany
     {
-        return $this->hasMany(ClientReceivable::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+//        return $this->hasMany(SubiektReceivable::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+        return $this->hasMany(ClientSettlement::class)->where("type", 1)->orderByDesc("datetime");
     }
 
     public function obligations(): HasMany
     {
-        return $this->hasMany(ClientObligation::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+//        return $this->hasMany(SubiektObligation::class, "nzf_IdObiektu", "subiekt_id")->orderByDesc("nzf_Data");
+        return $this->hasMany(ClientSettlement::class)->where("type", 2)->orderByDesc("datetime");
     }
 
     public function settlements()
