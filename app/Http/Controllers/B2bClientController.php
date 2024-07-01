@@ -14,6 +14,7 @@ class B2bClientController extends Controller
     public function index()
     {
         $client = Helper::getClientToB2b();
+        $client->load(["country", "accountManager"]);
 
         return Inertia::render('B2B/ClientZone', [
             'client' => $client
