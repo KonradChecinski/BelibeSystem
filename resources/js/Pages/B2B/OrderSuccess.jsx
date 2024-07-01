@@ -131,7 +131,9 @@ export default function B2bOrderSuccess(props) {
                     </Box>
 
                     <Box>
-                        <Button variant="outlined" startIcon={<Home/>}>Wróć do strony głównej</Button>
+                        <Link href={route("b2b.main")}>
+                            <Button variant="outlined" startIcon={<Home/>}>Wróć do strony głównej</Button>
+                        </Link>
                     </Box>
                 </Box>
 
