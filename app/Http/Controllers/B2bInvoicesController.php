@@ -65,6 +65,10 @@ class B2bInvoicesController extends Controller
             abort(403);
         }
 
+        if (($invoice->type === 1 || $invoice->status === 2) && $invoice->downloaded_at === null) {
+            $invoice->update(["status" => 1, "downloaded_at" => Carbon::now()]);
+        }
+
         $pdf = Storage::get($invoice->path);
         $mimeType = Storage::mimeType($invoice->path);
         return response($pdf)->header('Content-Type', $mimeType);

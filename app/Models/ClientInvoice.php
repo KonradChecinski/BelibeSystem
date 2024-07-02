@@ -20,12 +20,16 @@ class ClientInvoice extends Model
         'net_value',
         'gross_value',
         'datetime',
+        'status',
+        'downloaded_at',
         'path',
     ];
+
     protected $casts = [
         'datetime' => 'datetime',
+        'downloaded_at' => 'datetime',
     ];
-    
+
     //Type
     //1 - Faktura
     //2 - Paragon

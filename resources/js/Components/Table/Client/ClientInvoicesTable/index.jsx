@@ -100,7 +100,7 @@ export default function ClientInvoicesTable({invoices, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="warning.main" textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
+                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -126,7 +126,7 @@ export default function ClientInvoicesTable({invoices, readOnly, props}) {
             },
             {
                 accessorKey: 'downloaded_at',
-                header: 'Data pobrania',
+                header: 'Data pierwszego pobrania',
                 size: 35,
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm:ss") : "Nie pobrano",
                 enableColumnActions: false,
@@ -178,7 +178,7 @@ export default function ClientInvoicesTable({invoices, readOnly, props}) {
                             </Tooltip>
                             <Tooltip title={"Wygeneruyj fakturę ponownie"} arrow>
                                 <IconButton aria-label="showInvoice" onClick={handleGetInvoice}>
-                                    <Autorenew color={"secondary"}/>
+                                    <Autorenew color={"error"}/>
                                 </IconButton>
                             </Tooltip>
 
