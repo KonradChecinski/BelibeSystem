@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\GenerateInvoiceFromClientOrderInSubiekt;
 use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\Shoper\OrderCreateInSubiekt;
@@ -24,10 +27,13 @@ class TestController extends Controller
     public function index()
     {
 //        ClientOrder::find(10)->update(["status" => 2]);
-        ClientOrderCreateInSubiekt::dispatchSync();
+//        ClientOrderCreateInSubiekt::dispatchSync();
 //        UpdateClientOrderStatus::dispatchSync();
 //        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
 
+//        CreateSettlementsFromSubiekt::dispatchSync();
+//        UpdateSettlementsFromSubiekt::dispatchSync();
+//        DeleteSettlementsFromSubiekt::dispatchSync();
 
 //        $order = ClientOrder::find(33);
 //        $orderProducts = $order->orderProducts;

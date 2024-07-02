@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
@@ -29,23 +32,27 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
 //        // $schedule->command('inspire')->hourly();
-//        $schedule->job(new UpdateQuantityFromSubiekt)->everyMinute();
-////        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
-//        $schedule->job(new UpdateSubiektIdWhereNull)->everyFiveMinutes();
-//        $schedule->job(new CreateModelFromSubiekt)->everyMinute();
-//        $schedule->job(new CheckIfExistModelInSubiekt)->everyFiveMinutes();
-//        $schedule->job(new CreateTwFromSubiekt)->everyMinute();
-//        $schedule->job(new UpdateTwFromSubiekt)->everyMinute();
+        $schedule->job(new UpdateQuantityFromSubiekt)->everyMinute();
+//        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
+        $schedule->job(new UpdateSubiektIdWhereNull)->everyFiveMinutes();
+        $schedule->job(new CreateModelFromSubiekt)->everyMinute();
+        $schedule->job(new CheckIfExistModelInSubiekt)->everyFiveMinutes();
+        $schedule->job(new CreateTwFromSubiekt)->everyMinute();
+        $schedule->job(new UpdateTwFromSubiekt)->everyMinute();
 
         //ClientOrder
         $schedule->job(new ClientOrderCreateInSubiekt)->everyMinute();
         $schedule->job(new UpdateClientOrderStatus)->everyMinute();
 
+        //Settlements
+        $schedule->job(new DeleteSettlementsFromSubiekt)->everyMinute();
+        $schedule->job(new CreateSettlementsFromSubiekt)->everyMinute();
+        $schedule->job(new UpdateSettlementsFromSubiekt)->everyMinute();
 
 //        // Shoper
-//        $schedule->job(new ShoperLogin)->MonthlyOn(1);
-//        $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
-//        $schedule->job(new UpdateOrderStatus)->everyMinute();
+        $schedule->job(new ShoperLogin)->MonthlyOn(1);
+        $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
+        $schedule->job(new UpdateOrderStatus)->everyMinute();
 
         //Telescope
         $schedule->command('telescope:prune')->daily();
