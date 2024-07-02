@@ -91,7 +91,7 @@ export default function ClientInvoicesTable({invoices, readOnly, props}) {
                 muiTableHeadCellProps: {
                     align: 'right',
                 },
-                Cell: ({cell}) => <Box color="warning.main"
+                Cell: ({cell}) => <Box color="success.main"
                                        textAlign={"right"}>{toLocaleString(Number(cell.getValue()) /
                     100)}</Box>,
                 Header: ({column}) => (
@@ -172,13 +172,13 @@ export default function ClientInvoicesTable({invoices, readOnly, props}) {
                                     target={"_blank"}
                                 >
                                     <IconButton aria-label="showInvoice">
-                                        <ReceiptLong color={"success"}/>
+                                        <ReceiptLong color={"info"}/>
                                     </IconButton>
                                 </a>
                             </Tooltip>
                             <Tooltip title={"Wygeneruyj fakturę ponownie"} arrow>
                                 <IconButton aria-label="showInvoice" onClick={handleGetInvoice}>
-                                    <Autorenew color={"success"}/>
+                                    <Autorenew color={"secondary"}/>
                                 </IconButton>
                             </Tooltip>
 

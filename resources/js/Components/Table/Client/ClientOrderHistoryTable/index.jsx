@@ -7,7 +7,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
-import {ReceiptLong} from "@mui/icons-material";
+import {Info, ReceiptLong} from "@mui/icons-material";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -328,27 +328,15 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 enableSorting: false,
             },
 
-            {
-                accessorKey: 'currency',
-                header: 'Waluta',
-                size: 5,
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
-            {
-                accessorKey: 'comment',
-                header: 'Komentarz',
-                // Header: ({column}) => (
-                //     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                //         <Box>R</Box>
-                //     </Tooltip>
-                // ),
-                size: 5,
-                enableColumnActions: false,
-                enableColumnDragging: false,
-                enableSorting: false,
-            },
+            // {
+            //     accessorKey: 'currency',
+            //     header: 'Waluta',
+            //     size: 5,
+            //     enableColumnActions: false,
+            //     enableColumnDragging: false,
+            //     enableSorting: false,
+            // },
+
             {
                 accessorKey: 'status',
                 header: 'Status',
@@ -480,6 +468,19 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 enableColumnDragging: false,
                 enableSorting: false,
             },
+            // {
+            //     accessorKey: 'comment',
+            //     header: 'Komentarz',
+            //     // Header: ({column}) => (
+            //     //     <Tooltip title={column.columnDef.header} placement="top" arrow>
+            //     //         <Box>R</Box>
+            //     //     </Tooltip>
+            //     // ),
+            //     size: 5,
+            //     enableColumnActions: false,
+            //     enableColumnDragging: false,
+            //     enableSorting: false,
+            // },
             {
                 accessorKey: 'action',
                 header: 'Akcje',
@@ -492,7 +493,27 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 },
                 Cell: ({cell, row}) => {
                     return (
-                        <OrderMenu row={row}/>
+                        <Box sx={{display: "flex", justifyContent: "flex-end"}}>
+                            {row.original.comment && (
+                                <Tooltip arrow title={
+                                    <>
+                                        <Typography variant={"body1"}>
+                                            Komentarz:
+                                        </Typography>
+                                        <Divider sx={{my: 1}}/>
+
+                                        <Typography variant={"body2"}>
+                                            {row.original.comment}
+                                        </Typography>
+                                    </>
+                                }>
+                                    <IconButton aria-label="showInvoice">
+                                        <Info color={"info"}/>
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                            <OrderMenu row={row}/>
+                        </Box>
                     )
 
                 },

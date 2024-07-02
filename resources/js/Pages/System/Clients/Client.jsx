@@ -126,7 +126,7 @@ export default function Client(props) {
 
 
             </Grid>
-            {"cos"}
+
             <Button
                 variant="contained"
                 sx={{

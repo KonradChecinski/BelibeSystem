@@ -194,7 +194,7 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
         enableStickyFooter: true,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {nzf_Id: false},
+            columnVisibility: {id: false},
             density: 'compact',
             pagination: {pageSize: 30, pageIndex: 0},
             sorting: [
