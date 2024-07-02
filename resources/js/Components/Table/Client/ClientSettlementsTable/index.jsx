@@ -64,35 +64,35 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     </Tooltip>
                 ),
                 size: 5,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'datetime',
                 header: 'Data',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'number',
                 header: 'Dokument',
                 size: 60,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'date_of_payment',
                 header: 'Termin',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
 
             },
             {
@@ -105,9 +105,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 ),
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "",
                 size: 30,
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
 
             },
             {
@@ -127,9 +127,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                         <Box>S</Box>
                     </Tooltip>
                 ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
 
             {
@@ -151,9 +151,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                 Footer: () => (
                     <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWartoscPierwotna))}</Box>
                 ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
             {
                 accessorKey: 'value',
@@ -175,9 +175,9 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     <Box color={Number(sumWartosc) == 0 ? "success.main" : "error.main"}
                          textAlign={"right"}>{toLocaleString(Number(sumWartosc))}</Box>
                 ),
-                enableColumnActions: true,
+                enableColumnActions: false,
                 enableColumnDragging: false,
-                enableSorting: false,
+                enableSorting: true,
             },
         ],
         [],
@@ -202,6 +202,10 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     id: 'datetime',
                     desc: true,
                 },
+                {
+                    id: 'id',
+                    desc: true,
+                }
             ]
         },
         muiTableContainerProps: {
