@@ -62,7 +62,7 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
         >
             <Link href={route("b2b.client")}>
                 <MenuItem onClick={onClose}>
-                    <ListItemIcon sx={{mr: 2}}>
+                    <ListItemIcon sx={{mr: 1}}>
 
                         <Avatar>
                             <Person fontSize={"large"}/>

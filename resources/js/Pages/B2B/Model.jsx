@@ -30,7 +30,7 @@ import 'swiper/css/free-mode';
 import ProductPriceTable from "@/Components/Pages/B2B/Model/ProductPriceTable";
 import ProductSizeTable from "@/Components/Pages/B2B/Model/ProductSizeTable";
 import ProductColorTable from "@/Components/Pages/B2B/Model/ProductColorTable";
-import {Favorite, FavoriteBorder} from "@mui/icons-material";
+import {ArrowDownward, Favorite, FavoriteBorder} from "@mui/icons-material";
 
 export default function B2bModel(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -230,8 +230,8 @@ export default function B2bModel(props) {
                         flexWrap: "wrap",
                         gap: 2,
                         flex: 1,
-                        minWidth: 400
-
+                        minWidth: 400,
+                        maxWidth: 1
                     }}>
 
 
@@ -241,8 +241,8 @@ export default function B2bModel(props) {
                             flexWrap: "wrap",
                             gap: 2,
                             flex: 1,
-                            minWidth: 400
-
+                            minWidth: 400,
+                            maxWidth: 1
                         }}>
                             <Box sx={{
                                 flex: 1,
@@ -318,18 +318,20 @@ export default function B2bModel(props) {
                                     <Divider/>
                                     <ProductColorTable model={props.model} lightbox={lightbox} imageArray={imageArray}/>
                                 </Box>
+                                <Box>
+                                    {Boolean(props.blacklist) === false &&
+                                        (
+                                            <Button variant="contained" onClick={scrollTo} sx={{my: 2, width: 1}}
+                                                    startIcon={<ArrowDownward/>}>
+                                                Przejdź do zamawiania produktów
+                                            </Button>
+                                        )
+                                    }
+                                </Box>
                             </Box>
 
                         </Box>
-                        <Box>
-                            {Boolean(props.blacklist) === false &&
-                                (
-                                    <Button variant="contained" onClick={scrollTo} sx={{my: 2, width: 1}}>
-                                        Zamów
-                                    </Button>
-                                )
-                            }
-                        </Box>
+
                     </Box>
                 </Paper>
                 <Checkbox

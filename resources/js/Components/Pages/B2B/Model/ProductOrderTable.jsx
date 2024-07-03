@@ -28,6 +28,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                 align={"center"}
                 sx={{
                     bgcolor: disabled ? "disabled.background" : "",
+                    fontWeight: header ? "bold" : "normal",
                     ...sx
                 }}
                 // sx={{
@@ -229,7 +230,6 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
         }
         newValue = Number(newValue);
         if (newValue < 0) newValue = 0;
-        if (newValue > maxQuantity) newValue = maxQuantity;
         if (newValue > maxQuantity) {
             newValue = maxQuantity;
             enqueueSnackbar("Maksymalna ilość dla " + product.symbol + " wynosi " + maxQuantity, {variant: 'warning'})
@@ -258,12 +258,14 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                         max: maxQuantity,
                         style: {
                             textAlign: "center",
-                            fontSize: 14
+                            fontSize: 13
                         }
                     }
                 }}
                 sx={{
-                    width: "20ch",
+                    width: 1,
+                    minWidth: "14ch",
+                    maxWidth: "20ch",
                 }}
                 ref={inputRef}
             />

@@ -64,12 +64,11 @@ export default function CartSubmit({props, data, setData, post, processing}) {
             <Box sx={{display: "flex", gap: 2, justifyContent: "space-between"}}>
                 <Box>
                     <Typography variant="caption">
-                        Klikając w przycisk "Zamawiam" potwierdzasz zamówienie. Zamówienie zostanie przekazane do
+                        Klikając w przycisk "Zamów" potwierdzasz zamówienie. Zamówienie zostanie przekazane do
                         weryfikacji, a produkty zostaną zarezerwowane.
                     </Typography>
                 </Box>
                 <Box>
-                    {/*Todo: zablokowac klikanie po 1 kliknieciu - do sprawdzenia*/}
                     <Button variant="outlined" size={"large"} endIcon={<Send/>} onClick={send} disabled={processing}>
                         Zamów
                     </Button>

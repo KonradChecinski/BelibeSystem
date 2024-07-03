@@ -196,11 +196,12 @@ class B2bOrderController extends Controller
         }
         $lastOrder = ClientOrder::query()->latest()->first();
         $lastNumber = $lastOrder->number ?? 1000;
-        $lastNumber = (int)$lastNumber;
+        $lastNumber = (int)substr($lastNumber, -7);
         $lastNumber++;
+        $number = "B2B " . str_pad($lastNumber, 7, "0", STR_PAD_LEFT);
 
         $order = new ClientOrder([
-            "number" => "B2B " . str_pad($lastNumber, 7, "0", STR_PAD_LEFT),
+            "number" => $number,
             "status" => 1,
             "total_quantity" => $quantity,
             "total_net" => $priceSummary["total_net"],

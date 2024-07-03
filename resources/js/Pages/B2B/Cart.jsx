@@ -88,7 +88,7 @@ export default function B2bCart(props) {
                     (
                         <>
                             <Typography variant="h6" align={"center"}>
-                                Nie możesz składać zamówień w naszym sklepie
+                                Nie możesz składać zamówień na naszej platformie
                             </Typography>
                         </>
                     )

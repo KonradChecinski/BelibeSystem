@@ -102,7 +102,7 @@ export default function B2bOrderSuccess(props) {
                             Dziękujemy za złożenie zamówienia.
                         </Typography>
                         <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
-                            Nasz zespoł zaraz zajmie się twoim zamówieniem.
+                            Nasz zespół już zajmuje się twoim zamówieniem.
                         </Typography>
                         <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
                             Po zaakceptowaniu zamówienia otrzymasz potwierdzenie na twój adres email.
