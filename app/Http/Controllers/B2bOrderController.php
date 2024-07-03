@@ -200,7 +200,7 @@ class B2bOrderController extends Controller
         $lastNumber++;
 
         $order = new ClientOrder([
-            "number" => "B2B " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT),
+            "number" => "B2B " . str_pad($lastNumber, 7, "0", STR_PAD_LEFT),
             "status" => 1,
             "total_quantity" => $quantity,
             "total_net" => $priceSummary["total_net"],
