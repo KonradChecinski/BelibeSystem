@@ -47,7 +47,7 @@ export default function OrdersPlot(props) {
         )
         const countOtherOrderOfday = otherOrderOfday.length;
         const sumOtherMoneyOfday = otherOrderOfday.reduce((acc, order) => {
-            return acc + order.sum + order.shipping_cost
+            return acc + order.total_gross + order.delivery_gross
         }, 0);
 
         yOtherMoney.push(sumOtherMoneyOfday);

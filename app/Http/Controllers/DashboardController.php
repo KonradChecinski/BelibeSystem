@@ -21,15 +21,15 @@ class DashboardController extends Controller
         $b2bOrders = ClientOrder::query()->where("created_at", ">", Carbon::today()->addDays(-7))->get([
             "discounted_total_net", "discounted_total_gross", "delivery_net", "delivery_gross", "total_quantity", "created_at"
         ]);
-        $otherOrders = Order::withCount("orderProducts")->where("ordered_at", ">", Carbon::today()->addDays(-7))->get()
+        $otherOrders = Order::query()->where("ordered_at", ">", Carbon::today()->addDays(-7))->get()
             ->map(function ($order) {
                 return [
                     "id" => $order->id,
-                    "sum" => $order->sum,
+                    "total_gross" => $order->total_gross,
                     "ordered_at" => $order->ordered_at,
                     "type" => $order->type,
-                    "products_count" => $order->order_products_count,
-                    "shipping_cost" => $order->shipping_cost,
+                    "products_count" => $order->total_quantity,
+                    "delivery_gross" => $order->delivery_gross,
                 ];
             });
 
