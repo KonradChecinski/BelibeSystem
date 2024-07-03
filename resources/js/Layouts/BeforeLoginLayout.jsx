@@ -25,6 +25,7 @@ export default function BeforeLoginLayout({background, children}) {
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
+                color: "menuText.main"
             }}>
                 <Box
                     sx={{

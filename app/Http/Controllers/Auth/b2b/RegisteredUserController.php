@@ -13,9 +13,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register', [
+        return Inertia::render('B2B/Register', [
             'routeLogin' => 'b2b.login',
-            'routeRegister' => 'b2b.register',
+//            'routeRegister' => 'b2b.register',
         ]);
     }
 }
