@@ -188,7 +188,10 @@ class B2bOrderController extends Controller
 
         foreach ($cartModel as $item) {
             if ($item->quantity > Product::find($item->product_id)->available) {
-                return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
+//                return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
+                return redirect()->back()->withErrors(["message" => trans("send-message.product_out_of_stock", [
+                    "productName" => Product::find($item->product_id)->name,
+                ])], 403);
             }
         }
         $lastOrder = ClientOrder::query()->latest()->first();
@@ -197,7 +200,7 @@ class B2bOrderController extends Controller
         $lastNumber++;
 
         $order = new ClientOrder([
-            "number" => $lastNumber,
+            "number" => "B2B " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT),
             "status" => 1,
             "total_quantity" => $quantity,
             "total_net" => $priceSummary["total_net"],

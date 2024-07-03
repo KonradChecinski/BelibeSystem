@@ -18,6 +18,8 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                     },
                     onError: errors => {
                         enqueueSnackbar("Wystąpił błąd podczas składania zamówienia", {variant: 'error'})
+                        if (errors[403]) enqueueSnackbar(errors[403].message, {variant: 'error'})
+
                         console.error(errors)
                     },
                 })
