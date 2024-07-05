@@ -76,6 +76,7 @@ class ClientOrderController extends Controller
             $clientOrder->subiekt_number = null;
             $clientOrder->subiekt_added_at = null;
             $clientOrder->save();
+//            ClientOrderCreateInSubiekt::dispatch($clientOrder);
         }
 
         if ($request->status === 6) {

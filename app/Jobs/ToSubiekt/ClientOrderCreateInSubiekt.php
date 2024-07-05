@@ -159,7 +159,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $zamowienie->Rozliczony = false;
             $zamowienie->Zapisz();
 
-            dd("cos");
+//            dd("cos");
             $order->update([
                 'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,

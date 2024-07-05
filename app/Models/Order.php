@@ -26,7 +26,6 @@ class Order extends Model
         "delivery_gross",
         "promo_code",
         "email",
-        "adress_type",
         "firstname",
         "lastname",
         "company",
