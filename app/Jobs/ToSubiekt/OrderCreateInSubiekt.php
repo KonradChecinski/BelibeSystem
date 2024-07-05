@@ -81,10 +81,10 @@ class OrderCreateInSubiekt implements ShouldQueue
 
             if ($order["delivery_gross"] != 0.0) {
                 $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
-                $pozycja->UslJednNazwa = substr($order["shiping_name"], 0, 50);
+                $pozycja->UslJednNazwa = substr($order["delivery_name"], 0, 50);
                 $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');
                 $pozycja->IloscJm = (float)1;
-                $pozycja->CenaBruttoPrzedRabatem = (float)$order['shipping_cost'];
+                $pozycja->CenaBruttoPrzedRabatem = (float)$order['delivery_gross'];
                 $pozycja->RabatProcent = (float)0;
             }
 
