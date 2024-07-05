@@ -31,6 +31,7 @@ class TestController extends Controller
 //        UpdateClientOrderStatus::dispatchSync();
 //        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
 
+        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatch();
 //        CreateSettlementsFromSubiekt::dispatchSync();
 //        UpdateSettlementsFromSubiekt::dispatchSync();
 //        DeleteSettlementsFromSubiekt::dispatchSync();
