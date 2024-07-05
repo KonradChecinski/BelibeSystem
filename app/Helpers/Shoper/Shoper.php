@@ -852,8 +852,14 @@ class Shoper
 
             $shoperOrderProducts = $responseProducts->json()["list"];
 
+            $lastOrder = Order::query()->where("type", 1)->latest()->first();
+            $lastNumber = $lastOrder->number ?? 1;
+            $lastNumber = (int)substr($lastNumber, -5);
+            $lastNumber++;
+            $number = "SHP " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
 
             $shoperOrderModel = Order::create([
+                "number" => $number,
                 "type" => 1,
                 "status" => 2,
                 "order_id" => $shoperOrder["order_id"],

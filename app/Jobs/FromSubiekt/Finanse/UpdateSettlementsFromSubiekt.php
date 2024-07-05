@@ -43,11 +43,13 @@ class UpdateSettlementsFromSubiekt implements ShouldQueue
             $subiektSettlement = null;
             if ((int)$updatedSettlement->type === 1) {
                 $subiektSettlement = SubiektReceivable::find($updatedSettlement->id);
-            } else
-                if ((int)$updatedSettlement->type === 2) {
-                    $subiektSettlement = SubiektObligation::find($updatedSettlement->id);
-                } else continue;
+            }
 
+            if ((int)$updatedSettlement->type === 2) {
+                $subiektSettlement = SubiektObligation::find($updatedSettlement->id);
+            }
+
+            if (is_null($subiektSettlement)) continue;
 
             $client = $subiektSettlement->client;
 
