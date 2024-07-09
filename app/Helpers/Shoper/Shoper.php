@@ -69,6 +69,35 @@ class Shoper
         return $response->json()["list"][0]["product_id"];
     }
 
+    public static function findIdsColor(ProductModelColor $productModelColor): array|null
+    {
+        $code = $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut;
+        $code .= "%";
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/products', [
+                "limit" => 50,
+                "filters" => json_encode([
+                    "stock.code" => ['LIKE' => $code],
+                ])
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::findsIdColor($productModelColor);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+        if ($response->json()["count"] == 0) {
+            Log::alert($productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut . " not find in shoper");
+            return null;
+        }
+//        dd($response->json()["list"], $code);
+        return collect($response->json()["list"])->unique('product_id')->pluck('product_id')->toArray();
+    }
+
 
 //    Funkcje zmieniające w shoperze
 
@@ -515,6 +544,31 @@ class Shoper
         return $response->json()["list"];
     }
 
+    public static function getProductsStockBySymbol(Product $product): array|null
+    {
+        $code = $product->symbol == $product->color->model->symbol . "-" . $product->color->b2c_shortcut ? $product->symbol . "." : $product->symbol;
+        $code .= "%";
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
+                "filters" => json_encode([
+                    "extended" => 1,
+                    "code" => ['LIKE' => $code],
+                ])
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductsStockBySymbol($product);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json());
+        return $response->json()["list"];
+    }
+
     public static function getProductStockBySymbol(Product $product): array|null
     {
         $response = Http::withoutVerifying()
@@ -523,7 +577,6 @@ class Shoper
                 "filters" => json_encode([
                     "extended" => 1,
                     "code" => $product->symbol == $product->color->model->symbol . "-" . $product->color->b2c_shortcut ? $product->symbol . "." : $product->symbol,
-
                 ])
             ]);
         if ($response->status() === 429) {
@@ -582,6 +635,31 @@ class Shoper
         return $response->json()["list"];
     }
 
+    public static function getProductsBySymbol(ProductModelColor $productModelColor): array|null
+    {
+        $code = $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut;
+        $code .= "%";
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
+                "limit" => 50,
+                "filters" => json_encode([
+                    "stock.code" => ['LIKE' => $code],
+                ])
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductsBySymbol($productModelColor);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json());
+        return collect($response->json()["list"])->unique('product_id')->values()->toArray();
+    }
+
     public static function getProductBySymbol(ProductModelColor $productModelColor): array|null
     {
         $response = Http::withoutVerifying()
@@ -601,7 +679,7 @@ class Shoper
             return null;
         }
 //        dd($response->json());
-        return $response->json()["list"];
+        return collect($response->json()["list"])->unique('product_id')->values()->toArray();
     }
 
     public static function changeStockActive(int $productStockId, bool $active): bool

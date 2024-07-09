@@ -37,13 +37,16 @@ class ShoperChangeDescription implements ShouldQueue
     public function handle(): void
     {
         foreach ($this->productModel->colors as $productModelColor) {
-            $colorId = Shoper::findIdColor($productModelColor);
-            if (is_null($colorId)) continue;
+            $colorIds = Shoper::findIdsColor($productModelColor);
+            if (is_null($colorIds)) continue;
 
-            $result = Shoper::changeDescription($colorId, $productModelColor, $this->productModel->description_b2c);
-            if (!$result) {
-                $this->fail('Change price failed');
+            foreach ($colorIds as $colorId) {
+                $result = Shoper::changeDescription($colorId, $productModelColor, $this->productModel->description_b2c);
+                if (!$result) {
+                    $this->fail('Change price failed');
+                }
             }
+
         }
 
     }

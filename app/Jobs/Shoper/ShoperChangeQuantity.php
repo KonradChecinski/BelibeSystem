@@ -37,17 +37,23 @@ class ShoperChangeQuantity implements ShouldQueue
      */
     public function handle(): void
     {
-        $shoperStock = Shoper::getProductStockBySymbol($this->product);
-        if (count($shoperStock) == 0) return;
-        $result = Shoper::changeProductStockQuantity($shoperStock[0]["stock_id"], $this->product);
-        if (!$result) {
-            $this->fail('Change productStock stock failed');
+        $shoperStocks = Shoper::getProductsStockBySymbol($this->product);
+        if (count($shoperStocks) == 0) return;
+        foreach ($shoperStocks as $shoperStock) {
+            $result = Shoper::changeProductStockQuantity($shoperStock["stock_id"], $this->product);
+            if (!$result) {
+                $this->fail('Change productStock stock failed');
+            }
         }
-        $shoperColor = Shoper::getProductBySymbol($this->product->color);
-        if (count($shoperColor) == 0) return;
-        $result = Shoper::changeProductQuantity($shoperColor[0]["product_id"], $this->product->color);
-        if (!$result) {
-            $this->fail('Change Product stock failed');
+
+        $shoperColors = Shoper::getProductsBySymbol($this->product->color);
+        if (count($shoperColors) == 0) return;
+
+        foreach ($shoperColors as $shoperColor) {
+            $result = Shoper::changeProductQuantity($shoperColor["product_id"], $this->product->color);
+            if (!$result) {
+                $this->fail('Change Product stock failed');
+            }
         }
 
     }
