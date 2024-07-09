@@ -3,6 +3,7 @@
 namespace App\Helpers\Shoper;
 
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
@@ -13,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class Shoper
 {
@@ -886,31 +888,42 @@ class Shoper
 
             foreach ($shoperOrderProducts as $shoperOrderProduct) {
                 $code = $shoperOrderProduct["code"];
+                $originalCode = $shoperOrderProduct["code"];
+                $productVariant = false;
+
                 if (substr($code, -1) === ".") {
                     $code = substr($code, 0, -1);
                 }
-                $product = Product::query()->where("symbol", $code)->first();
-                if (is_null($product)) {
-                    $shoperOrderModel->orderProducts()->create([
-                        'product_code' => $code,
-                        'quantity' => $shoperOrderProduct["quantity"],
-                        'price' => $shoperOrderProduct["price"],
-                        'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
-                    ]);
-                } else {
-                    $shoperOrderModel->orderProducts()->create([
-                        'product_id' => $product->id,
-                        'quantity' => $shoperOrderProduct["quantity"],
-                        'price' => $shoperOrderProduct["price"],
-                        'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
-                    ]);
+
+
+                if (Str::contains($code, "#")) {
+                    $code = explode("#", $code)[0];
+                    $productVariant = true;
                 }
 
+
+                $product = Product::query()->where("symbol", $code)->first();
+
+                $orderProduct = new OrderProduct([
+                    'quantity' => $shoperOrderProduct["quantity"],
+                    'price' => $shoperOrderProduct["price"],
+                    'discounted_price' => $shoperOrderProduct["price"] - ($shoperOrderProduct["price"] * $shoperOrderProduct["discount_perc"] / 100),
+                ]);
+
+                if (is_null($product)) {
+                    $orderProduct->product_code = $code;
+                } else if ($productVariant) {
+                    $orderProduct->product_id = $product->id;
+                    $orderProduct->product_code = $originalCode;
+                } else {
+                    $orderProduct->product_id = $product->id;
+                }
+
+                $shoperOrderModel->orderProducts()->save($orderProduct);
 
             }
 
             self::changeOrderStatus($shoperOrder["order_id"]);
-
 
         }
 
