@@ -56,6 +56,7 @@ class OrderCreateInSubiekt implements ShouldQueue
             foreach ($orderProducts as $orderProduct) {
                 if ($orderProduct->product_id != null) {
                     $productSubiektId = Product::find($orderProduct->product_id)->subiekt_id;
+                    $productDescription = $orderProduct->product_code;
                 } else {
                     $productSubiekt = Towar::where("tw_Symbol", $orderProduct->product_code)->first();
                     $productSubiektId = is_null($productSubiekt) ? null : $productSubiekt->tw_Id;
@@ -65,13 +66,14 @@ class OrderCreateInSubiekt implements ShouldQueue
                 if (is_null($productSubiektId)) {
                     $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
                     $pozycja->UslJednNazwa = substr($orderProduct["code"], 0, 50);
-                    $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');
+                    $pozycja->Opis = Str::ascii("Usługa jednorazowa");
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
 //                    $pozycja->RabatProcent = (float)0;
                     $pozycja->CenaBruttoPoRabacie = (float)$orderProduct['discounted_price'];
                 } else {
                     $pozycja = $zamowienie->Pozycje->Dodaj((int)$productSubiektId);
+                    $pozycja->Opis = Str::ascii($productDescription);
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
 //                    $pozycja->RabatProcent = (float)0;

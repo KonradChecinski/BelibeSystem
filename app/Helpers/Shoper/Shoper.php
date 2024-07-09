@@ -860,7 +860,7 @@ class Shoper
                 "filters" => json_encode([
                     "is_paid" => true,
                     "status.status_id" => 1,
-                    "payment_id" => ["!=" => 2],
+                    "payment_id" => ["NOT IN" => [1, 2]],
                 ])
             ]);
         if ($response->status() === 429) {
@@ -881,7 +881,7 @@ class Shoper
                 "filters" => json_encode([
                     "is_paid" => false,
                     "status.status_id" => 1,
-                    "payment_id" => ["=" => 2],
+                    "payment_id" => ["IN" => [1, 2]],
                 ])
             ]);
         if ($responseCashOnDelivery->status() === 401) {
@@ -890,7 +890,7 @@ class Shoper
         }
 
         $shoperOrders = array_merge($response->json()["list"], $responseCashOnDelivery->json()["list"]);
-
+//        dd($shoperOrders);
         foreach ($shoperOrders as $shoperOrder) {
             $responseProducts = Http::withoutVerifying()
                 ->withToken(self::getAccessToken())

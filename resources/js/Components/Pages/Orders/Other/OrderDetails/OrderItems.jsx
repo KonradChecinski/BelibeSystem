@@ -101,6 +101,11 @@ export default function OrderItems({data}) {
                                                             <Typography variant="body1">
                                                                 {item?.product_model?.symbol}
                                                             </Typography>
+                                                            {item?.product_code && (
+                                                                <Typography variant="body1">
+                                                                    Wariant: {item?.product_code}
+                                                                </Typography>
+                                                            )}
                                                         </TableCell>
                                                         <TableCell align={"center"}>
                                                             <Typography variant="body1" gutterBottom>
