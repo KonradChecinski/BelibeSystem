@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Shoper;
 
+use App\Jobs\Shoper\ShoperChangeQuantity;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Products\Product;
@@ -999,6 +1000,9 @@ class Shoper
 
                 $shoperOrderModel->orderProducts()->save($orderProduct);
 
+                if (!is_null($product)) {
+                    ShoperChangeQuantity::dispatch($product);
+                }
             }
 
             self::changeOrderStatus($shoperOrder["order_id"]);
