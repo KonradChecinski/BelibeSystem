@@ -33,8 +33,24 @@ export default function ColorIconComponent(props) {
     const theme = useTheme();
     const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
 
+
     const [data, setData2] = useState(JSON.parse(JSON.stringify(props.productColors.map(c => ({...c, files: []})))))
 
+    const sortData = (a, b) => {
+        if (a.type > b.type) return 1;
+        if (a.type < b.type) return -1;
+
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+
+        if (aName < bName) {
+            return -1;
+        }
+        if (aName > bName) {
+            return 1;
+        }
+        return 0;
+    }
 
     const {
         data: dataUpdate,
@@ -66,7 +82,7 @@ export default function ColorIconComponent(props) {
         const newCategories2 = props.productColors
         // const newData = data.slice()
         // setData([...newData, ...newCategories])
-        setData2([...newCategories2])
+        // setData2([...newCategories2])
         if (newCategories.length > 0) {
             setEditedId(newCategories[0].id)
         }
@@ -168,7 +184,8 @@ export default function ColorIconComponent(props) {
 
 
                             {
-                                data.map((color, index) => {
+
+                                data.sort(sortData).map((color, index) => {
                                     return (
                                         <Paper
                                             key={index}
