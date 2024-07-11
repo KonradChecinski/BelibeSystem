@@ -33,14 +33,20 @@ export default function ColorIconComponent(props) {
     const theme = useTheme();
     const lgBreakpointDown = useMediaQuery(theme.breakpoints.down("lg"));
 
+    const [data, setData2] = useState(JSON.parse(JSON.stringify(props.productColors.map(c => ({...c, files: []})))))
+
+
     const {
-        data,
-        setData,
-        processing,
-        put,
-        post,
-        transform
-    } = useForm(JSON.parse(JSON.stringify(props.productColors.map(c => ({...c, files: []})))));
+        data: dataUpdate,
+        setData: setDataUpdate,
+        processing: processingUpdate,
+        post: postUpdate,
+    } = useForm({
+        id: null,
+        name: "",
+        type: 0,
+        hex: "#000000",
+    });
 
     const {
         data: dataAdd,
@@ -57,31 +63,33 @@ export default function ColorIconComponent(props) {
 
     useEffect(() => {
         const newCategories = props.productColors.filter(o => !data.find(e => e.id === o.id))
-        const newData = data.slice()
-        setData([...newData, ...newCategories])
+        const newCategories2 = props.productColors
+        // const newData = data.slice()
+        // setData([...newData, ...newCategories])
+        setData2([...newCategories2])
         if (newCategories.length > 0) {
             setEditedId(newCategories[0].id)
         }
     }, [props.productColors])
 
     const resetForm = () => {
-        setData(JSON.parse(JSON.stringify(props.productColors)))
+        setData2(JSON.parse(JSON.stringify(props.productColors))) //!!!!!
         setEdited(false)
         setEditedId(null)
     }
 
 
     const handleSave = () => {
-        console.log(data)
-        post(route("system.settings.colorIcon.update"), {
+        console.log(dataUpdate)
+        postUpdate(route("system.settings.colorIcon.update"), {
             forceFormData: true,
             onSuccess: params => {
                 setEdited(false);
-                enqueueSnackbar("Zapisano kolory", {variant: 'success'})
+                enqueueSnackbar("Zapisano kolor", {variant: 'success'})
             },
             onError: params => {
                 console.error(params)
-                enqueueSnackbar("Błąd przy zapisywaniu kolorów", {variant: 'error'})
+                enqueueSnackbar("Błąd przy zapisywaniu koloru", {variant: 'error'})
             },
             preserveScroll: true
         })
@@ -98,9 +106,15 @@ export default function ColorIconComponent(props) {
         router.delete(route("system.settings.colorIcon.delete", {productColorIcon: color.id}), {
             onSuccess: params => {
                 enqueueSnackbar("Usunięto kolor", {variant: 'success'})
-                setData(newData)
+                setData2(newData)
                 setEditedId(null)
                 setEdited(false);
+                setDataUpdate({
+                    id: null,
+                    name: "",
+                    type: 0,
+                    hex: "#000000",
+                })
             },
             onError: params => {
                 console.error(params)
@@ -139,38 +153,10 @@ export default function ColorIconComponent(props) {
                             height: "content-fit",
                             display: "flex",
                             justifyContent: "space-between",
-                            alignItems: "center"
+                            alignItems: "center",
+                            p: 1
                         }}>
                             <Typography variant={"h6"}>Kolory</Typography>
-                            <Box>
-                                <Fade in={edited}>
-                                    <Tooltip title={"Cofnij zmiany"}>
-                                        <IconButton
-                                            color="error"
-                                            size={"small"}
-                                            disabled={processing}
-                                            onClick={resetForm}
-                                        >
-                                            <Cancel fontSize={"large"}/>
-                                        </IconButton>
-                                    </Tooltip>
-                                </Fade>
-                                <Fade in={edited}>
-                                    <Tooltip title={"Zapisz"}>
-                                        <IconButton
-                                            type="submit"
-                                            color="success"
-                                            size={"small"}
-                                            disabled={processing}
-                                            onClick={handleSave}
-                                        >
-                                            <Save fontSize={"large"}/>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                </Fade>
-
-                            </Box>
                         </Box>
 
                         <Divider sx={{mb: 1}}/>
@@ -237,6 +223,12 @@ export default function ColorIconComponent(props) {
                                                             onClick={() => {
                                                                 setEditedId(color.id)
                                                                 setCreated(false)
+                                                                setDataUpdate({
+                                                                    id: color.id,
+                                                                    name: color.name,
+                                                                    type: color.type,
+                                                                    hex: color.hex,
+                                                                })
                                                             }}>
                                                     <Edit/>
                                                 </IconButton>
@@ -253,6 +245,7 @@ export default function ColorIconComponent(props) {
                             setCreated(true)
                             setEditedId(null)
                             setEdited(false)
+                            setDataUpdate(null)
                         }}>
                             <Add/>
                         </Fab>
@@ -263,36 +256,67 @@ export default function ColorIconComponent(props) {
             </Grid>
             <Grid item xs={12} lg={6} sx={{position: "relative", height: 1}}>
                 <Paper sx={{height: 1, p: 1, pt: 2}}>
+                    <Box sx={{
+                        height: "content-fit",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        <Typography variant={"h6"}>
+                            {created && "Dodanie koloru"}
+                            {editedId ? "Edycja koloru " + editedId + " - " + data.find(e => e.id === editedId)?.name : ""}
+                        </Typography>
+                        <Box>
+                            <Fade in={Boolean(created) || Boolean(edited)}>
+                                <Tooltip title={"Zapisz"}>
+                                    <IconButton
+                                        type="submit"
+                                        color="success"
+                                        size={"small"}
+                                        disabled={processingAdd || processingUpdate}
+                                        onClick={() => {
+                                            if (created) handleAdd()
+                                            if (edited) handleSave()
+                                        }}
+                                    >
+                                        <Save fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+
+
+                            </Fade>
+                            <Fade in={edited}>
+                                <Tooltip title={"Cofnij zmiany"}>
+                                    <IconButton
+                                        color="error"
+                                        size={"small"}
+                                        disabled={processingUpdate}
+                                        onClick={resetForm}
+                                    >
+                                        <Cancel fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+                            </Fade>
+                            <Fade in={Boolean(editedId)}>
+                                <Tooltip
+                                    title={data.find(e => e.id === editedId)?.colors_count > 0 ? "Nie można usunąć koloru z dopisanymi modelami" : "Usuń kolor"}>
+                                    <IconButton
+                                        color="warning"
+                                        size={"small"}
+                                        disabled={processingUpdate || data.find(e => e.id === editedId)?.colors_count > 0}
+                                        onClick={() => handleDelete(editedId)}
+                                    >
+                                        <Delete fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+                            </Fade>
+                        </Box>
+
+                    </Box>
+                    <Divider sx={{my: 1}}/>
                     {created ?
                         (
                             <>
-                                <Box sx={{
-                                    height: "content-fit",
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center"
-                                }}>
-                                    <Typography variant={"h6"}>Dodanie koloru </Typography>
-                                    <Box>
-                                        <Fade in={created}>
-                                            <Tooltip title={"Zapisz"}>
-                                                <IconButton
-                                                    type="submit"
-                                                    color="success"
-                                                    size={"small"}
-                                                    disabled={processingAdd}
-                                                    onClick={handleAdd}
-                                                >
-                                                    <Save fontSize={"large"}/>
-                                                </IconButton>
-                                            </Tooltip>
-
-                                        </Fade>
-
-                                    </Box>
-                                </Box>
-
-                                <Divider sx={{my: 1}}/>
                                 <Box sx={{display: "flex", flexDirection: "column"}}>
                                     <Box sx={{p: 2}}>
                                         <TextField id="name"
@@ -336,118 +360,85 @@ export default function ColorIconComponent(props) {
                         :
                         (
                             <>
-                                <Box>
-                                    <Typography variant={"h6"}>Edycja
-                                        koloru {editedId ? editedId + " - " + data.find(e => e.id === editedId)?.name : ""} </Typography>
-                                    <Divider sx={{my: 1}}/>
-                                    <Box sx={{display: "flex", flexDirection: "column"}}>
-                                        <Box sx={{p: 2}}>
-                                            <TextField id="name"
-                                                       label="Nazwa koloru"
-                                                       variant="outlined"
-                                                       value={data.find(e => e.id === editedId) ? data.find(e => e.id === editedId)?.name : ""}
-                                                       onChange={(e) => {
-                                                           setData(data.map(d => {
-                                                               if (d.id === editedId) {
-                                                                   d.name = e.target.value;
-                                                                   setEdited(true);
-                                                               }
-                                                               return d;
-                                                           }))
-
-                                                       }}
-                                                       sx={{width: "40ch"}}
-                                            />
-
-                                        </Box>
-
-                                        <Box sx={{p: 2}}>
-                                            <Stack direction="row" spacing={1} alignItems="center">
-                                                <Typography>Kolor</Typography>
-                                                <Switch inputProps={{'aria-label': 'design'}}
-                                                        checked={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).type !== null ? Boolean(data.find(e => e.id === editedId).type) : false}
-                                                        onChange={(e, value) => {
-                                                            setData(data.map(d => {
-                                                                if (d.id === editedId) {
-                                                                    d.type = value;
-                                                                    setEdited(true);
-                                                                }
-                                                                return d;
-                                                            }))
-
-                                                        }}
-                                                />
-                                                <Typography>Druk</Typography>
-                                            </Stack>
-                                        </Box>
-                                        <Box sx={{p: 2}}>
-
-                                            {data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) === true ?
-                                                <Box>
-                                                    <DropzoneIconAdd props={props}
-                                                                     editedId={editedId}
-                                                                     setEdited={setEdited}
-                                                                     data={data}
-                                                                     setData={setData}
-                                                                     disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== true}/>
-                                                </Box>
-                                                :
-                                                <Box>
-                                                    <MuiColorInput isAlphaHidden={true} format="hex"
-                                                                   value={data.find(e => e.id === editedId) && data.find(e => e.id === editedId).hex ? data.find(e => e.id === editedId)?.hex : "#000000"}
-                                                                   onChange={(color) => {
-                                                                       setData(data.map(d => {
-                                                                           if (d.id === editedId) {
-                                                                               d.hex = color;
-                                                                               setEdited(true);
-                                                                           }
-                                                                           return d;
-                                                                       }))
-
-                                                                   }}
-                                                                   disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== false}
-                                                    />
-                                                </Box>
-
-                                            }
 
 
-                                        </Box>
+                                <Box sx={{display: "flex", flexDirection: "column"}}>
+                                    <Box sx={{p: 2}}>
+                                        <TextField id="name"
+                                                   label="Nazwa koloru"
+                                                   variant="outlined"
+                                                   value={dataUpdate.id ? dataUpdate?.name : ""}
+                                                   onChange={(e) => {
+                                                       setDataUpdate("name", e.target.value)
+                                                       setEdited(true)
+                                                   }}
+                                                   disabled={Boolean(dataUpdate.id === null)}
+                                                   sx={{width: "40ch"}}
+                                        />
+
                                     </Box>
 
-                                    <Box sx={{my: 1}}>
-                                        <ColorIconsTable
-                                            colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
-                                            props={props}/>
+                                    <Box sx={{p: 2}}>
+                                        <Stack direction="row" spacing={1} alignItems="center">
+                                            <Typography>Kolor</Typography>
+                                            <Switch inputProps={{'aria-label': 'design'}}
+                                                    checked={dataUpdate.id && dataUpdate.type !== null ? Boolean(dataUpdate.type) : false}
+                                                    onChange={(e, value) => {
+                                                        setDataUpdate("type", value ? 1 : 0)
+                                                        setEdited(true)
+                                                        // console.log(dataUpdate, dataUpdate === null)
+                                                    }}
+                                                    disabled={Boolean(dataUpdate.id === null)}
+                                            />
+                                            <Typography>Druk</Typography>
+                                        </Stack>
+                                    </Box>
+                                    <Box sx={{p: 2}}>
+
+                                        {dataUpdate === undefined || Boolean(dataUpdate.type) === true ?
+                                            <Box>
+                                                <DropzoneIconAdd props={props}
+                                                                 editedId={editedId}
+                                                                 setEdited={setEdited}
+                                                                 data={dataUpdate}
+                                                                 setData={(file) => {
+                                                                     setDataUpdate(file)
+                                                                     setEdited(true)
+                                                                 }}
+                                                                 disabled={dataUpdate === undefined || Boolean(dataUpdate.type) !== true}/>
+                                            </Box>
+                                            :
+                                            <Box>
+                                                <MuiColorInput isAlphaHidden={true} format="hex"
+                                                               value={dataUpdate && dataUpdate.hex ? dataUpdate?.hex : "#000000"}
+                                                               onChange={(color) => {
+                                                                   setDataUpdate("hex", color)
+                                                                   setEdited(true)
+
+                                                               }}
+                                                               disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== false}
+                                                />
+                                            </Box>
+
+                                        }
+
+
                                     </Box>
                                 </Box>
+
+                                <Box sx={{my: 1}}>
+                                    <ColorIconsTable
+                                        colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
+                                        props={props}/>
+                                </Box>
+
                             </>
                         )
                     }
 
 
                 </Paper>
-                <Fade in={Boolean(editedId)}>
-                    <Tooltip
-                        title={data.find(e => e.id === editedId)?.colors_count > 0 ? "Nie można usunąć koloru z dopisanymi modelami" : "Usuń kolor"}>
-                        <Box
-                            sx={{
-                                position: "absolute",
-                                top: 50,
-                                right: 30,
-                            }}>
-                            <IconButton
-                                color="warning"
-                                size={"small"}
-                                disabled={processing || data.find(e => e.id === editedId)?.colors_count > 0}
-                                onClick={() => handleDelete(editedId)}
-                            >
-                                <Delete fontSize={"large"}/>
-                            </IconButton>
-                        </Box>
 
-                    </Tooltip>
-                </Fade>
 
             </Grid>
         </Grid>

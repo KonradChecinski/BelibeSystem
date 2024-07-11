@@ -24,12 +24,12 @@ class UpdateProductColorIconRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "*.id" => 'required|integer',
-            "*.name" => 'required|string|max:255',
-            "*.type" => 'required|integer|min:0|max:1',
-            "*.hex" => 'nullable|string|max:7|min:7',
-            '*.files' => "nullable|array",
-            '*.files.*' => [
+            "id" => 'required|integer',
+            "name" => 'required|string|max:255',
+            "type" => 'required|integer|min:0|max:1',
+            "hex" => 'nullable|string|max:7|min:7',
+            'files' => "nullable|array",
+            'files.*' => [
                 "nullable",
                 "image",
                 "mimes:jpeg,png,jpg",

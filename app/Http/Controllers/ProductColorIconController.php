@@ -59,17 +59,17 @@ class ProductColorIconController extends Controller
      */
     public function update(UpdateProductColorIconRequest $request)
     {
-        foreach ($request->validated() as $item) {
-            $productIcon = ProductColorIcon::find($item['id']);
-            $productIcon->update($item);
-            if ((int)$item["type"] === 1 && isset($item['files'])) {
-                foreach ($item['files'] as $id => $file) {
-                    $pathImage = Storage::putFileAs("colors/", $file, uniqid('', true) . "." . $file->getClientOriginalExtension());
-                    $productIcon->path = str_replace('/', '\\', substr($pathImage, 7));
-                    $productIcon->save();
-                }
+
+        $productIcon = ProductColorIcon::find($request->validated()['id']);
+        $productIcon->update($request->validated());
+        if ((int)$request->validated()["type"] === 1 && isset($request->validated()['files'])) {
+            foreach ($request->validated()['files'] as $id => $file) {
+                $pathImage = Storage::putFileAs("colors/", $file, uniqid('', true) . "." . $file->getClientOriginalExtension());
+                $productIcon->path = str_replace('/', '\\', substr($pathImage, 7));
+                $productIcon->save();
             }
         }
+
     }
 
     /**

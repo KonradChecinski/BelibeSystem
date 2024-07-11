@@ -29,13 +29,11 @@ export default function DropzoneIconAdd({props, editedId, setEdited, data, setDa
         //     enqueueSnackbar("Plik jest niedozwolonego rozmiaru. Plik musi być rozmiaru 80x80 px", {variant: "warning"})
         //     return;
         // }
-        setData(data.map(d => {
-            if (d.id === editedId) {
-                d.files = files;
-                setEdited(true);
-            }
-            return d;
-        }))
+        setData({
+            ...data,
+            files: files
+
+        })
     }
 
 
@@ -73,7 +71,7 @@ export default function DropzoneIconAdd({props, editedId, setEdited, data, setDa
                     </Typography>
                 }
                 inputProps={{disabled: disabled}}
-                dropzoneProps={{disabled: disabled}}
+                dropzoneProps={{disabled: disabled, sx: {minHeight: 50}}}
 
             />
         </Box>
