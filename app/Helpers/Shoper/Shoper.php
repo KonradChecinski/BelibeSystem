@@ -767,10 +767,13 @@ class Shoper
     //Zmiana stanu produktu
     public static function changeProductQuantity(int $productId, ProductModelColor $productModelColor): bool
     {
+        $products = $productModelColor->products()->where("show_in_b2c", true)->get();
+        $available = $products->sum("available");
+        
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
-                "stock" => ["stock" => $productModelColor->products()->where("show_in_b2c", true)->sum("available")]
+                "stock" => ["stock" => $available]
             ]);
         if ($response->status() === 429) {
             sleep(1);
