@@ -153,6 +153,21 @@ export default function Menu({showContent, auth}) {
                         <SubMenuLink
                             href={route("system.pages")}
                             active={route().current("system.pages")}
+                            text={t("Home page")}
+                        />
+                        <Divider
+                            component="div"
+                            sx={{
+                                background: theme.palette.gradient.divider,
+                                height: "2px",
+                                width: "80%",
+                                mx: "auto",
+                                my: 1
+                            }}
+                        />
+                        <SubMenuLink
+                            href={route("system.pages")}
+                            active={route().current("system.pages")}
                             text={t("Header")}
                         />
                         <SubMenuLink
