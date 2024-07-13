@@ -49,7 +49,6 @@ class Client extends Model
         'priority',
         'source_of_acquisition_id',
         'user_id',
-        'payment_id',
         'industry_id',
         'blacklist',
         'newsletter',
