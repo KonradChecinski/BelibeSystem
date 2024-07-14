@@ -23,11 +23,6 @@ class Install7Controller extends Controller
     {
         $klienci = DB::table("test.klienci")->get();
 
-
-//        +"branza": "7"
-
-//    }
-//        dd($klienci);
         foreach ($klienci as $klient) {
             $country = 2;
 
@@ -121,7 +116,7 @@ class Install7Controller extends Controller
                 ->where("adr_NIP", $klient->nip)
                 ->where("adr_TypAdresu", 1)->first();
 //            dd($klientInSubiekt, );
-
+//
             $client = Client::create([
                 'subiekt_id' => $klientInSubiekt ? $klientInSubiekt->adr_IdObiektu : null,
                 'name' => $klient->nazwa,
@@ -142,6 +137,16 @@ class Install7Controller extends Controller
                 'source_of_acquisition_id' => $source,
                 'industry_id' => $industry,
             ]);
+
+            $notatki = DB::table("test.notatki")->where("id_firmy", $klient->id)->get();
+
+            foreach ($notatki as $notatka) {
+                $client->notes()->create([
+                    'text' => $notatka->notatka,
+                    'user_id' => 3,
+                    "created_at" => $notatka->czas,
+                ]);
+            }
 
         }
 

@@ -14,7 +14,8 @@ class ClientNote extends Model
     protected $fillable = [
         'client_id',
         'text',
-        'user_id'
+        'user_id',
+        'created_at',
     ];
 
     public function client(): BelongsTo
