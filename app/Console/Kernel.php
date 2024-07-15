@@ -80,6 +80,9 @@ class Kernel extends ConsoleKernel
             $schedule->job(new SendClientTaskMail($clientTask))->when(function () use ($now, $exactTime) {
                 return $now->isSameYear($exactTime) && $now->isSameMonth($exactTime) && $now->isSameDay($exactTime) && $now->isSameHour($exactTime) && $now->isSameMinute($exactTime);
             });
+            $schedule->job(new SendClientTaskMail($clientTask))->when(function () use ($now, $exactTime) {
+                return $now->diffInDays($exactTime) > 0 && $now->isSameHour($exactTime) && $now->isSameMinute($exactTime);
+            });
         }
     }
 

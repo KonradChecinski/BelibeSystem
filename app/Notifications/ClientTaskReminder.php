@@ -7,12 +7,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
 
-class ClientTaskReminder extends Notification //implements ShouldQueue
+class ClientTaskReminder extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $tries = 5;
+    public $tries = 1;
     public $backoff = 20;
     public $timeout = 60;
 
@@ -42,11 +43,18 @@ class ClientTaskReminder extends Notification //implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-//        dd("test", $this, $notifiable);
+//        dd($this->clientTask, $notifiable);
+//        dd(request());
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject("Przypomnienie o zadaniu")
+            ->markdown("mail.system.clientTask.clientTask", [
+                'clientTask' => $this->clientTask,
+                'client' => $this->clientTask->client,
+                'late' => Carbon::now()->gt($this->clientTask->datetime),
+                'notifiable' => $notifiable,
+                "actionText" => "Zobacz zadanie",
+            ])
+            ->action('Przejdź do klienta', route('system.clients.client.edit', ["id" => $this->clientTask->client->id]));
     }
 
     /**

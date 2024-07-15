@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Route;
 | System Routes
 |--------------------------------------------------------------------------
 */
-if (request()->getHttpHost() === "system." . config("app.domain")) {
+if (request()->getHttpHost() === "system." . config("app.domain") || request()->getHttpHost() === 'localhost') {
     Route::domain("system." . config("app.domain"))->group(function () {
         require __DIR__ . "/system/system.php";
 
@@ -60,7 +60,7 @@ if (request()->getHttpHost() === "system." . config("app.domain")) {
 | B2b Routes
 |--------------------------------------------------------------------------
 */
-if (request()->getHttpHost() === "b2b." . config("app.domain")) {
+if (request()->getHttpHost() === "b2b." . config("app.domain") || request()->getHttpHost() === 'localhost') {
 
     Route::domain("b2b." . config("app.domain"))->group(function () {
         Route::middleware(["auth:client", "verified"])->group(function () {
