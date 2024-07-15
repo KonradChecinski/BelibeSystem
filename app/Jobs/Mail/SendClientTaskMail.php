@@ -4,9 +4,8 @@ namespace App\Jobs\Mail;
 
 
 use App\Models\ClientTask;
-use App\Notifications\ClientTaskReminder;
+use App\Notifications\system\ClientTaskReminder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\system;
 
 use App\Models\ClientTask;
 use Illuminate\Bus\Queueable;
@@ -13,7 +13,7 @@ class ClientTaskReminder extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $tries = 1;
+    public $tries = 5;
     public $backoff = 20;
     public $timeout = 60;
 
