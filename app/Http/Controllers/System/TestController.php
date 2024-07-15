@@ -17,6 +17,8 @@ use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
+use App\Models\User;
+use App\Notifications\b2b\OrderPlaced;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -31,7 +33,9 @@ class TestController extends Controller
 //        UpdateClientOrderStatus::dispatchSync();
 //        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
 
-        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatch();
+        return (new OrderPlaced(ClientOrder::find(50)))->toMail(User::find(2));
+
+//        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatch();
 //        CreateSettlementsFromSubiekt::dispatchSync();
 //        UpdateSettlementsFromSubiekt::dispatchSync();
 //        DeleteSettlementsFromSubiekt::dispatchSync();

@@ -307,3 +307,12 @@ img {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+/* Table border */
+.table-row-border table {
+    border-collapse: collapse;
+}
+
+.table-row-border tr {
+    border-bottom: 1px solid #5b96f1;
+}
