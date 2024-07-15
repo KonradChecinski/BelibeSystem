@@ -1,6 +1,9 @@
 *
 !backgrounds
 !backgrounds/*
+!favicons
 !favicons/*
+!logo
+!logo/*
 !images/*
 !.gitignore
