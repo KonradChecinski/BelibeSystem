@@ -25,14 +25,19 @@ export default function B2bOrderSuccess(props) {
     console.log(props)
 
     const dayNames = [
-        "niedzielę",
+        "niedziela",
         "poniedziałek",
         "wtorek",
-        "środę",
+        "środa",
         "czwartek",
         "piątek",
-        "sobotę",
-    ]
+        "sobota",
+    ];
+
+    const processTime = {
+        min: moment(props.order.created_at).add(props.processTime.min, 'days'),
+        max: moment(props.order.created_at).add(props.processTime.max, 'days')
+    }
 
 
     return (
@@ -120,13 +125,20 @@ export default function B2bOrderSuccess(props) {
                         flexDirection: "column"
                     }}>
                         <DeliveryAnimation style={{width: "100%", height: "100%", transform: "scale(1)"}}/>
-                        <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
-                            Czas realizacji tego zamówienia wraz z dostawą
-                            wynosi {props.processTime.min}-{props.processTime.max} dni.
+                        {/*<Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>*/}
+                        {/*    Czas realizacji tego zamówienia wraz z dostawą*/}
+                        {/*    wynosi {props.processTime.min}-{props.processTime.max} dni.*/}
+                        {/*</Typography>*/}
+                        {/*<Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>*/}
+                        {/*    A to oznacza, że twoja paczka powinna być w wyznaczonym przez Ciebie punkcie*/}
+                        {/*    w {dayNames[moment(props.order.created_at).add(props.processTime.min, 'days').day()]} - {dayNames[moment(props.order.created_at).add(props.processTime.max, 'days').day()]}.*/}
+                        {/*</Typography>*/}
+                        <Typography variant="h5" sx={{mb: 2}} textAlign={"center"}>
+                            Przewidywana dostawa:
                         </Typography>
                         <Typography variant="h6" sx={{mb: 2}} textAlign={"center"}>
-                            A to oznacza, że twoja paczka powinna być w wyznaczonym przez Ciebie punkcie
-                            w {dayNames[moment(props.order.created_at).add(props.processTime.min, 'days').day()]} - {dayNames[moment(props.order.created_at).add(props.processTime.max, 'days').day()]}.
+                            {dayNames[processTime.min.day()]} - {dayNames[processTime.max.day()]}, {processTime.min.format("LL").slice(0, -5)} - {processTime.max.format("LL").slice(0, -5)}
+
                         </Typography>
                     </Box>
 
