@@ -71,13 +71,13 @@ class Kernel extends ConsoleKernel
             $hourBefore = Carbon::parse($clientTask->datetime)->subHour();
             $exactTime = Carbon::parse($clientTask->datetime);
 
-            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $dayBefore) {
+            $schedule->job(new SendClientTaskMail($clientTask))->when(function () use ($now, $dayBefore) {
                 return $now->isSameYear($dayBefore) && $now->isSameMonth($dayBefore) && $now->isSameDay($dayBefore) && $now->isSameHour($dayBefore) && $now->isSameMinute($dayBefore);
             });
-            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $hourBefore) {
+            $schedule->job(new SendClientTaskMail($clientTask))->when(function () use ($now, $hourBefore) {
                 return $now->isSameYear($hourBefore) && $now->isSameMonth($hourBefore) && $now->isSameDay($hourBefore) && $now->isSameHour($hourBefore) && $now->isSameMinute($hourBefore);
             });
-            $schedule->job(new SendClientTaskMail())->when(function () use ($now, $exactTime) {
+            $schedule->job(new SendClientTaskMail($clientTask))->when(function () use ($now, $exactTime) {
                 return $now->isSameYear($exactTime) && $now->isSameMonth($exactTime) && $now->isSameDay($exactTime) && $now->isSameHour($exactTime) && $now->isSameMinute($exactTime);
             });
         }
