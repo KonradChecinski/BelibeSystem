@@ -105,7 +105,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"center"}>{Number(sumQ)}</Box>
+                    <Box textAlign={"center"}>{Number(sumQ)}</Box>
                 ),
                 size: 5,
                 enableColumnActions: false,
@@ -129,7 +129,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWN) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumWN) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -152,7 +152,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumWB) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -195,7 +195,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWNR) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumWNR) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -218,7 +218,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumWBR) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumWBR) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -242,7 +242,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDN) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumDN) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -265,7 +265,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumDB) / 100)}</Box>
+                    <Box textAlign={"right"}>{toLocaleString(Number(sumDB) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -293,7 +293,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     </Tooltip>
                 ),
                 Footer: () => (
-                    <Box color="success.main" textAlign={"right"}>{toLocaleString(Number(sumSN) / 100)}</Box>
+                    <Box color="info.main" textAlign={"right"}>{toLocaleString(Number(sumSN) / 100)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,

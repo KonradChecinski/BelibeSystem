@@ -25,6 +25,14 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
         [],
     );
 
+    const avgSpoznienie = useMemo(
+        () => {
+            const sum = data.reduce((acc, obj) => acc + Number(obj.days_of_delay), 0);
+            return Math.round((sum / data.length), 0) || 0;
+        },
+        []
+    );
+
     const columns = useMemo(
         //column definitions...
         () => [
@@ -126,6 +134,10 @@ export default function ClientSettlementsTable({settlement, readOnly, props}) {
                     <Tooltip title={column.columnDef.header} placement="top" arrow>
                         <Box>S</Box>
                     </Tooltip>
+                ),
+                Footer: () => (
+                    <Box color={avgSpoznienie > 10 ? "error.main" : avgSpoznienie > 3 ? "warning.main" : ""}
+                         textAlign={"right"}>{Number(avgSpoznienie)}</Box>
                 ),
                 enableColumnActions: false,
                 enableColumnDragging: false,
