@@ -179,7 +179,7 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1].includes(row.original.status)}
+                <MenuItem disabled={![1].includes(row.original.status) || true}
                           onClick={handleOpenDetailsEdit}>
                     <ListItemIcon><Edit/></ListItemIcon>
                     <ListItemText>Edytuj</ListItemText>
