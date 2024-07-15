@@ -15,7 +15,6 @@ class ClientNote extends Model
         'client_id',
         'text',
         'user_id',
-        'created_at',
     ];
 
     public function client(): BelongsTo
