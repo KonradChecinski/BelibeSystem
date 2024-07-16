@@ -11,6 +11,8 @@ use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderProduct;
 use App\Models\Products\Product;
+use App\Notifications\b2b\OrderPlacedClient;
+use App\Notifications\b2b\OrderPlacedUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -235,6 +237,25 @@ class B2bOrderController extends Controller
         }
 
         $cart->delete();
+
+
+        $client->notify(new OrderPlacedClient($order));
+        $client->accountManager->notify(new OrderPlacedUser($order));
+
+        if (auth()->guard()->name === "client") {
+            $user = auth()->user();
+            if ($user && $client->email !== $user->email) {
+                $user->notify(new OrderPlacedClient($order));
+            }
+        }
+        if (auth()->guard()->name === 'user') {
+            $user = auth()->user();
+            if ($client->accountManager->id !== $user->id) {
+                $user->notify(new OrderPlacedUser($order));
+            }
+        }
+
+
         return redirect()->route("b2b.order.success")->with(["order" => $order]);
     }
 

@@ -43,14 +43,14 @@ use Illuminate\Support\Facades\Route;
 if (request()->getHttpHost() === "system." . config("app.domain") || request()->getHttpHost() === 'localhost') {
     Route::domain("system." . config("app.domain"))->group(function () {
         require __DIR__ . "/system/system.php";
+        if (request()->getHttpHost() !== 'localhost') {
+            Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
+                Route::group(["prefix" => "/b2b"], function () {
+                    require __DIR__ . "/b2b/b2b.php";
+                });
 
-        Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
-            Route::group(["prefix" => "/b2b"], function () {
-                require __DIR__ . "/b2b/b2b.php";
             });
-
-        });
-
+        }
     });
 }
 

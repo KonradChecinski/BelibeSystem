@@ -35,18 +35,7 @@
 <p>{{$location->street}} {{ $location->building_number }}{{ $location->apartment_number ? "/" . $location->apartment_number : ""}}</p>
 <p>{{ $location->postal_code }}, {{ $location->city }}</p>
 <h1>Produkty</h1>
-{{--<div class="table">--}}
-{{--<table>--}}
-{{--    <thead>--}}
-{{--    <tr>--}}
-{{--        <th>Lp.</th>--}}
-{{--        <th>Rozmiar</th>--}}
-{{--        <th>Cena Netto</th>--}}
-{{--        <th>Cena Brutto</th>--}}
-{{--        <th>Ilość</th>--}}
-{{--    </tr>--}}
-{{--</table>--}}
-{{--</div>--}}
+
 @php $i=1 @endphp
 <div class="table-row-border">
 <x-mail::table>

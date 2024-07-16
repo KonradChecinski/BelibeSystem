@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 
-class OrderPlaced extends Notification //implements ShouldQueue
+class OrderPlacedClient extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -64,7 +64,7 @@ class OrderPlaced extends Notification //implements ShouldQueue
 
         return (new MailMessage)
             ->subject("Twoje zamówienie zostało złożone")
-            ->markdown("mail.b2b.orderPlaced.orderPlaced", [
+            ->markdown("mail.b2b.orderPlaced.client.orderPlaced", [
                 'clientOrder' => $this->clientOrder,
                 'location' => $this->clientOrder->location,
                 'client' => $this->clientOrder->client,

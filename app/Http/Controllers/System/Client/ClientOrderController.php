@@ -10,6 +10,7 @@ use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Models\Client\Client;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
+use App\Notifications\b2b\OrderAcceptedClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -72,11 +73,16 @@ class ClientOrderController extends Controller
     public function updateStatus(UpdateStatusClientOrderRequest $request, ClientOrder $clientOrder)
     {
         if ($request->status === 2) {
+            $oldStatus = $clientOrder->status;
+
             $clientOrder->status = 2;
             $clientOrder->subiekt_number = null;
             $clientOrder->subiekt_added_at = null;
             $clientOrder->save();
 //            ClientOrderCreateInSubiekt::dispatch($clientOrder);
+            if ($oldStatus === 1) {
+                $clientOrder->client->notify(new OrderAcceptedClient($clientOrder));
+            }
         }
 
         if ($request->status === 6) {

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\ShoperOrder;
 use App\Models\Subiekt\Towar;
+use App\Notifications\b2b\InvoiceGeneratedClient;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -76,7 +77,7 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue
         unlink($path);  //usuwanie pliku z temp
 
         if ($order->invoice()->count() > 0) $order->invoice()->delete();
-        $order->invoice()->create([
+        $invoice = $order->invoice()->create([
             'client_id' => $client->id,
             'type' => 1,
             'number' => $subiektInvoice->dok_NrPelny,
@@ -85,6 +86,8 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue
             'datetime' => $subiektInvoice->dok_DoDokDataWyst,
             'path' => $invoicePath,
         ]);
+
+        $order->client->notify(new InvoiceGeneratedClient($order));
 
 //        wyrazenie.DrukujDoPlikuWgWzorca(lWzorzec, bstrPlik, 0)
         //wzw_Id	wzw_Typ	wzw_Zrodlo	wzw_Nazwa
