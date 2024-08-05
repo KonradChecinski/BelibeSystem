@@ -78,13 +78,21 @@ export default function ColorIconComponent(props) {
     })
 
     useEffect(() => {
+        // console.log("change")
         const newCategories = props.productColors.filter(o => !data.find(e => e.id === o.id))
         const newCategories2 = props.productColors
         // const newData = data.slice()
-        // setData([...newData, ...newCategories])
+        setData2([...data, ...newCategories])
         // setData2([...newCategories2])
         if (newCategories.length > 0) {
             setEditedId(newCategories[0].id)
+            setDataUpdate({
+                id: newCategories[0].id,
+                name: newCategories[0].name,
+                type: newCategories[0].type,
+                hex: newCategories[0].hex,
+            })
+
         }
     }, [props.productColors])
 
@@ -152,15 +160,6 @@ export default function ColorIconComponent(props) {
                     hex: "#000000",
                 })
                 setCreated(false)
-
-                const color = params.props.productColors.reduce((latest, color) => latest.id > color.id ? latest : color);
-                setEditedId(color.id)
-                setDataUpdate({
-                    id: color.id,
-                    name: color.name,
-                    type: color.type,
-                    hex: color.hex,
-                })
             },
             onError: params => {
                 console.error(params)
@@ -291,7 +290,7 @@ export default function ColorIconComponent(props) {
                     }}>
                         <Typography variant={"h6"}>
                             {created && "Dodanie koloru"}
-                            {editedId ? "Edycja koloru " + editedId + " - " + data.find(e => e.id === editedId)?.name : ""}
+                            {editedId ? "Edycja koloru " + editedId + " - " + dataUpdate?.name : ""}
                         </Typography>
                         <Box>
                             <Fade in={Boolean(created) || Boolean(edited)}>
@@ -326,11 +325,11 @@ export default function ColorIconComponent(props) {
                             </Fade>
                             <Fade in={Boolean(editedId)}>
                                 <Tooltip
-                                    title={data.find(e => e.id === editedId)?.colors_count > 0 ? "Nie można usunąć koloru z dopisanymi modelami" : "Usuń kolor"}>
+                                    title={dataUpdate?.colors_count > 0 ? "Nie można usunąć koloru z dopisanymi modelami" : "Usuń kolor"}>
                                     <IconButton
                                         color="warning"
                                         size={"small"}
-                                        disabled={processingUpdate || data.find(e => e.id === editedId)?.colors_count > 0}
+                                        disabled={processingUpdate || dataUpdate?.colors_count > 0}
                                         onClick={() => handleDelete(editedId)}
                                     >
                                         <Delete fontSize={"large"}/>
@@ -394,12 +393,12 @@ export default function ColorIconComponent(props) {
                                         <TextField id="name"
                                                    label="Nazwa koloru"
                                                    variant="outlined"
-                                                   value={dataUpdate.id ? dataUpdate?.name : ""}
+                                                   value={dataUpdate && dataUpdate.id ? dataUpdate?.name : ""}
                                                    onChange={(e) => {
                                                        setDataUpdate("name", e.target.value)
                                                        setEdited(true)
                                                    }}
-                                                   disabled={Boolean(dataUpdate.id === null)}
+                                                   disabled={Boolean(dataUpdate ? dataUpdate.id === null : true)}
                                                    sx={{width: "40ch"}}
                                         />
 
@@ -409,20 +408,20 @@ export default function ColorIconComponent(props) {
                                         <Stack direction="row" spacing={1} alignItems="center">
                                             <Typography>Kolor</Typography>
                                             <Switch inputProps={{'aria-label': 'design'}}
-                                                    checked={dataUpdate.id && dataUpdate.type !== null ? Boolean(dataUpdate.type) : false}
+                                                    checked={dataUpdate && dataUpdate.id && dataUpdate.type !== null ? Boolean(dataUpdate.type) : false}
                                                     onChange={(e, value) => {
                                                         setDataUpdate("type", value ? 1 : 0)
                                                         setEdited(true)
                                                         // console.log(dataUpdate, dataUpdate === null)
                                                     }}
-                                                    disabled={Boolean(dataUpdate.id === null)}
+                                                    disabled={Boolean(dataUpdate ? dataUpdate.id === null : true)}
                                             />
                                             <Typography>Druk</Typography>
                                         </Stack>
                                     </Box>
                                     <Box sx={{p: 2}}>
 
-                                        {dataUpdate === undefined || Boolean(dataUpdate.type) === true ?
+                                        {dataUpdate === undefined || Boolean(dataUpdate ? dataUpdate.type : true) === true ?
                                             <Box>
                                                 <DropzoneIconAdd props={props}
                                                                  editedId={editedId}
@@ -432,7 +431,7 @@ export default function ColorIconComponent(props) {
                                                                      setDataUpdate(file)
                                                                      setEdited(true)
                                                                  }}
-                                                                 disabled={dataUpdate === undefined || Boolean(dataUpdate.type) !== true}/>
+                                                                 disabled={dataUpdate === undefined || Boolean(dataUpdate ? dataUpdate.type : true) !== true}/>
                                             </Box>
                                             :
                                             <Box>
@@ -443,7 +442,7 @@ export default function ColorIconComponent(props) {
                                                                    setEdited(true)
 
                                                                }}
-                                                               disabled={data.find(e => e.id === editedId) === undefined || Boolean(data.find(e => e.id === editedId).type) !== false}
+                                                               disabled={dataUpdate === undefined || Boolean(dataUpdate ? dataUpdate.type : true) !== false}
                                                 />
                                             </Box>
 
