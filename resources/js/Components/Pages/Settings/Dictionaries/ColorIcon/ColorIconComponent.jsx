@@ -144,6 +144,7 @@ export default function ColorIconComponent(props) {
         postAdd(route("system.settings.colorIcon.create"), {
             onSuccess: params => {
                 enqueueSnackbar("Dodano kolor", {variant: 'success'})
+                console.log(params)
                 setDataAdd({
                     id: null,
                     name: "",
@@ -151,6 +152,15 @@ export default function ColorIconComponent(props) {
                     hex: "#000000",
                 })
                 setCreated(false)
+
+                const color = params.props.productColors.reduce((latest, color) => latest.id > color.id ? latest : color);
+                setEditedId(color.id)
+                setDataUpdate({
+                    id: color.id,
+                    name: color.name,
+                    type: color.type,
+                    hex: color.hex,
+                })
             },
             onError: params => {
                 console.error(params)
@@ -445,7 +455,7 @@ export default function ColorIconComponent(props) {
 
                                 <Box sx={{my: 1}}>
                                     <ColorIconsTable
-                                        colors={editedId ? data.find(e => e.id === editedId)?.colors_with_models : []}
+                                        colors={editedId && data.find(e => e.id === editedId)?.colors_with_models ? data.find(e => e.id === editedId)?.colors_with_models : []}
                                         props={props}/>
                                 </Box>
 
