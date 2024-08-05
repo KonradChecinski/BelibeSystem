@@ -60,18 +60,17 @@ class B2bProductCategoryController extends Controller
             ->paginate(24)
             ->through(function ($model) use ($discounts, $client) {
                 $mainImages = $model->mainImages();
-//                if ($model->symbol === "S-0100-0104") dd($model->productsToB2bWithoutRelation);
-//                dd($model);
+
                 return [
                     'id' => $model->id,
                     'name' => $model->name,
                     'symbol' => $model->symbol,
                     'slug' => $model->slug,
-                    'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["path" => $image->path]) : null,
+                    'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["path" => $image->path])->values() : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
                     'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
                     'icons' => $model->colorIcons,
-                    'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique(),
+                    'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique()->values(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),
                     'isFavorited' => $model->isFavoritedByClient($client),
                 ];
@@ -81,6 +80,7 @@ class B2bProductCategoryController extends Controller
         if ($request->wantsJson()) {
             return response()->json($models);
         }
+//        dd($models);
 
         return Inertia::render('B2B/Category', [
             "category" => [
