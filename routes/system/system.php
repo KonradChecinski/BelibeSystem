@@ -233,67 +233,90 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
 
         Route::group(['prefix' => '/dictionaries'], function () {
-            Route::get("/sizes", [ProductSizeController::class, 'index'])->name("system.settings.sizes");
-            Route::get("/sizes/data", [ProductSizeController::class, 'data']);
-            Route::post("/sizes", [ProductSizeController::class, 'store'])->name("system.settings.sizes.create");
-            Route::patch("/sizes/{productSize}", [ProductSizeController::class, 'update'])->name("system.settings.sizes.update");
-            Route::delete("/sizes/{productSize}", [ProductSizeController::class, 'destroy'])->name("system.settings.sizes.delete");
 
-            Route::get("/group", [ProductGroupController::class, 'index'])->name("system.settings.group");
-            Route::get("/group/data", [ProductGroupController::class, 'data']);
-            Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
-            Route::patch("/group/{productGroup}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
-            Route::delete("/group/{productGroup}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
-
-            Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
-            Route::get("/unit/data", [ProductUnitController::class, 'data']);
-            Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
-            Route::patch("/unit/{productUnit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
-            Route::delete("/unit/{productUnit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
-
-            Route::get("/brand/", [ProductBrandController::class, 'index'])->name("system.settings.brand");
-            Route::get("/brand/data", [ProductBrandController::class, 'data']);
-            Route::post("/brand", [ProductBrandController::class, 'store'])->name("system.settings.brand.create");
-            Route::patch("/brand/{productBrand}", [ProductBrandController::class, 'update'])->name("system.settings.brand.update");
-            Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
-
-            Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
-            Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
-            Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
-            Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
-
-            Route::get("/color-icon/", [ProductColorIconController::class, 'index'])->name("system.settings.colorIcon");
-            Route::post("/color-icon/", [ProductColorIconController::class, 'store'])->name("system.settings.colorIcon.create");
-            Route::post("/color-icon/update", [ProductColorIconController::class, 'update'])->name("system.settings.colorIcon.update");
-            Route::delete("/color-icon/{productColorIcon}/", [ProductColorIconController::class, 'destroy'])->name("system.settings.colorIcon.delete");
+            Route::group(['prefix' => '/models'], function () {
 
 
-            Route::group(['prefix' => '/gs1'], function () {
-                Route::get("/gpc/", [GS1GPCController::class, 'index'])->name("system.settings.gs1.gpc");
-                Route::get("/gpc/data", [GS1GPCController::class, 'data']);
-                Route::post("/gpc", [GS1GPCController::class, 'store'])->name("system.settings.gs1.gpc.create");
-                Route::patch("/gpc/{GS1GPC}", [GS1GPCController::class, 'update'])->name("system.settings.gs1.gpc.update");
-                Route::delete("/gpc/{GS1GPC}", [GS1GPCController::class, 'destroy'])->name("system.settings.gs1.gpc.delete");
+                Route::get("/sizes", [ProductSizeController::class, 'index'])->name("system.settings.sizes");
+                Route::get("/sizes/data", [ProductSizeController::class, 'data']);
+                Route::post("/sizes", [ProductSizeController::class, 'store'])->name("system.settings.sizes.create");
+                Route::patch("/sizes/{productSize}", [ProductSizeController::class, 'update'])->name("system.settings.sizes.update");
+                Route::delete("/sizes/{productSize}", [ProductSizeController::class, 'destroy'])->name("system.settings.sizes.delete");
 
-                Route::get("/brand/", [GS1BrandController::class, 'index'])->name("system.settings.gs1.brand");
-                Route::get("/brand/data", [GS1BrandController::class, 'data']);
-                Route::post("/brand", [GS1BrandController::class, 'store'])->name("system.settings.gs1.brand.create");
-                Route::patch("/brand/{GS1Brand}", [GS1BrandController::class, 'update'])->name("system.settings.gs1.brand.update");
-                Route::delete("/brand/{GS1Brand}", [GS1BrandController::class, 'destroy'])->name("system.settings.gs1.brand.delete");
+                Route::get("/group", [ProductGroupController::class, 'index'])->name("system.settings.group");
+                Route::get("/group/data", [ProductGroupController::class, 'data']);
+                Route::post("/group", [ProductGroupController::class, 'store'])->name("system.settings.group.create");
+                Route::patch("/group/{productGroup}", [ProductGroupController::class, 'update'])->name("system.settings.group.update");
+                Route::delete("/group/{productGroup}", [ProductGroupController::class, 'destroy'])->name("system.settings.group.delete");
+
+                Route::get("/unit", [ProductUnitController::class, 'index'])->name("system.settings.unit");
+                Route::get("/unit/data", [ProductUnitController::class, 'data']);
+                Route::post("/unit", [ProductUnitController::class, 'store'])->name("system.settings.unit.create");
+                Route::patch("/unit/{productUnit}", [ProductUnitController::class, 'update'])->name("system.settings.unit.update");
+                Route::delete("/unit/{productUnit}", [ProductUnitController::class, 'destroy'])->name("system.settings.unit.delete");
+
+                Route::get("/brand/", [ProductBrandController::class, 'index'])->name("system.settings.brand");
+                Route::get("/brand/data", [ProductBrandController::class, 'data']);
+                Route::post("/brand", [ProductBrandController::class, 'store'])->name("system.settings.brand.create");
+                Route::patch("/brand/{productBrand}", [ProductBrandController::class, 'update'])->name("system.settings.brand.update");
+                Route::delete("/brand/{productBrand}", [ProductBrandController::class, 'destroy'])->name("system.settings.brand.delete");
+
+                Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
+                Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
+                Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
+                Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
+
+                Route::get("/color-icon/", [ProductColorIconController::class, 'index'])->name("system.settings.colorIcon");
+                Route::post("/color-icon/", [ProductColorIconController::class, 'store'])->name("system.settings.colorIcon.create");
+                Route::post("/color-icon/update", [ProductColorIconController::class, 'update'])->name("system.settings.colorIcon.update");
+                Route::delete("/color-icon/{productColorIcon}/", [ProductColorIconController::class, 'destroy'])->name("system.settings.colorIcon.delete");
+
+
+                Route::group(['prefix' => '/gs1'], function () {
+                    Route::get("/gpc/", [GS1GPCController::class, 'index'])->name("system.settings.gs1.gpc");
+                    Route::get("/gpc/data", [GS1GPCController::class, 'data']);
+                    Route::post("/gpc", [GS1GPCController::class, 'store'])->name("system.settings.gs1.gpc.create");
+                    Route::patch("/gpc/{GS1GPC}", [GS1GPCController::class, 'update'])->name("system.settings.gs1.gpc.update");
+                    Route::delete("/gpc/{GS1GPC}", [GS1GPCController::class, 'destroy'])->name("system.settings.gs1.gpc.delete");
+
+                    Route::get("/brand/", [GS1BrandController::class, 'index'])->name("system.settings.gs1.brand");
+                    Route::get("/brand/data", [GS1BrandController::class, 'data']);
+                    Route::post("/brand", [GS1BrandController::class, 'store'])->name("system.settings.gs1.brand.create");
+                    Route::patch("/brand/{GS1Brand}", [GS1BrandController::class, 'update'])->name("system.settings.gs1.brand.update");
+                    Route::delete("/brand/{GS1Brand}", [GS1BrandController::class, 'destroy'])->name("system.settings.gs1.brand.delete");
+                });
+
+                Route::group(['prefix' => '/b2c'], function () {
+                    Route::get("/category/", [B2cCategoryController::class, 'index'])->name("system.settings.b2c.category");
+                    Route::get("/category/data", [B2cCategoryController::class, 'data']);
+                    Route::post("/category", [B2cCategoryController::class, 'store'])->name("system.settings.b2c.category.create");
+                    Route::patch("/category/{b2cCategory}", [B2cCategoryController::class, 'update'])->name("system.settings.b2c.category.update");
+                    Route::delete("/category/{b2cCategory}", [B2cCategoryController::class, 'destroy'])->name("system.settings.b2c.category.delete");
+
+                    Route::get("/color/", [B2cColorController::class, 'index'])->name("system.settings.b2c.color");
+                    Route::get("/color/data", [B2cColorController::class, 'data']);
+                    Route::post("/color", [B2cColorController::class, 'store'])->name("system.settings.b2c.color.create");
+                    Route::patch("/color/{b2cColor}", [B2cColorController::class, 'update'])->name("system.settings.b2c.color.update");
+                    Route::delete("/color/{b2cColor}", [B2cColorController::class, 'destroy'])->name("system.settings.b2c.color.delete");
+                });
+
             });
 
-            Route::group(['prefix' => '/b2c'], function () {
-                Route::get("/category/", [B2cCategoryController::class, 'index'])->name("system.settings.b2c.category");
-                Route::get("/category/data", [B2cCategoryController::class, 'data']);
-                Route::post("/category", [B2cCategoryController::class, 'store'])->name("system.settings.b2c.category.create");
-                Route::patch("/category/{b2cCategory}", [B2cCategoryController::class, 'update'])->name("system.settings.b2c.category.update");
-                Route::delete("/category/{b2cCategory}", [B2cCategoryController::class, 'destroy'])->name("system.settings.b2c.category.delete");
+            Route::group(['prefix' => '/b2b'], function () {
+//                source_of_acquisitions
+//                payments
+//                industries
+//                deliveries
+//                countries
+//                activity_types
 
-                Route::get("/color/", [B2cColorController::class, 'index'])->name("system.settings.b2c.color");
-                Route::get("/color/data", [B2cColorController::class, 'data']);
-                Route::post("/color", [B2cColorController::class, 'store'])->name("system.settings.b2c.color.create");
-                Route::patch("/color/{b2cColor}", [B2cColorController::class, 'update'])->name("system.settings.b2c.color.update");
-                Route::delete("/color/{b2cColor}", [B2cColorController::class, 'destroy'])->name("system.settings.b2c.color.delete");
+                
+//                Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
+//                Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
+//                Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
+//                Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
+
+
             });
 
         });

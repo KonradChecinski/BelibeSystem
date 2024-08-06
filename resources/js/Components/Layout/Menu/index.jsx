@@ -287,7 +287,7 @@ export default function Menu({showContent, auth}) {
                         >
                             <SubMenuLink
                                 active={false}
-                                text={"Produkty"}
+                                text={"Modele"}
                             >
                                 <SubMenuLink
                                     href={route("system.settings.sizes")}
