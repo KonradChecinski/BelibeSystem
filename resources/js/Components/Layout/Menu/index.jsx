@@ -282,83 +282,93 @@ export default function Menu({showContent, auth}) {
                                 : ""}
                         </SubMenuLink>
                         <SubMenuLink
-                            href={route("system.settings.sizes")}
                             active={false}
                             text={"Słowniki"}
                         >
-
                             <SubMenuLink
-                                href={route("system.settings.sizes")}
-                                active={route().current("system.settings.sizes")}
-                                text={"Rozmiary"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.unit")}
-                                active={route().current("system.settings.unit")}
-                                text={"Jednostki"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.group")}
-                                active={route().current("system.settings.group")}
-                                text={"Grupy"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.brand")}
-                                active={route().current("system.settings.brand")}
-                                text={"Marki"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.category")}
-                                active={route().current("system.settings.category")}
-                                text={"Kategorie"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.colorIcon")}
-                                active={route().current("system.settings.colorIcon")}
-                                text={"Ikony kolorów"}
-                            />
-
-                            <SubMenuLink
-                                href={route("system.settings.gs1.brand")}
                                 active={false}
-                                text={"GS1"}
+                                text={"Produkty"}
                             >
                                 <SubMenuLink
-                                    href={route("system.settings.gs1.brand")}
-                                    active={route().current("system.settings.gs1.brand")}
+                                    href={route("system.settings.sizes")}
+                                    active={route().current("system.settings.sizes")}
+                                    text={"Rozmiary"}
+                                />
+
+                                <SubMenuLink
+                                    href={route("system.settings.unit")}
+                                    active={route().current("system.settings.unit")}
+                                    text={"Jednostki"}
+                                />
+
+                                <SubMenuLink
+                                    href={route("system.settings.group")}
+                                    active={route().current("system.settings.group")}
+                                    text={"Grupy"}
+                                />
+
+                                <SubMenuLink
+                                    href={route("system.settings.brand")}
+                                    active={route().current("system.settings.brand")}
                                     text={"Marki"}
                                 />
 
                                 <SubMenuLink
-                                    href={route("system.settings.gs1.gpc")}
-                                    active={route().current("system.settings.gs1.gpc")}
-                                    text={"Klasyfikacja GPC"}
-                                />
-                            </SubMenuLink>
-
-                            <SubMenuLink
-                                href={route("system.settings.b2c.category")}
-                                active={false}
-                                text={"B2C"}
-                            >
-                                <SubMenuLink
-                                    href={route("system.settings.b2c.category")}
-                                    active={route().current("system.settings.b2c.category")}
+                                    href={route("system.settings.category")}
+                                    active={route().current("system.settings.category")}
                                     text={"Kategorie"}
                                 />
-                                <SubMenuLink
-                                    href={route("system.settings.b2c.color")}
-                                    active={route().current("system.settings.b2c.color")}
-                                    text={"Kolory"}
-                                />
-                            </SubMenuLink>
 
+                                <SubMenuLink
+                                    href={route("system.settings.colorIcon")}
+                                    active={route().current("system.settings.colorIcon")}
+                                    text={"Ikony kolorów"}
+                                />
+
+                                <SubMenuLink
+                                    href={route("system.settings.gs1.brand")}
+                                    active={false}
+                                    text={"GS1"}
+                                >
+                                    <SubMenuLink
+                                        href={route("system.settings.gs1.brand")}
+                                        active={route().current("system.settings.gs1.brand")}
+                                        text={"Marki"}
+                                    />
+
+                                    <SubMenuLink
+                                        href={route("system.settings.gs1.gpc")}
+                                        active={route().current("system.settings.gs1.gpc")}
+                                        text={"Klasyfikacja GPC"}
+                                    />
+                                </SubMenuLink>
+
+                                <SubMenuLink
+                                    href={route("system.settings.b2c.category")}
+                                    active={false}
+                                    text={"B2C"}
+                                >
+                                    <SubMenuLink
+                                        href={route("system.settings.b2c.category")}
+                                        active={route().current("system.settings.b2c.category")}
+                                        text={"Kategorie"}
+                                    />
+                                    <SubMenuLink
+                                        href={route("system.settings.b2c.color")}
+                                        active={route().current("system.settings.b2c.color")}
+                                        text={"Kolory"}
+                                    />
+                                </SubMenuLink>
+
+                            </SubMenuLink>
+                            <SubMenuLink
+                                active={false}
+                                text={"B2B"}
+                            >
+
+                            </SubMenuLink>
                         </SubMenuLink>
+
                     </MainMenuLink>
                     : ""}
             </Box>

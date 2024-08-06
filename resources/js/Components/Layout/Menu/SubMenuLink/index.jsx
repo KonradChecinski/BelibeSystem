@@ -6,7 +6,7 @@ import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import isChildActive from "@/Functions/isChildActive";
 
 export default function SubMainLink({
-                                        href,
+                                        href = null,
                                         active,
                                         dropDown,
                                         text,
@@ -17,39 +17,14 @@ export default function SubMainLink({
     );
 
     return (
-        <Box sx={{pl: 1.4, pt: 0.0, pr: 1.75, position: "relative"}}>
-            <Link href={href}>
-                <Box
-                    sx={{
-                        width: 1,
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                        px: 2,
-                        py: 1,
-                        background: active ? "#014875" : "#0073BB",
-                        borderRadius: 1,
-                        // borderBottomRightRadius: 0,
-                        // borderTopRightRadius: 0,
-                        color: "#ffffff",
-                        "&:hover": {
-                            cursor: "pointer",
-                            background: "#038ce3"
-                        }
-                    }}
-                >
-                    <Typography
-                        align="center"
-                        variant="body1"
-                        sx={{
-                            width: "fit-content",
-                            position: "relative"
-                        }}
-                    >
-                        {text}
-                    </Typography>
-                </Box>
-            </Link>
+        <Box sx={{pl: 1.5, pt: 0.0, position: "relative"}}>
+            {href ?
+                <Link href={href}>
+                    <SubMenuLinkContent text={text} active={active}/>
+                </Link>
+                :
+                <SubMenuLinkContent text={text} active={active}/>
+            }
             {children !== undefined ? (
                 <IconButton
                     sx={{position: "absolute", top: "0px", right: "5px"}}
@@ -67,4 +42,40 @@ export default function SubMainLink({
             <Collapse in={showChildren}>{children}</Collapse>
         </Box>
     );
+}
+
+
+const SubMenuLinkContent = ({active, text}) => {
+    return (
+        <Box
+            sx={{
+                width: 1,
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                px: 2,
+                py: 1,
+                background: active ? "#014875" : "#0073BB",
+                borderRadius: 1,
+                // borderBottomRightRadius: 0,
+                // borderTopRightRadius: 0,
+                color: "#ffffff",
+                "&:hover": {
+                    cursor: "pointer",
+                    background: "#038ce3"
+                }
+            }}
+        >
+            <Typography
+                align="center"
+                variant="body1"
+                sx={{
+                    width: "fit-content",
+                    position: "relative"
+                }}
+            >
+                {text}
+            </Typography>
+        </Box>
+    )
 }
