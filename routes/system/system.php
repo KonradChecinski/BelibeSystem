@@ -21,7 +21,11 @@ use App\Http\Controllers\System\Client\ClientOrderController;
 use App\Http\Controllers\System\Client\ClientPaymentDiscountController;
 use App\Http\Controllers\System\Client\ClientTaskController;
 use App\Http\Controllers\System\Client\ClientUserController;
+use App\Http\Controllers\System\Product\B2bActivityTypeController;
+use App\Http\Controllers\System\Product\B2bCountryController;
+use App\Http\Controllers\System\Product\B2bIndustryController;
 use App\Http\Controllers\System\Product\B2BProductModelController;
+use App\Http\Controllers\System\Product\B2bSourceOfAcquisitionController;
 use App\Http\Controllers\System\Product\B2cCategoryController;
 use App\Http\Controllers\System\Product\B2cColorController;
 use App\Http\Controllers\System\Product\B2CProductModelController;
@@ -303,19 +307,34 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             });
 
             Route::group(['prefix' => '/b2b'], function () {
-//                source_of_acquisitions
+
 //                payments
-//                industries
 //                deliveries
+
+
+//                Industries
+                Route::get("/industry/", [B2bIndustryController::class, 'index'])->name("system.settings.industry");
+                Route::post("/industry/", [B2bIndustryController::class, 'store'])->name("system.settings.industry.create");
+                Route::patch("/industry/{b2bIndustry}", [B2bIndustryController::class, 'update'])->name("system.settings.industry.update");
+                Route::delete("/industry/{b2bIndustry}", [B2bIndustryController::class, 'destroy'])->name("system.settings.industry.delete");
+
+//                source_of_acquisitions
+                Route::get("/acquisition/", [B2bSourceOfAcquisitionController::class, 'index'])->name("system.settings.acquisition");
+                Route::post("/acquisition/", [B2bSourceOfAcquisitionController::class, 'store'])->name("system.settings.acquisition.create");
+                Route::patch("/acquisition/{b2bSourceOfAcquisition}", [B2bSourceOfAcquisitionController::class, 'update'])->name("system.settings.acquisition.update");
+                Route::delete("/acquisition/{b2bSourceOfAcquisition}", [B2bSourceOfAcquisitionController::class, 'destroy'])->name("system.settings.acquisition.delete");
+
 //                countries
+                Route::get("/country/", [B2bCountryController::class, 'index'])->name("system.settings.country");
+                Route::post("/country/", [B2bCountryController::class, 'store'])->name("system.settings.country.create");
+                Route::patch("/country/{b2bCountry}", [B2bCountryController::class, 'update'])->name("system.settings.country.update");
+                Route::delete("/country/{b2bCountry}", [B2bCountryController::class, 'destroy'])->name("system.settings.country.delete");
+
 //                activity_types
-
-                
-//                Route::get("/category/", [ProductCategoryController::class, 'index'])->name("system.settings.category");
-//                Route::post("/category/", [ProductCategoryController::class, 'store'])->name("system.settings.category.create");
-//                Route::put("/category/", [ProductCategoryController::class, 'update'])->name("system.settings.category.update");
-//                Route::delete("/category/{productCategory}/", [ProductCategoryController::class, 'destroy'])->name("system.settings.category.delete");
-
+                Route::get("/activity/", [B2bActivityTypeController::class, 'index'])->name("system.settings.activity");
+                Route::post("/activity/", [B2bActivityTypeController::class, 'store'])->name("system.settings.activity.create");
+                Route::patch("/activity/{b2bActivityType}", [B2bActivityTypeController::class, 'update'])->name("system.settings.activity.update");
+                Route::delete("/activity/{b2bActivityType}", [B2bActivityTypeController::class, 'destroy'])->name("system.settings.activity.delete");
 
             });
 

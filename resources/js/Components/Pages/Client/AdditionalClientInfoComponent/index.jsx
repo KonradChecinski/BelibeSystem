@@ -39,6 +39,7 @@ export default function AdditionalClientInfoComponent(props) {
         'status': props.client.status,
         'priority': props.client.priority,
         'source_of_acquisition': props.client.source_of_acquisition,
+        'industry': props.client.industry,
         'payments': props.client.payments ? props.client.payments
             .slice()
             .sort((a, b) => (a.id > b.id) ? 1 : (b.id > a.id) ? -1 : 0)
@@ -59,6 +60,7 @@ export default function AdditionalClientInfoComponent(props) {
         setValue('status', data.status.name)
         setValue('priority', data.priority === 1 ? "Niski" : data.priority === 2 ? "Średni" : "Wysoki")
         setValue('source_of_acquisition', data.source_of_acquisition.name)
+        setValue('industry', data.industry.name)
         setValue('payments', data.payments ? data.payments : [])
         setValue('account_manager', data.account_manager.name)
     }
@@ -78,6 +80,7 @@ export default function AdditionalClientInfoComponent(props) {
             'status': props.client.status,
             'priority': props.client.priority,
             'source_of_acquisition': props.client.source_of_acquisition,
+            'industry': props.client.industry,
             'payments': props.client.payments ? props.client.payments.map(obj => ({...obj, label: obj.name})) : [],
             'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
@@ -92,6 +95,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('status')
         clearErrors('priority')
         clearErrors('source_of_acquisition')
+        clearErrors('industry')
         clearErrors('payments')
         clearErrors('account_manager')
         clearErrors('blacklist')
@@ -194,6 +198,90 @@ export default function AdditionalClientInfoComponent(props) {
                             />
                         )}
 
+                        <FormControl
+                            sx={{
+                                ml: 2,
+                                width: "30ch",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: 'flex-start'
+                            }}
+                        >
+                            <FormControlLabel
+                                label={<Typography>Czarna lista</Typography>}
+                                control={
+                                    <Checkbox
+                                        id="blacklist-select"
+                                        label="Czarna lista"
+                                        size={"large"}
+                                        disabled={!props.editing}
+                                        checked={checkedBlacklist}
+                                        onChange={(value) => {
+                                            // setProductModel({...productModel, product_group_id: value.target.value});
+                                            setCheckedBlacklist(value.target.checked)
+                                            setData({
+                                                ...data,
+                                                blacklist: value.target.checked ? 1 : 0,
+                                            })
+                                            setEdited(true)
+                                        }}
+                                    />
+                                }
+                            />
+                            {fieldErrors.blacklist?.message && (
+                                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
+                                    {fieldErrors.blacklist?.message.toString()}
+                                </Typography>
+                            )}
+                        </FormControl>
+                        <Divider/>
+
+                        {props.editing ? (
+                            <>
+                                <Autocomplete
+                                    id="account_manager"
+                                    options={props.user.map(e => ({
+                                        id: e.id,
+                                        name: e.name,
+                                        label: e.name
+                                    }))}
+                                    sx={{width: "30ch"}}
+                                    value={data.account_manager.name}
+                                    isOptionEqualToValue={(option, value) => option.name === value}
+                                    onChange={(e, value) => {
+                                        setData({
+                                            ...data,
+                                            account_manager: value,
+                                        })
+                                        setEdited(true)
+                                    }}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            {...params}
+                                            label="Opiekun klienta"
+                                            sx={{my: 1}}
+                                            {...register("account_manager")}
+                                            value={data.account_manager.name}
+                                            color={fieldErrors.account_manager?.message && "error"}
+                                        />
+                                    }
+                                />
+                                {fieldErrors.account_manager?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                                        {fieldErrors.account_manager?.message.toString()}
+                                    </Typography>
+                                )}
+                            </>
+                        ) : (
+                            <TextField
+                                id="account_manager"
+                                label="Opiekun klienta"
+                                sx={{my: 1, width: "30ch"}}
+                                {...register("account_manager")}
+                                inputProps={{readOnly: true}}
+                            />
+                        )}
+                        <Divider/>
 
                         {props.editing ? (
                             <>
@@ -293,6 +381,54 @@ export default function AdditionalClientInfoComponent(props) {
                             />
                         )}
 
+                        {props.editing ? (
+                            <>
+                                <Autocomplete
+                                    id="industry"
+                                    options={props.industry.map(e => ({
+                                        id: e.id,
+                                        name: e.name,
+                                        label: e.name
+                                    }))}
+                                    sx={{width: "30ch"}}
+                                    value={data.industry.name}
+                                    isOptionEqualToValue={(option, value) => option.name === value}
+                                    onChange={(e, value) => {
+                                        setData({
+                                            ...data,
+                                            industry: value,
+                                        })
+                                        setEdited(true)
+                                    }}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            {...params}
+                                            label="Branża"
+                                            sx={{my: 1}}
+                                            {...register("industry")}
+                                            value={data.industry.name}
+                                            color={fieldErrors.industry?.message && "error"}
+                                        />
+                                    }
+                                />
+                                {fieldErrors.industry?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                                        {fieldErrors.industry?.message.toString()}
+                                    </Typography>
+                                )}
+                            </>
+                        ) : (
+                            <TextField
+                                id="industry"
+                                label="Branża"
+                                sx={{my: 1, width: "30ch"}}
+                                {...register("industry")}
+                                color={fieldErrors.industry?.message && "error"}
+                                inputProps={{readOnly: true}}
+                            />
+                        )}
+
+                        <Divider/>
 
                         {props.editing ? (
                             <>
@@ -358,88 +494,6 @@ export default function AdditionalClientInfoComponent(props) {
                             />
                         )}
 
-                        {props.editing ? (
-                            <>
-                                <Autocomplete
-                                    id="account_manager"
-                                    options={props.user.map(e => ({
-                                        id: e.id,
-                                        name: e.name,
-                                        label: e.name
-                                    }))}
-                                    sx={{width: "30ch"}}
-                                    value={data.account_manager.name}
-                                    isOptionEqualToValue={(option, value) => option.name === value}
-                                    onChange={(e, value) => {
-                                        setData({
-                                            ...data,
-                                            account_manager: value,
-                                        })
-                                        setEdited(true)
-                                    }}
-                                    renderInput={(params) =>
-                                        <TextField
-                                            {...params}
-                                            label="Opiekun klienta"
-                                            sx={{my: 1}}
-                                            {...register("account_manager")}
-                                            value={data.account_manager.name}
-                                            color={fieldErrors.account_manager?.message && "error"}
-                                        />
-                                    }
-                                />
-                                {fieldErrors.account_manager?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
-                                        {fieldErrors.account_manager?.message.toString()}
-                                    </Typography>
-                                )}
-                            </>
-                        ) : (
-                            <TextField
-                                id="account_manager"
-                                label="Opiekun klienta"
-                                sx={{my: 1, width: "30ch"}}
-                                {...register("account_manager")}
-                                inputProps={{readOnly: true}}
-                            />
-                        )}
-
-                        <FormControl
-                            sx={{
-                                ml: 2,
-                                width: "30ch",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: 'flex-start'
-                            }}
-                        >
-                            <FormControlLabel
-                                label={<Typography>Czarna lista</Typography>}
-                                control={
-                                    <Checkbox
-                                        id="blacklist-select"
-                                        label="Czarna lista"
-                                        size={"large"}
-                                        disabled={!props.editing}
-                                        checked={checkedBlacklist}
-                                        onChange={(value) => {
-                                            // setProductModel({...productModel, product_group_id: value.target.value});
-                                            setCheckedBlacklist(value.target.checked)
-                                            setData({
-                                                ...data,
-                                                blacklist: value.target.checked ? 1 : 0,
-                                            })
-                                            setEdited(true)
-                                        }}
-                                    />
-                                }
-                            />
-                            {fieldErrors.blacklist?.message && (
-                                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
-                                    {fieldErrors.blacklist?.message.toString()}
-                                </Typography>
-                            )}
-                        </FormControl>
                         <Divider/>
 
                         <Typography

@@ -23,7 +23,7 @@ import {
 export default function DictionariesAddDialog({
                                                   open,
                                                   setOpen,
-                                                  reloadData,
+                                                  reloadData = null,
                                                   dictionaryType,
                                                   clickedRow,
                                                   isGpc,
@@ -80,6 +80,10 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "group") return "grupę"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "markę"
         else if (dictionaryType === "gs1.gpc") return "klasyfikację GPC"
+        else if (dictionaryType === "industry") return "branże"
+        else if (dictionaryType === "acquisition") return "źródło pozyskania"
+        else if (dictionaryType === "country") return "kraj"
+        else if (dictionaryType === "activity") return "typ aktywności"
     }
     const currentDictionaryString2 = () => {
         if (dictionaryType === "sizes") return "rozmiaru"
@@ -88,6 +92,10 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "marki"
         else if (dictionaryType === "gs1.gpc") return "klasyfikacji GPC"
         else if (dictionaryType === "b2c.color") return "kolor"
+        else if (dictionaryType === "industry") return "branży"
+        else if (dictionaryType === "acquisition") return "źródła pozyskania"
+        else if (dictionaryType === "country") return "kraju"
+        else if (dictionaryType === "activity") return "typu aktywności"
     }
 
     const save = () => {
@@ -101,7 +109,7 @@ export default function DictionariesAddDialog({
                         reset();
                         setActiveStep(0);
                         enqueueSnackbar("Dodano element w słowniku", {variant: 'success'})
-                        reloadData();
+                        if (reloadData) reloadData();
                         handleClose();
                     },
                     onError: errors => {
@@ -118,7 +126,7 @@ export default function DictionariesAddDialog({
                         reset();
                         setActiveStep(0);
                         enqueueSnackbar(`Zaktualizowano ${currentDictionaryString()}`, {variant: 'success'})
-                        reloadData();
+                        if (reloadData) reloadData();
                         handleClose();
                     },
                     onError: errors => {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreB2bActivityTypeRequest;
 use App\Http\Requests\Client\UpdateB2bActivityTypeRequest;
 use App\Models\B2bActivityType;
+use Inertia\Inertia;
 
 class B2bActivityTypeController extends Controller
 {
@@ -14,7 +15,9 @@ class B2bActivityTypeController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Activity", [
+            "activityTypes" => B2bActivityType::all(),
+        ]);
     }
 
     /**
@@ -30,7 +33,7 @@ class B2bActivityTypeController extends Controller
      */
     public function store(StoreB2bActivityTypeRequest $request)
     {
-        //
+        B2bActivityType::create($request->validated());
     }
 
     /**
@@ -54,7 +57,7 @@ class B2bActivityTypeController extends Controller
      */
     public function update(UpdateB2bActivityTypeRequest $request, B2bActivityType $b2bActivityType)
     {
-        //
+        $b2bActivityType->update($request->validated());
     }
 
     /**
@@ -62,6 +65,6 @@ class B2bActivityTypeController extends Controller
      */
     public function destroy(B2bActivityType $b2bActivityType)
     {
-        //
+        $b2bActivityType->delete();
     }
 }

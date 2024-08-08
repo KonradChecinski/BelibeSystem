@@ -61,6 +61,7 @@ class AdditionalClientController extends Controller
         ]);
         $client->status()->associate($request->status["id"]);
         $client->sourceOfAcquisition()->associate($request->source_of_acquisition["id"]);
+        $client->industry()->associate($request->industry["id"]);
         $client->payments()->sync(collect($request->payments)->map(function ($payment) {
             return $payment["id"];
         }));

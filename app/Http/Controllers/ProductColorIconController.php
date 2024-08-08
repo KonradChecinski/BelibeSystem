@@ -15,7 +15,7 @@ class ProductColorIconController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Settings/Dictionaries/ColorIcon", [
+        return Inertia::render("System/Settings/Dictionaries/Models/ColorIcon", [
             'productColors' => ProductColorIcon::withCount(["colors"])
                 ->with(["colorsWithModels"])
                 ->get(),

@@ -17,7 +17,7 @@ class ProductGroupController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Settings/Dictionaries/Group");
+        return Inertia::render("System/Settings/Dictionaries/Models/Group");
     }
 
     public function data(Request $request) //DataProductModelRequest

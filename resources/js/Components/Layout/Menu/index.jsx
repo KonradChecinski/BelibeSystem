@@ -365,6 +365,34 @@ export default function Menu({showContent, auth}) {
                                 active={false}
                                 text={"B2B"}
                             >
+                                <SubMenuLink
+                                    href={route("system.settings.industry")}
+                                    active={route().current("system.settings.industry")}
+                                    text={t("Industries")}
+                                />
+                                <SubMenuLink
+                                    active={false}
+                                    text={t("Payments")}
+                                />
+                                <SubMenuLink
+                                    href={route("system.settings.acquisition")}
+                                    active={route().current("system.settings.acquisition")}
+                                    text={t("Source of acquisitions")}
+                                />
+                                <SubMenuLink
+                                    active={false}
+                                    text={t("Deliveries")}
+                                />
+                                <SubMenuLink
+                                    href={route("system.settings.country")}
+                                    active={route().current("system.settings.country")}
+                                    text={t("Countries")}
+                                />
+                                <SubMenuLink
+                                    href={route("system.settings.activity")}
+                                    active={route().current("system.settings.activity")}
+                                    text={t("Activity types")}
+                                />
 
                             </SubMenuLink>
                         </SubMenuLink>

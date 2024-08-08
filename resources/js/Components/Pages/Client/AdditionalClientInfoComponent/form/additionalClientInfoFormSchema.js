@@ -10,6 +10,9 @@ const schema = yup.object().shape({
     source_of_acquisition: yup
         .string()
         .required("Pole jest wymagane"),
+    industry: yup
+        .string()
+        .required("Pole jest wymagane"),
     payments: yup
         .mixed(),
     // .required("Pole jest wymagane")

@@ -142,7 +142,7 @@ export default function BasicClientInfoComponent(props) {
                     {/*    Informacje podstawowe*/}
                     {/*</Typography>*/}
 
-                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>
+                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
                         <Box>
                             <TextField id="nip" label="NIP" variant="outlined"
                                        value={data.nip}
@@ -174,7 +174,7 @@ export default function BasicClientInfoComponent(props) {
                                            setEdited(true)
                                        }}
                                        inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "30ch"}}/>
+                                       sx={{width: 1}}/>
                             {fieldErrors.name?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
                                     {fieldErrors.name?.message.toString()}

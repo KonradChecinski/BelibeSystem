@@ -17,7 +17,7 @@ class GS1GPCController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Settings/Dictionaries/GS1/GPC");
+        return Inertia::render("System/Settings/Dictionaries/Models/GS1/GPC");
 
     }
 

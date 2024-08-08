@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreB2bCountryRequest;
 use App\Http\Requests\Client\UpdateB2bCountryRequest;
 use App\Models\B2bCountry;
+use Inertia\Inertia;
 
 class B2bCountryController extends Controller
 {
@@ -14,7 +15,10 @@ class B2bCountryController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Country", [
+            "countries" => B2bCountry::all(),
+        ]);
+
     }
 
     /**
@@ -30,7 +34,7 @@ class B2bCountryController extends Controller
      */
     public function store(StoreB2bCountryRequest $request)
     {
-        //
+        B2bCountry::create($request->validated());
     }
 
     /**
@@ -54,7 +58,7 @@ class B2bCountryController extends Controller
      */
     public function update(UpdateB2bCountryRequest $request, B2bCountry $b2bCountry)
     {
-        //
+        $b2bCountry->update($request->validated());
     }
 
     /**
@@ -62,6 +66,6 @@ class B2bCountryController extends Controller
      */
     public function destroy(B2bCountry $b2bCountry)
     {
-        //
+        $b2bCountry->delete();
     }
 }

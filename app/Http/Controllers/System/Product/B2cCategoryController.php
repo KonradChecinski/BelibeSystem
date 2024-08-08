@@ -17,7 +17,7 @@ class B2cCategoryController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Settings/Dictionaries/B2C/Category");
+        return Inertia::render("System/Settings/Dictionaries/Models/B2C/Category");
     }
 
 

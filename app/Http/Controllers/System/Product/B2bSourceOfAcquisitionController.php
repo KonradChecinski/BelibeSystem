@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreB2bSourceOfAcquisitionRequest;
 use App\Http\Requests\Client\UpdateB2bSourceOfAcquisitionRequest;
 use App\Models\B2bSourceOfAcquisition;
+use Inertia\Inertia;
 
 class B2bSourceOfAcquisitionController extends Controller
 {
@@ -14,7 +15,10 @@ class B2bSourceOfAcquisitionController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Acquisition", [
+            "acquisitions" => B2bSourceOfAcquisition::all(),
+        ]);
+
     }
 
     /**
@@ -30,7 +34,7 @@ class B2bSourceOfAcquisitionController extends Controller
      */
     public function store(StoreB2bSourceOfAcquisitionRequest $request)
     {
-        //
+        B2bSourceOfAcquisition::create($request->validated());
     }
 
     /**
@@ -54,7 +58,7 @@ class B2bSourceOfAcquisitionController extends Controller
      */
     public function update(UpdateB2bSourceOfAcquisitionRequest $request, B2bSourceOfAcquisition $b2bSourceOfAcquisition)
     {
-        //
+        $b2bSourceOfAcquisition->update($request->validated());
     }
 
     /**
@@ -62,6 +66,6 @@ class B2bSourceOfAcquisitionController extends Controller
      */
     public function destroy(B2bSourceOfAcquisition $b2bSourceOfAcquisition)
     {
-        //
+        $b2bSourceOfAcquisition->delete();
     }
 }

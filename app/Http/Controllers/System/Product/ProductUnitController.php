@@ -17,7 +17,7 @@ class ProductUnitController extends Controller
      */
     public function index()
     {
-        return Inertia::render("System/Settings/Dictionaries/Unit");
+        return Inertia::render("System/Settings/Dictionaries/Models/Unit");
     }
 
     public function data(Request $request) //DataProductModelRequest

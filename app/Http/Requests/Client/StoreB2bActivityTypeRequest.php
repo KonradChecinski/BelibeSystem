@@ -11,7 +11,7 @@ class StoreB2bActivityTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,7 @@ class StoreB2bActivityTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|min:3'
         ];
     }
 }

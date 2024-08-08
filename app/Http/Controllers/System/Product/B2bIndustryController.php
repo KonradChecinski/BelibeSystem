@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreB2bIndustryRequest;
 use App\Http\Requests\Client\UpdateB2bIndustryRequest;
 use App\Models\B2bIndustry;
+use Inertia\Inertia;
 
 class B2bIndustryController extends Controller
 {
@@ -14,7 +15,9 @@ class B2bIndustryController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Industry", [
+            "industries" => B2bIndustry::all(),
+        ]);
     }
 
     /**
@@ -30,7 +33,7 @@ class B2bIndustryController extends Controller
      */
     public function store(StoreB2bIndustryRequest $request)
     {
-        //
+        B2bIndustry::create($request->validated());
     }
 
     /**
@@ -54,7 +57,7 @@ class B2bIndustryController extends Controller
      */
     public function update(UpdateB2bIndustryRequest $request, B2bIndustry $b2bIndustry)
     {
-        //
+        $b2bIndustry->update($request->validated());
     }
 
     /**
@@ -62,6 +65,6 @@ class B2bIndustryController extends Controller
      */
     public function destroy(B2bIndustry $b2bIndustry)
     {
-        //
+        $b2bIndustry->delete();
     }
 }
