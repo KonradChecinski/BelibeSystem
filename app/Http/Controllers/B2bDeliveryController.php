@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\B2bDelivery;
 use App\Http\Requests\StoreB2bDeliveryRequest;
 use App\Http\Requests\UpdateB2bDeliveryRequest;
+use Inertia\Inertia;
 
 class B2bDeliveryController extends Controller
 {
@@ -13,7 +14,10 @@ class B2bDeliveryController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Delivery", [
+            "deliveries" => B2bDelivery::all(),
+        ]);
+
     }
 
     /**
@@ -29,7 +33,7 @@ class B2bDeliveryController extends Controller
      */
     public function store(StoreB2bDeliveryRequest $request)
     {
-        //
+        B2bDelivery::create($request->validated());
     }
 
     /**
@@ -53,7 +57,7 @@ class B2bDeliveryController extends Controller
      */
     public function update(UpdateB2bDeliveryRequest $request, B2bDelivery $b2bDelivery)
     {
-        //
+        $b2bDelivery->update($request->validated());
     }
 
     /**
@@ -61,6 +65,6 @@ class B2bDeliveryController extends Controller
      */
     public function destroy(B2bDelivery $b2bDelivery)
     {
-        //
+        $b2bDelivery->delete();
     }
 }

@@ -371,7 +371,8 @@ export default function Menu({showContent, auth}) {
                                     text={t("Industries")}
                                 />
                                 <SubMenuLink
-                                    active={false}
+                                    href={route("system.settings.payment")}
+                                    active={route().current("system.settings.payment")}
                                     text={t("Payments")}
                                 />
                                 <SubMenuLink
@@ -380,7 +381,8 @@ export default function Menu({showContent, auth}) {
                                     text={t("Source of acquisitions")}
                                 />
                                 <SubMenuLink
-                                    active={false}
+                                    href={route("system.settings.delivery")}
+                                    active={route().current("system.settings.delivery")}
                                     text={t("Deliveries")}
                                 />
                                 <SubMenuLink

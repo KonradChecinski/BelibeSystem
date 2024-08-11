@@ -153,14 +153,14 @@ export default function Navbar({auth}) {
                                            }
                                            }/>
 
-                                <Tooltip title="Show events in system">
-                                    <IconButton size={"large"}
-                                                onClick={() => {
-                                                    router.visit(route("telescope"));
-                                                }}>
-                                        <Event sx={{fontSize: 25}}/>
-                                    </IconButton>
-                                </Tooltip>
+                                {/*<Tooltip title="Show events in system">*/}
+                                {/*    <IconButton size={"large"}*/}
+                                {/*                onClick={() => {*/}
+                                {/*                    router.visit(route("telescope"));*/}
+                                {/*                }}>*/}
+                                {/*        <Event sx={{fontSize: 25}}/>*/}
+                                {/*    </IconButton>*/}
+                                {/*</Tooltip>*/}
 
                                 {/*<Tooltip title="Delete">*/}
                                 {/*    <IconButton>*/}

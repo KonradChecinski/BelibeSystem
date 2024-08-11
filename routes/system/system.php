@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use App\Http\Controllers\B2bDeliveryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\InvoiceB2bController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\System\Client\ClientUserController;
 use App\Http\Controllers\System\Product\B2bActivityTypeController;
 use App\Http\Controllers\System\Product\B2bCountryController;
 use App\Http\Controllers\System\Product\B2bIndustryController;
+use App\Http\Controllers\System\Product\B2bPaymentController;
 use App\Http\Controllers\System\Product\B2BProductModelController;
 use App\Http\Controllers\System\Product\B2bSourceOfAcquisitionController;
 use App\Http\Controllers\System\Product\B2cCategoryController;
@@ -308,10 +310,6 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
             Route::group(['prefix' => '/b2b'], function () {
 
-//                payments
-//                deliveries
-
-
 //                Industries
                 Route::get("/industry/", [B2bIndustryController::class, 'index'])->name("system.settings.industry");
                 Route::post("/industry/", [B2bIndustryController::class, 'store'])->name("system.settings.industry.create");
@@ -335,6 +333,18 @@ Route::middleware(["auth:user", "verified"])->group(function () {
                 Route::post("/activity/", [B2bActivityTypeController::class, 'store'])->name("system.settings.activity.create");
                 Route::patch("/activity/{b2bActivityType}", [B2bActivityTypeController::class, 'update'])->name("system.settings.activity.update");
                 Route::delete("/activity/{b2bActivityType}", [B2bActivityTypeController::class, 'destroy'])->name("system.settings.activity.delete");
+
+//                payments
+                Route::get("/payment/", [B2bPaymentController::class, 'index'])->name("system.settings.payment");
+                Route::post("/payment/", [B2bPaymentController::class, 'store'])->name("system.settings.payment.create");
+                Route::patch("/payment/{b2bPayment}", [B2bPaymentController::class, 'update'])->name("system.settings.payment.update");
+                Route::delete("/payment/{b2bPayment}", [B2bPaymentController::class, 'destroy'])->name("system.settings.payment.delete");
+
+//                deliveries
+                Route::get("/delivery/", [B2bDeliveryController::class, 'index'])->name("system.settings.delivery");
+                Route::post("/delivery/", [B2bDeliveryController::class, 'store'])->name("system.settings.delivery.create");
+                Route::patch("/delivery/{b2bDelivery}", [B2bDeliveryController::class, 'update'])->name("system.settings.delivery.update");
+                Route::delete("/delivery/{b2bDelivery}", [B2bDeliveryController::class, 'destroy'])->name("system.settings.delivery.delete");
 
             });
 

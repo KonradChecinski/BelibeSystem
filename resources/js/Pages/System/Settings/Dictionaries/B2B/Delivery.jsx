@@ -2,10 +2,10 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import GS1GPCTable from "@/Components/Table/Settings/GS1GPCTable";
+import DeliveryTable from "@/Components/Table/Settings/DeliveryTable";
 
-export default function GPC(props) {
-    // console.log(props)
+export default function Delivery(props) {
+    console.log(props)
     const {t} = useLaravelReactI18n();
 
     return (
@@ -13,12 +13,12 @@ export default function GPC(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Klasyfikacja GPC")
+                t("Delivery")
             }
         >
-            <Head title={t("Klasyfikacja GPC")}/>
+            <Head title={t("Delivery")}/>
             <Card sx={{height: "100%", width: 1}}>
-                <GS1GPCTable {...props} />
+                <DeliveryTable {...props} />
             </Card>
         </UserLayout>
     );

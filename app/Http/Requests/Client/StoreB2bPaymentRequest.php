@@ -11,7 +11,7 @@ class StoreB2bPaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreB2bPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|min:3',
+            'subiekt_id' => 'numeric|required',
+            'type' => 'numeric|required|min:1|max:2',
         ];
     }
 }
