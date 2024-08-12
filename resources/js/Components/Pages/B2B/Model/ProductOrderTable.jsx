@@ -80,8 +80,8 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
 
                 <TableBody>
                     {model.colors.sort(sortByColorShortcut).map(color => {
-                        const image = color.images.find(i => i.order === 0);
-                        const imageIndex = imageArray.findIndex(i => i.id === image.id);
+                        const image = color.images?.find(i => i.order === 0);
+                        const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
                         return (
                             <TableRow hover key={color.id} sx={{height: 105}}>
                                 <HoveringCell column={1}>
@@ -93,16 +93,33 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                     </Typography>
                                 </HoveringCell>
                                 <HoveringCell column={2}>
+                                    {image ?
+                                        (
+                                            <Box component={"img"}
+                                                 src={route("images.webp", {path: image.path})}
+                                                 width={50}
+                                                 onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                 sx={{
+                                                     m: "auto",
+                                                     cursor: "pointer",
+                                                 }}
+                                            />
+                                        )
+                                        :
 
-                                    <Box component={"img"}
-                                         src={route("images.webp", {path: image.path})}
-                                         width={50}
-                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
-                                         sx={{
-                                             m: "auto",
-                                             cursor: "pointer",
-                                         }}
-                                    />
+                                        (
+                                            <Box component={"img"}
+                                                 src={route("images.webp", {path: "brak.jpg"})}
+                                                 width={50}
+                                                 onClick={() => lightbox.loadAndOpen(1)}
+                                                 sx={{
+                                                     m: "auto",
+                                                     cursor: "pointer",
+                                                 }}
+                                            />
+                                        )
+                                    }
+
 
                                 </HoveringCell>
                                 {sortBySizesName(model.sizes).map((size, id) => {
