@@ -108,7 +108,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                 {sortBySizesName(model.sizes).map((size, id) => {
                                     const product = color.products.find(p => p.size.id === size.id);
                                     let quantity = product?.available;
-                                    if (quantity > 30) quantity = 30;
+                                    // if (quantity > 30) quantity = 30;
 
                                     return (
                                         <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
