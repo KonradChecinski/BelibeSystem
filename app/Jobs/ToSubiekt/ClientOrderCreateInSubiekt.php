@@ -53,6 +53,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
 //            dd($order, $client, $orderProducts, $payment, $location, $delivery);
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
+            $zamowienie->KontrahentId = $client->subiekt_id;
             $zamowienie->NumerOryginalny = mb_substr(Str::ascii($order->number), 0, 30);
             $zamowienie->LiczonyOdCenBrutto = false;
             $zamowienie->PoziomCenyId = 2;
@@ -129,7 +130,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $zamowienie->PlatnoscKredytId = $payment->subiekt_id;
             $zamowienie->Rozliczony = false;
 
-            $zamowienie->KontrahentId = $client->subiekt_id;
+
             $zamowienie->Wystawil = "B2B";
 
 
@@ -151,8 +152,9 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $uwagi .= "Uwagi: " . Str::ascii($order->comment);
             $zamowienie->Uwagi = mb_substr($uwagi, 0, 255);
 
-            if ($zamowienie->WartoscNetto != $order["total_net"]) $this->fail("Niezgodne kwoty zamówienia");
+            if ((((float)$zamowienie->WartoscNetto) * 100) != $order["total_net"]) $this->fail("Niezgodne kwoty zamówienia" . " " . (((float)$zamowienie->WartoscNetto) * 100) . " " . $order["total_net"]);
 
+//            $zamowienie->Wyswietl();
             $zamowienie->Zapisz();
 
             $zamowienie->PlatnoscKredytId = $payment->subiekt_id;
