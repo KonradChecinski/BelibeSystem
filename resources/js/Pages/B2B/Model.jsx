@@ -58,7 +58,6 @@ export default function B2bModel(props) {
     const imageArray = props.model.colors.sort(sortByColorShortcut).map((color) => {
         return color.images?.sort((imageA, imageB) => imageA.order - imageB.order)
     }).flat();
-    console.log(imageArray, imageArray.filter(Boolean))
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
 

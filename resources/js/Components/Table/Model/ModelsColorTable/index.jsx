@@ -174,7 +174,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                         !Boolean(color.name) ||
                         !Boolean(props.productModel.description_b2b) ||
                         !Boolean(props.productModel.categories.length) ||
-                        !Boolean(props.productModel.images.filter(i => i.main > 0).length === 2) ||
+                        // !Boolean(props.productModel.images.filter(i => i.main > 0).length === 2) ||
                         !Boolean(params.row.size) ||
                         !Boolean(params.row.barcodes.length)
                 }
@@ -183,7 +183,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                     <Tooltip
                         title={CanEdit() ? "Sprawdź czy masz podane wszystkie dane potrzebne do b2b: " +
                             "nazwa i symbol w module \"Podstawowe informacje\", kategoria, opis w module \"B2B\", nazwa koloru, ikona koloru w edycji koloru, " +
-                            "kod kreskowy, rozmiar w produkcie, wybrane 2 zdjęcia główne modelu" : null}
+                            "kod kreskowy, rozmiar w produkcie" : null}
                         arrow>
                                 <span>
                     <Checkbox
