@@ -56,7 +56,7 @@ export default function B2bModel(props) {
     }
 
     const imageArray = props.model.colors.sort(sortByColorShortcut).map((color) => {
-        return color.images.sort((imageA, imageB) => imageA.order - imageB.order)
+        return color.images?.sort((imageA, imageB) => imageA.order - imageB.order)
     }).flat();
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -146,37 +146,84 @@ export default function B2bModel(props) {
                                 modules={[Autoplay, Pagination, Navigation, Thumbs]}
                                 className="mySwiper"
                             >
-                                {imageArray.map((image) => {
-                                    return (
-                                        <SwiperSlide key={image.id}>
-                                            <Box sx={{
-                                                "& .product-image": {
-                                                    // height: 600,
-                                                    // maxWidth: "fit-content"
-                                                    width: 1
-                                                }
-                                            }}>
-                                                <a
-                                                    href={route("images.webp", {path: image.path})}
-                                                    data-pswp-width={image.width}
-                                                    data-pswp-height={image.height}
-                                                    key={"pswp-gallery" + "-" + image.id}//index
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className={"relative"}
-                                                >
-                                                    <img
-                                                        src={route("images.webp", {path: image.path})}
-                                                        alt={"brak"}
-                                                        className={"product-image"}
-                                                        loading="lazy"
-                                                    />
+                                {
+                                    imageArray.length > 0 ?
+                                        (
+                                            <>
+                                                {
+                                                    imageArray.map((image) => {
+                                                        return (
+                                                            <>
+                                                                {image &&
+                                                                    (
+                                                                        <SwiperSlide key={image.id}>
+                                                                            <Box sx={{
+                                                                                "& .product-image": {
+                                                                                    // height: 600,
+                                                                                    // maxWidth: "fit-content"
+                                                                                    width: 1
+                                                                                }
+                                                                            }}>
+                                                                                <a
+                                                                                    href={route("images.webp", {path: image.path})}
+                                                                                    data-pswp-width={image.width}
+                                                                                    data-pswp-height={image.height}
+                                                                                    key={"pswp-gallery" + "-" + image.id}//index
+                                                                                    target="_blank"
+                                                                                    rel="noreferrer"
+                                                                                    className={"relative"}
+                                                                                >
+                                                                                    <img
+                                                                                        src={route("images.webp", {path: image.path})}
+                                                                                        alt={"brak"}
+                                                                                        className={"product-image"}
+                                                                                        loading="lazy"
+                                                                                    />
 
-                                                </a>
-                                            </Box>
-                                        </SwiperSlide>
-                                    )
-                                })}
+                                                                                </a>
+                                                                            </Box>
+                                                                        </SwiperSlide>
+                                                                    )
+                                                                }
+                                                            </>
+                                                        )
+                                                    })
+                                                }
+
+                                            </>
+                                        )
+                                        :
+                                        (
+                                            <SwiperSlide key={1}>
+                                                <Box sx={{
+                                                    "& .product-image": {
+                                                        // height: 600,
+                                                        // maxWidth: "fit-content"
+                                                        width: 1
+                                                    }
+                                                }}>
+                                                    <a
+                                                        href={route("images.webp", {path: "brak.jpg"})}
+                                                        data-pswp-width={1280}
+                                                        data-pswp-height={1920}
+                                                        key={"pswp-gallery" + "-" + 1}//index
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className={"relative"}
+                                                    >
+                                                        <img
+                                                            src={route("images.webp", {path: "brak.jpg"})}
+                                                            alt={"brak"}
+                                                            className={"product-image"}
+                                                            loading="lazy"
+                                                        />
+
+                                                    </a>
+                                                </Box>
+                                            </SwiperSlide>
+                                        )
+
+                                }
 
 
                             </Swiper>
@@ -200,9 +247,42 @@ export default function B2bModel(props) {
                                 modules={[FreeMode, Navigation, Thumbs]}
                                 className="mySwiper"
                             >
-                                {imageArray.map((image) => {
-                                    return (
-                                        <SwiperSlide key={image.id}>
+                                {imageArray.length > 0 ?
+                                    (
+                                        <>
+                                            {imageArray.map((image) => {
+
+                                                return (
+                                                    <>
+                                                        {image && (
+                                                            <SwiperSlide key={image.id}>
+                                                                <Box sx={{
+                                                                    "& .product-image": {
+                                                                        height: 50,
+                                                                        maxWidth: "fit-content",
+                                                                        width: 1,
+                                                                        cursor: "pointer",
+                                                                    }
+                                                                }}>
+                                                                    <img
+                                                                        src={route("images.webp", {path: image.path})}
+                                                                        alt={"brak"}
+                                                                        className={"product-image"}
+                                                                        loading="lazy"
+                                                                    />
+                                                                </Box>
+                                                            </SwiperSlide>
+                                                        )
+
+                                                        }
+                                                    </>
+                                                )
+                                            })}
+                                        </>
+                                    )
+                                    :
+                                    (
+                                        <SwiperSlide key={1}>
                                             <Box sx={{
                                                 "& .product-image": {
                                                     height: 50,
@@ -212,7 +292,7 @@ export default function B2bModel(props) {
                                                 }
                                             }}>
                                                 <img
-                                                    src={route("images.webp", {path: image.path})}
+                                                    src={route("images.webp", {path: "brak.jpg"})}
                                                     alt={"brak"}
                                                     className={"product-image"}
                                                     loading="lazy"
@@ -220,7 +300,8 @@ export default function B2bModel(props) {
                                             </Box>
                                         </SwiperSlide>
                                     )
-                                })}
+                                }
+
                             </Swiper>
                         </Box>
                     </Box>

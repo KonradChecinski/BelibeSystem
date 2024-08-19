@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreB2bPaymentRequest;
 use App\Http\Requests\Client\UpdateB2bPaymentRequest;
 use App\Models\B2bPayment;
+use Inertia\Inertia;
 
 class B2bPaymentController extends Controller
 {
@@ -14,7 +15,9 @@ class B2bPaymentController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("System/Settings/Dictionaries/B2B/Payment", [
+            "payments" => B2bPayment::all(),
+        ]);
     }
 
     /**
@@ -30,7 +33,7 @@ class B2bPaymentController extends Controller
      */
     public function store(StoreB2bPaymentRequest $request)
     {
-        //
+        B2bPayment::create($request->validated());
     }
 
     /**
@@ -54,7 +57,7 @@ class B2bPaymentController extends Controller
      */
     public function update(UpdateB2bPaymentRequest $request, B2bPayment $b2bPayment)
     {
-        //
+        $b2bPayment->update($request->validated());
     }
 
     /**
@@ -62,6 +65,6 @@ class B2bPaymentController extends Controller
      */
     public function destroy(B2bPayment $b2bPayment)
     {
-        //
+        $b2bPayment->delete();
     }
 }

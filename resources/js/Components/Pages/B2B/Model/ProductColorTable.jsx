@@ -37,21 +37,39 @@ export default function ProductColorTable({model, lightbox, imageArray}) {
                     </TableRow>
                     <TableRow>
                         {model.colors.sort(sortByColorShortcut).map(color => {
-                            const image = color.images.find(i => i.order === 0);
-                            const imageIndex = imageArray.findIndex(i => i.id === image.id);
+                            const image = color.images?.find(i => i.order === 0);
+                            const imageIndex = image ? imageArray?.findIndex(i => i.id === image.id) : null;
 
                             return (
                                 <HoveringCell column={color.id} key={color.id}>
-                                    <Box component={"img"}
-                                         src={route("images.webp", {path: image.path})}
-                                         width={50}
-                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
-                                         sx={{
-                                             m: "auto",
-                                             cursor: "pointer",
-                                             minWidth: 50
-                                         }}
-                                    />
+                                    {image ?
+                                        (
+                                            <Box component={"img"}
+                                                 src={route("images.webp", {path: image.path})}
+                                                 width={50}
+                                                 onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                 sx={{
+                                                     m: "auto",
+                                                     cursor: "pointer",
+                                                     minWidth: 50
+                                                 }}
+                                            />
+                                        )
+                                        :
+                                        (
+                                            <Box component={"img"}
+                                                 src={route("images.webp", {path: "brak.jpg"})}
+                                                 width={50}
+                                                 onClick={() => lightbox.loadAndOpen(1)}
+                                                 sx={{
+                                                     m: "auto",
+                                                     cursor: "pointer",
+                                                     minWidth: 50
+                                                 }}
+                                            />
+                                        )
+                                    }
+
 
                                 </HoveringCell>
                             )

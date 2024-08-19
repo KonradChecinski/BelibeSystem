@@ -151,14 +151,14 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
                                            }
                                            }/>
 
-                                <Tooltip title="Show events in system">
-                                    <IconButton size={"large"}
-                                                onClick={() => {
-                                                    router.visit(route("telescope"));
-                                                }}>
-                                        <Event sx={{fontSize: 25}}/>
-                                    </IconButton>
-                                </Tooltip>
+                                {/*<Tooltip title="Show events in system">*/}
+                                {/*    <IconButton size={"large"}*/}
+                                {/*                onClick={() => {*/}
+                                {/*                    router.visit(route("telescope"));*/}
+                                {/*                }}>*/}
+                                {/*        <Event sx={{fontSize: 25}}/>*/}
+                                {/*    </IconButton>*/}
+                                {/*</Tooltip>*/}
 
                                 <Tooltip title={"Zobacz ulubione"}>
                                     <IconButton size={"large"}

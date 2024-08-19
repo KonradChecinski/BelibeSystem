@@ -2,9 +2,9 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import GS1GPCTable from "@/Components/Table/Settings/GS1GPCTable";
+import PaymentTable from "@/Components/Table/Settings/PaymentTable";
 
-export default function GPC(props) {
+export default function Payment(props) {
     // console.log(props)
     const {t} = useLaravelReactI18n();
 
@@ -13,12 +13,12 @@ export default function GPC(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Klasyfikacja GPC")
+                t("Payment")
             }
         >
-            <Head title={t("Klasyfikacja GPC")}/>
+            <Head title={t("Payment")}/>
             <Card sx={{height: "100%", width: 1}}>
-                <GS1GPCTable {...props} />
+                <PaymentTable {...props} />
             </Card>
         </UserLayout>
     );

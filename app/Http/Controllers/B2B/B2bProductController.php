@@ -73,7 +73,7 @@ class B2bProductController extends Controller
         ]);
         $client = Client::find(Helper::getClientIdToB2b());
 
-
+//        dd($productModel, $productModel->productsToB2bWithRelation);
 //        dd($productModel->toArray());
         return Inertia::render('B2B/Model',
             [
