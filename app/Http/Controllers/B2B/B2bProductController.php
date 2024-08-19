@@ -90,7 +90,7 @@ class B2bProductController extends Controller
                     'sizes' => $productModel->sizesToB2b->map(fn($size) => [
                         "id" => $size->id,
                         "name" => $size->name
-                    ])->unique(),
+                    ])->unique()->values(),
                     'isFavorited' => $productModel->isFavoritedByClient($client),
                 ],
                 "cart" => $productModel->clientsCart($client)->get()
