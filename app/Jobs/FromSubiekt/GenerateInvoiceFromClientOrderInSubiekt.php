@@ -87,7 +87,7 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue
             'path' => $invoicePath,
         ]);
 
-        $order->client->notify(new InvoiceGeneratedClient($order));
+//        $order->client->notify(new InvoiceGeneratedClient($order));
 
 //        wyrazenie.DrukujDoPlikuWgWzorca(lWzorzec, bstrPlik, 0)
         //wzw_Id	wzw_Typ	wzw_Zrodlo	wzw_Nazwa
