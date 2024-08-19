@@ -114,15 +114,33 @@ export default function CartItems({props, discount}) {
                                                                 // zIndex: 500
 
                                                             }}>
-                                                                <Box component={"img"}
-                                                                     src={route("images.webp", {path: color.images[0].path})}
-                                                                     width={50}
-                                                                     sx={{
-                                                                         // m: "auto",
-                                                                         // cursor: "pointer",
-                                                                         mr: 2
-                                                                     }}
-                                                                />
+                                                                {color.images[0] ?
+                                                                    (
+                                                                        <Box component={"img"}
+                                                                             src={route("images.webp", {path: color.images[0].path})}
+                                                                             width={50}
+                                                                             sx={{
+                                                                                 // m: "auto",
+                                                                                 // cursor: "pointer",
+                                                                                 mr: 2
+                                                                             }}
+                                                                        />
+                                                                    )
+                                                                    :
+                                                                    (
+                                                                        <Box component={"img"}
+                                                                             src={route("images.webp", {path: "brak.jpg"})}
+                                                                             width={50}
+                                                                             sx={{
+                                                                                 // m: "auto",
+                                                                                 // cursor: "pointer",
+                                                                                 mr: 2
+                                                                             }}
+                                                                        />
+                                                                    )
+
+                                                                }
+
                                                                 <Box sx={{
                                                                     display: "flex",
                                                                     flexDirection: "column",

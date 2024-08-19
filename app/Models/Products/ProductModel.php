@@ -111,7 +111,7 @@ class ProductModel extends Model
     public function productsToB2bWithRelation(): HasMany
     {
         return $this->colors()
-            ->withWhereHas("images", function ($query) {
+            ->with("images", function ($query) {
                 $query->where("type", 1);
             })
             ->withWhereHas("products", function ($query) {

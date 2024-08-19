@@ -34,7 +34,7 @@ class B2bCartController extends Controller
                     "product_model_colors.shortcut",
                     "product_model_colors.name",
                     "product_model_colors.product_model_id");
-                $query->withWhereHas("images", function ($query) {
+                $query->with("images", function ($query) {
                     $query->where("type", 1);
                     $query->where("order", 0);
                     $query->select("product_model_color_id", "path");
