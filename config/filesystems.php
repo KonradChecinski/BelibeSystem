@@ -86,7 +86,8 @@ return [
             'visibility' => 'public', // `private` = 0600, `public` = 0644
             'directory_visibility' => 'private', // `private` = 0700, `public` = 0755
 
-            'permPublic' => 0664
+            'permPublic' => 0664,
+            'directoryPerm'=>0770,
 
             // Optional SFTP Settings...
             // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
