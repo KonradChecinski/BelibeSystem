@@ -399,6 +399,16 @@ export default function Menu({showContent, auth}) {
                             </SubMenuLink>
                         </SubMenuLink>
 
+                        <SubMenuLink
+                            active={false}
+                            text={"Allegro"}
+                        >
+                            <SubMenuLink
+                                href={route("system.settings.allegro.status")}
+                                active={route().current("system.settings.allegro.status")}
+                                text={"Status"}
+                            />
+                        </SubMenuLink>
                     </MainMenuLink>
                     : ""}
             </Box>

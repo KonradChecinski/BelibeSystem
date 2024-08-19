@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use App\Http\Controllers\AllegroTokenController;
 use App\Http\Controllers\B2bDeliveryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicPageController;
@@ -350,7 +351,12 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         });
 
+        Route::group(['prefix' => '/allegro'], function () {
+            Route::get("/status", [AllegroTokenController::class, 'index'])->name("system.settings.allegro.status");
+            Route::get("/get-token", [AllegroTokenController::class, 'create'])->name("system.settings.allegro.getToken");
+            Route::get("/token", [AllegroTokenController::class, 'token'])->name("system.settings.allegro.token");
 
+        });
     });
 });
 
@@ -363,10 +369,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("barcode", [TestController::class, 'store'])->name("system.test.barcodes");
 
 
-    Route::group(['prefix' => '/xml'], function () {
-        Route::get("merkandi", [XmlGeneratorController::class, "merkandiGenerateProductsXML"])->name("xml.merkandi");
-    }
-    );
+//    Route::group(['prefix' => '/xml'], function () {
+//        Route::get("merkandi", [XmlGeneratorController::class, "merkandiGenerateProductsXML"])->name("xml.merkandi");
+//    }
+//    );
 
 
     Route::get("install", [Install1Controller::class, 'install'])->name("install");
