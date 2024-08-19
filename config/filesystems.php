@@ -83,8 +83,10 @@ return [
 //            'passphrase' => env('SFTP_PASSPHRASE'),
 
             // Settings for file / directory permissions...
-            'visibility' => 'private', // `private` = 0600, `public` = 0644
+            'visibility' => 'public', // `private` = 0600, `public` = 0644
             'directory_visibility' => 'private', // `private` = 0700, `public` = 0755
+
+            'permPublic' => 0664
 
             // Optional SFTP Settings...
             // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
