@@ -5,10 +5,12 @@ import {createRoot} from "react-dom/client";
 import {createInertiaApp} from "@inertiajs/react";
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import {LaravelReactI18nProvider} from "laravel-react-i18n";
-import {SnackbarProvider} from "notistack";
+import {SnackbarProvider, closeSnackbar} from "notistack";
 import moment from "moment";
 import 'moment/dist/locale/pl';
 import 'moment/dist/locale/en-gb';
+import {Close} from "@mui/icons-material";
+import {IconButton} from "@mui/material";
 
 
 const appName =
@@ -51,11 +53,24 @@ createInertiaApp({
                 <SnackbarProvider
                     // dense
                     maxSnack={7}
-                    autoHideDuration={3000}
+                    autoHideDuration={13000}
                     anchorOrigin={{
-                        vertical: "bottom",
+                        vertical: "top",
                         horizontal: "right"
                     }}
+                    action={(snackbarId) => (
+                        <IconButton aria-label="close" onClick={() => closeSnackbar(snackbarId)}>
+                            <Close/>
+                        </IconButton>
+                    )}
+                    // classes={{
+                    //     containerRoot: {
+                    //         top: 264
+                    //     },
+                    //     root: {
+                    //         top: 264
+                    //     }
+                    // }}
                 >
                     <App {...props} />
                 </SnackbarProvider>
