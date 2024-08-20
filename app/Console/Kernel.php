@@ -17,6 +17,7 @@ use App\Jobs\Mail\SendClientTaskMail;
 use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
+use App\Jobs\ToSubiekt\BlokadaMisieczna;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Models\ClientTask;
@@ -57,6 +58,10 @@ class Kernel extends ConsoleKernel
 
         //Allegro
         $schedule->job(new AllegroRefreshToken)->everySixHours();
+
+        //Subiekt
+        $schedule->job(new BlokadaMisieczna)->monthlyOn(5, '07:00');
+        $schedule->job(new BlokadaMisieczna)->monthlyOn(6, '07:00');
 
         //Telescope
         $schedule->command('telescope:prune')->daily();
