@@ -160,7 +160,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         name: e.name,
                                         label: e.name
                                     }))}
-                                    sx={{width: "30ch"}}
+                                    sx={{width: "25ch"}}
                                     value={data.status.name}
                                     isOptionEqualToValue={(option, value) => option.name === value}
                                     onChange={(e, value) => {
@@ -191,7 +191,7 @@ export default function AdditionalClientInfoComponent(props) {
                             <TextField
                                 id="status"
                                 label="Status"
-                                sx={{my: 1, width: "30ch"}}
+                                sx={{my: 1, width: "25ch"}}
                                 {...register("status")}
                                 color={fieldErrors.status?.message && "error"}
                                 inputProps={{readOnly: true}}
@@ -245,7 +245,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         name: e.name,
                                         label: e.name
                                     }))}
-                                    sx={{width: "30ch"}}
+                                    sx={{width: "25ch"}}
                                     value={data.account_manager.name}
                                     isOptionEqualToValue={(option, value) => option.name === value}
                                     onChange={(e, value) => {
@@ -285,7 +285,7 @@ export default function AdditionalClientInfoComponent(props) {
 
                         {props.editing ? (
                             <>
-                                <FormControl sx={{width: "30ch", display: "flex", flexDirection: "column"}}>
+                                <FormControl sx={{width: "25ch", display: "flex", flexDirection: "column"}}>
                                     <InputLabel id="priority-select-label">Priorytet</InputLabel>
                                     <Select
                                         id="priority-select"
@@ -327,7 +327,7 @@ export default function AdditionalClientInfoComponent(props) {
                             <TextField
                                 id="priority-select"
                                 label="Priorytet"
-                                sx={{my: 1, width: "30ch"}}
+                                sx={{my: 1, width: "25ch"}}
                                 {...register("priority")}
                                 color={fieldErrors.priority?.message && "error"}
                                 inputProps={{readOnly: true}}
@@ -343,7 +343,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         name: e.name,
                                         label: e.name
                                     }))}
-                                    sx={{width: "30ch"}}
+                                    sx={{width: "25ch"}}
                                     value={data.source_of_acquisition.name}
                                     isOptionEqualToValue={(option, value) => option.name === value}
                                     onChange={(e, value) => {
@@ -374,7 +374,7 @@ export default function AdditionalClientInfoComponent(props) {
                             <TextField
                                 id="source_of_acquisition"
                                 label="Źródło pozyskania"
-                                sx={{my: 1, width: "30ch"}}
+                                sx={{my: 1, width: "25ch"}}
                                 {...register("source_of_acquisition")}
                                 color={fieldErrors.source_of_acquisition?.message && "error"}
                                 inputProps={{readOnly: true}}
@@ -390,7 +390,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         name: e.name,
                                         label: e.name
                                     }))}
-                                    sx={{width: "30ch"}}
+                                    sx={{width: "25ch"}}
                                     value={data.industry.name}
                                     isOptionEqualToValue={(option, value) => option.name === value}
                                     onChange={(e, value) => {
@@ -421,7 +421,7 @@ export default function AdditionalClientInfoComponent(props) {
                             <TextField
                                 id="industry"
                                 label="Branża"
-                                sx={{my: 1, width: "30ch"}}
+                                sx={{my: 1, width: "25ch"}}
                                 {...register("industry")}
                                 color={fieldErrors.industry?.message && "error"}
                                 inputProps={{readOnly: true}}
@@ -441,7 +441,7 @@ export default function AdditionalClientInfoComponent(props) {
                                         name: e.name,
                                         label: e.name
                                     }))}
-                                    sx={{width: "30ch"}}
+                                    sx={{width: "25ch"}}
                                     value={data.payments}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     onChange={(e, value) => {
@@ -488,7 +488,7 @@ export default function AdditionalClientInfoComponent(props) {
                             <TextField
                                 id="payments"
                                 label="Płatność"
-                                sx={{my: 1, width: "30ch"}}
+                                sx={{my: 1, width: "25ch"}}
                                 {...register("payments")}
                                 inputProps={{readOnly: true}}
                             />
@@ -506,7 +506,7 @@ export default function AdditionalClientInfoComponent(props) {
                         <FormControl
                             sx={{
                                 ml: 2,
-                                width: "30ch",
+                                width: "25ch",
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: 'flex-start'
