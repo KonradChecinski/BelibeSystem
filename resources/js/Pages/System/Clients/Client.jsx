@@ -44,7 +44,7 @@ export default function Client(props) {
                             <BasicClientInfoComponent {...props}/>
                         </IconGrid>
 
-                        <IconGrid xs={12} md={12} lg={12} xl={4} title={"Informacje dodatkowe"} icon={<AddBox/>}
+                        <IconGrid xs={12} md={12} lg={12} xl={4} title={"Dodatkowe"} icon={<AddBox/>}
                                   iconColor={"green"}>
                             <AdditionalClientInfoComponent {...props} />
                         </IconGrid>
