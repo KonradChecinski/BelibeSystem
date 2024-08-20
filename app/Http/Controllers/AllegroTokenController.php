@@ -18,7 +18,7 @@ class AllegroTokenController extends Controller
     public function index()
     {
         return Inertia::render("System/Settings/Allegro/Status", [
-            'allegroToken' => AllegroToken::query()->latest()->first()->only(["id", "created_at", "updated_at", "expires_at"]),
+            'allegroToken' => AllegroToken::query()->latest()->first()?->only(["id", "created_at", "updated_at", "expires_at"]),
         ]);
     }
 
