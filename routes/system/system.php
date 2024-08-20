@@ -355,6 +355,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::get("/status", [AllegroTokenController::class, 'index'])->name("system.settings.allegro.status");
             Route::get("/get-token", [AllegroTokenController::class, 'create'])->name("system.settings.allegro.getToken");
             Route::get("/token", [AllegroTokenController::class, 'token'])->name("system.settings.allegro.token");
+            Route::post("/refresh-token", [AllegroTokenController::class, 'refresh'])->name("system.settings.allegro.refreshToken");
 
         });
     });

@@ -406,7 +406,7 @@ export default function Menu({showContent, auth}) {
                             <SubMenuLink
                                 href={route("system.settings.allegro.status")}
                                 active={route().current("system.settings.allegro.status")}
-                                text={"Status"}
+                                text={"Połączenie z Allegro"}
                             />
                         </SubMenuLink>
                     </MainMenuLink>

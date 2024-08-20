@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Allegro\AllegroLogin;
+use App\Jobs\Allegro\AllegroRefreshToken;
 use App\Models\AllegroToken;
 use App\Http\Requests\StoreAllegroTokenRequest;
 use App\Http\Requests\UpdateAllegroTokenRequest;
@@ -43,43 +44,14 @@ class AllegroTokenController extends Controller
         return redirect()->route("system.settings.allegro.status");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAllegroTokenRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(AllegroToken $allegroToken)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AllegroToken $allegroToken)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAllegroTokenRequest $request, AllegroToken $allegroToken)
+    public function refresh(Request $request)
     {
-        //
+
+        AllegroRefreshToken::dispatch();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AllegroToken $allegroToken)
-    {
-        //
-    }
 }

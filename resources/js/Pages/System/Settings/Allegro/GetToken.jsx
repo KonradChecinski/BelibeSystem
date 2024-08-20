@@ -2,7 +2,7 @@ import {Head, Link} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Button, Paper} from "@mui/material";
+import {Button, Card, CardActions, CardContent, Paper, Typography} from "@mui/material";
 
 export default function Status(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -17,20 +17,37 @@ export default function Status(props) {
             }
         >
             <Head title={t("Allegro Get Token")}/>
-            <Paper sx={{height: 1, width: 1}}>
-                <a
-                    href={"https://allegro.pl/auth/oauth/authorize?" +
-                        `response_type=code&client_id=${props.client_id}` +
-                        `&redirect_uri=${route("system.settings.allegro.token")}` +
-                        "&code_challenge_method=S256" +
-                        `&code_challenge=${props.code_challenge}`}
-                >
-                    <Button variant="outlined">
-                        Zaloguj się w Allegro
-                    </Button>
-                </a>
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="h4" sx={{mb: 2}}>
+                        Łączenie z Allegro
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        W celu połączenia aplikacji z Allegro potrzebne jest zalogowanie i potwierdzenie dostępu
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        Poniższy przycisk rozpocznie procedurę łączenia
+                    </Typography>
+                    <Typography variant="body1" gutterBottom sx={{color: "error.main"}}>
+                        Rozpocznij łączenie tylko wtedy gdy token wygasł
+                    </Typography>
+                    <br/>
+                    <a
+                        href={"https://allegro.pl/auth/oauth/authorize?" +
+                            `response_type=code&client_id=${props.client_id}` +
+                            `&redirect_uri=${route("system.settings.allegro.token")}` +
+                            "&code_challenge_method=S256" +
+                            `&code_challenge=${props.code_challenge}`}
+                    >
+                        <Button variant="outlined">
+                            Połącz z Allegro
+                        </Button>
+                    </a>
 
-            </Paper>
+                </CardContent>
+
+            </Card>
+
 
         </UserLayout>
     );

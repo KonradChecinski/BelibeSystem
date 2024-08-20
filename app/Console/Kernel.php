@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\Allegro\AllegroRefreshToken;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
@@ -31,7 +32,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-//        // $schedule->command('inspire')->hourly();
+//        $schedule->command('inspire')->hourly();
         $schedule->job(new UpdateQuantityFromSubiekt)->everyMinute();
 //        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
         $schedule->job(new UpdateSubiektIdWhereNull)->everyFiveMinutes();
@@ -49,10 +50,13 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CreateSettlementsFromSubiekt)->everyMinute();
         $schedule->job(new UpdateSettlementsFromSubiekt)->everyMinute();
 
-//        // Shoper
+        //Shoper
         $schedule->job(new ShoperLogin)->MonthlyOn(1);
         $schedule->job(new ShoperGetOrder)->everyFiveMinutes();
         $schedule->job(new UpdateOrderStatus)->everyMinute();
+
+        //Allegro
+        $schedule->job(new AllegroRefreshToken)->everySixHours();
 
         //Telescope
         $schedule->command('telescope:prune')->daily();
