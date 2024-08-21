@@ -66,9 +66,9 @@ class UpdateClientOrderStatus implements ShouldQueue
                 ->first();
 
 //            dd($subiektFV,$subiektFVPrinted, $subiektFV->dok_Status,
-//                $subiektFV->dok_Status === 1, !is_null($subiektFVPrinted));
+//                (int)$subiektFV->dok_Status === 1, !is_null($subiektFVPrinted));
 
-            if ($subiektFV->dok_Status === 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
+            if ((int)$subiektFV->dok_Status == 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
                 $order->update([
                     "status" => 5
                 ]);
