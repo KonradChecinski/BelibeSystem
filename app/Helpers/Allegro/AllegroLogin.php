@@ -23,7 +23,7 @@ class AllegroLogin
     public static function getToken(string $code): bool
     {
         $response = Http::withoutVerifying()
-            ->asForm()->post("https://allegro.pl/auth/oauth/token", [
+            ->asForm()->post(config("services.allegro.uri") . "/auth/oauth/token", [
                 "grant_type" => "authorization_code",
                 "code" => $code,
                 "redirect_uri" => route("system.settings.allegro.token"),
@@ -45,7 +45,7 @@ class AllegroLogin
             ->asForm()
             ->withHeader("Authorization", "Basic " . base64_encode(config("services.allegro.client_id") . ":" . config("services.allegro.client_secret")))
             ->withHeader("Content-Type", "application/x-www-form-urlencoded")
-            ->post("https://allegro.pl/auth/oauth/token", [
+            ->post(config("services.allegro.uri") . "/auth/oauth/token", [
                 "grant_type" => "refresh_token",
                 "refresh_token" => $allegroToken->refresh_token,
                 "redirect_uri" => route("system.settings.allegro.token"),

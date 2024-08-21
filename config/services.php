@@ -34,5 +34,7 @@ return [
     'allegro' => [
         'client_id' => env('ALLEGRO_CLIENT_ID'),
         'client_secret' => env('ALLEGRO_CLIENT_SECRET'),
+        'uri' => env('ALLEGRO_URI'),
+        'api_uri' => env('ALLEGRO_API_URI'),
     ],
 ];
