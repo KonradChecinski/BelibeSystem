@@ -62,10 +62,13 @@ class UpdateClientOrderStatus implements ShouldQueue
 
             $subiektFVPrinted = DB::connection("subiekt")
                 ->table("dok_StatusWydruku")
-                ->where("dsw_IdDokumentu", $order->subiekt_id)
+                ->where("dsw_IdDokumentu", $subiektFV->dok_Id)
                 ->first();
 
-            if ($subiektFV->dok_Status == 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
+//            dd($subiektFV,$subiektFVPrinted, $subiektFV->dok_Status,
+//                $subiektFV->dok_Status === 1, !is_null($subiektFVPrinted));
+
+            if ($subiektFV->dok_Status === 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
                 $order->update([
                     "status" => 5
                 ]);
