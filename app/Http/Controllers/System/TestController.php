@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\System;
 
+use App\Helpers\Allegro\Allegro;
 use App\Http\Controllers\Controller;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
@@ -29,34 +30,7 @@ class TestController extends Controller
      */
     public function index()
     {
-//        ClientOrder::find(10)->update(["status" => 2]);
-//        ClientOrderCreateInSubiekt::dispatchSync();
-//        UpdateClientOrderStatus::dispatchSync();
-//        GenerateInvoiceFromClientOrderInSubiekt::dispatchSync(ClientOrder::find(10));
-        $user = User::find(2);
-        $order = (ClientOrder::find(50));
-        $user->notify(new InvoiceGeneratedClient($order));
-//        (new InvoiceGeneratedClient))->toMail(User::find(2));
-
-//        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatch();
-//        CreateSettlementsFromSubiekt::dispatchSync();
-//        UpdateSettlementsFromSubiekt::dispatchSync();
-//        DeleteSettlementsFromSubiekt::dispatchSync();
-
-//        $order = ClientOrder::find(33);
-//        $orderProducts = $order->orderProducts;
-//
-//        foreach ($orderProducts as $orderProduct) {
-//            B2bCart::create([
-//                'client_id' => 1,
-//                'product_id' => $orderProduct->product_id,
-//                'quantity' => $orderProduct->quantity,
-//                'price_net' => $orderProduct->price_net,
-//                'vat_rate' => $orderProduct->vat_rate,
-//                'currency' => $orderProduct->currency,
-//            ]);
-//        }
-
+        Allegro::getOrders();
     }
 
     /**
