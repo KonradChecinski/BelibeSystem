@@ -46,7 +46,7 @@ class Allegro
                 "status" => "PROCESSING",
             ]);
 
-        if (!$response->ok()) {
+        if (!$response->successful()) {
             throw new \RuntimeException("Allegro change order status error" . $response->status() . " " . $response->json());
         }
 //        dd($response, $response->status(), $response->json());
@@ -74,13 +74,12 @@ class Allegro
             $lastNumber++;
             $number = "ALL " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
 
-
             $allegroOrderModel = Order::create([
                 "number" => $number,
                 "type" => 2,
                 "status" => 2,
                 "order_id" => $allegroOrderObject->id,
-                "ordered_at" => Carbon::parse($allegroOrderObject->lineItems[0]->boughtAt),
+                "ordered_at" => Carbon::parse($allegroOrderObject->lineItems[0]->boughtAt)->setTimezone("Europe/Warsaw"),
                 "total_quantity" => $allegroOrderItemsObject->sum("quantity"),
                 "total_gross" => $allegroOrderItemsObject->sum("price.amount"),
                 "payment_name" => $allegroOrderObject->payment->provider,

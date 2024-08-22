@@ -27,6 +27,7 @@ class Order extends Model
         "smart",
         "promo_code",
         "email",
+        "login",
         "firstname",
         "lastname",
         "company",

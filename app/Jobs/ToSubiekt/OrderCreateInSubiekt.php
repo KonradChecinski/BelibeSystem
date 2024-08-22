@@ -39,19 +39,39 @@ class OrderCreateInSubiekt implements ShouldQueue
 
         $orders = Order::where('subiekt_added_at', null)->where("status", 2)->get();
 
+//        dd($orders);
         foreach ($orders as $order) {
-            $prefix = "";
-            if ($order->type == 1) $prefix = "SHP ";
             $orderProducts = $order->orderProducts;
 
+            $number = $order->number . " - ";
+            if ($order->login !== null) {
+                $number .= $order->login;
+            } else {
+                $number .= Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']);
+            }
+            $number = mb_substr($number, 0, 30);
+
+
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
-//            $zamowienie->NumerOryginalny = mb_substr("SHP " . $order['order_id'] . " - " . iconv("UTF-8", "Windows-1250//IGNORE", $order['firstname']) . " " . iconv("UTF-8", "Windows-1250//IGNORE", $order['lastname']), 0, 30);
-            $zamowienie->NumerOryginalny = mb_substr($prefix . $order['order_id'] . " - " . Str::ascii($order['firstname']) . " " . Str::ascii($order['lastname']), 0, 30);
+            $zamowienie->NumerOryginalny = $number;
             $zamowienie->LiczonyOdCenBrutto = true;
             $zamowienie->PoziomCenyId = 3;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
-            $zamowienie->KategoriaId = 115;
-            $zamowienie->PlatnoscKartaId = 15;
+
+
+            switch ($order->type) {
+                case 1: //SHOPER
+                    $zamowienie->KategoriaId = 115;
+                    $zamowienie->PlatnoscKartaId = 15;
+                    break;
+
+                case 2: //ALLEGRO
+                    $zamowienie->KategoriaId = 35;
+                    if ($order->payment_name == "P24") $zamowienie->PlatnoscKartaId = 16;
+                    if ($order->payment_name == "PAYU") $zamowienie->PlatnoscKartaId = 19;
+                    break;
+            }
+
 
             foreach ($orderProducts as $orderProduct) {
                 if ($orderProduct->product_id != null) {
@@ -92,8 +112,19 @@ class OrderCreateInSubiekt implements ShouldQueue
 
 
             $zamowienie->PlatnoscKartaKwota = $zamowienie->KwotaDoZaplaty;
-            $zamowienie->KontrahentId = 1439;
-            $zamowienie->Wystawil = "Shoper";
+
+
+            switch ($order->type) {
+                case 1: //SHOPER
+                    $zamowienie->KontrahentId = 1439;
+                    $zamowienie->Wystawil = "Shoper";
+                    break;
+
+                case 2: //ALLEGRO
+                    $zamowienie->KontrahentId = 1089;
+                    $zamowienie->Wystawil = "Allegro";
+                    break;
+            }
 
 
             // $zamowienie->Rezerwacja = True;
@@ -101,8 +132,22 @@ class OrderCreateInSubiekt implements ShouldQueue
 
             $date = date("Y-m-d H:i:s");
             $zamowienie->PoleWlasne["Czas"] = $date;
-            $uwagi = Str::ascii("Zamówienie z belibe.pl - " . $order["order_id"]);
-            if ($order["promo_code"] !== "") $uwagi .= " - kod rabatowy: " . $order["promo_code"];
+
+            $uwagi = "";
+            switch ($order->type) {
+                case 1: //SHOPER
+                    $uwagi = Str::ascii("Zamówienie z belibe.pl - " . $order->number);
+                    if ($order->promo_code !== null) $uwagi .= "\r\nkod rabatowy: " . $order->promo_code;
+                    if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
+                    break;
+
+                case 2: //ALLEGRO
+                    $uwagi = Str::ascii("Zamówienie z allegro.pl - " . $order->number);
+                    if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
+                    break;
+            }
+
+
             $zamowienie->Uwagi = $uwagi;
 
             if ($zamowienie->WartoscBrutto != $order["total_gross"]) $this->fail("Niezgodne kwoty zamówienia");

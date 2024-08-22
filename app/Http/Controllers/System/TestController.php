@@ -30,7 +30,8 @@ class TestController extends Controller
      */
     public function index()
     {
-        Allegro::getOrders();
+//        Allegro::getOrders();
+//        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
     }
 
     /**
