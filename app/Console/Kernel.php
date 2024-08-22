@@ -21,6 +21,8 @@ use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\ToSubiekt\BlokadaMiesieczna;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
+use App\Jobs\ToSubiekt\ParagonyIFakturyBiuro;
+use App\Jobs\ToSubiekt\ParagonyIFakturySklepy;
 use App\Jobs\ToSubiekt\ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci;
 use App\Models\ClientTask;
 use App\Models\PartnerExport;
@@ -66,7 +68,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(5, '07:00');
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(6, '07:00');
         $schedule->job(new ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci)->dailyAt('07:00');
-
+        $schedule->job(new ParagonyIFakturySklepy)->everyThirtySeconds();
+        $schedule->job(new ParagonyIFakturyBiuro)->everyMinute();
 
         //Telescope
         $schedule->command('telescope:prune')->daily();
