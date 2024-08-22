@@ -18,6 +18,87 @@ class Allegro
         return AllegroToken::query()->latest()->first()?->access_token;
     }
 
+    public static function listOffers(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->get(config("services.allegro.api_uri") . "/sale/offers");
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro list order error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+    public static function searchOffer(Product $product): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->get(config("services.allegro.api_uri") . "/sale/offers", [
+                    "external.id" => $product->symbol,
+                ]
+            );
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro search order error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+    public static function changeQuantityInOffer(int $allegroId, Product $product): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        $commandId = Str::uuid();
+
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->put(config("services.allegro.api_uri") . "/sale/offer-quantity-change-commands/{$commandId}", [
+                    "modification" => array(
+                        "changeType" => "FIXED",
+                        "value" => $product->available
+                    ),
+                    "offerCriteria" => array(
+                        array(
+                            "type" => "CONTAINS_OFFERS",
+                            "offers" => array(
+                                array(
+                                    "id" => $allegroId
+                                )
+                            )
+                        )
+                    )
+                ]
+            );
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro change quantity error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+    public static function changeStatusInOffer(int $allegroId, bool $active = true): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->patch(config("services.allegro.api_uri") . "/sale/product-offers/{$allegroId}", [
+                "publication" => [
+                    "status" => $active ? "ACTIVE" : "ENDED"
+                ]
+            ]);
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro change status error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
     public static function listOrders(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $response = Http::withoutVerifying()
@@ -28,8 +109,8 @@ class Allegro
                 "fulfillment.status" => "NEW",
                 "sort" => "lineItems.boughtAt",
             ]);
-        if (!$response->ok()) {
-            throw new \RuntimeException("Allegro list order error" . $response->status() . " " . $response->json());
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro list order error " . $response->status() . " " . json_encode($response->json()));
         }
 //        dd($response, $response->status(), $response->json());
         return $response;
@@ -47,7 +128,7 @@ class Allegro
             ]);
 
         if (!$response->successful()) {
-            throw new \RuntimeException("Allegro change order status error" . $response->status() . " " . $response->json());
+            throw new \RuntimeException("Allegro change order status error " . $response->status() . " " . json_encode($response->json()));
         }
 //        dd($response, $response->status(), $response->json());
 

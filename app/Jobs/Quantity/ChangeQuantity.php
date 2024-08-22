@@ -3,6 +3,7 @@
 namespace App\Jobs\Quantity;
 
 use App\Helpers\Shoper\Shoper;
+use App\Jobs\Allegro\AllegroChangeQuantity;
 use App\Jobs\Shoper\ShoperChangeQuantity;
 use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Products\Product;
@@ -39,6 +40,6 @@ class ChangeQuantity implements ShouldQueue
     public function handle(): void
     {
         ShoperChangeQuantity::dispatch($this->product);
-//        AllegroChangeQuantity::dispatch($this->product);
+        AllegroChangeQuantity::dispatch($this->product);
     }
 }
