@@ -2,9 +2,14 @@
 
 namespace App\Helpers\Allegro;
 
+use App\Jobs\Quantity\ChangeQuantity;
 use App\Models\AllegroToken;
 use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Products\Product;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class Allegro
 {
@@ -13,7 +18,7 @@ class Allegro
         return AllegroToken::query()->latest()->first()?->access_token;
     }
 
-    public static function getOrders()
+    public static function listOrders(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $response = Http::withoutVerifying()
             ->withToken(self::getToken())
@@ -21,46 +26,121 @@ class Allegro
             ->get(config("services.allegro.api_uri") . "/order/checkout-forms", [
                 "status" => "READY_FOR_PROCESSING",
                 "fulfillment.status" => "NEW",
+                "sort" => "lineItems.boughtAt",
+            ]);
+        if (!$response->ok()) {
+            throw new \RuntimeException("Allegro list order error" . $response->status() . " " . $response->json());
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+
+    public static function changeOrderStatus($orderId): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->put(config("services.allegro.api_uri") . "/order/checkout-forms/{$orderId}/fulfillment", [
+                "status" => "PROCESSING",
             ]);
 
+        if (!$response->ok()) {
+            throw new \RuntimeException("Allegro change order status error" . $response->status() . " " . $response->json());
+        }
 //        dd($response, $response->status(), $response->json());
 
-        $orders = $response->json()["checkoutForms"];
-        foreach ($orders as $order) {
-            dd($order);
+        return true;
+    }
 
-//            $shoperOrderModel = Order::create([
-//                "number" => $number,
-//                "type" => 1,
-//                "status" => 2,
-//                "order_id" => $shoperOrder["order_id"],
-//                "ordered_at" => $shoperOrder["date"],
-//                "total_quantity" => count($shoperOrderProducts),
-//                "total_gross" => $shoperOrder["sum"],
-//                "payment_name" => $paymentName,
-//                "delivery_name" => $shippingName,
-//                "delivery_gross" => $shoperOrder["shipping_cost"],
-//                "promo_code" => $shoperOrder["promo_code"],
-//                "email" => $shoperOrder["email"],
-//                "firstname" => $shoperOrder["billing_address"]["firstname"],
-//                "lastname" => $shoperOrder["billing_address"]["lastname"],
-//                "company" => $shoperOrder["billing_address"]["company"],
-//                "city" => $shoperOrder["billing_address"]["city"],
-//                "postcode" => $shoperOrder["billing_address"]["postcode"],
-//                "street1" => $shoperOrder["billing_address"]["street1"],
-//                "country" => $shoperOrder["billing_address"]["country"],
-//                "phone" => $shoperOrder["billing_address"]["phone"],
-//                "tax_id" => $shoperOrder["billing_address"]["tax_identification_number"],
-//                "subiekt_number" => "",
-//                "subiekt_added_at" => null
-//            ]);
+
+    /**
+     * @throws \Exception
+     */
+    public static function getOrders(): bool
+    {
+        $response = self::listOrders();
+
+        $allegroOrders = $response->json()["checkoutForms"];
+        foreach ($allegroOrders as $allegroOrder) {
+
+            $allegroOrderObject = json_decode(json_encode($allegroOrder));
+            $allegroOrderItemsObject = collect($allegroOrderObject->lineItems);
+
+            $lastOrder = Order::query()->where("type", 2)->latest()->first();
+            $lastNumber = $lastOrder?->number ?? 0;
+            $lastNumber = (int)substr($lastNumber, -5);
+            $lastNumber++;
+            $number = "ALL " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
+
+
+            $allegroOrderModel = Order::create([
+                "number" => $number,
+                "type" => 2,
+                "status" => 2,
+                "order_id" => $allegroOrderObject->id,
+                "ordered_at" => Carbon::parse($allegroOrderObject->lineItems[0]->boughtAt),
+                "total_quantity" => $allegroOrderItemsObject->sum("quantity"),
+                "total_gross" => $allegroOrderItemsObject->sum("price.amount"),
+                "payment_name" => $allegroOrderObject->payment->provider,
+                "delivery_name" => $allegroOrderObject->delivery->method->name,
+                "delivery_gross" => $allegroOrderObject->delivery->cost->amount,
+                "smart" => $allegroOrderObject->delivery->smart,
+                "promo_code" => null,
+                "email" => $allegroOrderObject->buyer->email,
+                "login" => $allegroOrderObject->buyer->login,
+                "firstname" => Str::title($allegroOrderObject->buyer->firstName),
+                "lastname" => Str::title($allegroOrderObject->buyer->lastName),
+                "company" => Str::title($allegroOrderObject->buyer->companyName),
+                "city" => Str::title($allegroOrderObject->buyer->address->city),
+                "postcode" => $allegroOrderObject->buyer->address->postCode,
+                "street1" => Str::title($allegroOrderObject->buyer->address->street),
+                "country" => Str::title($allegroOrderObject->buyer->address->countryCode),
+                "phone" => $allegroOrderObject->buyer->phoneNumber,
+                "tax_id" => $allegroOrderObject->invoice->address?->company->ids->value,
+                "comment" => $allegroOrderObject->messageToSeller === "" ? null : Str::ascii($allegroOrderObject->messageToSeller),
+            ]);
+
+            foreach ($allegroOrderItemsObject as $item) {
+                $code = $item->offer->external->id;
+                $originalCode = $item->offer->external->id;
+                $productVariant = false;
+
+
+                if (Str::contains($code, "#")) {
+                    $code = explode("#", $code)[0];
+                    $productVariant = true;
+                }
+
+                $product = Product::query()->where("symbol", $code)->first();
+
+                $orderProduct = new OrderProduct([
+                    'quantity' => $item->quantity,
+                    'price' => $item->originalPrice->amount,
+                    'discounted_price' => $item->price->amount,
+                ]);
+
+                if (is_null($product)) {
+                    $orderProduct->product_code = $code;
+                } else if ($productVariant) {
+                    $orderProduct->product_id = $product->id;
+                    $orderProduct->product_code = $originalCode;
+                } else {
+                    $orderProduct->product_id = $product->id;
+                }
+
+                $allegroOrderModel->orderProducts()->save($orderProduct);
+
+                if (!is_null($product)) {
+                    ChangeQuantity::dispatch($product);
+                }
+            }
+            self::changeOrderStatus($allegroOrderModel->order_id);
         }
-
-
-//        if($response->status() !== 401) {
-//            //Token wygasł
-//        }
+        return true;
 
     }
+
 
 }

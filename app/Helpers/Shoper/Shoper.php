@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Shoper;
 
+use App\Jobs\Quantity\ChangeQuantity;
 use App\Jobs\Shoper\ShoperChangeQuantity;
 use App\Models\Order;
 use App\Models\OrderProduct;
@@ -769,7 +770,7 @@ class Shoper
     {
         $products = $productModelColor->products()->where("show_in_b2c", true)->get();
         $available = $products->sum("available");
-        
+
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
@@ -837,16 +838,16 @@ class Shoper
 
 //    Zamówienia
 
-    public static function changeOrderStatus($shoperOrderId): bool
+    public static function changeOrderStatus($orderId): bool
     {
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
-            ->put(env('SHOPER_URL') . '/webapi/rest/orders/' . $shoperOrderId, [
+            ->put(env('SHOPER_URL') . '/webapi/rest/orders/' . $orderId, [
                 "status_id" => 2
             ]);
         if ($response->status() === 429) {
             sleep(1);
-            return self::changeOrderStatus($shoperOrderId);
+            return self::changeOrderStatus($orderId);
         }
         if ($response->status() === 401) {
             self::login();
@@ -855,7 +856,7 @@ class Shoper
         return true;
     }
 
-    public static function getOrder(): bool
+    public static function getOrders(): bool
     {
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
@@ -937,7 +938,7 @@ class Shoper
             $shoperOrderProducts = $responseProducts->json()["list"];
 
             $lastOrder = Order::query()->where("type", 1)->latest()->first();
-            $lastNumber = $lastOrder->number ?? 1;
+            $lastNumber = $lastOrder->number ?? 0;
             $lastNumber = (int)substr($lastNumber, -5);
             $lastNumber++;
             $number = "SHP " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
@@ -953,7 +954,7 @@ class Shoper
                 "payment_name" => $paymentName,
                 "delivery_name" => $shippingName,
                 "delivery_gross" => $shoperOrder["shipping_cost"],
-                "promo_code" => $shoperOrder["promo_code"],
+                "promo_code" => $shoperOrder["promo_code"] === "" ? null : $shoperOrder["promo_code"],
                 "email" => $shoperOrder["email"],
                 "firstname" => $shoperOrder["billing_address"]["firstname"],
                 "lastname" => $shoperOrder["billing_address"]["lastname"],
@@ -964,8 +965,6 @@ class Shoper
                 "country" => $shoperOrder["billing_address"]["country"],
                 "phone" => $shoperOrder["billing_address"]["phone"],
                 "tax_id" => $shoperOrder["billing_address"]["tax_identification_number"],
-                "subiekt_number" => "",
-                "subiekt_added_at" => null
             ]);
 
             foreach ($shoperOrderProducts as $shoperOrderProduct) {
@@ -1004,7 +1003,7 @@ class Shoper
                 $shoperOrderModel->orderProducts()->save($orderProduct);
 
                 if (!is_null($product)) {
-                    ShoperChangeQuantity::dispatch($product);
+                    ChangeQuantity::dispatch($product);
                 }
             }
 

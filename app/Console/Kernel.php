@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\Allegro\AllegroGetOrder;
 use App\Jobs\Allegro\AllegroRefreshToken;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
@@ -58,6 +59,7 @@ class Kernel extends ConsoleKernel
 
         //Allegro
         $schedule->job(new AllegroRefreshToken)->everySixHours();
+        $schedule->job(new AllegroGetOrder)->everyFiveMinutes();
 
         //Subiekt
         $schedule->job(new BlokadaMisieczna)->monthlyOn(5, '07:00');

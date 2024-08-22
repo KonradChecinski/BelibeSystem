@@ -24,6 +24,7 @@ class Order extends Model
         "payment_name",
         "delivery_name",
         "delivery_gross",
+        "smart",
         "promo_code",
         "email",
         "firstname",

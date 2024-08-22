@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Jobs\Shoper;
+namespace App\Jobs\Allegro;
 
+use App\Helpers\Allegro\Allegro;
 use App\Helpers\Shoper\Shoper;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use Illuminate\Bus\Queueable;
@@ -10,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperGetOrder implements ShouldQueue
+class AllegroGetOrder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,11 +29,12 @@ class ShoperGetOrder implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws \Exception
      */
     public function handle(): void
     {
 
-        $result = Shoper::getOrders();
+        $result = Allegro::getOrders();
         if (!$result) {
             $this->fail('getting orders failed');
         }
