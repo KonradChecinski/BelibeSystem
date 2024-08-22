@@ -109,7 +109,7 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                 accessorKey: 'ordered_at',
                 header: 'Data',
                 // columnDefType: 'display',
-                width: 20,
+                size: 20,
                 Cell: ({cell, row}) => moment(cell.getValue()).format("DD-MM-YYYY HH:mm:ss"),
                 enableColumnActions: false,
                 enableColumnDragging: true,
@@ -118,7 +118,7 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
             {
                 accessorKey: 'number',
                 header: 'Numer',
-                width: 10,
+                size: 10,
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
@@ -145,7 +145,7 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
             {
                 accessorKey: 'total_gross',
                 header: 'Wartość Brutto',
-                // size: 2,
+                size: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -162,50 +162,10 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                 enableColumnDragging: false,
                 enableSorting: false,
             },
-            // {
-            //     accessorKey: 'discount',
-            //     header: 'Zniżka z płatności',
-            //     size: 5,
-            //     muiTableBodyCellProps: {
-            //         align: 'center',
-            //     },
-            //     muiTableHeadCellProps: {
-            //         align: 'center',
-            //     },
-            //     Cell: ({cell}) => Number(cell.getValue()) + "%",
-            //     Header: ({column}) => (
-            //         <Tooltip title={column.columnDef.header} placement="top" arrow>
-            //             <Box>Z</Box>
-            //         </Tooltip>
-            //     ),
-            //     enableColumnActions: false,
-            //     enableColumnDragging: false,
-            //     enableSorting: false,
-            // },
-            {
-                accessorKey: 'delivery_name',
-                header: 'Dostawa',
-                width: 5,
-                muiTableBodyCellProps: {
-                    align: 'right',
-                },
-                muiTableHeadCellProps: {
-                    align: 'center',
-                },
-                // Cell: ({cell}) => toLocaleString(Number(cell.getValue())),
-                Header: ({column}) => (
-                    <Tooltip title={column.columnDef.header} placement="top" arrow>
-                        <Box>Dostawa</Box>
-                    </Tooltip>
-                ),
-                enableColumnActions: false,
-                enableColumnDragging: true,
-                enableSorting: true,
-            },
             {
                 accessorKey: 'delivery_gross',
                 header: 'Dostawa Brutto',
-                width: 5,
+                size: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -222,14 +182,27 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                 enableColumnDragging: true,
                 enableSorting: true,
             },
-            // {
-            //     accessorKey: 'currency',
-            //     header: 'Waluta',
-            //     size: 5,
-            //     enableColumnActions: false,
-            //     enableColumnDragging: false,
-            //     enableSorting: false,
-            // },
+            {
+                accessorKey: 'delivery_name',
+                header: 'Dostawa',
+                size: 5,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                // Cell: ({cell}) => toLocaleString(Number(cell.getValue())),
+                Header: ({column}) => (
+                    <Tooltip title={column.columnDef.header} placement="top" arrow>
+                        <Box>Dostawa</Box>
+                    </Tooltip>
+                ),
+                enableColumnActions: false,
+                enableColumnDragging: true,
+                enableSorting: true,
+            },
+
             {
                 accessorKey: 'subiekt_number',
                 header: 'Numer zamówienia w Subiekcie',
@@ -295,7 +268,12 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
         // enableStickyFooter: true,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {id: false},
+            columnVisibility: {
+                id: false,
+                subiekt_number: false,
+                subiekt_added_at: false,
+
+            },
             density: 'compact',
             pagination: {pageSize: 50, pageIndex: 0},
             sorting: [

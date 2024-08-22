@@ -30,7 +30,7 @@ import {Link} from "@inertiajs/react";
 export default function OrderListB2bTable({orders = [], readOnly, props}) {
     const theme = useTheme();
     const data = orders
-    console.log(data)
+    // console.log(data)
 
     const columns = useMemo(
         //column definitions...
@@ -65,7 +65,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
             {
                 accessorKey: 'invoice',
                 header: 'FV',
-                size: 10,
+                size: 5,
                 columnDefType: 'display',
                 Cell: ({cell, row}) => {
                     // console.log(row.original)
@@ -117,7 +117,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
             {
                 accessorKey: 'status',
                 header: 'Status',
-                size: 10,
+                size: 120,
                 Cell: ({cell, row}) => {
                     let text = "";
                     let color = "";
@@ -127,7 +127,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             color = "success.main";
                             break;
                         case 2:
-                            text = "Zaakceptowane do realizacji";
+                            text = "Zaakceptowane";
                             color = "info.main";
                             break;
                         case 3:
@@ -135,7 +135,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             color = "info.main";
                             break;
                         case 4:
-                            text = "Przesłane do subiekta";
+                            text = "W subiekcie";
                             color = "warning.main";
                             break;
                         case 5:
@@ -163,16 +163,30 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                 accessorKey: 'created_at',
                 header: 'Data',
                 // columnDefType: 'display',
-                width: 20,
+                size: 20,
                 Cell: ({cell, row}) => moment(cell.getValue()).format("DD-MM-YYYY HH:mm:ss"),
                 enableColumnActions: false,
-                enableColumnDragging: true,
+                enableColumnDragging: false,
                 enableSorting: true,
+            },
+            {
+                accessorKey: 'client.name',
+                header: 'Klient',
+                size: 100,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
             },
             {
                 accessorKey: 'number',
                 header: 'Numer',
-                width: 10,
+                muiTableBodyCellProps: {
+                    align: 'left',
+                },
+                muiTableHeadCellProps: {
+                    align: 'left',
+                },
+                size: 5,
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
@@ -273,7 +287,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     </Tooltip>
                 ),
                 enableColumnActions: false,
-                enableColumnDragging: true,
+                enableColumnDragging: false,
                 enableSorting: true,
             },
             {
@@ -293,13 +307,13 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     </Tooltip>
                 ),
                 enableColumnActions: false,
-                enableColumnDragging: true,
+                enableColumnDragging: false,
                 enableSorting: true,
             },
             {
                 accessorKey: 'delivery_net',
                 header: 'Dostawa Netto',
-                width: 5,
+                size: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -313,13 +327,13 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     </Tooltip>
                 ),
                 enableColumnActions: false,
-                enableColumnDragging: true,
+                enableColumnDragging: false,
                 enableSorting: true,
             },
             {
                 accessorKey: 'delivery_gross',
                 header: 'Dostawa Brutto',
-                width: 5,
+                size: 5,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -333,7 +347,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     </Tooltip>
                 ),
                 enableColumnActions: false,
-                enableColumnDragging: true,
+                enableColumnDragging: false,
                 enableSorting: true,
             },
             {
@@ -366,32 +380,6 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     </Tooltip>
                 ),
             },
-            // {
-            //     accessorKey: 'comment',
-            //     header: 'K',
-            //     columnDefType: 'display',
-            //
-            //     width: 25,
-            //     Cell: ({cell}) => {
-            //         return (
-            //             <>
-            //                 {cell.getValue() && (
-            //                     <Tooltip title={cell.getValue()} arrow placement={"left"}>
-            //
-            //                         <IconButton aria-label="info">
-            //                             <Info/>
-            //                         </IconButton>
-            //
-            //                     </Tooltip>
-            //                 )}
-            //             </>
-            //
-            //         )
-            //     },
-            //     enableColumnActions: false,
-            //     enableColumnDragging: false,
-            //     enableSorting: false,
-            // },
             {
                 accessorKey: 'action',
                 header: 'Akcje',
@@ -439,6 +427,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                 id: false,
                 total_gross: false,
                 total_net: false,
+                currency: false,
                 subiekt_number: false,
                 subiekt_added_at: false,
 
@@ -453,7 +442,9 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {height: "calc(100% - 110px)"},
+            sx: {
+                height: "calc(100% - 110px)",
+            },
         },
         // muiTableProps: {
         //     sx: {height: 1}
