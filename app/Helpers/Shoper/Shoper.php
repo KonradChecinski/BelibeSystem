@@ -431,6 +431,7 @@ class Shoper
                         "pl_PL" => [
                             "name" => $productModelColor->b2c_product_name,
                             "active" => true, //true
+                            "seo_url" => Str::slug($productModelColor->b2c_product_name)
                         ]
                     ],
 
@@ -456,18 +457,24 @@ class Shoper
     {
         $productSymbol = $product->symbol == $product->color->model->symbol . "-" . $product->color->b2c_shortcut ? $product->symbol . "." : $product->symbol;
         try {
+            $requestData = [
+                "product_id" => $shoperProductId,
+                "price_type" => 0,
+                "active" => true,
+                "code" => $productSymbol,
+                "ean" => $product->barcodes()->where("main", true)->first()->barcode,
+                "stock" => $product->quantity,
+                "delivery_id" => 1, //24h
+                "options" => $options
+            ];
+
+            if ($product->model->b2c_variant == 2) {
+                $requestData["default"] = true;
+            }
+
             $response = Http::withoutVerifying()
                 ->withToken(self::getAccessToken())
-                ->post(env('SHOPER_URL') . '/webapi/rest/product-stocks/', [
-                    "product_id" => $shoperProductId,
-                    "price_type" => 0,
-                    "active" => true,
-                    "code" => $productSymbol,
-                    "ean" => $product->barcodes()->where("main", true)->first()->barcode,
-                    "stock" => $product->quantity,
-                    "delivery_id" => 1, //24h
-                    "options" => $options
-                ]);
+                ->post(env('SHOPER_URL') . '/webapi/rest/product-stocks/', $requestData);
             if ($response->status() === 429) {
                 sleep(1);
                 return self::AddProductStock($product, $shoperProductId, $options);
@@ -774,7 +781,12 @@ class Shoper
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
-                "stock" => ["stock" => $available]
+                "stock" => ["stock" => $available],
+                "translations" => [
+                    "pl_PL" => [
+                        "order" => $available > 0 ? 10 : 0
+                    ]
+                ]
             ]);
         if ($response->status() === 429) {
             sleep(1);
@@ -820,7 +832,8 @@ class Shoper
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
                 "translations" => [
                     "pl_PL" => [
-                        "name" => $name
+                        "name" => $name,
+                        "seo_url" => Str::slug($name)
                     ]
                 ]
             ]);
