@@ -68,8 +68,10 @@ class Kernel extends ConsoleKernel
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(5, '07:00');
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(6, '07:00');
         $schedule->job(new ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci)->dailyAt('07:00');
-        $schedule->job(new ParagonyIFakturySklepy)->everyThirtySeconds();
-        $schedule->job(new ParagonyIFakturyBiuro)->everyMinute();
+        $schedule->job(new ParagonyIFakturySklepy)->everyThirtySeconds()->between('9:00', '21:00');
+        $schedule->job(new ParagonyIFakturySklepy)->everyFiveMinutes()->between('21:00', '9:00');
+        $schedule->job(new ParagonyIFakturyBiuro)->everyMinute()->between('9:00', '21:00');
+        $schedule->job(new ParagonyIFakturyBiuro)->everyFiveMinutes()->between('21:00', '9:00');
 
         //Telescope
         $schedule->command('telescope:prune')->daily();
