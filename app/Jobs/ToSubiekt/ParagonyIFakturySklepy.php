@@ -58,6 +58,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
             $subiekt->MagazynId = $param["warehouseId"];
             $this->updateParagony($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
             $this->updateFV($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
+            $this->updateReturns($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
         }
 
         $subiekt->MagazynId = 1;
@@ -107,6 +108,38 @@ class ParagonyIFakturySklepy implements ShouldQueue
             ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
             ->where("dok_MagId", $warehouseId)
             ->where("dok_Typ", 2)
+            ->where("dok_DataWyst", ">=", Carbon::today())
+            ->whereNull("pwd_Data01")
+            ->orderBy("dok_Id")
+            ->get([
+                "dok_Id",
+                "dok_NrPelny",
+                "dok_KartaId",
+            ]);
+
+        foreach ($documents as $document) {
+
+            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+            $subiektDocument->KategoriaId = $categoryId;
+
+            if (!is_null($document->dok_KartaId)) {
+                $subiektDocument->PlatnoscKartaId = $paymentId;
+            }
+
+            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+
+            $subiektDocument->Zapisz();
+            $subiektDocument->Zamknij();
+        }
+    }
+
+    private function updateReturns($subiekt, int $warehouseId, int $categoryId, int $paymentId)
+    {
+        $documents = DB::connection("subiekt")
+            ->table("dok__Dokument")
+            ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
+            ->where("dok_MagId", $warehouseId)
+            ->where("dok_Typ", 14)
             ->where("dok_DataWyst", ">=", Carbon::today())
             ->whereNull("pwd_Data01")
             ->orderBy("dok_Id")
