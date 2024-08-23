@@ -20,8 +20,6 @@ class ParagonyIFakturyBiuro implements ShouldQueue
     public $tries = 1;
     public $backoff = 20;
 
-    public $warehouseId = 1;
-
     /**
      * Create a new job instance.
      */
@@ -35,12 +33,14 @@ class ParagonyIFakturyBiuro implements ShouldQueue
      */
     public function handle(): void
     {
+        $warehouseId = 1;
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
 
-        $this->updateParagony($subiekt, $this->warehouseId);
-        $this->updateFV($subiekt, $this->warehouseId);
+        $this->updateParagony($subiekt, $warehouseId);
+        $this->updateFV($subiekt, $warehouseId);
+        $this->updateReturns($subiekt, $warehouseId);
 
     }
 
@@ -80,6 +80,32 @@ class ParagonyIFakturyBiuro implements ShouldQueue
             ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
             ->where("dok_MagId", $warehouseId)
             ->where("dok_Typ", 2)
+            ->where("dok_DataWyst", ">=", Carbon::today())
+            ->whereNull("pwd_Data01")
+            ->orderBy("dok_Id")
+            ->get([
+                "dok_Id",
+                "dok_NrPelny",
+                "dok_KartaId",
+            ]);
+
+        foreach ($documents as $document) {
+
+            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+
+            $subiektDocument->Zapisz();
+            $subiektDocument->Zamknij();
+        }
+    }
+
+    private function updateReturns($subiekt, int $warehouseId)
+    {
+        $documents = DB::connection("subiekt")
+            ->table("dok__Dokument")
+            ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
+            ->where("dok_MagId", $warehouseId)
+            ->where("dok_Typ", 14)
             ->where("dok_DataWyst", ">=", Carbon::today())
             ->whereNull("pwd_Data01")
             ->orderBy("dok_Id")

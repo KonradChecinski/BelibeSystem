@@ -20,24 +20,6 @@ class ParagonyIFakturySklepy implements ShouldQueue
     public $tries = 1;
     public $backoff = 20;
 
-    public $params = [
-        [//Tychy
-            "warehouseId" => 13,
-            "categoryId" => 27,
-            "paymentId" => 11
-        ],
-        [//DG
-            "warehouseId" => 17,
-            "categoryId" => 28,
-            "paymentId" => 12
-        ],
-        [//Blonie
-            "warehouseId" => 37,
-            "categoryId" => 158,
-            "paymentId" => 18
-        ]
-    ];
-
     /**
      * Create a new job instance.
      */
@@ -51,10 +33,28 @@ class ParagonyIFakturySklepy implements ShouldQueue
      */
     public function handle(): void
     {
+        $params = [
+            [//Tychy
+                "warehouseId" => 13,
+                "categoryId" => 27,
+                "paymentId" => 11
+            ],
+            [//DG
+                "warehouseId" => 17,
+                "categoryId" => 28,
+                "paymentId" => 12
+            ],
+            [//Blonie
+                "warehouseId" => 37,
+                "categoryId" => 158,
+                "paymentId" => 18
+            ]
+        ];
+
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
-        foreach ($this->params as $param) {
+        foreach ($params as $param) {
             $subiekt->MagazynId = $param["warehouseId"];
             $this->updateParagony($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
             $this->updateFV($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
