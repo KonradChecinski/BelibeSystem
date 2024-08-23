@@ -20,7 +20,7 @@ class ParagonyIFakturyBiuro implements ShouldQueue
     public $tries = 1;
     public $backoff = 20;
 
-    private $warehouseId = 1;
+    public $warehouseId = 1;
 
     /**
      * Create a new job instance.

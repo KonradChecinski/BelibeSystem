@@ -20,7 +20,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
     public $tries = 1;
     public $backoff = 20;
 
-    private $params = [
+    public $params = [
         [//Tychy
             "warehouseId" => 13,
             "categoryId" => 27,
