@@ -24,6 +24,7 @@ use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
 use App\Jobs\ToSubiekt\ParagonyIFakturyBiuro;
 use App\Jobs\ToSubiekt\ParagonyIFakturySklepy;
+use App\Jobs\ToSubiekt\ZestawienieSprzedazySklepy;
 use App\Jobs\ToSubiekt\ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci;
 use App\Models\ClientTask;
 use App\Models\PartnerExport;
@@ -70,6 +71,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(5, '07:00');
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(6, '07:00');
         $schedule->job(new ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci)->dailyAt('07:00');
+        $schedule->job(new ZestawienieSprzedazySklepy)->mondays()->at('09:00');
 
         //Subiekt paragony
         $schedule->job(new ParagonyIFakturySklepy)->everyMinute()->between('9:00', '21:00');
