@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ToSubiekt;
 
+use App\Helpers\Subiekt\SubiektQueries;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,75 +34,47 @@ class ZestawienieSprzedazySklepy implements ShouldQueue
      */
     public function handle(): void
     {
-        // Utworzenie obiektu Carbon z aktualną datą i czasem
-        $now = Carbon::now();
-        $magazyn = 17;
-        $od = Carbon::create($now->year, 6, 30, 0, 0, 0);
-        $do = Carbon::create($now->year, 7, 1, 23, 59, 59);
+        $params = [
+            (object)[//Tychy
+                "warehouseId" => 13,
+                "client" => 1309,
+                "email" => "konrad.checinski@belibe.pl",
+            ],
+            (object)[//DG
+                "warehouseId" => 17,
+                "client" => 1310,
+//                "email" => "sklep.dg@belibe.pl",
+                "email" => "konrad.checinski@belibe.pl",
+            ],
+            (object)[//Blonie
+                "warehouseId" => 37,
+                "client" => 1543,
+//                "email" => "sklep.blonie@belibe.pl",
+                "email" => "konrad.checinski@belibe.pl",
+            ]
+        ];
 
-        $subQueryReturns = DB::connection("subiekt")
-            ->table("dok_Pozycja")
-            ->select([
-                DB::raw("Ob_TowId as Tow_Id"),
-                DB::raw("-1* sum(Ob_Ilosc) as Tw_Ilosc"),
-            ])
-            ->whereIn("ob_DokHanId", function ($query) use ($magazyn, $od, $do) {
-                return $query->select("dok_Id")
-                    ->from("dok__Dokument")
-                    ->where("dok_MagId", $magazyn)
-                    ->where("dok_Typ", 14)
-                    ->where("dok_DataWyst", ">=", $od->ToDateString())
-                    ->where("dok_DataWyst", "<=", $do->ToDateString());
-            })
-            ->groupBy("Ob_TowId");
-//        dd($subQueryReturns->toSql(), $subQueryReturns->get());
+        $givenDate = Carbon::now();
 
-//        $twReturns = Towar::query()
-//            ->rightJoinSub($subQueryReturns, "s1", "tw__Towar.tw_Id", "=", "Tow_Id")
-//            ->get([
-//                "tw_Id",
-//                "tw_Symbol",
-//                "tw_Nazwa",
-//                "Tw_Ilosc"
-//            ]);
+        // Użycie Carbon do obliczenia daty "od" (poprzedni poniedziałek)
+        $from = Carbon::now()->previous(Carbon::MONDAY)->startOfDay();
 
+        // Sprawdzenie, czy obecny dzień to poniedziałek
+        if ($givenDate->isMonday()) {
+            // Użycie Carbon do obliczenia daty "do" (poprzednia niedziela)
+            $to = Carbon::now()->previous(Carbon::SUNDAY)->endOfDay();
+        } else {
+            // Ustawienie daty "do" na bieżący czas
+            $to = $givenDate;
+        }
+//
+//        $from = Carbon::parse("2024-06-24");
+//        $to = Carbon::parse("2024-06-30");
 
-        $subQuerySale = DB::connection("subiekt")
-            ->table("dok_Pozycja")
-            ->select([
-                DB::raw("Ob_TowId as Tow_Id"),
-                DB::raw("sum(Ob_Ilosc) as Tw_Ilosc"),
-            ])
-            ->whereIn("ob_DokHanId", function ($query) use ($magazyn, $od, $do) {
-                return $query->select("dok_Id")
-                    ->from("dok__Dokument")
-                    ->where("dok_MagId", $magazyn)
-                    ->where(function ($query) {
-                        return $query->where("dok_Typ", 2)
-                            ->orWhere("dok_Typ", 21);
-                    })
-                    ->where("dok_DataWyst", ">=", $od->ToDateString())
-                    ->where("dok_DataWyst", "<=", $do->ToDateString());
-            })
-            ->groupBy("Ob_TowId");
-//        $twSale = Towar::query()
-//            ->rightJoinSub($subQuerySale, "s1", "tw__Towar.tw_Id", "=", "Tow_Id")->get([
-//                "tw_Id",
-//                "tw_Symbol",
-//                "tw_Nazwa",
-//                "Tw_Ilosc"
-//            ]);
-//        dd($twSale);
+        foreach ($params as $param) {
+            ZestawienieSprzedazySklep::dispatch($param->warehouseId, $param->client, $param->email, $from, $to);
+        }
 
-        $union = $subQueryReturns->union($subQuerySale);
-
-//        $result = DB::connection("subiekt")
-//            ->query()
-//            ->fromSub($subQueryReturns, "s1")
-//            ->join($subQuerySale, "s2");
-
-//        dd($result->toSql());
-        dd($subQueryReturns->toSql(), $subQuerySale->toSql());
 
 //        if ($result === 0) {
 //            $this->fail("Nie udało się zaktualizować daty blokady miesięcznej");
