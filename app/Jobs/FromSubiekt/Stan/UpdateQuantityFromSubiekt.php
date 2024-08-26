@@ -2,7 +2,7 @@
 
 namespace App\Jobs\FromSubiekt\Stan;
 
-use App\Jobs\Shoper\ShoperChangeQuantity;
+use App\Jobs\Quantity\ChangeQuantity;
 use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
@@ -52,7 +52,7 @@ class UpdateQuantityFromSubiekt implements ShouldQueue
 
             DB::connection("subiekt")->table("Belibe_System_Stany_Updated")->where("id", $updatedStan->id)->delete();
 
-            ShoperChangeQuantity::dispatch($product);
+            ChangeQuantity::dispatch($product);
         }
     }
 }
