@@ -222,5 +222,71 @@ class Allegro
 
     }
 
+    //MESSAGES
+    public static function getMessThreads(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->get(config("services.allegro.api_uri") . "/messaging/threads");
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro message threads list error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+    public static function getMessThreadMessList(string $threadId): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->get(config("services.allegro.api_uri") . "/messaging/threads/$threadId/messages");
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro messages list of message thread error " . $response->status() . " " . json_encode($response->json()));
+        }
+        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+    public static function changeMessThreadStatus(string $threadId): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->put(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/read", [
+                "read" => "true",
+            ]);
+
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro message thread put read error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+
+        return true;
+    }
+
+    public static function sendMessInMessThread(string $threadId, string $loginAllegro, $message): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->post(config("services.allegro.api_uri") . "/messaging/messages", [
+                "recipient" => [
+                    "login" => $loginAllegro
+                ],
+                "text" => $message,
+                "attachments" => []
+            ]);
+
+        if (!$response->successful()) {
+            throw new \RuntimeException("Allegro send message error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+
+        return true;
+    }
 
 }

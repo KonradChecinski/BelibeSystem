@@ -4,23 +4,10 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Allegro\Allegro;
 use App\Http\Controllers\Controller;
-use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
-use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
-use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
-use App\Jobs\FromSubiekt\GenerateInvoiceFromClientOrderInSubiekt;
-use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
-use App\Jobs\Shoper\OrderCreateInSubiekt;
-use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
+use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Models\B2bCart;
-use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
-use App\Models\Products\ProductImage;
-use App\Models\Products\ProductModel;
-use App\Models\User;
-use App\Notifications\b2b\InvoiceGeneratedClient;
-use App\Notifications\b2b\OrderPlacedClient;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -32,6 +19,14 @@ class TestController extends Controller
     {
 //        Allegro::getOrders();
 //        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
+
+//        $threads = Allegro::getMessThreads()->json()["threads"];
+//        $thread = $threads[0];
+//        dd($thread);
+////        $threadMessages = Allegro::getMessThreadMessList($thread["id"]);
+////        $threadMessage = $threadMessages->json()["messages"][0];
+
+        AllegroCheckMessage::dispatchSync();
     }
 
     /**
