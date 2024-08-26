@@ -6,6 +6,7 @@ use App\Helpers\Allegro\Allegro;
 use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Jobs\ToSubiekt\ZestawienieSprzedazySklepy;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use Illuminate\Http\Request;
@@ -20,13 +21,7 @@ class TestController extends Controller
 //        Allegro::getOrders();
 //        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
 
-//        $threads = Allegro::getMessThreads()->json()["threads"];
-//        $thread = $threads[0];
-//        dd($thread);
-////        $threadMessages = Allegro::getMessThreadMessList($thread["id"]);
-////        $threadMessage = $threadMessages->json()["messages"][0];
-
-        AllegroCheckMessage::dispatchSync();
+        ZestawienieSprzedazySklepy::dispatchSync();
     }
 
     /**
