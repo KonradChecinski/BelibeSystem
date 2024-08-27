@@ -74,13 +74,16 @@ export default function SearchClientComponent({auth, searchRoute, label}) {
                     <Box
                         component="li"
                         {...props}
-                        sx={{
-                            height: 90
-                        }}
+                        // sx={{
+                        //     height: 90
+                        // }}
                     >
                         <Box>
                             <Typography variant="subtitle1" gutterBottom component="div" sx={{fontSize: 11}}>
-                                {option.nip} - {option.name}
+                                {option.name}
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom component="div" sx={{fontSize: 11}}>
+                                NIP: {option.nip}
                             </Typography>
                             <Typography variant="subtitle2" gutterBottom component="div" sx={{fontSize: 8}}>
                                 {option.street} {option.building_number}{option.apartment_number ? "/" + option.apartment_number : ""} | {option.city}, {option.postal_code}
