@@ -70,7 +70,7 @@ class Kernel extends ConsoleKernel
         //Subiekt
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(5, '07:00');
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(6, '07:00');
-        $schedule->job(new ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci)->dailyAt('07:00');
+        $schedule->job(new ZmianaDatyFormatowanieWarunkoweListaNierozliczonychNaleznosci)->dailyAt('00:01');
         $schedule->job(new ZestawienieSprzedazySklepy)->mondays()->at('09:00');
 
         //Subiekt paragony
