@@ -38,19 +38,20 @@ class ZestawienieSprzedazySklepy implements ShouldQueue
             (object)[//Tychy
                 "warehouseId" => 13,
                 "client" => 1309,
-                "email" => "konrad.checinski@belibe.pl",
+                "email" => "sklep.tychy@belibe.pl",
+//                "email" => "konrad.checinski@belibe.pl",
             ],
             (object)[//DG
                 "warehouseId" => 17,
                 "client" => 1310,
-//                "email" => "sklep.dg@belibe.pl",
-                "email" => "konrad.checinski@belibe.pl",
+                "email" => "sklep.dg@belibe.pl",
+//                "email" => "konrad.checinski@belibe.pl",
             ],
             (object)[//Blonie
                 "warehouseId" => 37,
                 "client" => 1543,
-//                "email" => "sklep.blonie@belibe.pl",
-                "email" => "konrad.checinski@belibe.pl",
+                "email" => "sklep.blonie@belibe.pl",
+//                "email" => "konrad.checinski@belibe.pl",
             ]
         ];
 
