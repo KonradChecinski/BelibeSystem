@@ -167,18 +167,21 @@ class ClientController extends Controller
     public function search(SearchProductModelRequest $request)
     {
         $clients = Client::query()
-            ->Where('id', 'LIKE', '%' . $request->search . '%')
-            ->orWhere("name", "LIKE", "%" . $request->search . "%")
-            ->orWhere("nip", "LIKE", "%" . $request->search . "%")
-            ->orWhere("city", "LIKE", "%" . $request->search . "%")
-            ->orWhere("postal_code", "LIKE", "%" . $request->search . "%")
-            ->orWhere("street", "LIKE", "%" . $request->search . "%")
-            ->orWhere("phone", "LIKE", "%" . $request->search . "%")
-            ->orWhere("email", "LIKE", "%" . $request->search . "%")
+            ->where("status_id", ">", 1)
+            ->where(function ($query) use ($request) {
+                $query->where('id', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere("name", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("nip", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("city", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("postal_code", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("street", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("phone", "LIKE", "%" . $request->search . "%")
+                    ->orWhere("email", "LIKE", "%" . $request->search . "%");
+            })
             ->limit(15)
             ->get(["id", "name", "nip", "city", "postal_code", "street", "building_number", "apartment_number", "phone", "email",]);
 
-//        dd($clients);
+//        dd($clients->toSql(), $clients->getBindings());
         return response()->json($clients);
     }
 
