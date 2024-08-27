@@ -181,7 +181,6 @@ class ClientController extends Controller
             ->limit(15)
             ->get(["id", "name", "nip", "city", "postal_code", "street", "building_number", "apartment_number", "phone", "email",]);
 
-//        dd($clients->toSql(), $clients->getBindings());
         return response()->json($clients);
     }
 

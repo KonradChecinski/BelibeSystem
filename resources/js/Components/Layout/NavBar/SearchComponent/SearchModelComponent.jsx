@@ -22,8 +22,13 @@ export default function SearchModelComponent({auth, searchRoute, label}) {
             return;
         }
         setLoading(true);
+
+        const params = new URLSearchParams({
+            search: search
+        })
+
         const option = {headers: {Accept: "application/json"}};
-        const response = await fetch(searchRoute + `?search=${search}`, option);
+        const response = await fetch(searchRoute + `?${params.toString()}`, option);
         const json = await response.json();
         await setOptions(json);
         setLoading(false)
