@@ -15,7 +15,7 @@ import {
     Inventory,
     QueryStats,
     Settings,
-    ShoppingCart
+    ShoppingCart, Warehouse
 } from '@mui/icons-material';
 
 export default function Menu({showContent, auth}) {
@@ -86,6 +86,25 @@ export default function Menu({showContent, auth}) {
                     showContent={smBreakpointUp || showContent}
                     text={t("Orders Other")}
                     menuIcon={ShoppingCart}
+                />
+
+                <Divider
+                    component="div"
+                    sx={{
+                        background: theme.palette.gradient.divider,
+                        height: "2px",
+                        width: "80%",
+                        mx: "auto",
+                        my: 1
+                    }}
+                />
+
+                <MainMenuLink
+                    href={route("system.orders.other")}
+                    active={route().current("system.orders.other")}
+                    showContent={smBreakpointUp || showContent}
+                    text={t("Warehouse")}
+                    menuIcon={Warehouse}
                 />
 
                 <Divider
