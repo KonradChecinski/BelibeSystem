@@ -52,7 +52,7 @@ export default function OrderMenu({row}) {
         router.patch(
             route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
             {
-                status: 2
+                status: 20
             },
             {
                 preserveScroll: true,
@@ -72,7 +72,7 @@ export default function OrderMenu({row}) {
         router.patch(
             route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
             {
-                status: 6
+                status: 0
             },
             {
                 preserveScroll: true,
@@ -92,7 +92,7 @@ export default function OrderMenu({row}) {
         router.patch(
             route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
             {
-                status: 2
+                status: 20
             },
             {
                 preserveScroll: true,
@@ -150,7 +150,7 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1, 2, 3, 4].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}
                           onClick={handleCancel}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
@@ -158,7 +158,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![3, 4].includes(row.original.status)}
+                <MenuItem disabled={![55, 90].includes(row.original.status)}
                           onClick={handleProcessAgain}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
@@ -166,7 +166,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![5].includes(row.original.status)}
+                <MenuItem disabled={![100].includes(row.original.status)}
                           onClick={handleGetInvoice}>
                     <ListItemIcon><ReceiptLong/></ListItemIcon>
                     <ListItemText>Wygeneruj fakturę do zamówienia</ListItemText>
@@ -174,7 +174,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![1, 2, 3, 4, 5, 6].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 55, 90, 100, 0].includes(row.original.status)}
                           onClick={handleOpenDetails}>
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>

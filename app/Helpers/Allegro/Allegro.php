@@ -158,7 +158,7 @@ class Allegro
             $allegroOrderModel = Order::create([
                 "number" => $number,
                 "type" => 2,
-                "status" => 2,
+                "status" => 20,
                 "order_id" => $allegroOrderObject->id,
                 "ordered_at" => Carbon::parse($allegroOrderObject->lineItems[0]->boughtAt)->setTimezone("Europe/Warsaw"),
                 "total_quantity" => $allegroOrderItemsObject->sum("quantity"),

@@ -40,7 +40,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
-        $orders = ClientOrder::where("status", 2)->get(); // do zmiany na 3
+        $orders = ClientOrder::where("status", 20)->get(); // do zmiany na 60
 
 
         foreach ($orders as $order) {
@@ -166,7 +166,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,
                 'subiekt_added_at' => $date,
-                "status" => 4
+                "status" => 90
             ]);
 
             //dok_Status =

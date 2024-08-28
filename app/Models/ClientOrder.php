@@ -47,13 +47,15 @@ class ClientOrder extends Model
 //    6 anulowane
 
 //Nowe statusy:
+//    0 - anulowane
 //    1 - złożone
-//    2 - zaakceptowane do realizacji
-//    3 - w trakcie kompletacji
-//    4 - skompletowane
-//    5 - przesłane do subiekta
-//    6 - zrealizowane
-//    7 - anulowane
+//    20 - zaakceptowane do realizacji
+//    50 - przekazane do magazynu
+//    55 - w trakcie kompletacji
+//    60 - skompletowane
+//    90 - przesłane do subiekta
+//    100 - zrealizowane
+
 
     public function orderProducts(): HasMany
     {

@@ -36,7 +36,7 @@ class UpdateClientOrderStatus implements ShouldQueue
      */
     public function handle(): void
     {
-        $orders = ClientOrder::query()->where("status", 4)->get();
+        $orders = ClientOrder::query()->where("status", 90)->get();
         foreach ($orders as $order) {
             $subiektFV = DB::connection("subiekt")
                 ->table("dok__Dokument")
@@ -53,7 +53,7 @@ class UpdateClientOrderStatus implements ShouldQueue
             if ($subiektFV == null) {
                 if (Carbon::now()->diffInDays($order->created_at) > 7) {
                     $order->update([
-                        "status" => 6
+                        "status" => 0
                     ]);
                 } else {
                     continue;
@@ -70,7 +70,7 @@ class UpdateClientOrderStatus implements ShouldQueue
 
             if ((int)$subiektFV->dok_Status == 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
                 $order->update([
-                    "status" => 5
+                    "status" => 100
                 ]);
                 $order->client->accountManager->notify(new OrderCompleatedUser($order));
             }

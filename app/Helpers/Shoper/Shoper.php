@@ -959,7 +959,7 @@ class Shoper
             $shoperOrderModel = Order::create([
                 "number" => $number,
                 "type" => 1,
-                "status" => 2,
+                "status" => 20,
                 "order_id" => $shoperOrder["order_id"],
                 "ordered_at" => $shoperOrder["date"],
                 "total_quantity" => count($shoperOrderProducts),

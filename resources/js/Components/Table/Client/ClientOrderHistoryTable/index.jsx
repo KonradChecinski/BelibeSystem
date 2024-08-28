@@ -349,23 +349,23 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                             text = "Złożone";
                             color = "success.main";
                             break;
-                        case 2:
+                        case 20:
                             text = "Zaakceptowane do realizacji";
                             color = "info.main";
                             break;
-                        case 3:
+                        case 55:
                             text = "W trakcie kompletacji";
                             color = "info.main";
                             break;
-                        case 4:
+                        case 90:
                             text = "Przesłane do subiekta";
                             color = "warning.main";
                             break;
-                        case 5:
+                        case 100:
                             text = "Zrealizowane";
                             color = "";
                             break;
-                        case 6:
+                        case 0:
                             text = "Anulowane";
                             color = "error.main";
                             break;

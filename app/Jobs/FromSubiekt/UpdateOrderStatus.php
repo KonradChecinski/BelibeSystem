@@ -31,7 +31,7 @@ class UpdateOrderStatus implements ShouldQueue
      */
     public function handle(): void
     {
-        $orders = Order::query()->where("status", 4)->get();
+        $orders = Order::query()->where("status", 90)->get();
         foreach ($orders as $order) {
             $subiektFV = DB::connection("subiekt")
                 ->table("dok__Dokument")
@@ -48,7 +48,7 @@ class UpdateOrderStatus implements ShouldQueue
             if ($subiektFV == null) {
                 if (Carbon::now()->diffInDays($order->created_at) > 7) {
                     $order->update([
-                        "status" => 6
+                        "status" => 0
                     ]);
                 } else {
                     continue;
@@ -57,7 +57,7 @@ class UpdateOrderStatus implements ShouldQueue
 
             if ($subiektFV->dok_Status == 1) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
                 $order->update([
-                    "status" => 5
+                    "status" => 100
                 ]);
             }
 

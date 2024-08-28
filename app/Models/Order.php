@@ -52,6 +52,18 @@ class Order extends Model
 //    4 przesłane do subiekta
 //    5 zrealizowane
 //    6 anulowane
+
+
+//Nowe statusy:
+//    0 - anulowane
+//    1 - złożone
+//    20 - zaakceptowane do realizacji
+//    50 - przekazane do magazynu
+//    55 - w trakcie kompletacji
+//    60 - skompletowane
+//    90 - przesłane do subiekta
+//    100 - zrealizowane
+
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);

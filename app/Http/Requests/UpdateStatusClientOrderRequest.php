@@ -26,24 +26,32 @@ class UpdateStatusClientOrderRequest extends FormRequest
             "status" => [
                 "required",
                 "integer",
-                "min:1",
-                "max:6",
+                Rule::in([
+                    0,
+                    1,
+                    20,
+                    50,
+                    55,
+                    60,
+                    90,
+                    100,
+                ]),
                 Rule::when($this->clientOrder->status == 1, function () {
-                    return "in:2,6";
+                    return "in:20,0";
                 }),
-                Rule::when($this->clientOrder->status == 2, function () {
-                    return "in:6";
+                Rule::when($this->clientOrder->status == 20, function () {
+                    return "in:0";
                 }),
-                Rule::when($this->clientOrder->status == 3, function () {
-                    return "in:2,6";
+                Rule::when($this->clientOrder->status == 55, function () {
+                    return "in:20,0";
                 }),
-                Rule::when($this->clientOrder->status == 4, function () {
-                    return "in:2,6";
+                Rule::when($this->clientOrder->status == 90, function () {
+                    return "in:20,60";
                 }),
-                Rule::when($this->clientOrder->status == 5, function () {
+                Rule::when($this->clientOrder->status == 100, function () {
                     return "in:";
                 }),
-                Rule::when($this->clientOrder->status == 6, function () {
+                Rule::when($this->clientOrder->status == 0, function () {
                     return "in:";
                 }),
             ],

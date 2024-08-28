@@ -72,10 +72,10 @@ class ClientOrderController extends Controller
 
     public function updateStatus(UpdateStatusClientOrderRequest $request, ClientOrder $clientOrder)
     {
-        if ($request->status === 2) {
+        if ($request->status === 20) {
             $oldStatus = $clientOrder->status;
 
-            $clientOrder->status = 2;
+            $clientOrder->status = 20;
             $clientOrder->subiekt_number = null;
             $clientOrder->subiekt_added_at = null;
             $clientOrder->save();
