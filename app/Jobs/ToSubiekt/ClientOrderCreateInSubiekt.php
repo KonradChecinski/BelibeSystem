@@ -91,6 +91,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                         $pozycja->IloscJm = (int)$orderProduct->quantity;
 //                        $pozycja->RabatProcent = (float)0;
 
+                        $pozycja->Opis = (int)$orderProduct->quantity;
 
                         $percent = (float)$pozycja->RabatProcent;
                         if ($percent > 0 && round($percent) !== round($percent, 2)) {
