@@ -1,9 +1,9 @@
 import {
     Autocomplete,
-    Box, Button,
+    Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
-    DialogTitle, Paper,
+    DialogTitle, FormControlLabel, FormGroup, Paper,
     Step,
     StepLabel,
     Stepper,
@@ -67,6 +67,7 @@ export default function ClientAddEditDiscountsDialog({
         } : null,
 
         value: clickedDiscount ? clickedDiscount.value / 100 : 0,
+        show_discount_on_invoice: clickedDiscount ? clickedDiscount.show_discount_on_invoice : true,
     })
 
     const getNameByTypeId = (id) => {
@@ -120,6 +121,8 @@ export default function ClientAddEditDiscountsDialog({
             } : null,
 
             value: clickedDiscount ? clickedDiscount.value / 100 : null,
+            show_discount_on_invoice: clickedDiscount ? clickedDiscount.show_discount_on_invoice : true,
+            
         })
 
         // setCurrentSchema()
@@ -430,6 +433,22 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                     </Box>
                 </>
             ) : null}
+            <Box sx={{ml: 1.5}}>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={data.show_discount_on_invoice}
+                                size={"large"}
+                                onChange={(e, value) => {
+                                    setData('show_discount_on_invoice', value);
+                                }}
+                            />
+                        }
+                        label="Czy pokazywać rabat na fakturze"
+                    />
+                </FormGroup>
+            </Box>
         </Box>
     );
 }
@@ -455,7 +474,20 @@ function Step2({data, errors, getNameByTypeId}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
-
+            <Box sx={{ml: 1.5}}>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={data.show_discount_on_invoice}
+                                size={"large"}
+                                disabled={true}
+                            />
+                        }
+                        label="Czy pokazywać rabat na fakturze"
+                    />
+                </FormGroup>
+            </Box>
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
                     {errors[key]}

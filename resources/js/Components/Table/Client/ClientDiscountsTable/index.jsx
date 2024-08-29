@@ -93,6 +93,16 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             valueGetter: (params) => getName(params.row),
         },
         {
+            field: "show_discount_on_invoice",
+            headerName: "Czy pokazywać rabat na fakturze",
+            type: "boolean",
+            sortable: true,
+            filterable: true,
+            align: 'center',
+            width: 100,
+            // valueGetter: (params) => getName(params.row),
+        },
+        {
             field: "value",
             headerName: "Wartość rabatu",
             sortable: true,

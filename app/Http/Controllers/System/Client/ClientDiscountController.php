@@ -34,6 +34,7 @@ class ClientDiscountController extends Controller
         $clientDiscount = new ClientDiscount([
             "type" => $request->type["id"],
             "value" => $request->value,
+            "show_discount_on_invoice" => $request->show_discount_on_invoice
         ]);
         $clientDiscount->client()->associate($client);
         if (!is_null($request->product_model) && $request->type["id"] === 1) {
@@ -125,10 +126,12 @@ class ClientDiscountController extends Controller
      */
     public function update(UpdateClientDiscountRequest $request, Client $client, ClientDiscount $clientDiscount)
     {
+//        dd($request->all());
         if ($clientDiscount->client != $client) abort(403);
 
         $clientDiscount->type = $request->type["id"];
         $clientDiscount->value = $request->value;
+        $clientDiscount->show_discount_on_invoice = $request->show_discount_on_invoice;
 
         $clientDiscount->productModel()->dissociate();
         $clientDiscount->productCategory()->dissociate();

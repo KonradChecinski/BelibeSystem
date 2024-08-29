@@ -75,6 +75,27 @@ class B2bProductController extends Controller
 
 //        dd($productModel, $productModel->productsToB2bWithRelation);
 //        dd($productModel->toArray());
+
+        $price = [
+            ...$productModel->prices->toArray(),
+            ...$productModel->priceForClientB2b($client),
+        ];
+
+        $priceForClient = [
+            'price_net' => $price['discounted_wholesale_net_price'],
+            'price_gross' => $price['discounted_wholesale_gross_price'],
+            'vat_rate' => $price['vat_rate'],
+            'currency' => $price['currency'],
+        ];
+        if ($price["discount"] !== 0 && $price["show_discount_on_invoice"]) {
+            $priceForClient["discount"] = $price["discount"];
+            $priceForClient["show_discount_on_invoice"] = $price["show_discount_on_invoice"];
+            $priceForClient["original_price_net"] = $price["wholesale_net_price"];
+            $priceForClient["original_price_gross"] = $price["wholesale_gross_price"];
+
+        }
+//        dd($price, $priceForClient);
+
         return Inertia::render('B2B/Model',
             [
                 "model" => [
@@ -84,7 +105,7 @@ class B2bProductController extends Controller
                     'slug' => $productModel->slug,
                     'description_b2b' => $productModel->description_b2b,
                     'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["path" => $image->path]) : null,
-                    'price' => array_merge($productModel->prices->toArray(), $productModel->priceForClientB2b($client)),
+                    'price' => $priceForClient,
 //                    'quantity' => $productModel->quantityToB2b(),
                     'colors' => $productModel->productsToB2bWithRelation,
                     'sizes' => $productModel->sizesToB2b->map(fn($size) => [

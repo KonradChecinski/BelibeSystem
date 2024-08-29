@@ -16,6 +16,7 @@ class ClientOrderProduct extends Model
         "client_order_id",
         "product_id",
         "quantity",
+        "original_price_net",
         "price_net",
         "vat_rate",
         "currency",

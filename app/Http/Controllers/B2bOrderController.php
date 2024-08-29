@@ -84,6 +84,7 @@ class B2bOrderController extends Controller
         $priceSummaryGrouped = $cartModel->map(function ($item) {
             return collect([
                 "quantity" => $item->quantity,
+                "original_total_net" => $item->original_price_net,
                 "total_net" => $item->price_net,
 //                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
                 "vat_rate" => $item->vat_rate,
@@ -229,6 +230,7 @@ class B2bOrderController extends Controller
             $orderProduct = new ClientOrderProduct([
                 "product_id" => $item->product_id,
                 "quantity" => $item->quantity,
+                "original_price_net" => $item->original_price_net,
                 "price_net" => $item->price_net,
                 "vat_rate" => $item->vat_rate,
                 "currency" => $item->currency,

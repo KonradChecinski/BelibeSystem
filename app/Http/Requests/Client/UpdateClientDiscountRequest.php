@@ -50,6 +50,7 @@ class UpdateClientDiscountRequest extends FormRequest
                 Rule::when($this->type === 4, ['required', 'integer'])
             ],
             "value" => "required|numeric|min:-50000|max:10000",
+            "show_discount_on_invoice" => "required|boolean",
         ];
     }
 }

@@ -21,6 +21,7 @@ class B2bCart extends Model
         'client_id',
         'product_id',
         'quantity',
+        'original_price_net',
         'price_net',
         'vat_rate',
         'currency',

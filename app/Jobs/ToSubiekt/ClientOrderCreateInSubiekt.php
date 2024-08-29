@@ -85,7 +85,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                         $wholesale_net_price_after_payment_discount = round($orderProduct->price_net * (100 - $order->discount) / 100);
 
                         $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
-                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->original_price_net / 100;
 //                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
                         $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                         $pozycja->IloscJm = (int)$orderProduct->quantity;
@@ -100,7 +100,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                             $pozycja->RabatProcent = $roundedPercent;
 
                             if ((float)$pozycja->CenaNettoPoRabacie !== $wholesale_net_price_after_payment_discount / 100) {
-                                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
+                                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->original_price_net / 100;
                                 $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                             }
 

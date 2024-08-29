@@ -146,13 +146,18 @@ class B2bCartController extends Controller
         $client = Helper::getClientToB2b();
         if ($client->cart()->where("product_id", $product->id)->count() == 0) {
             $discountedPrices = $product->model->priceForClientB2b($client);
-            $currency = $product->model->prices->currency;
+            $prices = $product->model->prices;
+            $currency = $prices->currency;
+
+//            dd($request->all(), $discountedPrices, $discountedPrices['show_discount_on_invoice'], $prices);
             $cartProduct = new B2bCart([
                 "quantity" => $request->quantity,
+                'original_price_net' => $discountedPrices['show_discount_on_invoice'] ? $prices['wholesale_net_price'] : $discountedPrices['discounted_wholesale_net_price'],
                 'price_net' => $discountedPrices['discounted_wholesale_net_price'],
                 'vat_rate' => $discountedPrices['vat_rate'],
                 'currency' => $currency,
             ]);
+
             $cartProduct->product()->associate($product);
 //            dd($cartProduct->toArray());
             $client->cart()->save($cartProduct);

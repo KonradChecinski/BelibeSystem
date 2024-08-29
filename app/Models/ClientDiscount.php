@@ -21,6 +21,7 @@ class ClientDiscount extends Model
         'product_category_id',
         'product_group_id',
         'product_brand_id',
+        'show_discount_on_invoice',
         'value',
     ];
 

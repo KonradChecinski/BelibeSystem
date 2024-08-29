@@ -32,7 +32,8 @@ class PriceForClient
         if (!is_null($productModel)) {
             $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
             if ($discountsForProductModel->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -40,8 +41,8 @@ class PriceForClient
             $discountsForCategories = $discounts->where("type", 2)->whereIn('product_category_id', $categories->map(fn($category) => $category->id));
 
             if ($discountsForCategories->isNotEmpty()) {
-                $discountValue = $discountsForCategories->max("value");
-                return self::calculatePrices($priceNet, $discountValue + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForCategories->orderBy("value", "desc")->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -49,7 +50,8 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForGroup->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -57,7 +59,8 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForBrand->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -65,7 +68,8 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForEverything->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -73,7 +77,8 @@ class PriceForClient
             "discounted_wholesale_net_price" => $priceNet,
             "discounted_wholesale_gross_price" => round($priceNet * (1 + $vat / 100)),
             "discount" => 0,
-            "vat_rate" => $vat
+            "vat_rate" => $vat,
+            "show_discount_on_invoice" => false
         ];
     }
 
@@ -105,7 +110,8 @@ class PriceForClient
         if (!is_null($productModel)) {
             $discountsForProductModel = $discounts->where("type", 1)->where('product_model_id', $productModel->id);
             if ($discountsForProductModel->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForProductModel->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -113,8 +119,8 @@ class PriceForClient
             $discountsForCategories = $discounts->where("type", 2)->whereIn('product_category_id', $categories->map(fn($category) => $category->id));
 
             if ($discountsForCategories->isNotEmpty()) {
-                $discountValue = $discountsForCategories->max("value");
-                return self::calculatePrices($priceNet, $discountValue + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForCategories->orderBy("value", "desc")->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -122,7 +128,8 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForGroup->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -130,7 +137,8 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForBrand->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -138,7 +146,8 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                return self::calculatePrices($priceNet, $discountsForEverything->first()->value + $extraDiscountPercent, $vat);
+                $discountModel = $discountsForProductModel->first();
+                return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
 
@@ -146,17 +155,19 @@ class PriceForClient
             "discounted_wholesale_net_price" => $priceNet,
             "discounted_wholesale_gross_price" => round($priceNet * (1 + $vat / 100)),
             "discount" => 0,
-            "vat_rate" => $vat
+            "vat_rate" => $vat,
+            "show_discount_on_invoice" => false
         ];
     }
 
-    private static function calculatePrices(int $priceNet, int $discount, int $vat): array
+    private static function calculatePrices(int $priceNet, int $discount, int $vat, bool $showOnInvoice): array
     {
         return [
             "discounted_wholesale_net_price" => round($priceNet - ($priceNet * ($discount / 10000))),
             "discounted_wholesale_gross_price" => round(round($priceNet - ($priceNet * ($discount / 10000))) * (1 + $vat / 100)),
-            "discount" => $discount / 100,
-            "vat_rate" => $vat
+            "discount" => $discount,
+            "vat_rate" => $vat,
+            "show_discount_on_invoice" => $showOnInvoice
         ];
     }
 }
