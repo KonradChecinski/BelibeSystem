@@ -70,5 +70,6 @@ input:focus {
 }
 
 
-.my-project-cron * {
+.notistack-SnackbarContainer {
+    top: 80px !important;
 }

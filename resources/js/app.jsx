@@ -21,6 +21,7 @@ const htmlLang =
 
 moment.locale(htmlLang)
 
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
@@ -53,7 +54,7 @@ createInertiaApp({
                 <SnackbarProvider
                     // dense
                     maxSnack={7}
-                    autoHideDuration={13000}
+                    autoHideDuration={3000}
                     anchorOrigin={{
                         vertical: "top",
                         horizontal: "right"
@@ -63,9 +64,11 @@ createInertiaApp({
                             <Close/>
                         </IconButton>
                     )}
+                    preventDuplicate={true}
                     // classes={{
                     //     containerRoot: {
-                    //         top: 264
+                    //         top: 264,
+                    //         backgroundColor: "#4B5563"
                     //     },
                     //     root: {
                     //         top: 264
