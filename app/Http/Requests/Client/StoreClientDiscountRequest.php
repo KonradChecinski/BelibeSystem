@@ -49,7 +49,7 @@ class StoreClientDiscountRequest extends FormRequest
             "product_brand.id" => [
                 Rule::when($this->type === 4, ['required', 'integer'])
             ],
-            "value" => "required|integer",
+            "value" => "required|numeric|min:-50000|max:10000",
         ];
     }
 }

@@ -141,9 +141,16 @@ class ClientDiscountController extends Controller
                 ->where("product_model_id", $request->product_model["id"])
                 ->where("client_id", $client->id)
                 ->count();
-            if ($count > 0) {
+
+            if ($count === 0) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Wybrany produkt już ma rabat'
+                    'name' => 'Wybrany produkt nie ma rabatu'
+                ]);
+            }
+
+            if ($count > 1) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Więcej niż jeden produkt ma już rabat'
                 ]);
             }
             $clientDiscount->productModel()->associate($request->product_model["id"]);
@@ -153,9 +160,15 @@ class ClientDiscountController extends Controller
                 ->where("product_category_id", $request->product_category["id"])
                 ->where("client_id", $client->id)
                 ->count();
-            if ($count > 0) {
+            if ($count === 0) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Wybrana kategoria już ma rabat'
+                    'name' => 'Wybrany produkt nie ma rabatu'
+                ]);
+            }
+
+            if ($count > 1) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Więcej niż jeden produkt ma już rabat'
                 ]);
             }
             $clientDiscount->productCategory()->associate($request->product_category["id"]);
@@ -165,9 +178,15 @@ class ClientDiscountController extends Controller
                 ->where("product_group_id", $request->product_group["id"])
                 ->where("client_id", $client->id)
                 ->count();
-            if ($count > 0) {
+            if ($count === 0) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Wybrana grupa już ma rabat'
+                    'name' => 'Wybrany produkt nie ma rabatu'
+                ]);
+            }
+
+            if ($count > 1) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Więcej niż jeden produkt ma już rabat'
                 ]);
             }
             $clientDiscount->productGroup()->associate($request->product_group["id"]);
@@ -177,9 +196,15 @@ class ClientDiscountController extends Controller
                 ->where("product_brand_id", $request->product_brand["id"])
                 ->where("client_id", $client->id)
                 ->count();
-            if ($count > 0) {
+            if ($count === 0) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Wybrana marka już ma rabat'
+                    'name' => 'Wybrany produkt nie ma rabatu'
+                ]);
+            }
+
+            if ($count > 1) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Więcej niż jeden produkt ma już rabat'
                 ]);
             }
             $clientDiscount->productBrand()->associate($request->product_brand["id"]);
@@ -189,9 +214,15 @@ class ClientDiscountController extends Controller
                 ->where("client_id", $client->id)
                 ->whereNot("id", $clientDiscount->id)
                 ->count();
-            if ($count > 0) {
+            if ($count === 0) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Klient ma juz rabat na wszystkie produkty'
+                    'name' => 'Wybrany produkt nie ma rabatu'
+                ]);
+            }
+
+            if ($count > 1) {
+                return redirect()->back()->withErrors([
+                    'name' => 'Więcej niż jeden produkt ma już rabat'
                 ]);
             }
 

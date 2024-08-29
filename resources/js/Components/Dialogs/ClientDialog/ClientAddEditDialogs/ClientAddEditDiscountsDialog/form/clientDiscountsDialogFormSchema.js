@@ -17,7 +17,7 @@ const schema = yup.object().shape({
         .number()
         .typeError("Wartość musi być liczbą")
         .required("Pole jest wymagane")
-        .min(0, "Wartość musi być większa lub równa 0")
+        .min(-500, "Wartość musi być większa lub równa -500")
         .max(100, "Wartość musi być mniejsza lub równa 100"),
 })
 

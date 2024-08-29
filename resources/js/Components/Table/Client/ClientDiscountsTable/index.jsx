@@ -20,7 +20,7 @@ import ClientAddEditDiscountsDialog
 export default function ClientDiscountsTable({discounts, readOnly, color, props}) {
     const theme = useTheme();
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
-    
+
     const {data, setData, re} = useForm(discounts)
     const [rowCountState, setRowCountState] = useState(discounts.length);
 
@@ -99,7 +99,10 @@ export default function ClientDiscountsTable({discounts, readOnly, color, props}
             filterable: true,
             align: 'center',
             width: 100,
-            valueGetter: (params) => params.row?.value + "%",
+            valueGetter: (params) => (Number(params.row?.value) / 100).toLocaleString("pl-PL", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " %",
         },
     ];
 

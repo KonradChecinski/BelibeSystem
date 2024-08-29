@@ -153,9 +153,9 @@ class PriceForClient
     private static function calculatePrices(int $priceNet, int $discount, int $vat): array
     {
         return [
-            "discounted_wholesale_net_price" => round($priceNet - ($priceNet * ($discount / 100))),
-            "discounted_wholesale_gross_price" => round(round($priceNet - ($priceNet * ($discount / 100))) * (1 + $vat / 100)),
-            "discount" => $discount,
+            "discounted_wholesale_net_price" => round($priceNet - ($priceNet * ($discount / 10000))),
+            "discounted_wholesale_gross_price" => round(round($priceNet - ($priceNet * ($discount / 10000))) * (1 + $vat / 100)),
+            "discount" => $discount / 100,
             "vat_rate" => $vat
         ];
     }

@@ -27,7 +27,7 @@ export default function ClientAddEditDiscountsDialog({
     const types = [
         {id: 1, name: "Model", label: "Model"},
         {id: 2, name: "Kategoria", label: "Kategoria"},
-        {id: 3, name: "Grupa", label: "Grupa"},
+        {id: 3, name: "Grupa", label: "Grupa", disabled: true},
         {id: 4, name: "Producent", label: "Producent"},
         {id: 5, name: "Wszystko", label: "Wszystko"}
     ]
@@ -41,7 +41,7 @@ export default function ClientAddEditDiscountsDialog({
     } = useClientDiscountsDialogForm();
 
 
-    const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
+    const {data, setData, post, patch, processing, errors, clearErrors, reset, transform} = useForm({
         type: clickedDiscount ? types.find((e) => e.id === clickedDiscount.type) : null,
 
         product_model: clickedDiscount?.product_model ? {
@@ -66,7 +66,7 @@ export default function ClientAddEditDiscountsDialog({
             label: clickedDiscount.product_brand?.name
         } : null,
 
-        value: clickedDiscount ? clickedDiscount.value : 0,
+        value: clickedDiscount ? clickedDiscount.value / 100 : 0,
     })
 
     const getNameByTypeId = (id) => {
@@ -92,7 +92,7 @@ export default function ClientAddEditDiscountsDialog({
         // inicjacja wartości pól
         setValue('type', clickedDiscount ? 'type' : '');
         setValue('name', clickedDiscount ? 'name' : '');
-        setValue('value', clickedDiscount?.value ? clickedDiscount?.value : 0);
+        setValue('value', clickedDiscount?.value ? clickedDiscount?.value / 100 : 0);
 
         setData({
             type: clickedDiscount ? types.find((e) => e.id === clickedDiscount.type) : null,
@@ -119,7 +119,7 @@ export default function ClientAddEditDiscountsDialog({
                 label: clickedDiscount.product_brand?.name
             } : null,
 
-            value: clickedDiscount ? clickedDiscount.value : null,
+            value: clickedDiscount ? clickedDiscount.value / 100 : null,
         })
 
         // setCurrentSchema()
@@ -155,6 +155,10 @@ export default function ClientAddEditDiscountsDialog({
         setOpen(false);
     }
 
+    transform((data) => ({
+        ...data,
+        value: data.value * 100
+    }))
     const save = () => {
         if (clickedDiscount) {
             patch(route("system.clients.client.discount.update", {
@@ -316,6 +320,7 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                     sx={{width: "30ch"}}
                     value={data.type}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
+                    getOptionDisabled={(option) => option?.disabled}
                     onChange={(e, value) => {
                         setData({
                             ...data,
@@ -341,7 +346,7 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                 )}
             </Box>
 
-            {data.type ? (
+            {data.type && data.type.id !== 5 ? (
                 <>
                     <Box>
                         <Autocomplete
@@ -398,7 +403,11 @@ function Step1({data, setData, clickedDiscount = null, register, errors, types, 
                             </Typography>
                         )}
                     </Box>
+                </>
+            ) : null}
 
+            {data.type ? (
+                <>
                     <Box>
                         <TextField
                             type="number"
@@ -432,11 +441,14 @@ function Step2({data, errors, getNameByTypeId}) {
                        value={data.type?.name}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+            {data.type.id !== 5 ? (
+                <TextField id="name" label="Nazwa" variant="outlined"
+                           value={getNameByTypeId(data.type?.id)?.name}
+                           disabled={true}
+                           sx={{width: "30ch", my: 1}}/>
+            ) : null
+            }
 
-            <TextField id="name" label="Nazwa" variant="outlined"
-                       value={getNameByTypeId(data.type?.id)?.name}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
 
             <TextField id="value" label="Wartość rabatu" variant="outlined"
                        value={data.value}
