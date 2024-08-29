@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('client_discounts', function (Blueprint $table) {
-            $table->boolean('show_discount_on_invoice')->default(true)->after('product_brand_id');
+            $table->boolean('show_discount_on_invoice')->default(false)->after('product_brand_id');
         });
     }
 

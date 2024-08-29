@@ -67,7 +67,7 @@ export default function ClientAddEditDiscountsDialog({
         } : null,
 
         value: clickedDiscount ? clickedDiscount.value / 100 : 0,
-        show_discount_on_invoice: clickedDiscount ? clickedDiscount.show_discount_on_invoice : true,
+        show_discount_on_invoice: clickedDiscount ? clickedDiscount.show_discount_on_invoice : false,
     })
 
     const getNameByTypeId = (id) => {
@@ -122,7 +122,7 @@ export default function ClientAddEditDiscountsDialog({
 
             value: clickedDiscount ? clickedDiscount.value / 100 : null,
             show_discount_on_invoice: clickedDiscount ? clickedDiscount.show_discount_on_invoice : true,
-            
+
         })
 
         // setCurrentSchema()
