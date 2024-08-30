@@ -25,30 +25,36 @@ class Install8Controller extends Controller
 {
     public function install()
     {
-        ClientOrder::query()->where('status', 6)->update(['status' => 0]);
-        ClientOrder::query()->where('status', 5)->update(['status' => 100]);
-        ClientOrder::query()->where('status', 4)->update(['status' => 90]);
-        ClientOrder::query()->where('status', 3)->update(['status' => 55]);
-        ClientOrder::query()->where('status', 2)->update(['status' => 20]);
+//        ClientOrder::query()->where('status', 6)->update(['status' => 0]);
+//        ClientOrder::query()->where('status', 5)->update(['status' => 100]);
+//        ClientOrder::query()->where('status', 4)->update(['status' => 90]);
+//        ClientOrder::query()->where('status', 3)->update(['status' => 55]);
+//        ClientOrder::query()->where('status', 2)->update(['status' => 20]);
 
+        Order::query()->where('status', 6)->update(['status' => 0]);
+        Order::query()->where('status', 5)->update(['status' => 100]);
+        Order::query()->where('status', 4)->update(['status' => 90]);
+        Order::query()->where('status', 3)->update(['status' => 55]);
+        Order::query()->where('status', 2)->update(['status' => 20]);
 
-        foreach (ClientDiscount::all() as $clientDiscount) {
-            $clientDiscount->update([
-                "value" => $clientDiscount->value * 100
-            ]);
-        }
-
-        foreach (B2bCart::all() as $cart) {
-            $cart->update([
-                "original_price_net" => $cart->price_net
-            ]);
-        }
-
-        foreach (ClientOrderProduct::all() as $orderProduct) {
-            $orderProduct->update([
-                "original_price_net" => $orderProduct->price_net
-            ]);
-        }
+//
+//        foreach (ClientDiscount::all() as $clientDiscount) {
+//            $clientDiscount->update([
+//                "value" => $clientDiscount->value * 100
+//            ]);
+//        }
+//
+//        foreach (B2bCart::all() as $cart) {
+//            $cart->update([
+//                "original_price_net" => $cart->price_net
+//            ]);
+//        }
+//
+//        foreach (ClientOrderProduct::all() as $orderProduct) {
+//            $orderProduct->update([
+//                "original_price_net" => $orderProduct->price_net
+//            ]);
+//        }
 
 
         return ("OK");
