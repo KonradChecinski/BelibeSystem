@@ -154,7 +154,7 @@ class Allegro
             $lastNumber = (int)substr($lastNumber, -5);
             $lastNumber++;
             $number = "ALL " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
-
+            
             $allegroOrderModel = Order::create([
                 "number" => $number,
                 "type" => 2,
@@ -178,7 +178,7 @@ class Allegro
                 "street1" => Str::title($allegroOrderObject->buyer->address->street),
                 "country" => Str::title($allegroOrderObject->buyer->address->countryCode),
                 "phone" => $allegroOrderObject->buyer->phoneNumber,
-                "tax_id" => $allegroOrderObject->invoice->address?->company->ids->value,
+                "tax_id" => $allegroOrderObject->invoice->address?->company->ids[0]->value,
                 "comment" => $allegroOrderObject->messageToSeller === "" ? null : Str::ascii($allegroOrderObject->messageToSeller),
             ]);
 
