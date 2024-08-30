@@ -62,14 +62,18 @@ class ParagonyIFakturyBiuro implements ShouldQueue
             ]);
 
         foreach ($documents as $document) {
+
             if (is_null($document->dok_FiskalizacjaData)) continue;
             if (Carbon::parse($document->dok_FiskalizacjaData)->diffInYears(Carbon::today()) > 0) continue;
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::parse($document->dok_FiskalizacjaData)->toDateTimeString();
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::parse($document->dok_FiskalizacjaData)->toDateTimeString();
-
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
+            }
         }
     }
 
@@ -91,11 +95,15 @@ class ParagonyIFakturyBiuro implements ShouldQueue
 
         foreach ($documents as $document) {
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
 
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
+            }
         }
     }
 
@@ -117,11 +125,16 @@ class ParagonyIFakturyBiuro implements ShouldQueue
 
         foreach ($documents as $document) {
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
 
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
+            }
+
         }
     }
 

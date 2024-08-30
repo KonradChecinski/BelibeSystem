@@ -87,17 +87,22 @@ class ParagonyIFakturySklepy implements ShouldQueue
             if (is_null($document->dok_FiskalizacjaData)) continue;
             if (Carbon::parse($document->dok_FiskalizacjaData)->diffInYears(Carbon::today()) > 0) continue;
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->KategoriaId = $categoryId;
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->KategoriaId = $categoryId;
 
-            if (!is_null($document->dok_KartaId)) {
-                $subiektDocument->PlatnoscKartaId = $paymentId;
+                if (!is_null($document->dok_KartaId)) {
+                    $subiektDocument->PlatnoscKartaId = $paymentId;
+                }
+
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::parse($document->dok_FiskalizacjaData)->toDateTimeString();
+
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
             }
 
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::parse($document->dok_FiskalizacjaData)->toDateTimeString();
-
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
         }
     }
 
@@ -118,18 +123,21 @@ class ParagonyIFakturySklepy implements ShouldQueue
             ]);
 
         foreach ($documents as $document) {
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->KategoriaId = $categoryId;
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->KategoriaId = $categoryId;
+                if (!is_null($document->dok_KartaId)) {
+                    $subiektDocument->PlatnoscKartaId = $paymentId;
+                }
 
-            if (!is_null($document->dok_KartaId)) {
-                $subiektDocument->PlatnoscKartaId = $paymentId;
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
             }
-
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
-
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
         }
     }
 
@@ -151,17 +159,22 @@ class ParagonyIFakturySklepy implements ShouldQueue
 
         foreach ($documents as $document) {
 
-            $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
-            $subiektDocument->KategoriaId = $categoryId;
+            try {
+                $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
+                $subiektDocument->KategoriaId = $categoryId;
 
-            if (!is_null($document->dok_KartaId)) {
-                $subiektDocument->PlatnoscKartaId = $paymentId;
+                if (!is_null($document->dok_KartaId)) {
+                    $subiektDocument->PlatnoscKartaId = $paymentId;
+                }
+
+                $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
+
+                $subiektDocument->Zapisz();
+                $subiektDocument->Zamknij();
+            } catch (\Exception $e) {
+                continue;
             }
 
-            $subiektDocument->PoleWlasne["Czas"] = Carbon::now()->toDateTimeString();
-
-            $subiektDocument->Zapisz();
-            $subiektDocument->Zamknij();
         }
     }
 
