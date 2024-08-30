@@ -50,7 +50,7 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForGroup->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
@@ -59,7 +59,7 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForBrand->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
@@ -68,7 +68,7 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForEverything->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
@@ -128,7 +128,7 @@ class PriceForClient
             $discountsForGroup = $discounts->where("type", 3)->where('product_group_id', $group->id);
 
             if ($discountsForGroup->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForGroup->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
@@ -137,7 +137,7 @@ class PriceForClient
             $discountsForBrand = $discounts->where("type", 4)->where('product_brand_id', $brand->id);
 
             if ($discountsForBrand->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForBrand->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
@@ -146,7 +146,7 @@ class PriceForClient
             $discountsForEverything = $discounts->where("type", 5);
 
             if ($discountsForEverything->isNotEmpty()) {
-                $discountModel = $discountsForProductModel->first();
+                $discountModel = $discountsForEverything->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
