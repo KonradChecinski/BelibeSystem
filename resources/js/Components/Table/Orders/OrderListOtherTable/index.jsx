@@ -24,6 +24,8 @@ import 'cronstrue/locales/pl';
 import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Orders/Other/Menu/OrderMenu";
+import {Allegro} from "@/Icons/Allegro";
+import {Belibe} from "@/Icons/Belibe";
 
 
 export default function OrderListOtherTable({orders = [], readOnly, props}) {
@@ -49,7 +51,17 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                         <Box>
                             {cell.getValue() === 1 && (
                                 <Tooltip title="Shoper">
-                                    <ShoppingCart color={"success"}/>
+                                     <span>
+                                    <Belibe sx={{width: 20, height: 20}}/>
+                                     </span>
+                                </Tooltip>
+                            )}
+
+                            {cell.getValue() === 2 && (
+                                <Tooltip title="Allegro">
+                                    <span>
+                                        <Allegro sx={{width: 20, height: 20}}/>
+                                    </span>
                                 </Tooltip>
                             )}
                         </Box>
