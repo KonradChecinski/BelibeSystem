@@ -62,6 +62,11 @@ class ClientOrder extends Model
         return $this->hasMany(ClientOrderProduct::class);
     }
 
+    public function warehouseDocument(): HasOne
+    {
+        return $this->hasOne(WarehouseDocument::class);
+    }
+
     public function products(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
     {
         return $this->hasManyDeep(Product::class, [ClientOrderProduct::class],

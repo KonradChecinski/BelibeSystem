@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System\Client;
 
 use App\Helpers\Helper;
+use App\Helpers\Warehouse\Warehouse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateStatusClientOrderRequest;
 use App\Jobs\FromSubiekt\GenerateInvoiceFromClientOrderInSubiekt;
@@ -82,11 +83,12 @@ class ClientOrderController extends Controller
 //            ClientOrderCreateInSubiekt::dispatch($clientOrder);
             if ($oldStatus === 1) {
                 $clientOrder->client->notify(new OrderAcceptedClient($clientOrder));
+//                Warehouse::transformClientOrderToWarehouseDocument($clientOrder);
             }
         }
 
-        if ($request->status === 6) {
-            $clientOrder->status = 6;
+        if ($request->status === 0) {
+            $clientOrder->status = 0;
             $clientOrder->save();
         }
     }

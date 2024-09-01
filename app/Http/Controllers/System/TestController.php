@@ -19,9 +19,10 @@ class TestController extends Controller
     public function index()
     {
 //        Allegro::getOrders();
+        Allegro::listOrders();
 //        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
 
-        ZestawienieSprzedazySklepy::dispatchSync();
+//        ZestawienieSprzedazySklepy::dispatchSync();
     }
 
     /**

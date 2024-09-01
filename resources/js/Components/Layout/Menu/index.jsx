@@ -100,12 +100,23 @@ export default function Menu({showContent, auth}) {
                 />
 
                 <MainMenuLink
-                    href={route("system.orders.other")}
-                    active={route().current("system.orders.other")}
+                    href={route("system.warehouse.documents")}
+                    active={false}
                     showContent={smBreakpointUp || showContent}
                     text={t("Warehouse")}
                     menuIcon={Warehouse}
-                />
+                >
+                    <SubMenuLink
+                        href={route("system.warehouse.documents")}
+                        active={route().current("system.warehouse.documents")}
+                        text={t("Documents")}
+                    />
+                    <SubMenuLink
+                        href={route("system.warehouse.documents.archival")}
+                        active={route().current("system.warehouse.documents.archival")}
+                        text={t("Archive")}
+                    />
+                </MainMenuLink>
 
                 <Divider
                     component="div"

@@ -60,6 +60,7 @@ use App\Http\Controllers\System\Settings\SettingsUsersActiveController;
 use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
 use App\Http\Controllers\System\XmlGeneratorController;
+use App\Http\Controllers\WarehouseDocumentController;
 use App\Install\ClearDBController;
 use App\Install\Install1Controller;
 use App\Install\Install2Controller;
@@ -173,9 +174,17 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     });
 
+
     Route::group(["prefix" => "/invoices"], function () {
         Route::get("/{invoice}", [InvoiceB2bController::class, 'show'])->name("system.invoices.invoice");
 
+    });
+
+    Route::group(["prefix" => "/warehouse"], function () {
+        Route::get("/documents", [WarehouseDocumentController::class, 'currentDocuments'])->name("system.warehouse.documents");
+        Route::get("/documents/archive", [WarehouseDocumentController::class, 'archivalDocuments'])->name("system.warehouse.documents.archival");
+        
+        Route::get("/document/{warehouseDocument}/print", [WarehouseDocumentController::class, 'print'])->name("system.warehouse.document.print");
     });
 
     Route::group(["prefix" => "/partners"], function () {
