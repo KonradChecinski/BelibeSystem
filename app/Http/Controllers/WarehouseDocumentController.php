@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WarehouseDocument;
 use App\Http\Requests\StoreWarehouseDocumentRequest;
 use App\Http\Requests\UpdateWarehouseDocumentRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
 class WarehouseDocumentController extends Controller
@@ -52,7 +53,19 @@ class WarehouseDocumentController extends Controller
 
     public function print(WarehouseDocument $warehouseDocument)
     {
-        dd($warehouseDocument);
+        $warehouseDocument->load([
+            "warehouseDocumentProducts",
+            "warehouseDocumentProducts.product",
+            "warehouseDocumentProducts.product.color",
+//            "warehouseDocumentProducts.product.model",
+            "clientOrder",
+            "clientOrder.client",
+        ]);
+//        dd($warehouseDocument->toArray());
+        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', ['warehouseDocument' => $warehouseDocument]);
+
+        return $pdf->stream($warehouseDocument->number . '.pdf');
+        return view('pdf.system.warehouseDocument.warehouseDocument', ['warehouseDocument' => $warehouseDocument]);
     }
 
     /**

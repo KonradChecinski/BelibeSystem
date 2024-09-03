@@ -316,9 +316,14 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                             </Tooltip>
 
                             <Tooltip title={"Drukuj"} arrow placement={"bottom"}>
-                                <IconButton aria-label="print" onClick={() => printDocument(row.original.id)}>
-                                    <Print/>
-                                </IconButton>
+                                <a
+                                    href={route("system.warehouse.document.print", {warehouseDocument: row.original.id})}
+                                    target="_blank"
+                                >
+                                    <IconButton aria-label="print">
+                                        <Print/>
+                                    </IconButton>
+                                </a>
                             </Tooltip>
 
                             <Tooltip title={"Zaakceptuj"} arrow placement={"bottom"}>
