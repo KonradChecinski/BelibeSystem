@@ -14,6 +14,7 @@ class WarehouseDocumentProduct extends Model
     use HasFactory;
 
     protected $fillable = [
+        "type",
         "warehouse_document_id",
         "product_id",
         "product_code",
@@ -23,6 +24,7 @@ class WarehouseDocumentProduct extends Model
         "price_net",
         "price_gross",
         "currency",
+        "comment"
     ];
 
     public function warehouseDocument(): BelongsTo

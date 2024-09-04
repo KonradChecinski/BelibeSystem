@@ -22,7 +22,8 @@ return new class extends Migration {
             $table->integer("discount");
             $table->integer("discounted_total_net")->nullable();
             $table->integer("discounted_total_gross")->nullable();
-            $table->text("comment")->nullable();
+            $table->text("client_comment")->nullable();
+            $table->text("user_comment")->nullable();
             $table->timestamps();
         });
     }

@@ -83,7 +83,7 @@ class ClientOrderController extends Controller
 //            ClientOrderCreateInSubiekt::dispatch($clientOrder);
             if ($oldStatus === 1) {
                 $clientOrder->client->notify(new OrderAcceptedClient($clientOrder));
-//                Warehouse::transformClientOrderToWarehouseDocument($clientOrder);
+                Warehouse::transformClientOrderToWarehouseDocument($clientOrder);
             }
         }
 

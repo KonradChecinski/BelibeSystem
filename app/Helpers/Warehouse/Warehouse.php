@@ -4,6 +4,7 @@ namespace App\Helpers\Warehouse;
 
 use App\Models\ClientOrder;
 use App\Models\WarehouseDocument;
+use Illuminate\Support\Collection;
 
 class Warehouse
 {
@@ -29,13 +30,15 @@ class Warehouse
             "discount" => $clientOrder->discount,
             "discounted_total_net" => $clientOrder->discounted_total_net,
             "discounted_total_gross" => $clientOrder->discounted_total_gross,
-            "comment" => $clientOrder->comment,
+            "client_comment" => $clientOrder->client_comment,
+            "user_comment" => $clientOrder->user_comment,
         ]);
 
         $warehouseDocument->save();
 
         foreach ($clientOrder->orderProducts as $orderProduct) {
             $warehouseDocument->warehouseDocumentProducts()->create([
+                "type" => 1,
                 "product_id" => $orderProduct->product_id,
                 "product_code" => null,
                 "quantity" => $orderProduct->quantity,
@@ -46,6 +49,26 @@ class Warehouse
                 "currency" => $orderProduct->currency,
             ]);
         }
+    }
+
+    public static function sortBySizeAndColor(Collection $products): Collection
+    {
+        $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
+            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL"];
+
+        // Mapujemy rozmiary na indeksy
+        $sizeIndex = array_flip(array_map('strtolower', $sizeOrder));
+
+        return $products->sortBy(function ($product) use ($sizeIndex) {
+            $size = strtolower($product->size->name);
+            $color = strtolower($product->color->shortcut);
+
+            $sizeRank = $sizeIndex[$size] ?? PHP_INT_MAX;
+//            dd($sizeIndex, $size, $sizeRank, $color, $product);
+
+            // Sortujemy najpierw po rozmiarze, a potem po kolorze
+            return [$sizeRank, $color];
+        });
     }
 
 }

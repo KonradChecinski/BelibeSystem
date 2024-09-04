@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('warehouse_document_products', function (Blueprint $table) {
             $table->id();
+            $table->integer("type")->default(1);
             $table->foreignId("warehouse_document_id")->references("id")->on("warehouse_documents")->restrictOnDelete();
             $table->foreignId("product_id")->nullable()->references("id")->on("products")->restrictOnDelete();
             $table->string("product_code")->nullable();
@@ -21,6 +22,7 @@ return new class extends Migration {
             $table->integer("price_net")->nullable();
             $table->integer("price_gross")->nullable();
             $table->string("currency");
+            $table->string("comment")->nullable();
             $table->timestamps();
         });
     }

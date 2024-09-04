@@ -88,9 +88,10 @@ class ProductModel extends Model
         return $this->hasManyThrough(ProductColorIcon::class, ProductModelColor::class, "product_model_id", "id", "id", "product_color_icon_id");
     }
 
-    public function products(): HasManyThrough
+    public function products(): HasManyDeep
     {
-        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size', 'unit']);
+//        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size', 'unit']);
+        return $this->hasManyDeep(Product::class, [ProductModelColor::class])->with(['barcodes', 'size', 'unit']);
     }
 
     public function productsWithoutRelation(): HasManyThrough

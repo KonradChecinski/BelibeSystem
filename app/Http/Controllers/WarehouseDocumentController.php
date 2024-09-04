@@ -55,17 +55,54 @@ class WarehouseDocumentController extends Controller
     {
         $warehouseDocument->load([
             "warehouseDocumentProducts",
-            "warehouseDocumentProducts.product",
-            "warehouseDocumentProducts.product.color",
-//            "warehouseDocumentProducts.product.model",
             "clientOrder",
             "clientOrder.client",
-        ]);
-//        dd($warehouseDocument->toArray());
-        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', ['warehouseDocument' => $warehouseDocument]);
+            "clientOrder.payment",
+            "clientOrder.delivery",
+            "clientOrder.location",
+            "clientOrder.location.country:id,name",
 
+
+            "products:products.id,products.symbol,products.quantity,products.product_size_id,products.product_unit_id,products.product_model_color_id",
+            "products.size:id,name",
+            "products.unit:id,name",
+            "products.barcodes",
+            "products.model",
+            "products.color",
+            "productModels:product_models.id,product_models.name,product_models.symbol",
+//            "productModelColors" => function ($query) {
+//                $query->select("product_model_colors.id",
+//                    "product_model_colors.shortcut",
+//                    "product_model_colors.name",
+//                    "product_model_colors.product_model_id");
+////                $query->withWhereHas("images", function ($query) {
+////                    $query->where("type", 1);
+////                    $query->where("order", 0);
+////                    $query->select("product_model_color_id", "path");
+////                });
+//            },
+        ]);
+        $warehouseDocumentModel = collect([$warehouseDocument]);
+
+        $result = [
+            "warehouseDocument" => $warehouseDocument,
+            "warehouseDocumentProducts" => $warehouseDocument->warehouseDocumentProducts,
+            "products" => $warehouseDocumentModel->pluck("products")->flatten(),
+            "productModels" => $warehouseDocumentModel->pluck("productModels")->flatten()->unique("id")->sortBy("symbol")->values(),
+//            "productColors" => $warehouseDocumentModel->pluck("productModelColors")->flatten()->unique("id")->values(),
+            "clientOrder" => $warehouseDocument->clientOrder,
+            "client" => $warehouseDocument->clientOrder->client,
+            "payment" => $warehouseDocument->clientOrder->payment,
+            "delivery" => $warehouseDocument->clientOrder->delivery,
+            "location" => $warehouseDocument->clientOrder->location,
+        ];
+//        dd($warehouseDocumentModel->toArray(), $result);
+//        dd($result["products"]->toArray());
+
+        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
         return $pdf->stream($warehouseDocument->number . '.pdf');
-        return view('pdf.system.warehouseDocument.warehouseDocument', ['warehouseDocument' => $warehouseDocument]);
+
+//        return view('pdf.system.warehouseDocument.warehouseDocument', $result);
     }
 
     /**

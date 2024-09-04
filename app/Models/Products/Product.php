@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 
     /**
@@ -46,7 +48,7 @@ class Product extends Model
     {
         $baseQuantity = $this->quantity;
         $orderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
-            $query->whereIn("status", [1, 2, 3, 4]);
+            $query->where("status", ">", 0)->where("status", "<", 100);
         })->sum("quantity");
         $sum = $baseQuantity - $orderProductsQuantity;
         if ($sum < 0) {
@@ -81,9 +83,13 @@ class Product extends Model
         return $this->belongsTo(ProductUnit::class, "product_unit_id", "id");
     }
 
-    public function model(): BelongsTo
+    public function model(): HasOneDeep
     {
-        return $this->color->model();
+//        return $this->color->model();
+
+        return $this->hasOneDeepFromReverse(
+            (new ProductModel())->products()
+        );
     }
 
 
