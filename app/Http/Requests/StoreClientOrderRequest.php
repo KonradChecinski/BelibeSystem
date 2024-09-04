@@ -30,7 +30,8 @@ class StoreClientOrderRequest extends FormRequest
             "delivery.id" => ["required", "integer", "exists:b2b_deliveries,id"],
             "location" => ["required", "array"],
             "location.id" => ["required", "integer", "exists:client_locations,id"],
-            "comment" => ["nullable", "string"],
+            "client_comment" => ["nullable", "string"],
+            "user_comment" => ["nullable", "string"],
         ];
     }
 }

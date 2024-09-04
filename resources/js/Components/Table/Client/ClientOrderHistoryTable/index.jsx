@@ -7,7 +7,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
-import {Info, ReceiptLong} from "@mui/icons-material";
+import {Info, PersonSearch, ReceiptLong} from "@mui/icons-material";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -494,22 +494,48 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 Cell: ({cell, row}) => {
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end"}}>
-                            {row.original.comment && (
-                                <Tooltip arrow title={
-                                    <>
-                                        <Typography variant={"body1"}>
-                                            Komentarz:
-                                        </Typography>
-                                        <Divider sx={{my: 1}}/>
+                            {row.original.client_comment && (
+                                <Tooltip
+                                    title={
+                                        <>
+                                            <Typography variant={"body1"} sx={{color: "warning.main"}}>
+                                                Uwagi klienta:
+                                            </Typography>
+                                            <Typography variant={"body2"}>
+                                                {row.original.client_comment}
+                                            </Typography>
+                                        </>
+                                    }
+                                    arrow
+                                    placement={"left"}
+                                >
 
-                                        <Typography variant={"body2"}>
-                                            {row.original.comment}
-                                        </Typography>
-                                    </>
-                                }>
-                                    <IconButton aria-label="showInvoice">
-                                        <Info color={"info"}/>
+                                    <IconButton aria-label="info">
+                                        <Info/>
                                     </IconButton>
+
+                                </Tooltip>
+                            )}
+                            {row.original.user_comment && (
+                                <Tooltip
+                                    title={
+                                        <>
+                                            <Typography variant={"body1"} sx={{color: "warning.main"}}>
+                                                Uwagi systemowe:
+                                            </Typography>
+                                            <Typography variant={"body2"}>
+                                                {row.original.user_comment}
+                                            </Typography>
+                                        </>
+                                    }
+                                    arrow
+                                    placement={"left"}
+                                >
+
+                                    <IconButton aria-label="info">
+                                        <PersonSearch/>
+                                    </IconButton>
+
                                 </Tooltip>
                             )}
                             <OrderMenu row={row}/>

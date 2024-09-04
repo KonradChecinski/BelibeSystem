@@ -39,28 +39,58 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                     Potwierdzenie
                 </Typography>
             </Box>
-            <Box>
-                <Typography variant="body1">
-                    Uwagi dla sprzedawcy
-                </Typography>
-                <TextField
-                    id="outlined-basic"
-                    // label="Komentarz"
-                    variant="outlined"
-                    multiline={true}
-                    value={data.comment}
-                    onChange={(e) => setData("comment", e.target.value)}
-                    minRows={4}
-                    sx={{
-                        width: "50ch",
-                        minWidth: "30ch",
-                        maxWidth: "50ch",
-                        mt: 2,
-                        mb: 4
-                    }}
-                />
+            <Box sx={{display: "flex", gap: 2, flexWrap: "wrap"}}>
+                <Box>
+                    <Typography variant="body1">
+                        Uwagi dla sprzedawcy {props.accountManager ? "(Od klienta)" : null}
+                    </Typography>
+                    <TextField
+                        id="outlined-basic"
+                        // label="Komentarz"
+                        variant="outlined"
+                        multiline={true}
+                        value={data.client_comment}
+                        onChange={(e) => setData("client_comment", e.target.value)}
+                        minRows={4}
+                        sx={{
+                            width: "50ch",
+                            minWidth: "30ch",
+                            maxWidth: "50ch",
+                            mt: 2,
+                            mb: 4
+                        }}
+                    />
+
+                </Box>
+                {props.accountManager &&
+                    (
+                        <Box>
+                            <Typography variant="body1">
+                                Uwagi systemowe (klient ich nie widzi)
+                            </Typography>
+                            <TextField
+                                id="outlined-basic"
+                                // label="Komentarz"
+                                variant="outlined"
+                                multiline={true}
+                                value={data.user_comment}
+                                onChange={(e) => setData("user_comment", e.target.value)}
+                                minRows={4}
+                                sx={{
+                                    width: "50ch",
+                                    minWidth: "30ch",
+                                    maxWidth: "50ch",
+                                    mt: 2,
+                                    mb: 4
+                                }}
+                            />
+
+                        </Box>
+                    )
+                }
 
             </Box>
+
             <Box sx={{display: "flex", gap: 2, justifyContent: "space-between"}}>
                 <Box>
                     <Typography variant="caption">

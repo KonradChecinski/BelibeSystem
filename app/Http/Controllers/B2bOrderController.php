@@ -68,6 +68,7 @@ class B2bOrderController extends Controller
      */
     public function store(StoreClientOrderRequest $request)
     {
+
         $client = Helper::getClientToB2b();
 
         $deliveries = B2bDelivery::all();
@@ -218,8 +219,13 @@ class B2bOrderController extends Controller
             "delivery_gross" => $deliveryGross,
 
             "currency" => $cartModel[0]->currency,
-            "comment" => $request->comment,
+            "client_comment" => $request->client_comment,
         ]);
+
+        if (auth()->guard()->name === 'user') {
+            $order->user_comment = $request->user_comment;
+        }
+
         $order->client()->associate($client);
         $order->payment()->associate($request->payment["id"]);
         $order->delivery()->associate($request->delivery["id"]);

@@ -12,7 +12,7 @@ import {
     Edit,
     ContentCopy,
     Upgrade,
-    Sell, ShoppingCart, Info, ReceiptLong, Print
+    Sell, ShoppingCart, Info, ReceiptLong, Print, PersonSearch
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -299,11 +299,46 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                 Cell: ({cell, row}) => {
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end", width: 1}}>
-                            {row.original.comment && (
-                                <Tooltip title={row.original.comment} arrow placement={"left"}>
+                            {row.original.client_comment && (
+                                <Tooltip
+                                    title={
+                                        <>
+                                            <Typography variant={"body1"} sx={{color: "warning.main"}}>
+                                                Uwagi klienta:
+                                            </Typography>
+                                            <Typography variant={"body2"}>
+                                                {row.original.client_comment}
+                                            </Typography>
+                                        </>
+                                    }
+                                    arrow
+                                    placement={"left"}
+                                >
 
                                     <IconButton aria-label="info">
                                         <Info/>
+                                    </IconButton>
+
+                                </Tooltip>
+                            )}
+                            {row.original.user_comment && (
+                                <Tooltip
+                                    title={
+                                        <>
+                                            <Typography variant={"body1"} sx={{color: "warning.main"}}>
+                                                Uwagi systemowe:
+                                            </Typography>
+                                            <Typography variant={"body2"}>
+                                                {row.original.user_comment}
+                                            </Typography>
+                                        </>
+                                    }
+                                    arrow
+                                    placement={"left"}
+                                >
+
+                                    <IconButton aria-label="info">
+                                        <PersonSearch/>
                                     </IconButton>
 
                                 </Tooltip>
@@ -335,7 +370,7 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                         </Box>
                     )
                 },
-                size: 180,
+                size: 190,
             },
         ],
         [],

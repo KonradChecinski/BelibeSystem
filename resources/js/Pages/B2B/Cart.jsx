@@ -33,7 +33,8 @@ export default function B2bCart(props) {
         payment: null,
         delivery: null,
         location: null,
-        comment: "",
+        client_comment: "",
+        user_comment: "",
     });
 
     Echo.private("cart." + props.clientId + ".updated").listen("CartUpdated", (e) => {
