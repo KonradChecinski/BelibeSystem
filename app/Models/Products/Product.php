@@ -5,6 +5,7 @@ namespace App\Models\Products;
 use App\Models\B2bCart;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
+use App\Models\OrderProduct;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,10 +48,15 @@ class Product extends Model
     public function getAvailableAttribute()
     {
         $baseQuantity = $this->quantity;
-        $orderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
+        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
             $query->where("status", ">", 0)->where("status", "<", 100);
         })->sum("quantity");
-        $sum = $baseQuantity - $orderProductsQuantity;
+
+        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity;
         if ($sum < 0) {
             return 0;
         }
