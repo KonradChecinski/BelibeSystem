@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Requests\B2bAgainOrderRequest;
 use App\Http\Requests\B2bShowOrderRequest;
 use App\Http\Requests\StoreClientOrderRequest;
+use App\Jobs\Quantity\ChangeQuantity;
 use App\Models\B2bCart;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
@@ -242,6 +243,10 @@ class B2bOrderController extends Controller
                 "currency" => $item->currency,
             ]);
             $order->orderProducts()->save($orderProduct);
+
+            if (!is_null($orderProduct->product)) {
+                ChangeQuantity::dispatch($orderProduct->product);
+            }
         }
 
         $cart->delete();
