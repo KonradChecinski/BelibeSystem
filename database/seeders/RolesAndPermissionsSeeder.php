@@ -39,6 +39,9 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('deleteClient', 'user', 'Klient - usuwanie', 'Klient');
         Permission::findOrCreate('changeUserInClientRelation', 'user', 'Klient - zmiana użytkownika dodawania', 'Klient');
 
+        Permission::findOrCreate('printWarehouseDocument', "user", 'Magazyn - drukuj', 'Magazyn');
+        Permission::findOrCreate('editWarehouseDocument', "user", 'Magazyn - edycja', 'Magazyn');
+
         Permission::findOrCreate('createPartners', "user", 'Partnerzy - dodawanie', 'Partnerzy');
         Permission::findOrCreate('editPartners', "user", 'Partnerzy - edycja', 'Partnerzy');
         Permission::findOrCreate('deletePartners', "user", 'Partnerzy - usuwanie', 'Partnerzy');
