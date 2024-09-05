@@ -1,5 +1,16 @@
 import {useMemo, useState} from "react";
-import {Box, Button, Divider, Fab, IconButton, Tooltip, Typography,} from "@mui/material";
+import {
+    Box,
+    Button, Dialog, DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    Fab,
+    IconButton,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {
     Done,
@@ -25,27 +36,17 @@ import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
 import {Link, router} from "@inertiajs/react";
+import {boolean} from "yup";
 
 
 export default function WarehouseDocumentListTable({documents = [], readOnly, props}) {
     const data = documents
     // console.log(data)
 
-    const printDocument = ($documentId) => {
-        router.get(
-            route("system.warehouse.document.print", {warehouseDocument: $documentId}),
-            {},
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    enqueueSnackbar("Wygenerowano wydruk", {variant: 'success'})
-                },
-                onError: errors => {
-                    console.error(errors)
-                    enqueueSnackbar("Błąd przy generowaniu wydruku", {variant: 'error'})
-                }
-            }
-        )
+    const reloadData = () => {
+        setTimeout(() => {
+            router.reload({only: ['warehouseDocuments']})
+        }, 1000)
     }
 
     const columns = useMemo(
@@ -78,7 +79,6 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                 enableColumnDragging: false,
                 enableSorting: false,
             },
-
             {
                 accessorKey: 'status',
                 header: 'Status',
@@ -115,8 +115,6 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                 enableColumnDragging: false,
                 enableSorting: false,
             },
-
-
             {
                 accessorKey: 'created_at',
                 header: 'Data',
@@ -128,7 +126,6 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                 enableColumnDragging: false,
                 enableSorting: true,
             },
-
             {
                 accessorKey: 'number',
                 header: 'Numer',
@@ -147,7 +144,7 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
             {
                 accessorKey: 'client_order.client.name',
                 header: 'Klient',
-                size: 450,
+                size: 400,
 
                 enableResizing: true,
                 enableColumnActions: false,
@@ -297,6 +294,31 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
+                    const [showAcceptDialog, setShowAcceptDialog] = useState(false);
+                    const handleAccept = (e) => {
+                        setShowAcceptDialog(!showAcceptDialog)
+                    }
+
+                    const acceptDocument = (createInvoice) => {
+                        router.post(
+                            route("system.warehouse.document.accept", {warehouseDocument: row.original.id}),
+                            {
+                                create_invoice: createInvoice
+                            },
+                            {
+                                preserveScroll: true,
+                                onSuccess: () => {
+                                    enqueueSnackbar("Dokument został zatwierdzony", {variant: "success"});
+                                    reloadData();
+                                },
+                                onError: (error) => {
+                                    enqueueSnackbar("Błąd zatwierdzania dokumentu", {variant: "error"});
+                                    console.log(error)
+                                }
+                            }
+                        )
+                    }
+
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end", width: 1}}>
                             {row.original.client_comment && (
@@ -345,7 +367,7 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                             )}
 
                             <Tooltip title={"Edytuj"} arrow placement={"bottom"}>
-                                <IconButton aria-label="edit" disabled={true}>
+                                <IconButton aria-label="edit" disabled={row.original.status === 100}>
                                     <Edit/>
                                 </IconButton>
                             </Tooltip>
@@ -355,17 +377,51 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                                     href={route("system.warehouse.document.print", {warehouseDocument: row.original.id})}
                                     target="_blank"
                                 >
-                                    <IconButton aria-label="print">
+                                    <IconButton aria-label="print" onClick={reloadData}>
                                         <Print/>
                                     </IconButton>
                                 </a>
                             </Tooltip>
 
                             <Tooltip title={"Zaakceptuj"} arrow placement={"bottom"}>
-                                <IconButton aria-label="accept" disabled={true}>
+                                <IconButton
+                                    aria-label="accept"
+                                    disabled={row.original.status !== 50}
+                                    onClick={handleAccept}
+                                >
                                     <Done/>
                                 </IconButton>
                             </Tooltip>
+                            <Dialog
+                                open={showAcceptDialog}
+                                onClose={handleAccept}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                    Potwierdzenie DM
+                                </DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        Czy chcesz zatwierdzić dokument magazynowy {row.original.number}?
+                                    </DialogContentText>
+                                    <DialogContentText id="alert-dialog-description">
+                                        Zamówienie zostanie przekazane do subiekta.
+                                    </DialogContentText>
+                                    <DialogContentText id="alert-dialog-description">
+                                        Możesz utworzyć automatycznie do zamówienia fakturę
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button variant={"outlined"} onClick={handleAccept}>Nie</Button>
+                                    <Button variant={"contained"} onClick={() => acceptDocument(false)}>Tak, bez
+                                        faktury</Button>
+                                    <Button variant={"contained"} color={"info"} autoFocus
+                                            onClick={() => acceptDocument(true)}>Tak, z
+                                        fakturą</Button>
+                                </DialogActions>
+                            </Dialog>
+
 
                         </Box>
                     )

@@ -25,7 +25,8 @@ class WarehouseDocument extends Model
         "discounted_total_net",
         "discounted_total_gross",
         "client_comment",
-        "user_comment"
+        "user_comment",
+        "create_invoice",
     ];
 
     // status

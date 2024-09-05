@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->integer("discounted_total_gross")->nullable();
             $table->text("client_comment")->nullable();
             $table->text("user_comment")->nullable();
+            $table->boolean("create_invoice")->default(false);
             $table->timestamps();
         });
     }

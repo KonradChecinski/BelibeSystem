@@ -38,10 +38,18 @@ class WarehouseDocumentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWarehouseDocumentRequest $request)
+    public function store(StoreWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
-        //
+        $warehouseDocument->update([
+            "status" => 100,
+            "create_invoice" => $request->create_invoice,
+        ]);
+
+        $warehouseDocument->clientOrder()->update([
+            "status" => 60,
+        ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -96,8 +104,16 @@ class WarehouseDocumentController extends Controller
             "delivery" => $warehouseDocument->clientOrder->delivery,
             "location" => $warehouseDocument->clientOrder->location,
         ];
-//        dd($warehouseDocumentModel->toArray(), $result);
-//        dd($result["products"]->toArray());
+
+        if ($warehouseDocument->status === 10) {
+            $warehouseDocument->status = 50;
+            $warehouseDocument->save();
+
+            $warehouseDocument->clientOrder()->update([
+                "status" => 55
+            ]);
+        }
+
 
         $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
         return $pdf->stream($warehouseDocument->number . '.pdf');

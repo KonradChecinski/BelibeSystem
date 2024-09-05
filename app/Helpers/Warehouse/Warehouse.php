@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class Warehouse
 {
-    public static function transformClientOrderToWarehouseDocument(ClientOrder $clientOrder)
+    public static function transformClientOrderToWarehouseDocument(ClientOrder $clientOrder): WarehouseDocument
     {
 //        dd($clientOrder, $clientOrder->orderProducts);
 
@@ -49,6 +49,7 @@ class Warehouse
                 "currency" => $orderProduct->currency,
             ]);
         }
+        return $warehouseDocument;
     }
 
     public static function sortBySizeAndColor(Collection $products): Collection

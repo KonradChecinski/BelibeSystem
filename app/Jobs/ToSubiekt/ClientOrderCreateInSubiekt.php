@@ -40,8 +40,8 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
-        $orders = ClientOrder::where("status", 20)->get(); // do zmiany na 60
-
+        $orders = ClientOrder::where("status", 60)->get();
+//TODO: dodać obsługe dokumentu magazynowego
 
         foreach ($orders as $order) {
             $orderProducts = $order->orderProducts;
