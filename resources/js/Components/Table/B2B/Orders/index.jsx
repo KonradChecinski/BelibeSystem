@@ -51,23 +51,32 @@ export default function B2bOrdersTable({orders, props}) {
                             statusText = "Złożone";
                             statusColor = "success.main";
                             break;
-                        case 2:
+                        case 20:
                             statusText = "Zaakceptowane do realizacji";
                             statusColor = "info.main";
                             break;
-                        case 3:
+                        case 50:
                             statusText = "W realizacji";
                             statusColor = "info.main";
                             break;
-                        case 4:
+                        case 55:
                             statusText = "W realizacji";
                             statusColor = "info.main";
                             break;
-                        case 5:
+                        case 60:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 90:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 100:
                             statusText = "Zrealizowane";
                             statusColor = "";
                             break;
-                        case 6:
+
+                        case 0:
                             statusText = "Anulowane";
                             statusColor = "error.main";
                             break;

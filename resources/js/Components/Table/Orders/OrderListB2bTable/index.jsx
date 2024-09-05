@@ -130,8 +130,16 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             text = "Zaakceptowane";
                             color = "info.main";
                             break;
+                        case 50:
+                            text = "W magazynie";
+                            color = "info.main";
+                            break;
                         case 55:
-                            text = "W trakcie kompletacji";
+                            text = "Kompletowane";
+                            color = "info.main";
+                            break;
+                        case 60:
+                            text = "Skompletowane";
                             color = "info.main";
                             break;
                         case 90:
