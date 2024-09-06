@@ -85,7 +85,7 @@ class OrderCreateInSubiekt implements ShouldQueue
 
                 if (is_null($productSubiektId)) {
                     $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
-                    $pozycja->UslJednNazwa = substr($orderProduct["code"], 0, 50);
+                    $pozycja->UslJednNazwa = substr($orderProduct["product_code"], 0, 50);
                     $pozycja->Opis = Str::ascii("Usługa jednorazowa");
                     $pozycja->IloscJm = (float)$orderProduct['quantity'];
                     $pozycja->CenaBruttoPrzedRabatem = (float)$orderProduct['price'];
