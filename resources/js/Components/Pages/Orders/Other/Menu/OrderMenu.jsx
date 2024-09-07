@@ -57,7 +57,7 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1, 2, 3, 4].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}
                           onClick={() => console.log("cancel")}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
@@ -65,7 +65,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![3, 4].includes(row.original.status)}
+                <MenuItem disabled={![55, 90].includes(row.original.status)}
                           onClick={() => console.log("subiekt")}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
@@ -73,7 +73,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![1, 2, 3, 4, 5, 6].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 55, 90, 100, 0].includes(row.original.status)}
                           onClick={handleOpenDetails}>
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
