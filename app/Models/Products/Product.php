@@ -43,7 +43,7 @@ class Product extends Model
         'show_in_subiekt',
     ];
 
-    protected $appends = ["available"];
+    protected $appends = ["available", "available_b2c"];
 
     public function getAvailableAttribute()
     {
@@ -57,6 +57,24 @@ class Product extends Model
         })->sum("quantity");
 
         $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity;
+        if ($sum < 0) {
+            return 0;
+        }
+        return $sum;
+    }
+
+    public function getAvailableB2cAttribute()
+    {
+        $baseQuantity = $this->quantity;
+        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - 1;
         if ($sum < 0) {
             return 0;
         }

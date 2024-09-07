@@ -758,7 +758,7 @@ class Shoper
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
-                "stock" => $product->available
+                "stock" => $product->available_b2c
             ]);
         if ($response->status() === 429) {
             sleep(1);
@@ -776,7 +776,7 @@ class Shoper
     public static function changeProductQuantity(int $productId, ProductModelColor $productModelColor): bool
     {
         $products = $productModelColor->products()->where("show_in_b2c", true)->get();
-        $available = $products->sum("available");
+        $available = $products->sum("available_b2c");
 
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())

@@ -60,7 +60,7 @@ class Allegro
             ->put(config("services.allegro.api_uri") . "/sale/offer-quantity-change-commands/{$commandId}", [
                     "modification" => array(
                         "changeType" => "FIXED",
-                        "value" => $product->available
+                        "value" => $product->available_b2c
                     ),
                     "offerCriteria" => array(
                         array(
