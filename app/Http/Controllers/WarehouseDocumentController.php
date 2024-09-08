@@ -126,7 +126,16 @@ class WarehouseDocumentController extends Controller
      */
     public function edit(WarehouseDocument $warehouseDocument)
     {
-        //
+        $warehouseDocument->load([
+            "warehouseDocumentProducts",
+            "warehouseDocumentProducts.product",
+            "warehouseDocumentProducts.product.size",
+            "warehouseDocumentProducts.product.color",
+//            "warehouseDocumentProducts.product.model.prices",
+        ]);
+        return Inertia::render('System/Warehouse/Document', [
+            'warehouseDocument' => $warehouseDocument
+        ]);
     }
 
     /**

@@ -367,9 +367,13 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                             )}
 
                             <Tooltip title={"Edytuj"} arrow placement={"bottom"}>
-                                <IconButton aria-label="edit" disabled={row.original.status === 100}>
-                                    <Edit/>
-                                </IconButton>
+                                <Link
+                                    href={route("system.warehouse.document.edit", {warehouseDocument: row.original.id})}
+                                >
+                                    <IconButton aria-label="edit" disabled={row.original.status === 100}>
+                                        <Edit/>
+                                    </IconButton>
+                                </Link>
                             </Tooltip>
 
                             <Tooltip title={"Drukuj"} arrow placement={"bottom"}>

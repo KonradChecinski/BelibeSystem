@@ -185,6 +185,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::get("/documents/archive", [WarehouseDocumentController::class, 'archivalDocuments'])->name("system.warehouse.documents.archival");
 
         Route::get("/document/{warehouseDocument}/print", [WarehouseDocumentController::class, 'print'])->name("system.warehouse.document.print");
+        Route::get("/document/{warehouseDocument}/edit", [WarehouseDocumentController::class, 'edit'])->name("system.warehouse.document.edit");
         Route::post("/document/{warehouseDocument}/accept", [WarehouseDocumentController::class, 'store'])->name("system.warehouse.document.accept");
     });
 
