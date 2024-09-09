@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\ZestawienieSprzedazySklepy;
+use App\Jobs\Warehouse\CreateWarehouseDocument;
+use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use Illuminate\Http\Request;
@@ -19,8 +21,12 @@ class TestController extends Controller
     public function index()
     {
 //        Allegro::getOrders();
-        Allegro::listOrders();
+//        Allegro::listOrders();
 //        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
+        $clientOrder = ClientOrder::query()->latest()->first();
+        CreateWarehouseDocument::dispatchSync($clientOrder);
+//        $product = Product::find(120);
+//        dd($product, $product->available, $product->available_b2c);
 
 //        ZestawienieSprzedazySklepy::dispatchSync();
     }

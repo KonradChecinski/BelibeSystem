@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\B2B;
 
 use App\Helpers\Helper;
-use App\Helpers\PriceForClient\PriceForClient;
+use App\Helpers\Prices\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Models\Client\Client;
 use App\Models\Products\ProductCategory;

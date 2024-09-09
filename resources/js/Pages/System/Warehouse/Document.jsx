@@ -1,4 +1,4 @@
-import {Head} from "@inertiajs/react";
+import {Head, useForm} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Box, Button, Card} from "@mui/material";
 import {useSnackbar} from "notistack";
@@ -11,15 +11,26 @@ export default function DocumentList(props) {
     const {t} = useLaravelReactI18n();
     console.log(props)
 
-    const data = props.warehouseDocument
+    // const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm(props.warehouseDocument)
+    const {
+        data,
+        setData,
+        post,
+        patch,
+        processing,
+        errors,
+        clearErrors,
+        reset
+    } = useForm(props.warehouseDocument.warehouse_document_products)
 
 
     return (
-        <UserLayout auth={props.auth} errors={props.errors} header={t("Editing") + " " + data.number}>
+        <UserLayout auth={props.auth} errors={props.errors}
+                    header={t("Editing") + " " + props.warehouseDocument.number}>
             <Head title={t("Editing") + " " + data.number}/>
 
             <Card sx={{height: "100%", width: 1, display: "flex", flexDirection: "column"}}>
-                <WarehouseDocumentEditTable document={data} readOnly={false} props={props}/>
+                <WarehouseDocumentEditTable data={data} setData={setData} props={props}/>
                 <Box sx={{p: 1, display: "flex", justifyContent: "flex-end", gap: 2}}>
                     <Button variant="outlined" startIcon={<ArrowBack/>}>Anuluj</Button>
                     <Button variant="contained" startIcon={<Save/>}>Zapisz</Button>

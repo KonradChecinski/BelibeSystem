@@ -2,7 +2,7 @@
 
 namespace App\Models\Products;
 
-use App\Helpers\PriceForClient\PriceForClient;
+use App\Helpers\Prices\PriceForClient;
 use App\Models\B2bCart;
 use App\Models\B2cCategory;
 use App\Models\B2cColor;

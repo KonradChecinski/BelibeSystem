@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\PriceForClient;
+namespace App\Helpers\Prices;
 
 use App\Models\Client\Client;
 use App\Models\ClientDiscount;

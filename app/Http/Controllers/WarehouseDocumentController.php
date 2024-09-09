@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Prices\Price;
+use App\Http\Requests\SearchProductRequest;
+use App\Models\Products\Product;
 use App\Models\WarehouseDocument;
 use App\Http\Requests\StoreWarehouseDocumentRequest;
 use App\Http\Requests\UpdateWarehouseDocumentRequest;
@@ -25,6 +28,22 @@ class WarehouseDocumentController extends Controller
         return Inertia::render('System/Warehouse/DocumentList', [
             'warehouseDocuments' => WarehouseDocument::query()->where('status', 100)->get(),
         ]);
+    }
+
+    public function search(SearchProductRequest $request, WarehouseDocument $warehouseDocument)
+    {
+//        dd($request->search, $warehouseDocument->clientOrder->client);
+
+        $products = Product::query()
+            ->Where("name", "LIKE", "%" . $request->search . "%")
+            ->orWhere("symbol", "LIKE", "%" . $request->search . "%")
+            ->limit(20)
+            ->get(["id", "symbol", "name", "product_model_color_id", "product_size_id", "quantity"])->load(["color", "size"])->map(function ($product) use ($warehouseDocument) {
+                $product->mainImage = $product->images()->where("type", 1)->where("order", 0)->first();
+                $product->prices = Price::showClientPrices($product->model, $warehouseDocument->clientOrder->client);
+                return $product;
+            });
+        return response()->json($products);
     }
 
     /**

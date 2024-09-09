@@ -187,6 +187,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::get("/document/{warehouseDocument}/print", [WarehouseDocumentController::class, 'print'])->name("system.warehouse.document.print");
         Route::get("/document/{warehouseDocument}/edit", [WarehouseDocumentController::class, 'edit'])->name("system.warehouse.document.edit");
         Route::post("/document/{warehouseDocument}/accept", [WarehouseDocumentController::class, 'store'])->name("system.warehouse.document.accept");
+
+        Route::get("/document/{warehouseDocument}/products/search", [WarehouseDocumentController::class, 'search'])->name("system.warehouse.products.search");
+
+
     });
 
     Route::group(["prefix" => "/partners"], function () {
