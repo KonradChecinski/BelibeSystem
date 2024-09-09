@@ -9,7 +9,6 @@ import {
     Stepper,
     TextField
 } from "@mui/material";
-import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {useState, useRef} from "react";
 import Draggable from "react-draggable";
 import {router, useForm} from "@inertiajs/react";

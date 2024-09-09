@@ -1,29 +1,12 @@
 import {useMemo, useState} from "react";
 import {
     Box,
-    Button, Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
-    Fab,
     IconButton,
     Tooltip,
     Typography,
 } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
 import {
-    Done,
-    Close,
-    DownloadDone,
-    BorderAll,
-    Code,
-    Add,
-    Delete,
-    Edit,
-    ContentCopy,
-    Upgrade,
-    Sell, ShoppingCart, Info, ReceiptLong, Print, PersonSearch
+    Info
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -34,9 +17,7 @@ import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import 'cronstrue/locales/pl';
 import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
-import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
 import {Link, router, useForm} from "@inertiajs/react";
-import {boolean} from "yup";
 
 
 export default function WarehouseDocumentEditTable({document = [], readOnly, props}) {
@@ -108,7 +89,7 @@ export default function WarehouseDocumentEditTable({document = [], readOnly, pro
                 enableSorting: false,
             },
             {
-                accessorKey: 'price_net',
+                accessorKey: 'original_price_net',
                 header: 'Cena Netto',
                 size: 100,
                 muiTableBodyCellProps: {
@@ -118,18 +99,13 @@ export default function WarehouseDocumentEditTable({document = [], readOnly, pro
                     align: 'center',
                 },
                 Cell: ({cell}) => cell.getValue() && toLocaleString(Number(cell.getValue()) / 100),
-                // Header: ({column}) => (
-                //     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                //         <Box>WN</Box>
-                //     </Tooltip>
-                // ),
                 enableResizing: false,
                 enableColumnActions: false,
                 enableColumnDragging: false,
                 enableSorting: false,
             },
             {
-                accessorKey: 'price_gross',
+                accessorKey: 'original_price_gross',
                 header: 'Cena Brutto',
                 size: 100,
                 muiTableBodyCellProps: {
@@ -139,11 +115,38 @@ export default function WarehouseDocumentEditTable({document = [], readOnly, pro
                     align: 'center',
                 },
                 Cell: ({cell}) => cell.getValue() && toLocaleString(Number(cell.getValue()) / 100),
-                // Header: ({column}) => (
-                //     <Tooltip title={column.columnDef.header} placement="top" arrow>
-                //         <Box>WB</Box>
-                //     </Tooltip>
-                // ),
+                enableResizing: false,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'price_net',
+                header: 'Cena Netto (R)',
+                size: 100,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => cell.getValue() && toLocaleString(Number(cell.getValue()) / 100),
+                enableResizing: false,
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'price_gross',
+                header: 'Cena Brutto (R)',
+                size: 100,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell}) => cell.getValue() && toLocaleString(Number(cell.getValue()) / 100),
                 enableResizing: false,
                 enableColumnActions: false,
                 enableColumnDragging: false,
