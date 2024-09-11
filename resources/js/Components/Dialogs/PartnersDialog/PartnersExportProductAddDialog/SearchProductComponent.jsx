@@ -14,28 +14,37 @@ export default function SearchProductComponent({partner, products}) {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
     const [value, setValue] = useState(products)
-    const [search, setSearch] = useState("")
+    // const [search, setSearch] = useState("")
     const [loading, setLoading] = useState(false);
 
     const searchRoute = route("system.partners.products.search")
     const label = "Produkt"
 
-    const fetchData = async () => {
+    const fetchData = async (search) => {
         if (!open) {
             return;
         }
+        const params = new URLSearchParams({
+            search: search
+        })
+
         setLoading(true);
         const option = {headers: {Accept: "application/json"}};
-        const response = await fetch(searchRoute + `?search=${search}`, option);
+        const response = await fetch(searchRoute + `?${params.toString()}`, option);
         const json = await response.json();
         await setOptions(json);
         setLoading(false)
     }
 
     useEffect(() => {
-        fetchData();
-    }, [open, search])
+        if (open) fetchData("");
+    }, [open])
 
+    const handleInputChange = (event, newInputValue, reason) => {
+        if (reason !== 'reset') fetchData(event.target.value);
+    }
+
+    const debouncedInputChange = debounce(handleInputChange, 500)
 
     const filterOptions = createFilterOptions({
         stringify: (option) => {
@@ -73,7 +82,8 @@ export default function SearchProductComponent({partner, products}) {
             getOptionDisabled={(option) =>
                 value.some((selectedOption) => selectedOption.id === option.id)
             }
-            onInputChange={(event, newInputValue, reason) => reason !== 'reset' && debounce(setSearch(newInputValue), 500)}
+            // onInputChange={(event, newInputValue, reason) => reason !== 'reset' && debounce(setSearch(newInputValue), 500)}
+            onInputChange={debouncedInputChange}
             ChipProps={{sx: {display: "none"}}}
             renderOption={(props, option) => {
                 // console.log(props, option)

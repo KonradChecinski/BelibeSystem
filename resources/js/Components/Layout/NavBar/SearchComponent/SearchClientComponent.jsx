@@ -14,10 +14,10 @@ export default function SearchClientComponent({auth, searchRoute, label}) {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
     // const [value, setValue] = useState()
-    const [search, setSearch] = useState("")
+    // const [search, setSearch] = useState("")
     const [loading, setLoading] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = async (search) => {
         if (!open) {
             return;
         }
@@ -36,8 +36,14 @@ export default function SearchClientComponent({auth, searchRoute, label}) {
     }
 
     useEffect(() => {
-        fetchData();
-    }, [open, search])
+        if (open) fetchData("");
+    }, [open])
+
+    const handleInputChange = (event, newInputValue, reason) => {
+        if (reason !== 'reset') fetchData(event.target.value);
+    }
+
+    const debouncedInputChange = debounce(handleInputChange, 500)
 
 
     const filterOptions = createFilterOptions({
@@ -73,7 +79,7 @@ export default function SearchClientComponent({auth, searchRoute, label}) {
                     router.visit(route("system.clients.client", {id: newValue.id}))
                 }
             }}
-            onInputChange={(event, newInputValue) => debounce(setSearch(newInputValue), 500)}
+            onInputChange={debouncedInputChange}
             renderOption={(props, option) => {
                 return (
                     <Box
