@@ -24,16 +24,17 @@ import {keyframes} from "@emotion/css";
 import SearchProductComponent from "@/Components/Table/Warehouse/WarehouseDocumentEditTable/SearchProductComponent";
 
 
-export default function WarehouseDocumentEditTable({data, setData, productsQuantityHistory, props}) {
+export default function WarehouseDocumentEditTable({
+                                                       data,
+                                                       setData,
+                                                       productsQuantityHistory,
+                                                       setProductsQuantityHistory,
+                                                       props
+                                                   }) {
     console.log("reload")
-    // console.log(data)
+    console.log(data)
     // console.log(data.warehouse_document_products)
-
-
-    const handleDeleteRow = () => {
-        setData(data.filter((product) => product.id !== openDeleteModal.original.id))
-    }
-
+    const dataTable = data
 
     const columns = useMemo(
         //column definitions...
@@ -68,44 +69,12 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
                                 })}
                                 data={data}
                                 setData={(item) => {
-                                    // setData([
-                                    //         ...data,
-                                    //         {
-                                    //             currency: "PLN",
-                                    //             id: "added_" + (Math.random() + 1).toString(36).substring(7),
-                                    //             original_price_gross: item.prices.original_price_gross,
-                                    //             original_price_net: item.prices.original_price_net,
-                                    //             price_gross: item.prices.price_gross,
-                                    //             price_net: item.prices.price_net,
-                                    //             product: item,
-                                    //             product_code: null,
-                                    //             product_id: item.id,
-                                    //             quantity: 1,
-                                    //             type: 1,
-                                    //             warehouse_document_id: props.warehouseDocument.id
-                                    //         }
-                                    //     ]
-                                    // )
-                                    tableData.push(
-                                        {
-                                            currency: "PLN",
-                                            id: "added_" + (Math.random() + 1).toString(36).substring(7),
-                                            original_price_gross: item.prices.original_price_gross,
-                                            original_price_net: item.prices.original_price_net,
-                                            price_gross: item.prices.price_gross,
-                                            price_net: item.prices.price_net,
-                                            product: item,
-                                            product_code: null,
-                                            product_id: item.id,
-                                            quantity: 1,
-                                            type: 2,
-                                            warehouse_document_id: props.warehouseDocument.id
-                                        }
-                                    )
-                                    table.setCreatingRow(null);
-                                    productsQuantityHistory.push({
+                                    const newId = "added_" + (Math.random() + 1).toString(36).substring(7)
+
+                                    const tempHistory = productsQuantityHistory
+                                    tempHistory.push({
                                         currency: "PLN",
-                                        id: "added_" + (Math.random() + 1).toString(36).substring(7),
+                                        id: newId,
                                         original_price_gross: item.prices.original_price_gross,
                                         original_price_net: item.prices.original_price_net,
                                         price_gross: item.prices.price_gross,
@@ -117,8 +86,33 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
                                         type: 2,
                                         warehouse_document_id: props.warehouseDocument.id
                                     })
-                                    console.log(tableData)
+                                    setProductsQuantityHistory(JSON.parse(JSON.stringify(tempHistory)))
                                     console.log(productsQuantityHistory)
+
+
+                                    const tempData = data
+                                    tempData.push({
+                                        currency: "PLN",
+                                        id: newId,
+                                        original_price_gross: item.prices.original_price_gross,
+                                        original_price_net: item.prices.original_price_net,
+                                        price_gross: item.prices.price_gross,
+                                        price_net: item.prices.price_net,
+                                        product: item,
+                                        product_code: null,
+                                        product_id: item.id,
+                                        quantity: 1,
+                                        type: 1,
+                                        warehouse_document_id: props.warehouseDocument.id
+                                    })
+                                    setData(JSON.parse(JSON.stringify(tempData)))
+                                    console.log(data)
+
+
+                                    // setTimeout(() => {
+                                    //     table.setCreatingRow(null);
+                                    // }, 300)
+                                    table.setCreatingRow(null);
                                 }}
                                 props={props}
                             />
@@ -212,6 +206,13 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
                     // console.log(row.original.product.available, cell.getValue(), row.original.product.available + cell.getValue())
                     // console.log()
                     if (cell.row.id !== "mrt-row-create") {
+                        // console.log(row.original.product?.symbol)
+                        // console.log(productsQuantityHistory.find((product) => product.id === row.original.id))
+                        // if (productsQuantityHistory.find((product) => product.id === row.original.id) === undefined) {
+                        //     console.log(productsQuantityHistory)
+                        //     console.log(row.original.id)
+                        // }
+                        // console.log(row.original.product?.available)
                         return (
                             <ProductInput
                                 props={row.original}
@@ -219,13 +220,11 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
                                 maxQuantity={Number(productsQuantityHistory.find((product) => product.id === row.original.id)?.quantity + Number(row.original.product?.available))}
                                 setQuantity={(value) => {
                                     // console.log(data, value, row.original.id)
-                                    row._valuesCache[column.id] = value;
-                                    // setData(data.map((item) => {
-                                    //     if (item.id === row.original.id) {
-                                    //         return {...item, quantity: value}
-                                    //     }
-                                    //     return item;
-                                    // }));
+                                    // row._valuesCache[column.id] = value;
+                                    const tempData = data
+                                    tempData.find((product) => product.id === row.original.id).quantity = value
+                                    setData(tempData);
+                                    // console.log("zmiana data")
                                 }}
                             />
                         )
@@ -375,7 +374,7 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
 
     const table = useMaterialReactTable({
         // data: data.warehouse_document_products,
-        data: tableData,
+        data: dataTable,
         columns,
         enableTopToolbar: true,
         enableBottomToolbar: true,
@@ -392,14 +391,14 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
         positionCreatingRow: 'bottom',
         enableRowActions: true,
         positionActionsColumn: 'last',
-        onCreatingRowSave: ({table, values}) => {
-            //validate data
-            //save data to api
-            table.setCreatingRow(null); //exit creating mode
-        },
-        onCreatingRowCancel: () => {
-            //clear any validation errors
-        },
+        // onCreatingRowSave: ({table, values}) => {
+        //     //validate data
+        //     //save data to api
+        //     table.setCreatingRow(null); //exit creating mode
+        // },
+        // onCreatingRowCancel: () => {
+        //     //clear any validation errors
+        // },
         renderTopToolbarCustomActions: ({table}) => (
             <Button
                 variant={"outlined"}
@@ -422,7 +421,10 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
         ),
         renderRowActions: ({row}) => {
             const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
+            const handleDeleteRow = () => {
+                setData(data.filter((product) => product.id !== row.original.id))
+                setOpenDeleteModal(false)
+            }
 
             return (
                 <>
@@ -504,13 +506,7 @@ export default function WarehouseDocumentEditTable({data, setData, productsQuant
     return (
         <>
             <MaterialReactTable table={table}/>
-            <Box sx={{p: 1, display: "flex", justifyContent: "flex-end", gap: 2}}>
-                <Button variant="outlined" startIcon={<ArrowBack/>} onClick={handleCancel}>Anuluj</Button>
-                <Button variant="contained" startIcon={<Save/>} onClick={handleSave}>Zapisz</Button>
-            </Box>
-
         </>
-
     );
 }
 
@@ -520,42 +516,46 @@ const ProductInput = ({quantity, maxQuantity, setQuantity, props}) => {
 
     return (
         <Box>
-            <TextField
-                id="outlined-basic"
-                label="Ilość"
-                variant="outlined"
-                type={"number"}
-                // defaultValue={quantity}
-                value={value}
-                onChange={(event) => setValue(event.target.value)}
-                error={value > maxQuantity}
-                onBlur={(event) => setQuantity(event.target.value)}
-                InputProps={{
-                    inputProps: {
-                        min: 0,
-                        // max: maxQuantity,
-                        style: {
-                            textAlign: "center",
-                            fontSize: 13
-                        }
-                    }
-                }}
-                sx={{
-                    width: 1,
-                    minWidth: "14ch",
-                    maxWidth: "20ch",
 
-                    "& .MuiFormLabel-root.Mui-error": {
-                        color: "orange !important"
-                    },
-                    "& .MuiOutlinedInput-root.Mui-error>.MuiOutlinedInput-notchedOutline": {
-                        borderColor: "orange !important"
-                    },
-                    "& .MuiFormHelperText-root.Mui-error": {
-                        color: "orange !important"
-                    }
-                }}
-            />
+            <Tooltip title={value > maxQuantity ? "Przekroczono dostępność" : ""} arrow>
+                <TextField
+                    id="outlined-basic"
+                    label="Ilość"
+                    variant="outlined"
+                    type={"number"}
+                    // defaultValue={quantity}
+                    value={value}
+                    onChange={(event) => setValue(event.target.value)}
+                    error={value > maxQuantity}
+                    onBlur={(event) => setQuantity(Number(event.target.value))}
+                    InputProps={{
+                        inputProps: {
+                            min: 0,
+                            // max: maxQuantity,
+                            style: {
+                                textAlign: "center",
+                                fontSize: 13
+                            }
+                        }
+                    }}
+                    sx={{
+                        width: 1,
+                        minWidth: "14ch",
+                        maxWidth: "20ch",
+
+                        "& .MuiFormLabel-root.Mui-error": {
+                            color: "orange !important"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-error>.MuiOutlinedInput-notchedOutline": {
+                            borderColor: "orange !important"
+                        },
+                        "& .MuiFormHelperText-root.Mui-error": {
+                            color: "orange !important"
+                        }
+                    }}
+                />
+            </Tooltip>
+
             <Box sx={{
                 display: "flex",
                 justifyContent: "flex-start",

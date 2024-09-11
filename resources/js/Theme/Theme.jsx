@@ -88,6 +88,9 @@ export default function Theme({children}) {
         },
         disabled: {
             background: "rgba(124,124,124,0.33)"
+        },
+        hoveredCell: {
+            background: "rgba(4,119,243,0.26)"
         }
     };
 
