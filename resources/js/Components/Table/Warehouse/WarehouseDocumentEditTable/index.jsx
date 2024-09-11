@@ -1,13 +1,14 @@
-import {useCallback, useMemo, useRef, useState} from "react";
+import {createRef, useCallback, useMemo, useRef, useState} from "react";
 import {
-    Box, Button, debounce,
+    Box, Button, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     IconButton, TextField,
     Tooltip,
     Typography,
 } from "@mui/material";
 import {
+    ArrowBack,
     Delete,
-    Info
+    Info, Save
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -23,10 +24,16 @@ import {keyframes} from "@emotion/css";
 import SearchProductComponent from "@/Components/Table/Warehouse/WarehouseDocumentEditTable/SearchProductComponent";
 
 
-export default function WarehouseDocumentEditTable({data, setData, props}) {
-    console.log(data)
+export default function WarehouseDocumentEditTable({data, setData, productsQuantityHistory, props}) {
+    console.log("reload")
+    // console.log(data)
     // console.log(data.warehouse_document_products)
-    const productsHistory = props.warehouseDocument.warehouse_document_products
+
+
+    const handleDeleteRow = () => {
+        setData(data.filter((product) => product.id !== openDeleteModal.original.id))
+    }
+
 
     const columns = useMemo(
         //column definitions...
@@ -53,6 +60,7 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
                     // console.log(table.getState(), table.getState().creatingRow, table.getState().editingRow)
                     // console.log(cell)
                     if (table.getState().creatingRow && cell.row.id === "mrt-row-create") {
+
                         return (
                             <SearchProductComponent
                                 products={data.map((product) => {
@@ -60,26 +68,42 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
                                 })}
                                 data={data}
                                 setData={(item) => {
-                                    setData([
-                                            ...data,
-                                            {
-                                                currency: "PLN",
-                                                id: "added_" + (Math.random() + 1).toString(36).substring(7),
-                                                original_price_gross: item.prices.original_price_gross,
-                                                original_price_net: item.prices.original_price_net,
-                                                price_gross: item.prices.price_gross,
-                                                price_net: item.prices.price_net,
-                                                product: item,
-                                                product_code: null,
-                                                product_id: item.id,
-                                                quantity: 1,
-                                                type: 1,
-                                                warehouse_document_id: props.warehouseDocument.id
-                                            }
-                                        ]
+                                    // setData([
+                                    //         ...data,
+                                    //         {
+                                    //             currency: "PLN",
+                                    //             id: "added_" + (Math.random() + 1).toString(36).substring(7),
+                                    //             original_price_gross: item.prices.original_price_gross,
+                                    //             original_price_net: item.prices.original_price_net,
+                                    //             price_gross: item.prices.price_gross,
+                                    //             price_net: item.prices.price_net,
+                                    //             product: item,
+                                    //             product_code: null,
+                                    //             product_id: item.id,
+                                    //             quantity: 1,
+                                    //             type: 1,
+                                    //             warehouse_document_id: props.warehouseDocument.id
+                                    //         }
+                                    //     ]
+                                    // )
+                                    tableData.push(
+                                        {
+                                            currency: "PLN",
+                                            id: "added_" + (Math.random() + 1).toString(36).substring(7),
+                                            original_price_gross: item.prices.original_price_gross,
+                                            original_price_net: item.prices.original_price_net,
+                                            price_gross: item.prices.price_gross,
+                                            price_net: item.prices.price_net,
+                                            product: item,
+                                            product_code: null,
+                                            product_id: item.id,
+                                            quantity: 1,
+                                            type: 2,
+                                            warehouse_document_id: props.warehouseDocument.id
+                                        }
                                     )
                                     table.setCreatingRow(null);
-                                    productsHistory.push({
+                                    productsQuantityHistory.push({
                                         currency: "PLN",
                                         id: "added_" + (Math.random() + 1).toString(36).substring(7),
                                         original_price_gross: item.prices.original_price_gross,
@@ -90,10 +114,11 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
                                         product_code: null,
                                         product_id: item.id,
                                         quantity: 0,
-                                        type: 1,
+                                        type: 2,
                                         warehouse_document_id: props.warehouseDocument.id
                                     })
-                                    console.log(productsHistory)
+                                    console.log(tableData)
+                                    console.log(productsQuantityHistory)
                                 }}
                                 props={props}
                             />
@@ -185,22 +210,22 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
                 }),
                 Edit: ({cell, column, row, table}) => {
                     // console.log(row.original.product.available, cell.getValue(), row.original.product.available + cell.getValue())
-                    console.log()
+                    // console.log()
                     if (cell.row.id !== "mrt-row-create") {
                         return (
                             <ProductInput
                                 props={row.original}
                                 quantity={cell.getValue()}
-                                maxQuantity={Number(productsHistory.find((product) => product.id === row.original.id)?.quantity + Number(row.original.product?.available))}
+                                maxQuantity={Number(productsQuantityHistory.find((product) => product.id === row.original.id)?.quantity + Number(row.original.product?.available))}
                                 setQuantity={(value) => {
                                     // console.log(data, value, row.original.id)
-                                    // row._valuesCache[column.id] = value;
-                                    setData(data.map((item) => {
-                                        if (item.id === row.original.id) {
-                                            return {...item, quantity: value}
-                                        }
-                                        return item;
-                                    }));
+                                    row._valuesCache[column.id] = value;
+                                    // setData(data.map((item) => {
+                                    //     if (item.id === row.original.id) {
+                                    //         return {...item, quantity: value}
+                                    //     }
+                                    //     return item;
+                                    // }));
                                 }}
                             />
                         )
@@ -350,7 +375,7 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
 
     const table = useMaterialReactTable({
         // data: data.warehouse_document_products,
-        data: data,
+        data: tableData,
         columns,
         enableTopToolbar: true,
         enableBottomToolbar: true,
@@ -377,6 +402,7 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
         },
         renderTopToolbarCustomActions: ({table}) => (
             <Button
+                variant={"outlined"}
                 onClick={() => {
                     table.setCreatingRow(true); //simplest way to open the create row modal with no default values
                     //or you can pass in a row object to set default values with the `createRow` helper function
@@ -384,22 +410,62 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
                     //   createRow(table, {
                     //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
                     //   }),
-                    // );
+                    // // );
+                    // console.log(table, table.refs, table.refs.tableContainerRef)
+                    setTimeout(() => {
+                        table.refs.tableContainerRef.current.scrollTo(0, table.refs.tableContainerRef.current.scrollHeight + 100, {behavior: "smooth"});
+                    }, 100)
                 }}
             >
-                Create New User
+                Dodaj produkt
             </Button>
         ),
-        renderRowActions: ({row}) => (
-            <Box sx={{display: 'flex', gap: '1rem'}}>
-                <Tooltip title="Delete">
-                    <IconButton color="error">
-                        {/*onClick={() => openDeleteConfirmModal(row)}*/}
-                        <Delete/>
-                    </IconButton>
-                </Tooltip>
-            </Box>
-        ),
+        renderRowActions: ({row}) => {
+            const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+
+            return (
+                <>
+                    <Box sx={{display: 'flex', gap: '1rem'}}>
+                        <Tooltip title="Delete">
+                            <IconButton
+                                color="error"
+                                onClick={() => setOpenDeleteModal(true)}
+                            >
+                                <Delete/>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                    <Dialog
+                        open={Boolean(openDeleteModal)}
+                        onClose={() => setOpenDeleteModal(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"Usunięcie produktu z dokumentu"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Czy na pewno chcesz usunąć produkt {" "}
+                                {row?.original.product?.symbol ? row?.original.product?.symbol : row?.original.product_code}?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDeleteModal(false)}>Anuluj</Button>
+                            <Button
+                                variant={"contained"}
+                                color={"error"}
+                                onClick={handleDeleteRow}
+                                autoFocus
+                            >
+                                Usuń
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
+            )
+        },
         initialState: {
             columnVisibility: {
                 id: false,
@@ -416,6 +482,7 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
         muiTableContainerProps: {
             sx: {
                 height: "calc(100% - 110px)",
+                scrollBehavior: "smooth",
             },
         },
         // muiTableProps: {
@@ -437,6 +504,11 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
     return (
         <>
             <MaterialReactTable table={table}/>
+            <Box sx={{p: 1, display: "flex", justifyContent: "flex-end", gap: 2}}>
+                <Button variant="outlined" startIcon={<ArrowBack/>} onClick={handleCancel}>Anuluj</Button>
+                <Button variant="contained" startIcon={<Save/>} onClick={handleSave}>Zapisz</Button>
+            </Box>
+
         </>
 
     );
@@ -444,9 +516,7 @@ export default function WarehouseDocumentEditTable({data, setData, props}) {
 
 
 const ProductInput = ({quantity, maxQuantity, setQuantity, props}) => {
-
-    const inputRef = useRef(null);
-
+    const [value, setValue] = useState(quantity)
 
     return (
         <Box>
@@ -455,9 +525,10 @@ const ProductInput = ({quantity, maxQuantity, setQuantity, props}) => {
                 label="Ilość"
                 variant="outlined"
                 type={"number"}
-                defaultValue={quantity}
-                // onChange={(event) => setQuantity(event.target.value)}
-                error={quantity > maxQuantity}
+                // defaultValue={quantity}
+                value={value}
+                onChange={(event) => setValue(event.target.value)}
+                error={value > maxQuantity}
                 onBlur={(event) => setQuantity(event.target.value)}
                 InputProps={{
                     inputProps: {
@@ -484,7 +555,6 @@ const ProductInput = ({quantity, maxQuantity, setQuantity, props}) => {
                         color: "orange !important"
                     }
                 }}
-                ref={inputRef}
             />
             <Box sx={{
                 display: "flex",

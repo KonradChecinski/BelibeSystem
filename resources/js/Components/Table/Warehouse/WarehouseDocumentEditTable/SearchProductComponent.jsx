@@ -15,28 +15,39 @@ export default function SearchProductComponent({products, data, setData, props})
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
     const [value, setValue] = useState(null);
-    const [search, setSearch] = useState("")
+    // const [search, setSearch] = useState("")
     const [loading, setLoading] = useState(false);
 
     const searchRoute = route("system.warehouse.products.search", {warehouseDocument: props.warehouseDocument.id});
     const label = "Produkt"
 
-    const fetchData = async () => {
+    const fetchData = async (search) => {
         if (!open) {
             return;
         }
+
+        const params = new URLSearchParams({
+            search: search
+        })
+
         setLoading(true);
         const option = {headers: {Accept: "application/json"}};
-        const response = await fetch(searchRoute + `?search=${search}`, option);
+        const response = await fetch(searchRoute + `?${params.toString()}`, option);
         const json = await response.json();
         await setOptions(json);
         setLoading(false)
     }
 
     useEffect(() => {
-        fetchData();
-    }, [open, search])
+        if (open) fetchData("");
+    }, [open])
 
+
+    const handleInputChange = (event, newInputValue, reason) => {
+        if (reason !== 'reset') fetchData(event.target.value);
+    }
+
+    const debouncedInputChange = debounce(handleInputChange, 500)
 
     const filterOptions = createFilterOptions({
         stringify: (option) => {
@@ -50,6 +61,7 @@ export default function SearchProductComponent({products, data, setData, props})
             filterOptions={filterOptions}
             disableCloseOnSelect={false}
             open={open}
+            // ref={setRef}
             onOpen={() => {
                 setOpen(true);
             }}
@@ -64,22 +76,16 @@ export default function SearchProductComponent({products, data, setData, props})
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => option.symbol + " - " + option.name}
             loading={loading}
-            value={value}
+            // value={value}
             onChange={(event, newValue, cr, selected) => {
-                // const item = selected.option
-                // console.log(data, selected.option)
-                //
-                //
-                //
-                // console.log("cos")
-
                 setData(selected.option)
             }}
             //disabling selected options
             getOptionDisabled={(option) =>
                 products.some((selectedOption) => selectedOption.id === option.id)
             }
-            onInputChange={(event, newInputValue, reason) => reason !== 'reset' && debounce(setSearch(newInputValue), 500)}
+            // onInputChange={(event, newInputValue, reason) => debounce(handleInputChange, 500)}
+            onInputChange={debouncedInputChange}
             ChipProps={{sx: {display: "none"}}}
             renderOption={(props, option) => {
                 // console.log(props, option)
