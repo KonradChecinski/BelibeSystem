@@ -64,6 +64,11 @@ class Towar extends Model
         return $this->hasMany(Stany::class, "st_TowId", "tw_Id");
     }
 
+    public function stanyMagazyn($magazynId): HasMany
+    {
+        return $this->hasMany(Stany::class, "st_TowId", "tw_Id")->where("st_MagId", $magazynId);
+    }
+
     public function grupa(): BelongsTo
     {
         return $this->belongsTo(Grupa::class, "tw_IdGrupa", "grt_Id");
