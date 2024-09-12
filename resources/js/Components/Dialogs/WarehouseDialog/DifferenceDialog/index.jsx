@@ -10,11 +10,21 @@ import Draggable from "react-draggable";
 import moment from "moment";
 import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import {ArrowBack, Close, Save} from "@mui/icons-material";
 
 export default function DifferenceDialog({open, setOpen, data, processing, params}) {
+    const beforeArray = data?.before
+    const afterArray = data?.after
+    const onlyInAIds = data?.onlyInAIds
+    const intersectionABIds = data?.intersectionABIds
+    const onlyInBIds = data?.onlyInBIds
+
+    let tableIndex = 1
+
+    console.log(beforeArray)
 
     const handleClose = () => {
-        setOpen(false);
+        setOpen(null);
     };
 
     const save = () => {
@@ -40,7 +50,7 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
     return (
 
         <Dialog
-            open={open}
+            open={Boolean(open)}
             onClose={handleClose}
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
@@ -53,8 +63,8 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
                 Różnice przed zapisem i po
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>
-
+                <DialogContentText sx={{mb: 2}}>
+                    Czy chcesz zapisać poniższe zmiany?
                 </DialogContentText>
                 <Box>
 
@@ -62,13 +72,13 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
                         <Table aria-label="simple table" align={"center"} sx={{textAlign: "center"}}>
                             <TableHead sx={{bgcolor: "secondary"}}>
                                 <TableRow>
-                                    <TableCell sx={{borderRight: 2}} rowSpan={2}>Lp.</TableCell>
+                                    <TableCell sx={{borderRight: 2, width: 20}} rowSpan={2}>Lp.</TableCell>
                                     <TableCell sx={{borderRight: 2}} align={"center"} colSpan={2}>
                                         Przed zmianami
                                     </TableCell>
                                     <TableCell colSpan={2} align={"center"}>Po zmianach</TableCell>
                                 </TableRow>
-                                <TableRow>
+                                <TableRow sx={{borderBottom: 2}}>
                                     <TableCell align={"center"}>Produkt</TableCell>
                                     <TableCell align={"center"} sx={{borderRight: 2}}>Ilość</TableCell>
                                     <TableCell align={"center"}>Produkt</TableCell>
@@ -77,40 +87,105 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
                             </TableHead>
                             <TableBody
                                 sx={{
-                                    '& .MuiTableRow:nth-of-type(odd)': {
+                                    '& .MuiTableRow-root:nth-of-type(odd)': {
                                         bgcolor: "hoveredCell.background",
                                     },
                                 }}
                             >
-                                <TableRow hover>
-                                    <TableCell sx={{borderRight: 2}}>1.</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell sx={{borderRight: 2}}>value 1</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                </TableRow>
+                                {
+                                    intersectionABIds?.map((id, index) => {
+                                        const beforeItem = beforeArray.find((item) => item.id === id)
+                                        const afterItem = afterArray.find((item) => item.id === id)
+                                        return (
+                                            <TableRow hover key={"inter" + id}>
+                                                <TableCell
+                                                    align={"center"}
+                                                    sx={{borderRight: 2}}
+                                                >
+                                                    {tableIndex++}.
+                                                </TableCell>
 
-                                <TableRow hover>
-                                    <TableCell>1.</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell sx={{borderRight: 2}}>value 1</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                </TableRow>
-                                <TableRow hover>
-                                    <TableCell>1.</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell sx={{borderRight: 2}}>value 1</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                </TableRow>
-                                <TableRow hover>
-                                    <TableCell>1.</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell sx={{borderRight: 2}}>value 1</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                    <TableCell>value 2</TableCell>
-                                </TableRow>
+                                                <TableCell align={"center"}>
+                                                    {beforeItem.product ? beforeItem.product.symbol : beforeItem.product_symbol}
+                                                </TableCell>
+                                                <TableCell align={"center"} sx={{borderRight: 2}}>
+                                                    {beforeItem.quantity}
+                                                </TableCell>
+
+
+                                                <TableCell align={"center"}>
+                                                    {afterItem.product ? afterItem.product.symbol : afterItem.product_symbol}
+                                                </TableCell>
+                                                <TableCell align={"center"}>
+                                                    {afterItem.quantity}
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })
+                                }
+
+                                {
+                                    onlyInAIds?.map((id, index) => {
+                                        const beforeItem = beforeArray.find((item) => item.id === id)
+                                        return (
+                                            <TableRow hover key={"inter" + id}>
+                                                <TableCell
+                                                    align={"center"}
+                                                    sx={{borderRight: 2}}
+                                                >
+                                                    {tableIndex++}.
+                                                </TableCell>
+
+                                                <TableCell align={"center"}>
+                                                    {beforeItem.product ? beforeItem.product.symbol : beforeItem.product_symbol}
+                                                </TableCell>
+                                                <TableCell align={"center"} sx={{borderRight: 2}}>
+                                                    {beforeItem.quantity}
+                                                </TableCell>
+
+
+                                                <TableCell align={"center"} colSpan={2}>
+                                                    <Typography variant="body2" sx={{color: "error.main"}}>
+                                                        Usunięte
+                                                    </Typography>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })
+                                }
+
+                                {
+                                    onlyInBIds?.map((id, index) => {
+                                        // const beforeItem = beforeArray.find((item) => item.id === id)
+                                        const afterItem = afterArray.find((item) => item.id === id)
+                                        return (
+                                            <TableRow hover key={"inter" + id}>
+                                                <TableCell
+                                                    align={"center"}
+                                                    sx={{borderRight: 2}}
+                                                >
+                                                    {tableIndex++}.
+                                                </TableCell>
+
+                                                <TableCell align={"center"} colSpan={2} sx={{borderRight: 2}}>
+                                                    <Typography variant="body2" sx={{color: "warning.main"}}>
+                                                        Dodane
+                                                    </Typography>
+                                                </TableCell>
+
+                                                <TableCell align={"center"}>
+                                                    {afterItem.product ? afterItem.product.symbol : afterItem.product_symbol}
+                                                </TableCell>
+                                                <TableCell align={"center"}>
+                                                    {afterItem.quantity}
+                                                </TableCell>
+
+
+                                            </TableRow>
+                                        )
+                                    })
+                                }
+
 
                             </TableBody>
                         </Table>
@@ -118,13 +193,16 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>
-                    Zamknij
-                </Button>
 
-
-                <Button onClick={save} disabled={processing} autoFocus>
-                    Tak
+                <Button variant="outlined" startIcon={<Close/>} onClick={handleClose}>Anuluj</Button>
+                <Button
+                    variant="contained"
+                    startIcon={<Save/>}
+                    onClick={save}
+                    disabled={processing}
+                    autoFocus
+                >
+                    Zapisz
                 </Button>
             </DialogActions>
 

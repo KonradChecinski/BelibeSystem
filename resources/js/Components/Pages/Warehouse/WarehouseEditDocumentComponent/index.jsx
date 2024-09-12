@@ -8,10 +8,10 @@ import DifferenceDialog from "@/Components/Dialogs/WarehouseDialog/DifferenceDia
 
 export default function WarehouseEditDocument({props}) {
     const [openSaveModal, setOpenSaveModal] = useState(false)
+    const [saveModalData, setSaveModalData] = useState(null)
     const [productsQuantityHistory, setProductsQuantityHistory] = useState(JSON.parse(JSON.stringify(props.warehouseDocument.warehouse_document_products)))
-    const productsHistory2 = JSON.parse(JSON.stringify(props.warehouseDocument.warehouse_document_products))
+    const productsHistory = JSON.parse(JSON.stringify(props.warehouseDocument.warehouse_document_products))
 
-    // const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm(props.warehouseDocument)
     const {
         data,
         setData,
@@ -19,30 +19,57 @@ export default function WarehouseEditDocument({props}) {
     } = useForm(JSON.parse(JSON.stringify(props.warehouseDocument.warehouse_document_products)))
 
 
-// A comparer object to determine if two entries are equal.
-    const isSameObject = (a, b) => a.id === b.id && a.quantity === b.quantity;
+    // A comparer object to determine if two entries are equal.
+    const isSameObjectIdAndQuantity = (a, b) => a.id === b.id && a.quantity === b.quantity;
+    const isSameObjectId = (a, b) => a.id === b.id;
 
     // Get items that only occur in the left array,
-// using the compareFunction to determine equality.
+    // using the compareFunction to determine equality.
     const onlyInLeft = (left, right, compareFunction) =>
-        left.filter(
-            leftValue => !right.some(rightValue => compareFunction(leftValue, rightValue))
-        );
+        left.filter(leftValue => !right.some(rightValue => compareFunction(leftValue, rightValue)));
+
+    const onlyInIntersection = (left, right, compareFunction) =>
+        left.filter(leftValue => right.some(rightValue => compareFunction(leftValue, rightValue)));
 
 
     const handleCancel = () => {
         history.back();
     }
+
     const handleOpenSaveModal = () => {
         console.log(props.warehouseDocument)
         console.log(productsQuantityHistory)
-        console.log(data, productsHistory2)
-        const onlyInA = onlyInLeft(data, productsHistory2, isSameObject);
-        const onlyInB = onlyInLeft(productsHistory2, data, isSameObject);
+        console.log(data, productsHistory)
+        const before = onlyInLeft(productsHistory, data, isSameObjectIdAndQuantity);
+        const after = onlyInLeft(data, productsHistory, isSameObjectIdAndQuantity);
+        console.log(before, after)
+
+        const onlyInA = onlyInLeft(before, after, isSameObjectId);
+        const intersectionAB = onlyInIntersection(before, after, isSameObjectId);
+        const onlyInB = onlyInLeft(after, before, isSameObjectId);
 
 
-        console.log(onlyInA, onlyInB)
+        const onlyInAIds = onlyInA.map((item) => item.id)
+        const intersectionABIds = intersectionAB.map((item) => item.id)
+        const onlyInBIds = onlyInB.map((item) => item.id)
+        // console.log(onlyInA, intersectionAB, onlyInB)
+        // console.log(onlyInA.map((item) => item.id), intersectionAB.map((item) => item.id), onlyInB.map((item) => item.id))
+
+        console.log({
+            before: before,
+            after: after,
+            onlyInAIds: onlyInAIds,
+            intersectionABIds: intersectionABIds,
+            onlyInBIds: onlyInBIds
+        })
         setOpenSaveModal(true)
+        setSaveModalData({
+            before: before,
+            after: after,
+            onlyInAIds: onlyInAIds,
+            intersectionABIds: intersectionABIds,
+            onlyInBIds: onlyInBIds
+        });
     }
 
     return (
@@ -56,10 +83,20 @@ export default function WarehouseEditDocument({props}) {
             />
             <Box sx={{p: 1, display: "flex", justifyContent: "flex-end", gap: 2}}>
                 <Button variant="outlined" startIcon={<ArrowBack/>} onClick={handleCancel}>Anuluj</Button>
-                <Button variant="contained" startIcon={<Save/>} onClick={handleOpenSaveModal}>Zapisz</Button>
+                <Button
+                    variant="contained"
+                    startIcon={<Save/>}
+                    onClick={handleOpenSaveModal}
+                    disabled={processing || (onlyInLeft(productsHistory, data, isSameObjectIdAndQuantity).length === 0 && onlyInLeft(data, productsHistory, isSameObjectIdAndQuantity).length === 0)}
+                >Zapisz</Button>
             </Box>
-            <DifferenceDialog open={openSaveModal} setOpen={setOpenSaveModal} data={data} processing={processing}
-                              params={props}/>
+            <DifferenceDialog
+                open={openSaveModal}
+                setOpen={setOpenSaveModal}
+                data={saveModalData}
+                processing={processing}
+                params={props}
+            />
         </>
 
     );

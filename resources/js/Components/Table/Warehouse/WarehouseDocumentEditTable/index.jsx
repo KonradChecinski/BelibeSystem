@@ -219,11 +219,12 @@ export default function WarehouseDocumentEditTable({
                                 quantity={cell.getValue()}
                                 maxQuantity={Number(productsQuantityHistory.find((product) => product.id === row.original.id)?.quantity + Number(row.original.product?.available))}
                                 setQuantity={(value) => {
+                                    console.log(data)
                                     // console.log(data, value, row.original.id)
                                     // row._valuesCache[column.id] = value;
                                     const tempData = data
                                     tempData.find((product) => product.id === row.original.id).quantity = value
-                                    setData(tempData);
+                                    setData(JSON.parse(JSON.stringify(tempData)));
                                     // console.log("zmiana data")
                                 }}
                             />
@@ -368,7 +369,7 @@ export default function WarehouseDocumentEditTable({
             },
 
         ],
-        [],
+        [data, productsQuantityHistory],
         //end
     );
 
@@ -422,7 +423,11 @@ export default function WarehouseDocumentEditTable({
         renderRowActions: ({row}) => {
             const [openDeleteModal, setOpenDeleteModal] = useState(false);
             const handleDeleteRow = () => {
-                setData(data.filter((product) => product.id !== row.original.id))
+                console.log(data)
+                const tempData = JSON.parse(JSON.stringify(data))
+                tempData.splice(tempData.findIndex((product) => product.id === row.original.id), 1)
+                setData(tempData)
+                // setData(data.filter((product) => product.id !== row.original.id))
                 setOpenDeleteModal(false)
             }
 
