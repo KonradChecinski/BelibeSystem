@@ -15,8 +15,21 @@ export default function WarehouseEditDocument({props}) {
     const {
         data,
         setData,
+        put,
+        transform,
         processing,
     } = useForm(JSON.parse(JSON.stringify(props.warehouseDocument.warehouse_document_products)))
+
+    transform((data) =>
+        data.map(e => ({
+            // ...e,
+            id: e.id.toString().includes("added_") ? null : e.id,
+            quantity: e.quantity,
+            product: {
+                id: e.product.id
+            },
+        }))
+    );
 
 
     // A comparer object to determine if two entries are equal.
@@ -95,7 +108,8 @@ export default function WarehouseEditDocument({props}) {
                 setOpen={setOpenSaveModal}
                 data={saveModalData}
                 processing={processing}
-                params={props}
+                put={put}
+                props={props}
             />
         </>
 

@@ -6,6 +6,7 @@ use App\Models\B2bCart;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
 use App\Models\OrderProduct;
+use App\Models\WarehouseDocumentProduct;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,16 +48,8 @@ class Product extends Model
 
     public function getAvailableAttribute()
     {
-        $baseQuantity = $this->quantity;
-        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
-            $query->where("status", ">", 0)->where("status", "<", 100);
-        })->sum("quantity");
+        $sum = $this->getAvailableQuantity();
 
-        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
-            $query->where("status", ">", 0)->where("status", "<", 100);
-        })->sum("quantity");
-
-        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity;
         if ($sum < 0) {
             return 0;
         }
@@ -65,16 +58,8 @@ class Product extends Model
 
     public function getAvailableB2cAttribute()
     {
-        $baseQuantity = $this->quantity;
-        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
-            $query->where("status", ">", 0)->where("status", "<", 100);
-        })->sum("quantity");
+        $sum = $this->getAvailableQuantity();
 
-        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
-            $query->where("status", ">", 0)->where("status", "<", 100);
-        })->sum("quantity");
-
-        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - 1;
         if ($sum < 0) {
             return 0;
         }
@@ -130,5 +115,58 @@ class Product extends Model
     public function inClientsCart(): HasMany
     {
         return $this->hasMany(B2bCart::class);
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getAvailableQuantity(): mixed
+    {
+        $baseQuantity = $this->quantity;
+        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<=", 20);
+        })->sum("quantity");
+
+        $warehouseDocumentProductsQuantity = WarehouseDocumentProduct::query()->where("product_id", $this->id)->whereHas("warehouseDocument", function (Builder $query) {
+            $query->whereHas("clientOrder", function (Builder $query) {
+                $query->where("status", ">", 20)->where("status", "<", 100);
+            });
+        })->sum("quantity");
+
+//        if ($this->symbol === "S-0100-0104-4-XL") dd($this->id, $this->symbol, $baseQuantity, $clientOrderProductsQuantity, $warehouseDocumentProductsQuantity);
+
+        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - $warehouseDocumentProductsQuantity;
+        return $sum;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getAvailableQuantityWithoutWarehouseDocument(int $warehouseDocumentId): mixed
+    {
+        $baseQuantity = $this->quantity;
+        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<=", 20);
+        })->sum("quantity");
+
+        $warehouseDocumentProductsQuantity = WarehouseDocumentProduct::query()->where("product_id", $this->id)->whereHas("warehouseDocument", function (Builder $query) use ($warehouseDocumentId) {
+            $query->where("id", "!=", $warehouseDocumentId);
+            $query->whereHas("clientOrder", function (Builder $query) {
+                $query->where("status", ">", 20)->where("status", "<", 100);
+            });
+        })->sum("quantity");
+
+//        if ($this->symbol === "S-0100-0104-4-XL") dd($this->id, $this->symbol, $baseQuantity, $clientOrderProductsQuantity, $warehouseDocumentProductsQuantity);
+
+        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - $warehouseDocumentProductsQuantity;
+        return $sum;
     }
 }

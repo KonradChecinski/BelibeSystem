@@ -186,6 +186,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::get("/document/{warehouseDocument}/print", [WarehouseDocumentController::class, 'print'])->name("system.warehouse.document.print");
         Route::get("/document/{warehouseDocument}/edit", [WarehouseDocumentController::class, 'edit'])->name("system.warehouse.document.edit");
+        Route::put("/document/{warehouseDocument}/edit", [WarehouseDocumentController::class, 'update'])->name("system.warehouse.document.update");
         Route::post("/document/{warehouseDocument}/accept", [WarehouseDocumentController::class, 'store'])->name("system.warehouse.document.accept");
 
         Route::get("/document/{warehouseDocument}/products/search", [WarehouseDocumentController::class, 'search'])->name("system.warehouse.products.search");

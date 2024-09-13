@@ -217,7 +217,7 @@ export default function WarehouseDocumentEditTable({
                             <ProductInput
                                 props={row.original}
                                 quantity={cell.getValue()}
-                                maxQuantity={Number(productsQuantityHistory.find((product) => product.id === row.original.id)?.quantity + Number(row.original.product?.available))}
+                                maxQuantity={row.original.product?.availableWithoutThisDocument}
                                 setQuantity={(value) => {
                                     console.log(data)
                                     // console.log(data, value, row.original.id)

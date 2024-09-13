@@ -46,6 +46,7 @@ class Warehouse
                 "original_price_gross" => $orderProduct->original_price_gross,
                 "price_net" => $orderProduct->price_net,
                 "price_gross" => $orderProduct->price_gross,
+                "vat_rate" => $orderProduct->vat_rate,
                 "currency" => $orderProduct->currency,
             ]);
         }

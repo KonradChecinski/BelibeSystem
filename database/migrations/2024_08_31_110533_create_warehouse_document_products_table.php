@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->integer("original_price_gross")->nullable();
             $table->integer("price_net")->nullable();
             $table->integer("price_gross")->nullable();
+            $table->integer("vat_rate")->nullable();
             $table->string("currency");
             $table->string("comment")->nullable();
             $table->timestamps();

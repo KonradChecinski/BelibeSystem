@@ -37,6 +37,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
 import {Link, router} from "@inertiajs/react";
 import {boolean} from "yup";
+import AcceptDialog from "@/Components/Dialogs/WarehouseDialog/AcceptDialog";
 
 
 export default function WarehouseDocumentListTable({documents = [], readOnly, props}) {
@@ -299,26 +300,6 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                         setShowAcceptDialog(!showAcceptDialog)
                     }
 
-                    const acceptDocument = (createInvoice) => {
-                        router.post(
-                            route("system.warehouse.document.accept", {warehouseDocument: row.original.id}),
-                            {
-                                create_invoice: createInvoice
-                            },
-                            {
-                                preserveScroll: true,
-                                onSuccess: () => {
-                                    enqueueSnackbar("Dokument został zatwierdzony", {variant: "success"});
-                                    reloadData();
-                                },
-                                onError: (error) => {
-                                    enqueueSnackbar("Błąd zatwierdzania dokumentu", {variant: "error"});
-                                    console.log(error)
-                                }
-                            }
-                        )
-                    }
-
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end", width: 1}}>
                             {row.original.client_comment && (
@@ -396,36 +377,9 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                                     <Done/>
                                 </IconButton>
                             </Tooltip>
-                            <Dialog
-                                open={showAcceptDialog}
-                                onClose={handleAccept}
-                                aria-labelledby="alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                            >
-                                <DialogTitle id="alert-dialog-title">
-                                    Potwierdzenie DM
-                                </DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText id="alert-dialog-description">
-                                        Czy chcesz zatwierdzić dokument magazynowy {row.original.number}?
-                                    </DialogContentText>
-                                    <DialogContentText id="alert-dialog-description">
-                                        Zamówienie zostanie przekazane do subiekta.
-                                    </DialogContentText>
-                                    <DialogContentText id="alert-dialog-description">
-                                        Możesz utworzyć automatycznie do zamówienia fakturę
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button variant={"outlined"} onClick={handleAccept}>Nie</Button>
-                                    <Button variant={"contained"} onClick={() => acceptDocument(false)}>Tak, bez
-                                        faktury</Button>
-                                    <Button variant={"contained"} color={"info"} autoFocus
-                                            onClick={() => acceptDocument(true)}>Tak, z
-                                        fakturą</Button>
-                                </DialogActions>
-                            </Dialog>
 
+                            <AcceptDialog open={showAcceptDialog} setOpen={handleAccept}
+                                          warehouseDocument={row.original} props={props}/>
 
                         </Box>
                     )

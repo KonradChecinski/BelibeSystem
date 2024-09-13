@@ -41,6 +41,7 @@ class WarehouseDocumentController extends Controller
             ->get(["id", "symbol", "name", "product_model_color_id", "product_size_id", "quantity"])->load(["color", "size"])->map(function ($product) use ($warehouseDocument) {
                 $product->mainImage = $product->images()->where("type", 1)->where("order", 0)->first();
                 $product->prices = Price::showClientPrices($product->model, $warehouseDocument->clientOrder->client);
+                $product->availableWithoutThisDocument = $product->getAvailableQuantityWithoutWarehouseDocument($warehouseDocument->id);
                 return $product;
             });
         return response()->json($products);
@@ -145,6 +146,8 @@ class WarehouseDocumentController extends Controller
      */
     public function edit(WarehouseDocument $warehouseDocument)
     {
+        if ($warehouseDocument->status === 100) return response()->json(["message" => "Dokument jest zrealizowany"], 400);
+
         $warehouseDocument->load([
             "warehouseDocumentProducts",
             "warehouseDocumentProducts.product",
@@ -152,6 +155,11 @@ class WarehouseDocumentController extends Controller
             "warehouseDocumentProducts.product.color",
 //            "warehouseDocumentProducts.product.model.prices",
         ]);
+        $warehouseDocument->warehouseDocumentProducts->map(function ($item) use ($warehouseDocument) {
+            $item->product->availableWithoutThisDocument = $item->product->getAvailableQuantityWithoutWarehouseDocument($warehouseDocument->id);
+            return $item;
+        });
+
         return Inertia::render('System/Warehouse/Document', [
             'warehouseDocument' => $warehouseDocument
         ]);
@@ -162,7 +170,69 @@ class WarehouseDocumentController extends Controller
      */
     public function update(UpdateWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
-        //
+        if ($warehouseDocument->status === 100) return response()->json(["message" => "Dokument jest zrealizowany"], 400);
+        $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts;
+        $warehouseDocumentProductsIds = $warehouseDocumentProducts->pluck("id");
+
+        foreach ($request->validated() as $item) {
+            if (in_array($item["id"], $warehouseDocumentProductsIds->toArray())) {
+
+                $warehouseDocumentProducts->find($item["id"])->update([
+                    "quantity" => $item["quantity"],
+                ]);
+
+                $warehouseDocumentProductsIds = $warehouseDocumentProductsIds->reject(function ($id) use ($item) {
+                    return $id === $item["id"];
+                });
+
+            } else {
+                $product = Product::find($item["product"]["id"]);
+                $prices = (object)Price::showClientPrices($product->model, $warehouseDocument->clientOrder->client);
+
+//                dd($product, $prices, [
+//                    "original_price_net" => isset($prices->original_price_net) ? $prices->original_price_net : $prices->price_net,
+//                    "original_price_gross" => isset($prices->original_price_gross) ? $prices->original_price_gross : $prices->price_gross,
+//                    "price_net" => $prices->price_net,
+//                    "price_gross" => $prices->price_gross,
+//                    "currency" => $prices->currency,
+//                ]);
+                $warehouseDocument->warehouseDocumentProducts()->create([
+                    "type" => 2,
+                    "product_id" => $product->id,
+                    "product_code" => null,
+                    "quantity" => $item["quantity"],
+
+                    "original_price_net" => isset($prices->original_price_net) ? $prices->original_price_net : $prices->price_net,
+                    "original_price_gross" => isset($prices->original_price_gross) ? $prices->original_price_gross : $prices->price_gross,
+                    "price_net" => $prices->price_net,
+                    "price_gross" => $prices->price_gross,
+                    "currency" => $prices->currency,
+                    "vat_rate" => $prices->vat_rate,
+                ]);
+            }
+        }
+        if ($warehouseDocumentProductsIds->count() > 0) {
+            foreach ($warehouseDocumentProducts->whereIn("id", $warehouseDocumentProductsIds) as $item) {
+                $item->delete();
+            }
+        }
+
+        $calculateTotalFromCartItems = Price::calculateTotalFromCartItems($warehouseDocumentProducts, (bool)$warehouseDocument->discount, $warehouseDocument->discount);
+
+        $priceSummary = $calculateTotalFromCartItems->priceSummary;
+        $discountedPriceSummary = $calculateTotalFromCartItems->discountedPriceSummary;
+//        dd($priceSummary, $discountedPriceSummary);
+        $warehouseDocument->update([
+            "total_quantity" => $warehouseDocument->warehouseDocumentProducts->sum("quantity"),
+            "total_net" => $priceSummary["total_net"],
+            "total_gross" => $priceSummary["total_gross"],
+            "discounted_total_net" => $discountedPriceSummary["total_net"],
+            "discounted_total_gross" => $discountedPriceSummary["total_gross"],
+        ]);
+
+
+        return redirect()->route('system.warehouse.documents');
+//        dd($request->validated(), $warehouseDocument, $warehouseDocumentProducts, $warehouseDocumentProductsIds);
     }
 
     /**

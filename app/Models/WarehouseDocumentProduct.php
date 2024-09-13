@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WarehouseDocumentProduct extends Model
 {
-    use HasFactory;
+    use HasFactory, \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     protected $fillable = [
         "type",
@@ -23,6 +23,7 @@ class WarehouseDocumentProduct extends Model
         "original_price_gross",
         "price_net",
         "price_gross",
+        "vat_rate",
         "currency",
         "comment"
     ];

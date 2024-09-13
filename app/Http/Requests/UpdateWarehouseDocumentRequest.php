@@ -11,7 +11,7 @@ class UpdateWarehouseDocumentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editWarehouseDocument", "user");
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateWarehouseDocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "*.id" => ["nullable", "integer", "exists:warehouse_document_products,id"],
+            "*.quantity" => ["required", "integer", "min:1"],
+            "*.product.id" => ["required_if:*.id,null", "integer", "exists:products,id"],
         ];
     }
 }

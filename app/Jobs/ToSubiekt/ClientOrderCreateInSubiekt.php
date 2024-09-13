@@ -41,16 +41,18 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
         $subiekt = $subiekt->connect();
 
         $orders = ClientOrder::where("status", 60)->get();
-//TODO: dodać obsługe dokumentu magazynowego
+
 
         foreach ($orders as $order) {
-            $orderProducts = $order->orderProducts;
+//            $orderProducts = $order->orderProducts;
+            $warehouseDocument = $order->warehouseDocument;
+            $orderProducts = $order->warehouseDocument->warehouseDocumentProducts;
             $client = $order->client;
             $delivery = $order->delivery;
             $payment = $order->payment;
             $location = $order->location;
 
-//            dd($order, $client, $orderProducts, $payment, $location, $delivery);
+//            dd($order, $client, $orderProducts, $payment, $location, $delivery, $warehouseDocument);
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
             $zamowienie->KontrahentId = $client->subiekt_id;
@@ -169,6 +171,10 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 'subiekt_added_at' => $date,
                 "status" => 90
             ]);
+
+            if ($warehouseDocument->create_invoice) {
+                CreateFvFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $order);
+            }
 
             //dok_Status =
             // 8 - zrealizowane

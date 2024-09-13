@@ -12,7 +12,7 @@ import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {ArrowBack, Close, Save} from "@mui/icons-material";
 
-export default function DifferenceDialog({open, setOpen, data, processing, params}) {
+export default function DifferenceDialog({open, setOpen, data, processing, put, props}) {
     const beforeArray = data?.before
     const afterArray = data?.after
     const onlyInAIds = data?.onlyInAIds
@@ -28,21 +28,21 @@ export default function DifferenceDialog({open, setOpen, data, processing, param
     };
 
     const save = () => {
-        // post(
-        //     route("b2b.order.again", {clientOrder: row.original.id}),
-        //     {
-        //         preserveScroll: true,
-        //         onSuccess: () => {
-        //             enqueueSnackbar(`Dodano do koszyka produkty z zamówienia - ${row.original.number}`, {variant: 'success'})
-        //             handleClose();
-        //
-        //         },
-        //         onError: errors => {
-        //             console.error(errors)
-        //             enqueueSnackbar(`Błąd przy dodawaniu do koszyka produktów z zamówienia - ${row.original.number}`, {variant: 'error'})
-        //         }
-        //     }
-        // )
+        put(
+            route("system.warehouse.document.update", {warehouseDocument: props.warehouseDocument.id}),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    enqueueSnackbar(`Zaktualizowano dokument magazynowy - ${props.warehouseDocument.number}`, {variant: 'success'})
+                    handleClose();
+
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar(`Błąd przy aktualizacji dokumentu magazynowego - ${props.warehouseDocument.number}`, {variant: 'error'})
+                }
+            }
+        )
 
     }
 
