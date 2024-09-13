@@ -77,15 +77,18 @@ class ClientOrderController extends Controller
         if ($request->status === 20) {
             $oldStatus = $clientOrder->status;
 
-            $clientOrder->status = 20;
-            $clientOrder->subiekt_number = null;
-            $clientOrder->subiekt_added_at = null;
-            $clientOrder->save();
-//            ClientOrderCreateInSubiekt::dispatch($clientOrder);
             if ($oldStatus === 1) {
                 $clientOrder->client->notify(new OrderAcceptedClient($clientOrder));
                 CreateWarehouseDocument::dispatch($clientOrder);
             }
+        }
+
+        if ($request->status === 60) {
+            $clientOrder->status = 60;
+            $clientOrder->subiekt_number = null;
+            $clientOrder->subiekt_added_at = null;
+            $clientOrder->save();
+            ClientOrderCreateInSubiekt::dispatch($clientOrder);
         }
 
         if ($request->status === 0) {

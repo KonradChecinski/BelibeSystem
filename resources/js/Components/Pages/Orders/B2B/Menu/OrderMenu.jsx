@@ -92,7 +92,7 @@ export default function OrderMenu({row}) {
         router.patch(
             route("system.orders.order.b2b.update.status", {clientOrder: row.original.id}),
             {
-                status: 20
+                status: 60
             },
             {
                 preserveScroll: true,
@@ -158,7 +158,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![55, 90].includes(row.original.status)}
+                <MenuItem disabled={![55, 60, 90].includes(row.original.status)}
                           onClick={handleProcessAgain}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Prices\Price;
 use App\Http\Requests\SearchProductRequest;
+use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Models\Products\Product;
 use App\Models\WarehouseDocument;
 use App\Http\Requests\StoreWarehouseDocumentRequest;
@@ -68,6 +69,8 @@ class WarehouseDocumentController extends Controller
         $warehouseDocument->clientOrder()->update([
             "status" => 60,
         ]);
+
+        ClientOrderCreateInSubiekt::dispatch($warehouseDocument->clientOrder);
     }
 
 
