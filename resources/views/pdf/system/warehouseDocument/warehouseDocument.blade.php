@@ -165,7 +165,7 @@
     @php( $i = 1 )
     @foreach( $productModels as $productModel )
         @php( $filteredProducts = $products->filter(fn($product)=>$product->model->id===$productModel->id) )
-        @php( $sortedProducts = \App\Helpers\Warehouse\Warehouse::sortBySizeAndColor($filteredProducts)->values() )
+        @php( $sortedProducts = \App\Helpers\Warehouse\Warehouse::sortProductsBySizeAndColor($filteredProducts)->values() )
 
         <tbody class="border-y-2 border-slate-700">
         @foreach( $sortedProducts as $sortedProduct)

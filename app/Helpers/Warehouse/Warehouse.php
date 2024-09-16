@@ -53,7 +53,7 @@ class Warehouse
         return $warehouseDocument;
     }
 
-    public static function sortBySizeAndColor(Collection $products): Collection
+    public static function sortProductsBySizeAndColor(Collection $products): Collection
     {
         $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
             "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL"];
@@ -64,6 +64,26 @@ class Warehouse
         return $products->sortBy(function ($product) use ($sizeIndex) {
             $size = strtolower($product->size->name);
             $color = strtolower($product->color->shortcut);
+
+            $sizeRank = $sizeIndex[$size] ?? PHP_INT_MAX;
+//            dd($sizeIndex, $size, $sizeRank, $color, $product);
+
+            // Sortujemy najpierw po rozmiarze, a potem po kolorze
+            return [$sizeRank, $color];
+        });
+    }
+
+    public static function sortItemsBySizeAndColor(Collection $items): Collection
+    {
+        $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
+            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL"];
+
+        // Mapujemy rozmiary na indeksy
+        $sizeIndex = array_flip(array_map('strtolower', $sizeOrder));
+
+        return $items->sortBy(function ($item) use ($sizeIndex) {
+            $size = strtolower($item->product->size->name);
+            $color = strtolower($item->product->color->shortcut);
 
             $sizeRank = $sizeIndex[$size] ?? PHP_INT_MAX;
 //            dd($sizeIndex, $size, $sizeRank, $color, $product);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Prices\Price;
+use App\Helpers\Warehouse\Warehouse;
 use App\Http\Requests\SearchProductRequest;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Models\Products\Product;
@@ -157,14 +158,50 @@ class WarehouseDocumentController extends Controller
             "warehouseDocumentProducts.product.size",
             "warehouseDocumentProducts.product.color",
 //            "warehouseDocumentProducts.product.model.prices",
+            "productModels",
+            "productModelColors"
         ]);
         $warehouseDocument->warehouseDocumentProducts->map(function ($item) use ($warehouseDocument) {
             $item->product->availableWithoutThisDocument = $item->product->getAvailableQuantityWithoutWarehouseDocument($warehouseDocument->id);
             return $item;
         });
+        $productModels = $warehouseDocument->productModels->unique()->sortBy("symbol")->values();
+        $productModelColors = $warehouseDocument->productModelColors->unique()->sortBy("shortcut")->values();
+
+        $warehouseItems = collect();
+
+        foreach ($productModels as $productModel) {
+            $filteredProducts = $warehouseDocument->warehouseDocumentProducts->filter(function ($item) use ($productModel) {
+                return $item->product->model->id === $productModel->id;
+            });
+            $sortedProducts = Warehouse::sortItemsBySizeAndColor($filteredProducts)->values();
+            $warehouseItems->push(...$sortedProducts);
+        }
+
+//        dd($warehouseItems->toArray());
+        $warehouseDocumentResult = [
+            "id" => $warehouseDocument->id,
+            "number" => $warehouseDocument->number,
+            "status" => $warehouseDocument->status,
+            "type" => $warehouseDocument->type,
+            "client_order_id" => $warehouseDocument->client_order_id,
+            "total_quantity" => $warehouseDocument->total_quantity,
+            "total_net" => $warehouseDocument->total_net,
+            "total_gross" => $warehouseDocument->total_gross,
+            "discount" => $warehouseDocument->discount,
+            "discounted_total_net" => $warehouseDocument->discounted_total_net,
+            "discounted_total_gross" => $warehouseDocument->discounted_total_gross,
+            "client_comment" => $warehouseDocument->client_comment,
+            "user_comment" => $warehouseDocument->user_comment,
+            "create_invoice" => $warehouseDocument->create_invoice,
+            "created_at" => $warehouseDocument->created_at,
+            "updated_at" => $warehouseDocument->updated_at,
+            "warehouse_document_products" => $warehouseItems,
+        ];
+//        dd($warehouseDocumentResult);
 
         return Inertia::render('System/Warehouse/Document', [
-            'warehouseDocument' => $warehouseDocument
+            'warehouseDocument' => $warehouseDocumentResult
         ]);
     }
 
