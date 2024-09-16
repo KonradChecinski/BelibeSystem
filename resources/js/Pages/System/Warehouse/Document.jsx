@@ -13,8 +13,8 @@ export default function DocumentList(props) {
 
     return (
         <UserLayout auth={props.auth} errors={props.errors}
-                    header={t("Editing") + " " + props.warehouseDocument.number}>
-            <Head title={t("Editing") + " " + props.warehouseDocument.number}/>
+                    header={t("Editing") + " - " + props.warehouseDocument.number}>
+            <Head title={t("Editing") + " - " + props.warehouseDocument.number}/>
 
             <Card sx={{height: "100%", width: 1, display: "flex", flexDirection: "column"}}>
                 <WarehouseEditDocument props={props}/>
