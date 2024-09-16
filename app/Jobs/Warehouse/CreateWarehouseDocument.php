@@ -4,6 +4,7 @@ namespace App\Jobs\Warehouse;
 
 use App\Helpers\Partners\PartnerExportFile;
 use App\Helpers\Warehouse\Warehouse;
+use App\Mail\WarehouseDocumentCreated;
 use App\Models\ClientOrder;
 use App\Models\Partner;
 use App\Models\PartnerExport;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class CreateWarehouseDocument implements ShouldQueue
 {
@@ -45,5 +47,8 @@ class CreateWarehouseDocument implements ShouldQueue
 
         $this->clientOrder->status = 50;
         $this->clientOrder->save();
+
+        //TODO: Add dynamic mail
+        Mail::to("sprzedaz@belibe.pl")->send(new WarehouseDocumentCreated($warehouseDocument));
     }
 }
