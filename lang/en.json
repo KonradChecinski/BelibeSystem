@@ -93,5 +93,14 @@
     "Cart": "Cart",
     "Invoices": "Invoices",
     "Settlements": "Settlements",
-    "Client zone": "Client zone"
+    "Client zone": "Client zone",
+    "Warehouse": "Warehouse",
+    "Documents": "Documents",
+    "Archive": "Archive",
+    "Industries": "Industries",
+    "Payments": "Payments",
+    "Source of acquisitions": "Source of acquisitions",
+    "Deliveries": "Deliveries",
+    "Countries": "Countries",
+    "Activity types": "Activity types"
 }

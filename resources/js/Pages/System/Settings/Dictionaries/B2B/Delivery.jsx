@@ -13,10 +13,10 @@ export default function Delivery(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Delivery")
+                t("Deliveries")
             }
         >
-            <Head title={t("Delivery")}/>
+            <Head title={t("Deliveries")}/>
             <Card sx={{height: "100%", width: 1}}>
                 <DeliveryTable {...props} />
             </Card>

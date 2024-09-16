@@ -93,5 +93,14 @@
     "Cart": "Koszyk",
     "Invoices": "Faktury",
     "Settlements": "Rozliczenia",
-    "Client zone": "Strefa klienta"
+    "Client zone": "Strefa klienta",
+    "Warehouse": "Magazyn",
+    "Documents": "Dokumenty",
+    "Archive": "Archiwum",
+    "Industries": "Branże",
+    "Payments": "Płatności",
+    "Source of acquisitions": "Źródło pozyskania",
+    "Deliveries": "Dostawy",
+    "Countries": "Kraje",
+    "Activity types": "Typy aktywności"
 }

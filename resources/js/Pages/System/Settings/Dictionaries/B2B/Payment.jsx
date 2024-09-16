@@ -13,10 +13,10 @@ export default function Payment(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Payment")
+                t("Payments")
             }
         >
-            <Head title={t("Payment")}/>
+            <Head title={t("Payments")}/>
             <Card sx={{height: "100%", width: 1}}>
                 <PaymentTable {...props} />
             </Card>

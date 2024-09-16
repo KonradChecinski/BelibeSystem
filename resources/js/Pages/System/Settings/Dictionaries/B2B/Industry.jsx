@@ -13,10 +13,10 @@ export default function Industry(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-                t("Industry")
+                t("Industries")
             }
         >
-            <Head title={t("Industry")}/>
+            <Head title={t("Industries")}/>
             <Card sx={{height: "100%", width: 1}}>
                 <IndustryTable {...props} />
             </Card>
