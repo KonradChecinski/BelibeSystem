@@ -29,7 +29,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
     {
         $this->onQueue('sfera');
 
-        if (is_null($date)) {
+        if (!is_null($date)) {
             $this->date = $date;
         }
     }
@@ -56,6 +56,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
                 "paymentId" => 18
             ]
         ];
+//        dd($this->date->toDateString());
 //        $date = Carbon::today()->subDays(2);
         if (is_null($this->date)) {
             $date = Carbon::today();
