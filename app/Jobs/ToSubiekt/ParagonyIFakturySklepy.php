@@ -20,12 +20,18 @@ class ParagonyIFakturySklepy implements ShouldQueue
     public $tries = 1;
     public $backoff = 20;
 
+    public ?Carbon $date = null;
+
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(Carbon $date = null)
     {
         $this->onQueue('sfera');
+
+        if (is_null($date)) {
+            $this->date = $date;
+        }
     }
 
     /**
@@ -50,21 +56,27 @@ class ParagonyIFakturySklepy implements ShouldQueue
                 "paymentId" => 18
             ]
         ];
+//        $date = Carbon::today()->subDays(2);
+        if (is_null($this->date)) {
+            $date = Carbon::today();
+        } else {
+            $date = $this->date;
+        }
 
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
         foreach ($params as $param) {
             $subiekt->MagazynId = $param["warehouseId"];
-            $this->updateParagony($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
-            $this->updateFV($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
-            $this->updateReturns($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"]);
+            $this->updateParagony($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"], $date);
+            $this->updateFV($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"], $date);
+            $this->updateReturns($subiekt, $param["warehouseId"], $param["categoryId"], $param["paymentId"], $date);
         }
 
         $subiekt->MagazynId = 1;
     }
 
-    private function updateParagony($subiekt, int $warehouseId, int $categoryId, int $paymentId)
+    private function updateParagony($subiekt, int $warehouseId, int $categoryId, int $paymentId, Carbon $date)
     {
         $documents = DB::connection("subiekt")
             ->table("dok__Dokument")
@@ -74,7 +86,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
                 $query->whereNot("dok_KatId", $categoryId)
                     ->orWhereNull("dok_KatId");
             })
-            ->where("dok_DataWyst", ">=", Carbon::today())
+            ->where("dok_DataWyst", ">=", $date)
             ->orderBy("dok_Id")
             ->get([
                 "dok_Id",
@@ -85,7 +97,7 @@ class ParagonyIFakturySklepy implements ShouldQueue
 
         foreach ($documents as $document) {
             if (is_null($document->dok_FiskalizacjaData)) continue;
-            if (Carbon::parse($document->dok_FiskalizacjaData)->diffInYears(Carbon::today()) > 0) continue;
+            if (Carbon::parse($document->dok_FiskalizacjaData)->diffInYears($date) > 0) continue;
 
             try {
                 $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
@@ -106,14 +118,14 @@ class ParagonyIFakturySklepy implements ShouldQueue
         }
     }
 
-    private function updateFV($subiekt, int $warehouseId, int $categoryId, int $paymentId)
+    private function updateFV($subiekt, int $warehouseId, int $categoryId, int $paymentId, Carbon $date)
     {
         $documents = DB::connection("subiekt")
             ->table("dok__Dokument")
             ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
             ->where("dok_MagId", $warehouseId)
             ->where("dok_Typ", 2)
-            ->where("dok_DataWyst", ">=", Carbon::today())
+            ->where("dok_DataWyst", ">=", $date)
             ->whereNull("pwd_Data01")
             ->orderBy("dok_Id")
             ->get([
@@ -141,14 +153,14 @@ class ParagonyIFakturySklepy implements ShouldQueue
         }
     }
 
-    private function updateReturns($subiekt, int $warehouseId, int $categoryId, int $paymentId)
+    private function updateReturns($subiekt, int $warehouseId, int $categoryId, int $paymentId, Carbon $date)
     {
         $documents = DB::connection("subiekt")
             ->table("dok__Dokument")
             ->leftJoin("pw_Dane", "dok__Dokument.dok_Id", "=", "pw_Dane.pwd_IdObiektu")
             ->where("dok_MagId", $warehouseId)
             ->where("dok_Typ", 14)
-            ->where("dok_DataWyst", ">=", Carbon::today())
+            ->where("dok_DataWyst", ">=", $date)
             ->whereNull("pwd_Data01")
             ->orderBy("dok_Id")
             ->get([
