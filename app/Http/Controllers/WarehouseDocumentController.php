@@ -159,14 +159,12 @@ class WarehouseDocumentController extends Controller
             "warehouseDocumentProducts.product.color",
 //            "warehouseDocumentProducts.product.model.prices",
             "productModels",
-            "productModelColors"
         ]);
         $warehouseDocument->warehouseDocumentProducts->map(function ($item) use ($warehouseDocument) {
             $item->product->availableWithoutThisDocument = $item->product->getAvailableQuantityWithoutWarehouseDocument($warehouseDocument->id);
             return $item;
         });
         $productModels = $warehouseDocument->productModels->unique()->sortBy("symbol")->values();
-        $productModelColors = $warehouseDocument->productModelColors->unique()->sortBy("shortcut")->values();
 
         $warehouseItems = collect();
 

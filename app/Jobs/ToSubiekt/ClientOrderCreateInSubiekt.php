@@ -3,6 +3,7 @@
 namespace App\Jobs\ToSubiekt;
 
 use App\Helpers\Helper;
+use App\Helpers\Warehouse\Warehouse;
 use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
@@ -46,7 +47,6 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
         foreach ($orders as $order) {
 //            $orderProducts = $order->orderProducts;
             $warehouseDocument = $order->warehouseDocument;
-            $orderProducts = $order->warehouseDocument->warehouseDocumentProducts;
             $client = $order->client;
             $delivery = $order->delivery;
             $payment = $order->payment;
@@ -69,49 +69,69 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 }
             }
 
-            $orderProducts->load(['product', 'productModel', 'productModelColor', 'product.size']);
-            $orderModels = $orderProducts->pluck("productModel")->unique("id")->values();
+
+//            $orderProducts = $order->warehouseDocument->warehouseDocumentProducts;
+            $order->warehouseDocument->load([
+                'warehouseDocumentProducts',
+                'warehouseDocumentProducts.product',
+                'warehouseDocumentProducts.product.color',
+                'warehouseDocumentProducts.product.size',
+                'productModels'
+            ]);
+
+            $productModels = $order->warehouseDocument->productModels->unique()->sortBy("symbol")->values();
+
+            $warehouseItems = collect();
+
+            foreach ($productModels as $productModel) {
+                $filteredProducts = $warehouseDocument->warehouseDocumentProducts->filter(function ($item) use ($productModel) {
+                    return $item->product->model->id === $productModel->id;
+                });
+                $sortedProducts = Warehouse::sortItemsBySizeAndColor($filteredProducts)->values();
+                $warehouseItems->push(...$sortedProducts);
+            }
 
 
-            foreach ($orderModels as $orderModel) {
-                $orderColors = $orderProducts->where("productModel.id", $orderModel->id)->pluck("productModelColor")->unique("id")->values();
-                $orderColors = $orderColors->sort(fn($a, $b) => Helper::sortByProductShortcut($a, $b))->values();
+//            foreach ($orderModels as $orderModel) {
+//                $orderColors = $orderProducts->where("productModel.id", $orderModel->id)->pluck("productModelColor")->unique("id")->values();
+//                $orderColors = $orderColors->sort(fn($a, $b) => Helper::sortByProductShortcut($a, $b))->values();
+//
+//                foreach ($orderColors as $orderColor) {
+//                    $orderColorProducts = $orderProducts->where("productModel.id", $orderModel->id)->where("productModelColor.id", $orderColor->id);
+//                    $orderColorProducts = $orderColorProducts->sort(fn($a, $b) => Helper::sortByProductSize($a, $b))->values();
+//
 
-                foreach ($orderColors as $orderColor) {
-                    $orderColorProducts = $orderProducts->where("productModel.id", $orderModel->id)->where("productModelColor.id", $orderColor->id);
-                    $orderColorProducts = $orderColorProducts->sort(fn($a, $b) => Helper::sortByProductSize($a, $b))->values();
-
-
-                    foreach ($orderColorProducts as $orderProduct) {
+//                    foreach ($orderColorProducts as $orderProduct) {
+            foreach ($warehouseItems as $warehouseItem) {
 //                $wholesale_net_price_after_payment_discount = round($orderProduct->price_net - $orderProduct->price_net * ($order->discount / 100), 0);
-                        $wholesale_net_price_after_payment_discount = round($orderProduct->price_net * (100 - $order->discount) / 100);
+                $wholesale_net_price_after_payment_discount = round($warehouseItem->price_net * (100 - $order->discount) / 100);
 
-                        $pozycja = $zamowienie->Pozycje->Dodaj((int)$orderProduct->product->subiekt_id);
-                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->original_price_net / 100;
+                $pozycja = $zamowienie->Pozycje->Dodaj((int)$warehouseItem->product->subiekt_id);
+                $pozycja->CenaNettoPrzedRabatem = (float)$warehouseItem->original_price_net / 100;
 //                        $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->price_net / 100;
-                        $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
-                        $pozycja->IloscJm = (int)$orderProduct->quantity;
+                $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
+                $pozycja->IloscJm = (int)$warehouseItem->quantity;
 //                        $pozycja->RabatProcent = (float)0;
 
-                        $pozycja->Opis = (int)$orderProduct->quantity;
+                $pozycja->Opis = (int)$warehouseItem->quantity;
 
-                        $percent = (float)$pozycja->RabatProcent;
-                        if ($percent > 0 && round($percent) !== round($percent, 2)) {
-                            $roundedPercent = round($percent, 0);
-                            $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->productModel->prices->wholesale_net_price / 100;
-                            $pozycja->RabatProcent = $roundedPercent;
+                $percent = (float)$pozycja->RabatProcent;
+                if ($percent > 0 && round($percent) !== round($percent, 2)) {
+                    $roundedPercent = round($percent, 0);
+                    $pozycja->CenaNettoPrzedRabatem = (float)$warehouseItem->productModel->prices->wholesale_net_price / 100;
+                    $pozycja->RabatProcent = $roundedPercent;
 
-                            if ((float)$pozycja->CenaNettoPoRabacie !== $wholesale_net_price_after_payment_discount / 100) {
-                                $pozycja->CenaNettoPrzedRabatem = (float)$orderProduct->original_price_net / 100;
-                                $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
-                            }
-
-                        }
-
-
+                    if ((float)$pozycja->CenaNettoPoRabacie !== $wholesale_net_price_after_payment_discount / 100) {
+                        $pozycja->CenaNettoPrzedRabatem = (float)$warehouseItem->original_price_net / 100;
+                        $pozycja->CenaNettoPoRabacie = (float)$wholesale_net_price_after_payment_discount / 100;
                     }
+
                 }
+
+
             }
+//                }
+//            }
 
 
             if ($order->discounted_total_net < $delivery->free_from) {
