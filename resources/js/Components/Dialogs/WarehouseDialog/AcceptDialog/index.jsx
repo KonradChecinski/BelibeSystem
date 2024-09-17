@@ -10,7 +10,7 @@ import {router} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
 
-export default function AcceptDialog({open, setOpen, warehouseDocument, props}) {
+export default function AcceptDialog({open, setOpen, warehouseDocument, processing, props}) {
 
     const acceptDocument = (createInvoice) => {
         router.post(
@@ -22,10 +22,12 @@ export default function AcceptDialog({open, setOpen, warehouseDocument, props}) 
                 preserveScroll: true,
                 onSuccess: () => {
                     enqueueSnackbar("Dokument został zatwierdzony", {variant: "success"});
+                    setOpen();
                 },
                 onError: (error) => {
                     enqueueSnackbar("Błąd zatwierdzania dokumentu", {variant: "error"});
                     console.log(error)
+                    setOpen();
                 }
             }
         )

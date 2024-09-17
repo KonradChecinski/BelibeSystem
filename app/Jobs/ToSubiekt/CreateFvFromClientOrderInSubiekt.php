@@ -7,6 +7,7 @@ use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
+use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -21,20 +22,22 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    public $tries = 2;
     public $backoff = 20;
 
     public int $subiektOrderId;
     public ClientOrder $clientOrder;
+    public WarehouseDocument $warehouseDocument;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(int $subiektOrderId, ClientOrder $clientOrder)
+    public function __construct(int $subiektOrderId, WarehouseDocument $warehouseDocument, ClientOrder $clientOrder)
     {
         $this->onQueue('sfera');
         $this->subiektOrderId = $subiektOrderId;
         $this->clientOrder = $clientOrder;
+        $this->warehouseDocument = $warehouseDocument;
     }
 
     /**
@@ -61,7 +64,9 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
         $faktura->NaPodstawie($this->subiektOrderId);
         $faktura->StatusDokumentu = 3;
 
-
+        $faktura->Wystawil = $this->warehouseDocument->user->name;
+//        $faktura->PersonelId = 23;
+        
         if (!is_null($client->accountManager->subiekt_category_name)) {
             $categoryName = $client->accountManager->subiekt_category_name;
             $categorySubiekt = DB::connection("subiekt")->table("sl_Kategoria")->where("kat_Nazwa", $categoryName)->first();

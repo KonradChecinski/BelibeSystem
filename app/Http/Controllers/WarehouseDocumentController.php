@@ -62,10 +62,14 @@ class WarehouseDocumentController extends Controller
      */
     public function store(StoreWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
+//        dd($request->validated(), $warehouseDocument, $warehouseDocument->user);
         $warehouseDocument->update([
             "status" => 100,
             "create_invoice" => $request->create_invoice,
         ]);
+        $warehouseDocument->user()->associate(auth()->user());
+        $warehouseDocument->save();
+//        dd($request->validated(), $warehouseDocument, $warehouseDocument->user);
 
         $warehouseDocument->clientOrder()->update([
             "status" => 60,

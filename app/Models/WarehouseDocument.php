@@ -7,6 +7,7 @@ use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WarehouseDocument extends Model
@@ -27,6 +28,7 @@ class WarehouseDocument extends Model
         "client_comment",
         "user_comment",
         "create_invoice",
+        "client_id",
     ];
 
     // status
@@ -44,7 +46,7 @@ class WarehouseDocument extends Model
         return $this->hasMany(WarehouseDocumentProduct::class);
     }
 
-    public function clientOrder()
+    public function clientOrder(): BelongsTo
     {
         return $this->belongsTo(ClientOrder::class);
     }
@@ -93,5 +95,11 @@ class WarehouseDocument extends Model
                 'product_model_color_id', // Local key on the "products" table.
                 'product_model_id'  // Local key on the "product_model_colors" table.
             ]);
+    }
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

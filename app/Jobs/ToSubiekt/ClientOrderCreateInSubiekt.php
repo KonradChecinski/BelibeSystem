@@ -52,6 +52,8 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $payment = $order->payment;
             $location = $order->location;
 
+            $total_net = $warehouseDocument->discounted_total_net;
+
 //            dd($order, $client, $orderProducts, $payment, $location, $delivery, $warehouseDocument);
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
@@ -134,7 +136,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
 //            }
 
 
-            if ($order->discounted_total_net < $delivery->free_from) {
+            if ($warehouseDocument->discounted_total_net < $delivery->free_from) {
 //                $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
 //                $pozycja->UslJednNazwa = substr($delivery->name, 0, 50);
 ////                $pozycja->Opis = mb_convert_encoding("Usługa jednorazowa", 'iso-8859-2', 'utf-8');
@@ -145,7 +147,9 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 $pozycja = $zamowienie->Pozycje->Dodaj((int)$delivery->subiekt_id);
                 $pozycja->Opis = substr($delivery->description, 0, 50);
                 $pozycja->IloscJm = (float)1;
-                $pozycja->CenaNettoPrzedRabatem = (float)$delivery->price_net / 100;
+                $pozycja->CenaNettoPrzedRabatem = (float)$order->delivery_net / 100;
+
+                $total_net += $order->delivery_net;
             }
 
 
@@ -175,7 +179,9 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $uwagi .= "Uwagi: " . Str::ascii($order->comment);
             $zamowienie->Uwagi = mb_substr($uwagi, 0, 255);
 
-            if ((((float)$zamowienie->WartoscNetto) * 100) != $order["total_net"]) $this->fail("Niezgodne kwoty zamówienia" . " " . (((float)$zamowienie->WartoscNetto) * 100) . " " . $order["total_net"]);
+
+//            if ((((float)$zamowienie->WartoscNetto) * 100) != $order["total_net"]) $this->fail("Niezgodne kwoty zamówienia" . " " . (((float)$zamowienie->WartoscNetto) * 100) . " " . $order["total_net"]);
+            if ((string)(((float)$zamowienie->WartoscNetto) * 100) !== (string)$total_net) $this->fail("Niezgodne kwoty zamówienia" . " " . (((float)$zamowienie->WartoscNetto) * 100) . " " . $total_net);
 
 //            $zamowienie->Wyswietl();
             $zamowienie->Zapisz();
@@ -193,7 +199,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             ]);
 
             if ($warehouseDocument->create_invoice) {
-                CreateFvFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $order);
+                CreateFvFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $warehouseDocument, $order);
             }
 
             //dok_Status =
