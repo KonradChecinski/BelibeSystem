@@ -22,8 +22,9 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 2;
-    public $backoff = 20;
+    public $tries = 5;
+//    public $backoff = 20;
+    public $backoff = 2;
 
     public int $subiektOrderId;
     public ClientOrder $clientOrder;
@@ -63,10 +64,10 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
         $faktura = $subiekt->SuDokumentyManager->DodajFS();
         $faktura->NaPodstawie($this->subiektOrderId);
         $faktura->StatusDokumentu = 3;
-
-        $faktura->Wystawil = $this->warehouseDocument->user->name;
+//        dd($this->warehouseDocument->user->name);
+        $faktura->Wystawil = iconv("UTF-8", "Windows-1250//IGNORE", $this->warehouseDocument->user->firstname . " " . $this->warehouseDocument->user->lastname);
 //        $faktura->PersonelId = 23;
-        
+
         if (!is_null($client->accountManager->subiekt_category_name)) {
             $categoryName = $client->accountManager->subiekt_category_name;
             $categorySubiekt = DB::connection("subiekt")->table("sl_Kategoria")->where("kat_Nazwa", $categoryName)->first();
@@ -77,5 +78,13 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
 
 //        $faktura->Wyswietl();
         $faktura->Zapisz();
+
+        if (!is_null($this->warehouseDocument->user->subiekt_id)) {
+            DB::connection("subiekt")->table("dok__Dokument")->where("dok_Id", $faktura->Identyfikator)->update([
+                "dok_PersonelId" => $this->warehouseDocument->user->subiekt_id,
+            ]);
+        }
+
+
     }
 }
