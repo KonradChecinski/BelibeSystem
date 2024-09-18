@@ -8,6 +8,7 @@ import Navbar from "@/Components/Layout/NavBar";
 import AppBar from "@/Components/Layout/AppBar";
 import B2BNavBar from "@/Components/Layout/B2BNavBar";
 import B2BMenu from "@/Components/Layout/B2BMenu";
+import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
 
 export default function ClientLayout({
                                          auth,
@@ -92,6 +93,7 @@ export default function ClientLayout({
 
                         <B2BNavBar clientId={clientId} cart={cart} auth={auth}
                                    accountManager={accountManager}/>
+                        <B2BDynamicMenu auth={auth} menu={[]}/>
                     </Box>
                 </>
             ) : (
@@ -107,23 +109,24 @@ export default function ClientLayout({
             <Box
                 sx={{
                     // width: "100%",
-                    height: "calc(100% - 82px)",
+                    // height: "calc(100% - 82px)",
+                    height: "100vh",
                     [theme.breakpoints.down("sm")]: {
                         m: 1
                     },
                     [theme.breakpoints.up("sm")]: {
                         marginLeft: "100px",
-                        paddingTop: "90px"
+                        paddingTop: "140px"
                     },
                     [theme.breakpoints.up("md")]: {
                         marginLeft: "max(17%,220px)",
                         marginRight: "10px",
-                        paddingTop: "90px",
+                        paddingTop: "140px",
                         marginBottom: "10px"
                     }
                 }}
             >
-                <Typography variant="h4" sx={{my: 2, mx: 1, pt: 1}}>{header}</Typography>
+                <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
 
                 {children}
             </Box>

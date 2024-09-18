@@ -74,7 +74,8 @@ export default function UserLayout({auth, header, children}) {
                 <Box
                     sx={{
                         // width: "100%",
-                        height: "calc(100% - 82px)",
+                        // height: "calc(100% - 82px)",
+                        height: "100vh",
                         [theme.breakpoints.down("sm")]: {
                             m: 1
                         },
@@ -90,7 +91,7 @@ export default function UserLayout({auth, header, children}) {
                         }
                     }}
                 >
-                    <Typography variant="h4" sx={{my: 2, mx: 1, pt: 1}}>{header}</Typography>
+                    <Typography variant="h4" sx={{my: 2, mx: 1}}>{header}</Typography>
 
                     {children}
                 </Box>
