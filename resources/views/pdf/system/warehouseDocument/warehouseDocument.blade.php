@@ -97,6 +97,8 @@
         <tr>
             <td class="w-full text-sm p-2 text-center">
                 {{ $warehouseDocument->clientOrder->client->name }}
+                <br>
+                NIP: {{ $warehouseDocument->clientOrder->client->nip }}
             </td>
         </tr>
         </tbody>
@@ -175,8 +177,8 @@
                 <tr>
                     <td class="p-2 border border-slate-700 text-center">{{ $i++ }}</td>
                     <td class="p-2 border border-slate-700">{{ $sortedProduct->symbol }}</td>
-                    <td class="p-2 border border-slate-700 text-center font-bold text-lg">{{ $sortedProduct->size->name }}</td>
-                    <td class="p-2 border border-slate-700 text-center font-bold text-lg">{{ $sortedProduct->color->shortcut }}</td>
+                    <td class="p-2 border border-slate-700 text-center  text-lg">{{ $sortedProduct->size->name }}</td>
+                    <td class="p-2 border border-slate-700 text-center  text-lg">{{ $sortedProduct->color->shortcut }}</td>
                     <td class="p-2 border border-slate-700">{{ $sortedProduct->color->name }}</td>
                     <td class="p-2 border border-slate-700 text-sm">
                         @foreach( $sortedProduct->barcodes->sortByDesc("main") as $barcode)
@@ -215,20 +217,62 @@
 <div class="clear-both"></div>
 
 @if($warehouseDocument->client_comment)
-    <div class="float-left mx-3 text-md">
-        <h2 class="font-bold">Uwagi klienta: </h2>
-        <p>{{ $warehouseDocument->client_comment }}</p>
+    {{--    <div class="float-left mx-3 text-md">--}}
+    {{--        <h2 class="font-bold">: </h2>--}}
+    {{--        <p> class="text-lg"</p>--}}
+    {{--    </div>--}}
+
+    <div class="float-left max-w-full w-half">
+        <table class="w-full border-y-2 border-gray-600">
+            <thead class="bg-gray-300">
+            <tr>
+                <th class="w-full p-2 text-lg">
+                    Uwagi klienta
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="w-full text-lg p-2 text-center">
+                    {!! nl2br($warehouseDocument->client_comment) !!}
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <div class="clear-both"></div>
 @endif
+
 
 <div class="clear-both"></div>
 <div class="my-2 w-full"></div>
 
 @if($warehouseDocument->user_comment)
-    <div class="float-left mx-3 text-md">
-        <h2 class="font-bold">Uwagi systemowe: </h2>
-        <p>{{ $warehouseDocument->user_comment }}</p>
+    {{--    <div class="float-left mx-3 text-md">--}}
+    {{--        <h2 class="font-bold">Uwagi systemowe: </h2>--}}
+    {{--        <p class="text-lg">{{ $warehouseDocument->user_comment }}</p>--}}
+    {{--    </div>--}}
+
+
+    <div class="float-left  max-w-full w-half">
+        <table class="w-full border-y-2 border-gray-600">
+            <thead class="bg-gray-300">
+            <tr>
+                <th class="w-full p-2 text-lg">
+                    Uwagi systemowe
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="w-full text-lg p-2 text-center">
+                    {!! nl2br($warehouseDocument->user_comment) !!}
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <div class="clear-both"></div>
 @endif
 <div class="clear-both"></div>
 <div class="my-4 w-full"></div>
@@ -292,7 +336,9 @@
                 <td class="w-full text-sm p-2 text-center">
                     {{ $delivery->name }}<br>
                     {{ $delivery->description }}<br>
-                    Koszt: {{ $clientOrder->delivery_net }} zł ({{ $clientOrder->delivery_gross }} brutto zł)<br><br>
+                    Koszt: {{ number_format($clientOrder->delivery_net/100, 2, ',', '') }} zł
+                    ({{ number_format($clientOrder->delivery_gross/100, 2, ',', '') }} brutto
+                    zł)<br><br>
                 </td>
             </tr>
             </tbody>
