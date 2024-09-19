@@ -182,7 +182,7 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
             {
                 accessorKey: 'client.name',
                 header: 'Klient',
-                size: 450,
+                size: 250,
 
                 enableResizing: true,
                 enableColumnActions: false,
