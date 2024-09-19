@@ -116,12 +116,12 @@ export default function ClientLayout({
                     },
                     [theme.breakpoints.up("sm")]: {
                         marginLeft: "100px",
-                        paddingTop: "140px"
+                        paddingTop: Boolean(blacklist) ? "180px" : "140px",
                     },
                     [theme.breakpoints.up("md")]: {
                         marginLeft: "max(17%,220px)",
                         marginRight: "10px",
-                        paddingTop: "140px",
+                        paddingTop: Boolean(blacklist) ? "180px" : "140px",
                         marginBottom: "10px"
                     }
                 }}

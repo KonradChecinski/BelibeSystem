@@ -20,7 +20,7 @@ export default function B2BDynamicMenu({auth, menu}) {
                     justifyContent="flex-start"
                     alignItems="center"
                 >
-                    <Grid item xs={3} md={1} sx={{margin: 0}}>
+                    <Grid item xs={3} md={2} sx={{margin: 0}}>
                         <Link href={route('b2b.main')}>
                             <Box
                                 sx={{
@@ -45,7 +45,7 @@ export default function B2BDynamicMenu({auth, menu}) {
 
                     <Divider orientation="vertical" flexItem variant="middle" sx={{mr: "-1px", mt: 2}}/>
 
-                    <Grid item xs={3} md={1} sx={{margin: 0}}>
+                    <Grid item xs={3} md={2} sx={{margin: 0}}>
                         <Link href={route('b2b.main')}>
                             <Box
                                 sx={{
