@@ -71,15 +71,16 @@ class CreateTwFromSubiekt implements ShouldQueue
             $dane = DaneDodatkowe::where("pwd_TypObiektu", -14)->where("pwd_IdObiektu", $createdTw->id)->first();
             if (is_null($dane)) continue;
 
-            $colorTw = $dane->pwd_Tekst02;
-            if (is_null($colorTw)) continue;
-
-            $colorB2cTw = $dane->pwd_Tekst05;
-            if (is_null($colorB2cTw)) continue;
-            $colorB2cTwDict = B2cColor::query()->where("name", $colorB2cTw)->first();
 
             $colorNazwaTw = $dane->pwd_Tekst01;
             if (is_null($colorNazwaTw)) continue;
+
+            $colorTw = $dane->pwd_Tekst02;
+            if (is_null($colorTw)) continue;
+
+//            $colorB2cTw = $dane->pwd_Tekst05;
+//            if (is_null($colorB2cTw)) continue;
+//            $colorB2cTwDict = B2cColor::query()->where("name", $colorB2cTw)->first();
 
             $sizeTw = $dane->pwd_Tekst04;
             if (is_null($sizeTw)) continue;
@@ -93,7 +94,7 @@ class CreateTwFromSubiekt implements ShouldQueue
 //                    'b2c_name' => $colorB2cTw,
                     'b2c_shortcut' => $colorTw
                 ]);
-                if (!is_null($colorB2cTwDict)) $color->b2cColor()->associate($colorB2cTwDict);
+//                if (!is_null($colorB2cTwDict)) $color->b2cColor()->associate($colorB2cTwDict);
 
                 $model->colors()->save($color);
             }

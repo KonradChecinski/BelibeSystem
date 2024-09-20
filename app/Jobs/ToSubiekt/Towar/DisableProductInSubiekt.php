@@ -43,14 +43,15 @@ class DisableProductInSubiekt implements ShouldQueue
         $zablokowany = (bool)Towar::find($this->subiekt_id)->tw_Zablokowany;
         $subiektTowar = $subiekt->Towary->Wczytaj($this->subiekt_id);
 
-        if ($zablokowany) {
-            $subiektTowar->Aktywny = true;
+        if (!$zablokowany) {
+//            $subiektTowar->Aktywny = true;
+//            $subiektTowar->zapisz();
+
+            $subiektTowar->Aktywny = false;
             $subiektTowar->zapisz();
         }
 
 
-        $subiektTowar->Aktywny = false;
-        $subiektTowar->zapisz();
         DB::connection("subiekt")->table("Belibe_System_Tw_Updated")->where("id", $this->subiekt_id)->delete();
 
 

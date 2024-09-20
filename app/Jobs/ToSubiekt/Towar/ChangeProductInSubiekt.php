@@ -52,9 +52,9 @@ class ChangeProductInSubiekt implements ShouldQueue
         $subiektTowar->Symbol = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->symbol, 0, 50));
         $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->name, 0, 50));
         $subiektTowar->DoSklepuInternetowego = (bool)$this->product->show_in_b2c;
-        $subiektTowar->PoleWlasne["Kolor"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->shortcut, 0, 50));
-        $subiektTowar->PoleWlasne["KolorCRM"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
-        if (!is_null($this->product->color->b2cColor)) $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->b2cColor->name, 0, 50));
+        $subiektTowar->PoleWlasne["KolorSymbol"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->shortcut, 0, 50));
+        $subiektTowar->PoleWlasne["KolorNazwa"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
+//        if (!is_null($this->product->color->b2cColor)) $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->b2cColor->name, 0, 50));
         $subiektTowar->PoleWlasne["Rozmiar"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->size->name, 0, 50));
 
 
