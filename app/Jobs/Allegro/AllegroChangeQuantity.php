@@ -41,7 +41,7 @@ class AllegroChangeQuantity implements ShouldQueue
             $offer = json_decode(json_encode($offer));
             $offer = $offer[0];
 
-            $available = $this->product->available;
+            $available = $this->product->available_b2c;
 
             if ($available > 0) {
                 Allegro::changeQuantityInOffer($offer->id, $this->product);
