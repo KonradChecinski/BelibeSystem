@@ -59,6 +59,7 @@ class Product extends Model
     public function getAvailableB2cAttribute()
     {
         $sum = $this->getAvailableQuantity();
+        --$sum;
 
         if ($sum < 0) {
             return 0;
