@@ -47,6 +47,24 @@ class CreateTowarInSubiekt implements ShouldQueue
 
             $subiektTowar->Symbol = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->symbol, 0, 30));
             $subiektTowar->Nazwa = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->name, 0, 50));
+
+            $subiektTowar->DoSklepuInternetowego = (bool)$this->product->show_in_b2c;
+            $subiektTowar->PoleWlasne["KolorSymbol"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->shortcut, 0, 50));
+            $subiektTowar->PoleWlasne["KolorNazwa"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->name, 0, 50));
+//        if (!is_null($this->product->color->b2cColor)) $subiektTowar->PoleWlasne["KolorSKLEP"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->color->b2cColor->name, 0, 50));
+            $subiektTowar->PoleWlasne["Rozmiar"] = iconv("UTF-8", "Windows-1250//IGNORE", mb_substr($this->product->size->name, 0, 50));
+
+
+            foreach ($this->product->barcodes as $id => $barcode) {
+                if ($id === 0) {
+                    $subiektTowar->KodyKreskowe->Podstawowy = $barcode->barcode;
+                    continue;
+                }
+
+                $subiektTowar->KodyKreskowe->Dodaj($barcode->barcode);
+            }
+
+
             $subiektTowar->zapisz();
 
             $this->product->update([
@@ -73,7 +91,6 @@ class CreateTowarInSubiekt implements ShouldQueue
 
         DB::connection("subiekt")->table("Belibe_System_Tw_Created")->where("id", $productSubiekt->tw_Id)->delete();
 
-        ChangeProductInSubiekt::dispatch($this->product->id)->delay(now()->addSeconds(5));
         ChangePriceInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));
         ChangeB2CInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));
         ChangeBasicInModelInSubiekt::dispatch($this->product->model)->delay(now()->addSeconds(10));
