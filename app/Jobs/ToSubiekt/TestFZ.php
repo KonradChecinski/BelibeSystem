@@ -22,7 +22,7 @@ class TestFZ implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    public $tries = 1;
     public $backoff = 20;
     public $timeout = 600;
 

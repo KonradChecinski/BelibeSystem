@@ -384,6 +384,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         phpinfo();
     })->name("system.phpinfo");
     Route::get("test", [TestController::class, 'index'])->name("system.test");
+    Route::get("test/fz", [TestController::class, 'invoiceStart'])->name("system.test.fz");
     Route::get("barcode", [TestController::class, 'store'])->name("system.test.barcodes");
 
 

@@ -5,13 +5,21 @@ namespace App\Http\Controllers\System;
 use App\Helpers\Allegro\Allegro;
 use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
+use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
+use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Jobs\ToSubiekt\ZestawienieSprzedazySklepy;
 use App\Jobs\Warehouse\CreateWarehouseDocument;
+use App\Mail\WarehouseDocumentCreated;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Subiekt\Towar;
+use App\Models\WarehouseDocument;
+use App\Singleton\Subiekt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Spatie\SimpleExcel\SimpleExcelReader;
 
 class TestController extends Controller
 {
@@ -23,12 +31,16 @@ class TestController extends Controller
 //        Allegro::getOrders();
 //        Allegro::listOrders();
 //        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
-        $clientOrder = ClientOrder::query()->latest()->first();
-        CreateWarehouseDocument::dispatchSync($clientOrder);
+//        $clientOrder = ClientOrder::query()->latest()->first();
+//        CreateWarehouseDocument::dispatchSync($clientOrder);
 //        $product = Product::find(120);
 //        dd($product, $product->available, $product->available_b2c);
+//        $warehouseDocument = WarehouseDocument::find(8);
+//        ClientOrderCreateInSubiekt::dispatch($warehouseDocument->clientOrder);
 
-//        ZestawienieSprzedazySklepy::dispatchSync();
+
+        $product = Product::find(95);
+        dd($product, $product->available, $product->available_b2c);
     }
 
     /**
@@ -189,5 +201,43 @@ class TestController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function invoiceStart()
+    {
+        TestFZ::dispatch();
+    }
+
+    public static function invoice()
+    {
+        $subiekt = app(Subiekt::class)->getInstance();
+        $subiekt = $subiekt->connect();
+
+        $path = storage_path("app/test/2.csv");
+        $rows = SimpleExcelReader::create($path)
+            ->useHeaders(["lp", "symbol", "stan", "cena_magazynowa", "wartosc_netto", "wartosc_brutto"])
+            ->useDelimiter(";")
+            ->getRows();
+
+        $fz = $subiekt->SuDokumentyManager->DodajFZ();
+        $fz->KontrahentId = 128;
+        $fz->NumerOryginalny = "???";
+        $fz->LiczonyOdCenBrutto = false;
+        $fz->PoziomCenyId = 2;
+        $fz->Pozycje->PrzeliczWedlugPoziomuCen();
+
+
+        $rows->each(function ($row) use ($fz) {
+//            dd($row);
+            $towarId = Towar::query()->where("tw_Symbol", $row["symbol"])->first()->tw_Id;
+            $cena = (float)str_replace(',', '.', str_replace('.', '', $row["cena_magazynowa"]));
+
+
+            $pozycja = $fz->Pozycje->Dodaj($towarId);
+            $pozycja->CenaNettoPrzedRabatem = $cena;
+            $pozycja->IloscJm = (int)$row["stan"];
+        });
+
+        $fz->Zapisz();
     }
 }
