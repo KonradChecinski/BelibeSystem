@@ -75,23 +75,26 @@ export default function UserLayout({auth, header, children}) {
                     sx={{
                         // width: "100%",
                         // height: "calc(100% - 82px)",
-                        height: "100vh",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        pb: 1,
                         [theme.breakpoints.down("sm")]: {
                             m: 1
                         },
                         [theme.breakpoints.up("sm")]: {
-                            marginLeft: "100px",
-                            paddingTop: "90px"
+                            ml: "100px",
+                            pt: "90px"
                         },
                         [theme.breakpoints.up("md")]: {
-                            marginLeft: "max(17%,220px)",
-                            marginRight: "10px",
-                            paddingTop: "90px",
-                            marginBottom: "10px"
+                            ml: "max(17%,220px)",
+                            mr: "10px",
+                            pt: "90px",
+                            mb: "10px"
                         }
                     }}
                 >
-                    <Typography variant="h4" sx={{my: 2, mx: 1}}>{header}</Typography>
+                    <Typography variant="h4" sx={{my: 1, mx: 1}}>{header}</Typography>
 
                     {children}
                 </Box>
