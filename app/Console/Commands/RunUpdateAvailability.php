@@ -47,9 +47,9 @@ class RunUpdateAvailability extends Command
             $this->info("");
 
             if ($i % 10 === 0) {
-                $this->info("Waiting 5 seconds...");
+                $this->info("Waiting 10 seconds...");
                 $this->info("");
-                sleep(5);
+                sleep(10);
             }
         }
 
