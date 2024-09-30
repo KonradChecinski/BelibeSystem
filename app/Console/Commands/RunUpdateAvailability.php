@@ -46,6 +46,14 @@ class RunUpdateAvailability extends Command
                 } catch
                 (\Exception $e) {
                     $this->error($e->getMessage());
+                    $this->info("Waiting 1 seconds...");
+                    sleep(1);
+                    try {
+                        ShoperChangeQuantity::dispatchSync($product);
+                    } catch (\Exception $e) {
+                        $this->error($e->getMessage());
+                    }
+
                 }
 
             }
@@ -56,6 +64,14 @@ class RunUpdateAvailability extends Command
                 } catch
                 (\Exception $e) {
                     $this->error($e->getMessage());
+                    $this->info("Waiting 1 seconds...");
+                    sleep(1);
+                    try {
+                        AllegroChangeQuantity::dispatchSync($product);
+                    } catch (\Exception $e) {
+                        $this->error($e->getMessage());
+                    }
+
                 }
 
             }
