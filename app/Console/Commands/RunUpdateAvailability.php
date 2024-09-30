@@ -32,10 +32,12 @@ class RunUpdateAvailability extends Command
         $allegro = $this->ask('Update Allegro availability?', true);
 
         $products = Product::query()->where("show_in_b2c", 1)->get();
+
+        $this->info('Find ' . $products->count() . ' products');
         $i = 0;
         foreach ($products as $product) {
             $i++;
-            $this->info('Updating availability for product: ' . $product->symbol);
+            $this->info($i . '. Updating availability for product: ' . $product->symbol);
             if ($shoper) {
                 $this->info('Updating Shoper availability...');
                 ShoperChangeQuantity::dispatch($product);
@@ -46,7 +48,7 @@ class RunUpdateAvailability extends Command
             }
             $this->info("");
 
-            if ($i % 10 === 0) {
+            if ($i % 5 === 0) {
                 $this->info("Waiting 10 seconds...");
                 $this->info("");
                 sleep(10);
