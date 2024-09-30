@@ -51,7 +51,7 @@ class RunUpdateAvailability extends Command
             if ($allegro) {
                 $this->info('Updating Allegro availability...');
                 try {
-                    AllegroChangeQuantity::dispatch($product);
+                    AllegroChangeQuantity::dispatchSync($product);
                 } catch
                 (\Exception $e) {
                     $this->error($e->getMessage());
