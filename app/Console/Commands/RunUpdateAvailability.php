@@ -34,10 +34,11 @@ class RunUpdateAvailability extends Command
         $products = Product::query()->where("show_in_b2c", 1)->get();
 
         $this->info('Find ' . $products->count() . ' products');
+        $count = $products->count();
         $i = 0;
         foreach ($products as $product) {
             $i++;
-            $this->info($i . '. Updating availability for product: ' . $product->symbol);
+            $this->info($i . '.(/' . $count . ') Updating availability for product: ' . $product->symbol);
             if ($shoper) {
                 $this->info('Updating Shoper availability...');
                 try {
@@ -59,12 +60,12 @@ class RunUpdateAvailability extends Command
 
             }
             $this->info("");
-
-            if ($i % 5 === 0) {
-                $this->info("Waiting 5 seconds...");
-                $this->info("");
-                sleep(5);
-            }
+//
+//            if ($i % 5 === 0) {
+//                $this->info("Waiting 5 seconds...");
+//                $this->info("");
+//                sleep(5);
+//            }
         }
 
     }
