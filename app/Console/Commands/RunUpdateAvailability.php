@@ -40,18 +40,30 @@ class RunUpdateAvailability extends Command
             $this->info($i . '. Updating availability for product: ' . $product->symbol);
             if ($shoper) {
                 $this->info('Updating Shoper availability...');
-                ShoperChangeQuantity::dispatch($product);
+                try {
+                    ShoperChangeQuantity::dispatchSync($product);
+                } catch
+                (\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+
             }
             if ($allegro) {
-                $this->info('Updating Shoper availability...');
-                AllegroChangeQuantity::dispatch($product);
+                $this->info('Updating Allegro availability...');
+                try {
+                    AllegroChangeQuantity::dispatch($product);
+                } catch
+                (\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+
             }
             $this->info("");
 
             if ($i % 5 === 0) {
-                $this->info("Waiting 10 seconds...");
+                $this->info("Waiting 5 seconds...");
                 $this->info("");
-                sleep(10);
+                sleep(5);
             }
         }
 
