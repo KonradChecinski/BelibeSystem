@@ -20,7 +20,7 @@ class RunParagonyIFakturySklepyWithDate extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Uruchom zadanie ParagonyIFakturySklepy z datą';
 
     /**
      * Execute the console command.
