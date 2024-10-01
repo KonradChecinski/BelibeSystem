@@ -34,6 +34,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
         },
         symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
         name: actualState?.name ? actualState?.name : '',
+        name_b2c: actualState?.name_b2c ? actualState?.name_b2c : '',
         size: method !== "copy" ? (actualState?.size ? {
             ...actualState?.size,
             label: actualState?.size?.name
@@ -45,6 +46,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
     useEffect(() => {
         // inicjacja wartości pól
         setValue("name", data.name)
+        setValue("name_b2c", data.name_b2c)
         setValue("size", data.size)
         setValue("unit", data.unit)
         setValue("color", data.color)
@@ -57,6 +59,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
             },
             symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
             name: actualState?.name ? actualState?.name : '',
+            name_b2c: actualState?.name_b2c ? actualState?.name_b2c : '',
             size: method !== "copy" ? (actualState?.size ? {
                 ...actualState?.size,
                 label: actualState?.size?.name
@@ -87,6 +90,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 
     const handleClose = () => {
         clrErrors("name")
+        clrErrors("name_b2c")
         clrErrors("size")
         clrErrors("unit")
         clrErrors("color")
@@ -385,6 +389,23 @@ function Step1({data, setData, props, register, errors}) {
                 </Typography>
             )}
 
+            <TextField
+                id="name_b2c"
+                label="Nazwa B2C"
+                color={errors.name_b2c?.message && "error"}
+                {...register("name_b2c")}
+                onChange={(value) => {
+                    setData('name_b2c', value.target.value);
+                }}
+                value={data.name_b2c}
+                sx={{width: "30ch", my: 1}}
+            />
+            {errors.name_b2c?.message && (
+                <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1}}>
+                    {errors.name_b2c?.message.toString()}
+                </Typography>
+            )}
+
 
             <Autocomplete
                 disablePortal
@@ -613,6 +634,10 @@ function Step2({data, errors}) {
 
             <TextField id="name" label="Nazwa" variant="outlined"
                        value={data?.name}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+            <TextField id="name_b2c" label="Nazwa B2C" variant="outlined"
+                       value={data?.name_b2c}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

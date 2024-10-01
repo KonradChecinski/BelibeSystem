@@ -5,7 +5,8 @@ namespace App\Helpers\Empik;
 class Empik
 {
 
-    public static login (){
+    public static function login()
+    {
 
-}
+    }
 }

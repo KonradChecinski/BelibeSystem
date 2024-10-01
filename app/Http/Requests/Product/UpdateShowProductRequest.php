@@ -22,10 +22,11 @@ class UpdateShowProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'show_in_subiekt' => 'required_without_all:show_in_b2b,show_in_b2c,show_in_allegro|boolean',
-            'show_in_b2b' => 'required_without_all:show_in_subiekt,show_in_b2c,show_in_allegro|boolean',
-            'show_in_b2c' => 'required_without_all:show_in_subiekt,show_in_b2b,show_in_allegro|boolean',
-            'show_in_allegro' => 'required_without_all:show_in_subiekt,show_in_b2b,show_in_b2c|boolean',
+            'show_in_subiekt' => 'required_without_all:show_in_b2b,show_in_b2c,show_in_allegro,show_in_empik|boolean',
+            'show_in_b2b' => 'required_without_all:show_in_subiekt,show_in_b2c,show_in_allegro,show_in_empik|boolean',
+            'show_in_b2c' => 'required_without_all:show_in_subiekt,show_in_b2b,show_in_allegro,show_in_empik|boolean',
+            'show_in_allegro' => 'required_without_all:show_in_subiekt,show_in_b2b,show_in_b2c,show_in_empik|boolean',
+            'show_in_empik' => 'required_without_all:show_in_subiekt,show_in_b2b,show_in_b2c,show_in_allegro|boolean',
         ];
     }
 }

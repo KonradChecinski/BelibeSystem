@@ -34,6 +34,7 @@ class Product extends Model
         'subiekt_id',
         'symbol',
         'name',
+        'name_b2c',
         'quantity',
         'quantity_total',
         'product_unit_id',
@@ -41,6 +42,7 @@ class Product extends Model
         'show_in_b2b',
         'show_in_b2c',
         'show_in_allegro',
+        'show_in_empik',
         'show_in_subiekt',
     ];
 

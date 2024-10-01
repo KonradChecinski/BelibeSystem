@@ -28,6 +28,10 @@ export default function ModelB2CComponent(props) {
 
         'product_b2c_category_id': props.productModel.product_b2c_category_id,
         'b2c_category': props.productModel.b2c_category,
+
+
+        'product_clasp_id': props.productModel.product_clasp_id,
+        'clasp': props.productModel.clasp,
     })
 
     const ITEM_HEIGHT = 48;
@@ -49,6 +53,9 @@ export default function ModelB2CComponent(props) {
 
             'product_b2c_category_id': props.productModel.product_b2c_category_id,
             'b2c_category': props.productModel.b2c_category,
+
+            'product_clasp_id': props.productModel.product_clasp_id,
+            'clasp': props.productModel.clasp,
         })
     }, [props]);
     const saveB2C = () => {
@@ -141,6 +148,38 @@ export default function ModelB2CComponent(props) {
                 {/*        {fieldErrors.gs1_gpc?.message.toString()}*/}
                 {/*    </Typography>*/}
                 {/*)}*/}
+
+
+                <Autocomplete
+                    disablePortal
+                    id="b2c_clasp"
+                    options={props.clasps.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        label: e.name
+                    }))}
+                    sx={{width: "30ch"}}
+                    value={data.clasp}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={(e, value) => {
+                        setData({
+                            ...data,
+                            clasp: value,
+                            product_clasp_id: value?.id,
+                        })
+                        setEdited(true)
+                    }}
+                    renderInput={(params) =>
+                        <TextField
+                            {...params}
+                            label="Zapięcie"
+                            sx={{my: 1}}
+                            value={data.clasp}
+                            //{...register("gs1_gpc")}
+                            // color={fieldErrors.gs1_gpc?.message && "error"}
+                        />}
+                />
             </Box>
             <Box sx={{my: 1}}>
                 <Typography

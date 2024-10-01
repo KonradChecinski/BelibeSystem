@@ -26,6 +26,7 @@ class StoreProductRequest extends FormRequest
             'color.id' => 'required|numeric',
             'symbol' => 'required|string|min:5',
             'name' => 'required|string|min:5',
+            'name_b2c' => 'required|string|min:5',
             'size' => 'required',
             'size.id' => 'required|numeric',
             'unit' => 'required',

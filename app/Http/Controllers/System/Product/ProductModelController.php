@@ -14,6 +14,7 @@ use App\Models\B2cColor;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
+use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
@@ -203,7 +204,7 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -214,6 +215,7 @@ class ProductModelController extends Controller
         $b2cCategory = B2cCategory::all();
         $b2cColor = B2cColor::all();
         $productColorIcons = ProductColorIcon::all();
+        $productClasps = ProductClasp::all();
 
 
         return Inertia::render("System/Products/Model", [
@@ -240,7 +242,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -251,6 +253,7 @@ class ProductModelController extends Controller
         $b2cCategory = B2cCategory::all();
         $b2cColor = B2cColor::all();
         $productColorIcons = ProductColorIcon::all();
+        $productClasps = ProductClasp::all();
 
         return Inertia::render("System/Products/Model", [
             "editing" => true,
@@ -268,6 +271,7 @@ class ProductModelController extends Controller
                 "category" => $b2cCategory,
                 "color" => $b2cColor,
             ],
+            "clasps" => $productClasps,
             "productColorIcons" => $productColorIcons,
         ]);
     }

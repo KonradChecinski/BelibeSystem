@@ -20,7 +20,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
     useEffect(() => {
         setData(products)
     }, [products]);
-    console.log(data)
+    // console.log(data)
 
     const column = [
         {field: "id", headerName: "Id"},
@@ -35,6 +35,12 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
         {
             field: "name",
             headerName: "Nazwa", sortable: false,
+            filterable: false,
+            width: 300
+        },
+        {
+            field: "name_b2c",
+            headerName: "Nazwa B2C", sortable: false,
             filterable: false,
             width: 300
         },
@@ -234,6 +240,7 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
                     return !Boolean(props.productModel.brand) ||
                         !Boolean(props.productModel.b2c_category) ||
                         !Boolean(props.productModel.b2c_variant) ||
+                        !Boolean(props.productModel.description_b2c) ||
                         !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
                             return colorWithImages.id === color.id;
                         }).b2c_color_id) ||
@@ -287,7 +294,68 @@ export default function ModelsColorTable({products, readOnly, units, color, prop
         //
         //     }
         // }
+        {
+            field: "show_in_empik",
+            headerName: "Empik",
+            sortable: false,
+            filterable: false,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => {
+                const {data: rowData, setData: setRowData, reset} = useForm({
+                    id: params.row.id,
+                    show_in_empik: Boolean(params.row.show_in_empik)
+                })
+                const handleChange = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
 
+                    setRowData("show_in_empik", !rowData.show_in_empik);
+
+                    router.post(route("system.products.show.update", {product: rowData.id}),
+                        {...rowData, show_in_empik: !rowData.show_in_empik},
+                        {
+                            onSuccess: params => {
+                                // setEdited(false);
+                                enqueueSnackbar("Zapisano", {variant: 'success'})
+
+                            },
+                            onError: params => {
+                                console.error(params);
+                                enqueueSnackbar("Błąd przy zapisie", {variant: 'error'})
+                            },
+                            preserveScroll: true
+                        })
+                };
+                const CanEdit = () => {
+                    return !Boolean(props.productModel.brand) ||
+                        // !Boolean(props.productModel.b2c_category) ||
+                        // !Boolean(props.productModel.b2c_variant) ||
+                        !Boolean(props.productModel.description_b2c) ||
+                        !Boolean(props.productModel.colors_with_images.find((colorWithImages) => {
+                            return colorWithImages.id === color.id;
+                        }).images.filter(i => i.type === 1).length) ||
+                        !Boolean(params.row.name_b2c) ||
+                        !Boolean(params.row.size) ||
+                        !Boolean(params.row.barcodes.length)
+                }
+
+                return (
+                    <Tooltip
+                        title={CanEdit() ? "Sprawdź czy masz zaznaczone wszystkie dane potrzebne do empiku: marka w module \"Podstawowe informacje\",  opis w module \"B2C\", nazwa produktu do sklepu" : null}
+                        arrow>
+                                <span>
+                    <Checkbox
+                        disabled={CanEdit() || readOnly}
+                        checked={rowData.show_in_empik}
+                        onChange={handleChange}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
+                    />
+   </span>
+                    </Tooltip>
+                );
+
+            }
+        },
     ];
 
     const [rowCountState, setRowCountState] = useState(0);

@@ -11,6 +11,7 @@ use App\Models\ClientDiscount;
 use App\Models\GS1Brand;
 use App\Models\GS1GPC;
 use App\Models\ProductBrand;
+use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
 use App\Models\Products\Price\ProductModelPrice;
 use Illuminate\Database\Eloquent\Builder;
@@ -186,6 +187,11 @@ class ProductModel extends Model
     public function brand(): BelongsTo
     {
         return $this->belongsTo(ProductBrand::class, "product_brand_id");
+    }
+
+    public function clasp(): BelongsTo
+    {
+        return $this->belongsTo(ProductClasp::class, "product_clasp_id");
     }
 
 //    GS1

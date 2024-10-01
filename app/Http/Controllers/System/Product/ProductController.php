@@ -163,6 +163,7 @@ class ProductController extends Controller
 
         $product->symbol = $request->symbol;
         $product->name = $request->name;
+        $product->name_b2c = $request->name_b2c;
 
         $product->save();
 
