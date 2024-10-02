@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Helpers\Allegro\Allegro;
+use App\Helpers\Empik\Empik;
 use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
@@ -14,6 +15,7 @@ use App\Mail\WarehouseDocumentCreated;
 use App\Models\ClientOrder;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
@@ -28,19 +30,10 @@ class TestController extends Controller
      */
     public function index()
     {
-//        Allegro::getOrders();
-//        Allegro::listOrders();
-//        \App\Jobs\ToSubiekt\OrderCreateInSubiekt::dispatchSync();
-//        $clientOrder = ClientOrder::query()->latest()->first();
-//        CreateWarehouseDocument::dispatchSync($clientOrder);
-//        $product = Product::find(120);
-//        dd($product, $product->available, $product->available_b2c);
-//        $warehouseDocument = WarehouseDocument::find(8);
-//        ClientOrderCreateInSubiekt::dispatch($warehouseDocument->clientOrder);
+        $productModel = ProductModel::find(37);
+        Empik::createProductsCsv($productModel);
 
-
-        $product = Product::find(95);
-        dd($product, $product->available, $product->available_b2c);
+//        dd(Product::query()->where("show_in_empik", 1)->get());
     }
 
     /**

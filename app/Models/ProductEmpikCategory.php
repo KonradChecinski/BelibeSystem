@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ProductEmpikCategory extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
+        'value',
     ];
 
 
