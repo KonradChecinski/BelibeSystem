@@ -70,6 +70,7 @@ use App\Install\Install5Controller;
 use App\Install\Install6Controller;
 use App\Install\Install7Controller;
 use App\Install\Install8Controller;
+use App\Install\Install9Controller;
 use Illuminate\Support\Facades\Route;
 
 
@@ -405,6 +406,8 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("install7", [Install7Controller::class, 'install'])->name("install7");
 
     Route::get("install8", [Install8Controller::class, 'install'])->name("install8");
+
+    Route::get("install9", [Install9Controller::class, 'install'])->name("install9");
 
     Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 });

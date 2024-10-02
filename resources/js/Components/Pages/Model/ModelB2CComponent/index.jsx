@@ -32,6 +32,9 @@ export default function ModelB2CComponent(props) {
 
         'product_clasp_id': props.productModel.product_clasp_id,
         'clasp': props.productModel.clasp,
+
+        'product_empik_category_id': props.productModel.product_empik_category_id,
+        'empik_category': props.productModel.empik_category,
     })
 
     const ITEM_HEIGHT = 48;
@@ -56,6 +59,9 @@ export default function ModelB2CComponent(props) {
 
             'product_clasp_id': props.productModel.product_clasp_id,
             'clasp': props.productModel.clasp,
+
+            'product_empik_category_id': props.productModel.product_empik_category_id,
+            'empik_category': props.productModel.empik_category,
         })
     }, [props]);
     const saveB2C = () => {
@@ -149,7 +155,11 @@ export default function ModelB2CComponent(props) {
                 {/*    </Typography>*/}
                 {/*)}*/}
 
-
+                <Typography
+                    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                    <Category fontSize={"large"}/>
+                    Empik
+                </Typography>
                 <Autocomplete
                     disablePortal
                     id="b2c_clasp"
@@ -176,6 +186,37 @@ export default function ModelB2CComponent(props) {
                             label="Zapięcie"
                             sx={{my: 1}}
                             value={data.clasp}
+                            //{...register("gs1_gpc")}
+                            // color={fieldErrors.gs1_gpc?.message && "error"}
+                        />}
+                />
+
+                <Autocomplete
+                    disablePortal
+                    id="b2c_empik_category"
+                    options={props.empikCategories.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        label: e.name
+                    }))}
+                    sx={{width: "30ch"}}
+                    value={data.empik_category}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={(e, value) => {
+                        setData({
+                            ...data,
+                            empik_category: value,
+                            product_empik_category_id: value?.id,
+                        })
+                        setEdited(true)
+                    }}
+                    renderInput={(params) =>
+                        <TextField
+                            {...params}
+                            label="Kategoria Empik"
+                            sx={{my: 1}}
+                            value={data.empik_category}
                             //{...register("gs1_gpc")}
                             // color={fieldErrors.gs1_gpc?.message && "error"}
                         />}

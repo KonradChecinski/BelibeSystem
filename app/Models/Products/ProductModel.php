@@ -13,6 +13,7 @@ use App\Models\GS1GPC;
 use App\Models\ProductBrand;
 use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
+use App\Models\ProductEmpikCategory;
 use App\Models\Products\Price\ProductModelPrice;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -192,6 +193,11 @@ class ProductModel extends Model
     public function clasp(): BelongsTo
     {
         return $this->belongsTo(ProductClasp::class, "product_clasp_id");
+    }
+
+    public function empikCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductEmpikCategory::class, "product_empik_category_id");
     }
 
 //    GS1
