@@ -18,6 +18,8 @@ class ProductModelPrice extends Model
         'wholesale_gross_price',
         'retail_net_price',
         'retail_gross_price',
+        'b2c_net_price',
+        'b2c_gross_price',
         'currency'
     ];
 

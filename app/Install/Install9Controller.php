@@ -5,6 +5,7 @@ ini_set('max_execution_time', 600);
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductEmpikCategory;
+use App\Models\Products\Price\ProductModelPrice;
 
 
 class Install9Controller extends Controller
@@ -30,6 +31,13 @@ class Install9Controller extends Controller
         ProductEmpikCategory::create(["name" => "Ubrania/Kobieta/Bluzki i tuniki/Tuniki"]);
         ProductEmpikCategory::create(["name" => "Ubrania/Kobieta/Stroje kąpielowe i kostiumy"]);
         ProductEmpikCategory::create(["name" => "Ubrania/Mężczyzna/Kąpielówki"]);
+
+        $prices = ProductModelPrice::all();
+        foreach ($prices as $price) {
+            $price->b2c_net_price = $price->retail_net_price;
+            $price->b2c_gross_price = $price->retail_gross_price;
+            $price->save();
+        }
 
         return ("OK");
     }

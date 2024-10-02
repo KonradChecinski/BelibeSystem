@@ -41,6 +41,8 @@ function ModelPricesComponentShow(props) {
         'wholesale_gross_price': props.productModel.prices.wholesale_gross_price,
         'retail_net_price': props.productModel.prices.retail_net_price,
         'retail_gross_price': props.productModel.prices.retail_gross_price,
+        'b2b_net_price': props.productModel.prices.b2b_net_price,
+        'b2b_gross_price': props.productModel.prices.b2b_gross_price,
         'vat_rate': props.productModel.prices.vat_rate,
     })
 
@@ -78,6 +80,12 @@ function ModelPricesComponentShow(props) {
                             <TableCell>{currencyNumberPrice(data.retail_gross_price)}</TableCell>
                             <TableCell>{props.productModel.prices.vat_rate} %</TableCell>
                         </TableRow>
+                        <TableRow>
+                            <TableCell>B2C</TableCell>
+                            <TableCell>{currencyNumberPrice(data.b2c_net_price)}</TableCell>
+                            <TableCell>{currencyNumberPrice(data.b2c_gross_price)}</TableCell>
+                            <TableCell>{props.productModel.prices.vat_rate} %</TableCell>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -94,6 +102,8 @@ function ModelPricesComponentEdit(props) {
         'wholesale_gross_price': props.productModel.prices.wholesale_gross_price,
         'retail_net_price': props.productModel.prices.retail_net_price,
         'retail_gross_price': props.productModel.prices.retail_gross_price,
+        'b2c_net_price': props.productModel.prices.b2c_net_price,
+        'b2c_gross_price': props.productModel.prices.b2c_gross_price,
         'vat_rate': props.productModel.prices.vat_rate,
         'currency': props.productModel.prices.currency,
     })
@@ -169,6 +179,10 @@ function ModelPricesComponentEdit(props) {
                                         ...data,
                                         retail_gross_price: Number(data.retail_net_price * (1 + data.vat_rate / 100)).toFixed()
                                     }))
+                                    setData(data => ({
+                                        ...data,
+                                        b2c_gross_price: Number(data.b2c_net_price * (1 + data.vat_rate / 100)).toFixed()
+                                    }))
                                     setEdited(true);
                                 }}/>
                             </TableCell>
@@ -211,6 +225,58 @@ function ModelPricesComponentEdit(props) {
                                     setData(data => ({
                                         ...data,
                                         retail_gross_price: Number(data.retail_net_price * (1 + data.vat_rate / 100)).toFixed()
+                                    }))
+                                    setData(data => ({
+                                        ...data,
+                                        b2c_gross_price: Number(data.b2c_net_price * (1 + data.vat_rate / 100)).toFixed()
+                                    }))
+                                    setEdited(true);
+                                }}/>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell>B2C (Empik)</TableCell>
+                            <TableCell>
+                                <PriceFiled
+                                    currency={data.currency}
+                                    price={(data.b2c_net_price)}
+                                    setPrice={(price) => {
+                                        setData(data => ({...data, b2c_net_price: price}))
+                                        setData(data => ({
+                                            ...data,
+                                            b2c_gross_price: Number(price * (1 + data.vat_rate / 100)).toFixed()
+                                        }))
+                                        setEdited(true);
+                                    }}/>
+                            </TableCell>
+                            <TableCell>
+                                <PriceFiled
+                                    currency={data.currency}
+                                    price={(data.b2c_gross_price)}
+                                    setPrice={(price) => {
+                                        setData(data => ({...data, b2c_gross_price: price}))
+                                        setData(data => ({
+                                            ...data,
+                                            b2c_net_price: Number(price / (1 + data.vat_rate / 100)).toFixed()
+                                        }))
+                                        setEdited(true);
+                                    }}/>
+                            </TableCell>
+                            <TableCell>
+                                <VatFiled vat={data.vat_rate} setVat={(vat) => {
+                                    setData(data => ({...data, vat_rate: vat}))
+                                    setData(data => ({
+                                        ...data,
+                                        wholesale_gross_price: data.wholesale_net_price * (1 + data.vat_rate / 100)
+                                    }))
+                                    setData(data => ({
+                                        ...data,
+                                        retail_gross_price: Number(data.retail_net_price * (1 + data.vat_rate / 100)).toFixed()
+                                    }))
+                                    setData(data => ({
+                                        ...data,
+                                        b2c_gross_price: Number(data.b2c_net_price * (1 + data.vat_rate / 100)).toFixed()
                                     }))
                                     setEdited(true);
                                 }}/>

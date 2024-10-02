@@ -27,6 +27,8 @@ class UpdateProductModelPriceRequest extends FormRequest
             'wholesale_gross_price' => 'required|numeric',
             'retail_net_price' => 'required|numeric',
             'retail_gross_price' => 'required|numeric',
+            'b2c_net_price' => 'required|numeric',
+            'b2c_gross_price' => 'required|numeric',
         ];
     }
 }

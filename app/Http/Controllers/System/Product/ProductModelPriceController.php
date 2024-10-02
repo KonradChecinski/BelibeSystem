@@ -56,7 +56,7 @@ class ProductModelPriceController extends Controller
      */
     public function update(UpdateProductModelPriceRequest $request, ProductModelPrice $productModelPrice)
     {
-        $productModelPrice->update($request->all());
+        $productModelPrice->update($request->validated());
         ChangePriceInModelInSubiekt::dispatch($productModelPrice->model);
         ShoperChangePrice::dispatch($productModelPrice->model);
     }
