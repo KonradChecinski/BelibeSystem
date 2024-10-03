@@ -6,6 +6,7 @@ use App\Helpers\Allegro\Allegro;
 use App\Helpers\Empik\Empik;
 use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
+use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
@@ -38,8 +39,12 @@ class TestController extends Controller
 //        Empik::searchProduct($product);
 
 
-        Empik::updateOffers(collect([$product]));
+//        Empik::updateOffers(collect([$product]));
+//        Empik::getOrders();
+//        Empik::listReadyOrders();
 //        dd(Product::query()->where("show_in_empik", 1)->get());
+
+        EmpikGetReadyOrder::dispatchSync();
 
 //        $products = Product::all();
 //        foreach ($products as $product) {

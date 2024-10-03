@@ -5,6 +5,8 @@ namespace App\Console;
 use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\Allegro\AllegroGetOrder;
 use App\Jobs\Allegro\AllegroRefreshToken;
+use App\Jobs\Empik\EmpikGetNewOrder;
+use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
@@ -66,6 +68,11 @@ class Kernel extends ConsoleKernel
         $schedule->job(new AllegroRefreshToken)->everySixHours();
         $schedule->job(new AllegroGetOrder)->everyFiveMinutes();
         $schedule->job(new AllegroCheckMessage)->everyFiveMinutes();
+
+        //Empik
+        $schedule->job(new EmpikGetNewOrder)->everyFiveMinutes();
+        $schedule->job(new EmpikGetReadyOrder)->everyFiveMinutes();
+
 
         //Subiekt
         $schedule->job(new BlokadaMiesieczna)->monthlyOn(5, '07:00');

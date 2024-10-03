@@ -70,6 +70,11 @@ class OrderCreateInSubiekt implements ShouldQueue
                     if ($order->payment_name == "P24") $zamowienie->PlatnoscKartaId = 16;
                     if ($order->payment_name == "PAYU") $zamowienie->PlatnoscKartaId = 19;
                     break;
+
+                case 3: //EMPIK
+                    $zamowienie->KategoriaId = 190;
+                    $zamowienie->PlatnoscKartaId = 20;
+                    break;
             }
 
 
@@ -124,6 +129,11 @@ class OrderCreateInSubiekt implements ShouldQueue
                     $zamowienie->KontrahentId = 1089;
                     $zamowienie->Wystawil = "Allegro";
                     break;
+
+                case 1: //EMPIK
+                    $zamowienie->KontrahentId = 880;
+                    $zamowienie->Wystawil = "Empik";
+                    break;
             }
 
 
@@ -143,6 +153,11 @@ class OrderCreateInSubiekt implements ShouldQueue
 
                 case 2: //ALLEGRO
                     $uwagi = Str::ascii("Zamówienie z allegro.pl - " . $order->number);
+                    if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
+                    break;
+
+                case 2: //EMPIK
+                    $uwagi = Str::ascii("Zamówienie z empik.pl - " . $order->number);
                     if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
                     break;
             }

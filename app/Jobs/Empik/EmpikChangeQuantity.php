@@ -1,23 +1,17 @@
 <?php
 
-namespace App\Jobs\Quantity;
+namespace App\Jobs\Empik;
 
-use App\Helpers\Shoper\Shoper;
-use App\Jobs\Allegro\AllegroChangeQuantity;
-use App\Jobs\Empik\EmpikChangeQuantity;
-use App\Jobs\Shoper\ShoperChangeQuantity;
-use App\Models\Products\Price\ProductModelPrice;
+use App\Helpers\Empik\Empik;
+use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeQuantity implements ShouldQueue
+class EmpikChangeQuantity implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,11 +31,13 @@ class ChangeQuantity implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws \Exception
      */
     public function handle(): void
     {
-        ShoperChangeQuantity::dispatch($this->product);
-        AllegroChangeQuantity::dispatch($this->product);
-        EmpikChangeQuantity::dispatch($this->product);
+//        $result = Empik::getOrders();
+//        if (!$result) {
+//            $this->fail('getting new orders failed');
+//        }
     }
 }

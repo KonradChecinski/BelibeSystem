@@ -2,11 +2,17 @@
 
 namespace App\Helpers\Empik;
 
+use App\Jobs\Empik\EmpikAcceptOrder;
+use App\Jobs\Quantity\ChangeQuantity;
+use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\ProductEmpikCategory;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class Empik
@@ -156,23 +162,203 @@ class Empik
     }
 
 
-    public static function listOrders()
+    public static function listNewOrders()
     {
         $response = Http::withoutVerifying()
             ->withToken(config("services.empik.api_key"), "")
             ->accept("application/json")
             ->contentType("application/json")
             ->get(config("services.empik.api_uri") . "/orders", [
-                "sku" => $product->symbol,
-//                "max" => 100,
-                //"offset"=>0,
-                //"sort"=>"id",
-                //"order"=>"asc",
+                "sort" => "dateCreated",
+                "order" => "asc",
+                "order_state_codes" => "WAITING_ACCEPTANCE",
             ]);
         if (!$response->successful()) {
-            throw new \RuntimeException("Empik search offer error " . $response->status() . " " . json_encode($response->json()));
+            throw new \RuntimeException("Empik search new orders error " . $response->status() . " " . json_encode($response->json()));
         }
-        dd($response, $response->status(), $response->json());
+//        dd($response, $response->status(), $response->json());
         return $response;
     }
+
+    public static function listReadyOrders()
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(config("services.empik.api_key"), "")
+            ->accept("application/json")
+            ->contentType("application/json")
+            ->get(config("services.empik.api_uri") . "/orders", [
+                "sort" => "dateCreated",
+                "order" => "asc",
+                "order_state_codes" => "SHIPPING",
+            ]);
+        if (!$response->successful()) {
+            throw new \RuntimeException("Empik search ready orders error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+        return $response;
+    }
+
+//    public static function getReadyOrder($orderId)
+//    {
+//        $response = Http::withoutVerifying()
+//            ->withToken(config("services.empik.api_key"), "")
+//            ->accept("application/json")
+//            ->contentType("application/json")
+//            ->get(config("services.empik.api_uri") . "/orders", [
+//                "sort" => "dateCreated",
+//                "order" => "asc",
+//                "order_state_codes" => "SHIPPING",
+//                "order_ids" => $orderId,
+//            ]);
+//        if (!$response->successful()) {
+//            throw new \RuntimeException("Empik search ready order error " . $response->status() . " " . json_encode($response->json()));
+//        }
+//        dd($response, $response->status(), $response->json());
+//        return $response;
+//    }
+
+    public static function acceptOrder(string $orderId, Collection $orderItems)
+    {
+//        dd($orderId, $orderItems);
+        $orderLines = $orderItems->map(function ($orderItem) {
+            return [
+                "accepted" => "true",
+                "id" => $orderItem->order_line_id,
+            ];
+        });
+        $response = Http::withoutVerifying()
+            ->withToken(config("services.empik.api_key"), "")
+            ->accept("application/json")
+            ->contentType("application/json")
+            ->put(config("services.empik.api_uri") . "/orders/{$orderId}/accept", [
+                "order_lines" => $orderLines
+            ]);
+        if (!$response->successful()) {
+            throw new \RuntimeException("Empik accept order error " . $response->status() . " " . json_encode($response->json()));
+        }
+//        dd($response, $response->status(), $response->json());
+//        return $response;
+
+        if ($response->successful()) {
+            return true;
+        }
+        return false;
+    }
+
+
+//    public static function acceptOrders()
+//    {
+//        $response = self::listNewOrders();
+//        $empikOrders = $response->json()["orders"];
+//        foreach ($empikOrders as $empikOrder) {
+//            $empikOrderObject = json_decode(json_encode($empikOrder));
+//            $empikOrderItemsObject = collect($empikOrderObject->order_lines);
+//
+////            dd($empikOrderObject);
+//            $response = self::acceptOrder($empikOrderObject->order_id, $empikOrderItemsObject);
+//            if ($response->successful()) {
+//            }
+//            dd($response, $response->status(), $response->json());
+//        }
+//    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function getOrders(): bool
+    {
+        $response = self::listNewOrders();
+//        $response = self::listReadyOrders();
+
+        $empikOrders = $response->json()["orders"];
+        foreach ($empikOrders as $empikOrder) {
+
+            $empikOrderObject = json_decode(json_encode($empikOrder));
+            $empikOrderItemsObject = collect($empikOrderObject->order_lines);
+
+
+            $lastOrder = Order::query()->where("type", 3)->latest()->first();
+            $lastNumber = $lastOrder?->number ?? 0;
+            $lastNumber = (int)substr($lastNumber, -5);
+            $lastNumber++;
+            $number = "EMP " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
+
+            $email = collect(json_decode(json_encode($empikOrderObject->order_additional_fields)))->filter(function ($item) {
+                return $item->code === "customer-emai";
+            })->first()?->value;
+            if (is_null($email)) {
+                $email = $empikOrderObject->customer_notification_email;
+            }
+//            dd($empikOrderObject, $empikOrderItemsObject);
+
+            $empikOrderModel = Order::create([
+                "number" => $number,
+                "type" => 3,
+                "status" => 1,//1 - nowe, 20 - zrealizowane
+                "order_id" => $empikOrderObject->order_id,
+                "ordered_at" => Carbon::parse($empikOrderObject->created_date)->setTimezone("Europe/Warsaw")->toDateTimeString(),
+                "total_quantity" => $empikOrderItemsObject->sum("quantity"),
+                "total_gross" => $empikOrderItemsObject->sum("price"),
+                "payment_name" => $empikOrderObject->paymentType,
+                "delivery_name" => $empikOrderObject->shipping_type_label,
+                "delivery_gross" => $empikOrderObject->shipping_price,
+                "promo_code" => null,
+
+                "email" => $email,
+                "login" => $empikOrderObject->customer->customer_id,
+                "firstname" => Str::title($empikOrderObject->customer->firstname),
+                "lastname" => Str::title($empikOrderObject->customer->lastname),
+
+                "company" => "",
+                "city" => "",
+                "postcode" => "",
+                "street1" => "",
+                "country" => "",
+                "phone" => "",
+                "tax_id" => "",
+                "comment" => null,
+            ]);
+
+
+            foreach ($empikOrderItemsObject as $item) {
+                $code = $item->offer_sku;
+                $originalCode = $item->offer_sku;
+                $productVariant = false;
+
+
+                if (Str::contains($code, "#")) {
+                    $code = explode("#", $code)[0];
+                    $productVariant = true;
+                }
+
+                $product = Product::query()->where("symbol", $code)->first();
+
+                $orderProduct = new OrderProduct([
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                    'discounted_price' => $item->price,
+                ]);
+
+                if (is_null($product)) {
+                    $orderProduct->product_code = $code;
+                } else if ($productVariant) {
+                    $orderProduct->product_id = $product->id;
+                    $orderProduct->product_code = $originalCode;
+                } else {
+                    $orderProduct->product_id = $product->id;
+                }
+
+                $empikOrderModel->orderProducts()->save($orderProduct);
+
+                if (!is_null($product)) {
+                    ChangeQuantity::dispatch($product);
+                }
+            }
+            EmpikAcceptOrder::dispatch($empikOrderObject->order_id, $empikOrderItemsObject);
+
+        }
+        return true;
+
+    }
+
 }
