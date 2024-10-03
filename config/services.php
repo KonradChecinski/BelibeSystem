@@ -37,4 +37,9 @@ return [
         'uri' => env('ALLEGRO_URI'),
         'api_uri' => env('ALLEGRO_API_URI'),
     ],
+
+    'empik' => [
+        'api_key' => env('EMPIK_API_KEY'),
+        'api_uri' => env('EMPIK_API_URI'),
+    ],
 ];

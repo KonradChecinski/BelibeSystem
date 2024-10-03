@@ -30,10 +30,22 @@ class TestController extends Controller
      */
     public function index()
     {
-        $productModel = ProductModel::find(37);
-        Empik::createProductsCsv($productModel);
+//        $productModel = ProductModel::find(37);
+        $product = Product::find(135);//0104-1-l
+//        $product = Product::find(674);//0722-1-s
+//        Empik::createProductsCsv($productModel);
+//        Empik::listAllProducts();
+//        Empik::searchProduct($product);
 
+
+        Empik::updateOffers(collect([$product]));
 //        dd(Product::query()->where("show_in_empik", 1)->get());
+
+//        $products = Product::all();
+//        foreach ($products as $product) {
+//            $product->name_b2c = ucfirst(mb_strtolower($product->name_b2c));
+//            $product->save();
+//        }
     }
 
     /**
