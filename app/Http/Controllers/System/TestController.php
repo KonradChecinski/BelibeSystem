@@ -39,17 +39,20 @@ class TestController extends Controller
 //        Empik::createProductsCsv($productModel);
 //        Empik::listAllProducts();
 //        Empik::searchProduct($product);
-        $products = Product::query()->where("name_b2c", "!=", "")->get();
-        foreach ($products->filter(function ($product) {
-            return $product->show_in_empik == 0;
-        }) as $product) {
-            $product->show_in_empik = 1;
-            $product->save();
-        };
-//        $products = Product::query()->where("show_in_empik", 1)->get();
-//        foreach ($products as $product) {
-//            EmpikChangeShow::dispatch($product->id, true);
+//        $products = Product::query()->where("name_b2c", "!=", "")->get();
+//        foreach ($products->filter(function ($product) {
+//            return $product->show_in_empik == 0;
+//        }) as $product) {
+//            $product->show_in_empik = 1;
+//            $product->save();
 //        }
+
+        $products = Product::query()->where("show_in_empik", 1)->get();
+        foreach ($products as $product) {
+            EmpikChangeShow::dispatch($product->id, true);
+        }
+        
+
     }
 
     /**

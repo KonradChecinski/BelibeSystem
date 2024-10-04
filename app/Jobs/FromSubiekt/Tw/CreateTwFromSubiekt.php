@@ -164,7 +164,8 @@ class CreateTwFromSubiekt implements ShouldQueue
             }
 
             DB::connection("subiekt")->table("Belibe_System_Tw_Created")->where("id", $createdTw->id)->delete();
-
+//TODO: stany od razu widoczne
+            
 //            ChangeProductInSubiekt::dispatch($product->id);
 //            ChangeProductShowInSubiekt::dispatch($product->id);
 //            ChangePriceInModelInSubiekt::dispatch($product->model);
