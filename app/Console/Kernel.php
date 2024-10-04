@@ -7,6 +7,7 @@ use App\Jobs\Allegro\AllegroGetOrder;
 use App\Jobs\Allegro\AllegroRefreshToken;
 use App\Jobs\Empik\EmpikGetNewOrder;
 use App\Jobs\Empik\EmpikGetReadyOrder;
+use App\Jobs\Empik\EmpikUpdateOffers;
 use App\Jobs\Empik\EmpikUpdateProducts;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
@@ -75,7 +76,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new EmpikGetReadyOrder)->everyFiveMinutes();
 
         $schedule->job(new EmpikUpdateProducts())->everyFifteenMinutes();
-        $schedule->job(new EmpikUpdateProducts())->everyFiveMinutes();
+        $schedule->job(new EmpikUpdateOffers())->everyFiveMinutes();
 
 
         //Subiekt
