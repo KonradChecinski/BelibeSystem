@@ -81,7 +81,7 @@ function ModelPricesComponentShow(props) {
                             <TableCell>{props.productModel.prices.vat_rate} %</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell>B2C</TableCell>
+                            <TableCell>B2C (Shoper, Empik)</TableCell>
                             <TableCell>{currencyNumberPrice(data.b2c_net_price)}</TableCell>
                             <TableCell>{currencyNumberPrice(data.b2c_gross_price)}</TableCell>
                             <TableCell>{props.productModel.prices.vat_rate} %</TableCell>
@@ -236,7 +236,7 @@ function ModelPricesComponentEdit(props) {
                         </TableRow>
 
                         <TableRow>
-                            <TableCell>B2C (Empik)</TableCell>
+                            <TableCell>B2C (Shoper, Empik)</TableCell>
                             <TableCell>
                                 <PriceFiled
                                     currency={data.currency}
