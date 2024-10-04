@@ -35,9 +35,10 @@ class EmpikChangeQuantity implements ShouldQueue
      */
     public function handle(): void
     {
-//        $result = Empik::getOrders();
-//        if (!$result) {
-//            $this->fail('getting new orders failed');
-//        }
+        if ($this->product->show_in_empik == 0) return;
+        $this->product->b2cStat->update([
+            'update_in_empik' => 1,
+        ]);
+
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductModelPriceRequest;
 use App\Http\Requests\Product\UpdateProductModelPriceRequest;
+use App\Jobs\Empik\EmpikChangePrice;
 use App\Jobs\Shoper\ShoperChangePrice;
 use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
 use App\Models\Products\Price\ProductModelPrice;
@@ -59,6 +60,7 @@ class ProductModelPriceController extends Controller
         $productModelPrice->update($request->validated());
         ChangePriceInModelInSubiekt::dispatch($productModelPrice->model);
         ShoperChangePrice::dispatch($productModelPrice->model);
+        EmpikChangePrice::dispatch($productModelPrice->model);
     }
 
     /**

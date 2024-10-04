@@ -6,12 +6,11 @@ use App\Jobs\Empik\EmpikAcceptOrder;
 use App\Jobs\Quantity\ChangeQuantity;
 use App\Models\Order;
 use App\Models\OrderProduct;
-use App\Models\ProductEmpikCategory;
 use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
@@ -23,21 +22,19 @@ class Empik
 
     }
 
-    public static function createProductsCsv(ProductModel $productModel)
+    public static function createProductsCsv(Collection $products): string
     {
-        $productsToEmpik = $productModel->products()->where("show_in_empik", 1)->get();
+        $rows = collect([]);
 
-//        dd($productsToEmpik, $productModel, $productModel->empikCategory->name);
-
-        $writer = SimpleExcelWriter::streamDownload("EmpikProducts.csv", delimiter: ';');
-
-        foreach ($productsToEmpik as $productToEmpik) {
+        foreach ($products as $productToEmpik) {
             $images = $productToEmpik->images()->where("type", 1)->get()->sortBy("order")->values();
             $images = $images->map(function ($image) {
                 return str_replace("test", "pl", route("images.1x1", ["path" => $image->path]));
             });
 
-            $writer->addRow([
+            $productModel = $productToEmpik->model;
+
+            $rows->push([
                 "STR_GOLD" => $productModel->empikCategory->name,//Kategoria Empik
                 "CATALOG_CODE" => $productToEmpik->symbol,//Numer katalogowy
                 "PELNY_TYTUL" => $productToEmpik->name_b2c,//Pełny tytuł
@@ -63,71 +60,75 @@ class Empik
                 "2502" => $productToEmpik->size->name,//Rozmiar obuwia
                 "254" => $productModel->clasp->value,//Zapięcie
             ]);
-
-
         }
 
+        $path = storage_path("app/empik/EmpikProducts.csv");
+        $writer = SimpleExcelWriter::create($path, delimiter: ';')
+            ->addRows($rows);
+        $writer->close();
 
-        dd($writer->toBrowser());
+        return $path;
     }
 
 
-    public static function updateProducts()
+    public static function updateProducts(string $path): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
+//        dd($path, file_get_contents($path));
         $response = Http::withoutVerifying()
             ->withToken(config("services.empik.api_key"), "")
             ->accept("application/json")
-            ->contentType("application/json")
+//            ->contentType("application/json")
+            ->asMultipart()
+            ->attach("file", file_get_contents($path), "EmpikProducts.csv")
             ->post(config("services.empik.api_uri") . "/products/imports", [
-                "file" => base64_encode(file_get_contents("EmpikProducts.csv")),
             ]);
         if (!$response->successful()) {
-            throw new \RuntimeException("Empik list offers error " . $response->status() . " " . json_encode($response->json()));
+            throw new \RuntimeException("Empik update products error " . $response->status() . " " . json_encode($response->json()));
         }
-        dd($response, $response->status(), $response->json());
+//        dd($response, $response->status(), $response->json());
         return $response;
     }
 
-    public static function listAllProducts()
-    {
-        $response = Http::withoutVerifying()
-            ->withToken(config("services.empik.api_key"), "")
-            ->accept("application/json")
-            ->contentType("application/json")
-            ->get(config("services.empik.api_uri") . "/offers", [
-                "max" => 100,
-                //"offset"=>0,
-                //"sort"=>"id",
-                //"order"=>"asc",
-            ]);
-        if (!$response->successful()) {
-            throw new \RuntimeException("Empik list offers error " . $response->status() . " " . json_encode($response->json()));
-        }
-        dd($response, $response->status(), $response->json());
-        return $response;
-    }
-
-    public static function searchProduct(Product $product)
-    {
-        $response = Http::withoutVerifying()
-            ->withToken(config("services.empik.api_key"), "")
-            ->accept("application/json")
-            ->contentType("application/json")
-            ->get(config("services.empik.api_uri") . "/offers", [
-                "sku" => $product->symbol,
+//    public static function listAllProducts(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+//    {
+//        $response = Http::withoutVerifying()
+//            ->withToken(config("services.empik.api_key"), "")
+//            ->accept("application/json")
+//            ->contentType("application/json")
+//            ->get(config("services.empik.api_uri") . "/offers", [
 //                "max" => 100,
-                //"offset"=>0,
-                //"sort"=>"id",
-                //"order"=>"asc",
-            ]);
-        if (!$response->successful()) {
-            throw new \RuntimeException("Empik search offer error " . $response->status() . " " . json_encode($response->json()));
-        }
-        dd($response, $response->status(), $response->json());
-        return $response;
-    }
+//                //"offset"=>0,
+//                //"sort"=>"id",
+//                //"order"=>"asc",
+//            ]);
+//        if (!$response->successful()) {
+//            throw new \RuntimeException("Empik list offers error " . $response->status() . " " . json_encode($response->json()));
+//        }
+////        dd($response, $response->status(), $response->json());
+//        return $response;
+//    }
 
-    public static function updateOffers(Collection $products)
+//    public static function searchProduct(Product $product): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+//    {
+//        $response = Http::withoutVerifying()
+//            ->withToken(config("services.empik.api_key"), "")
+//            ->accept("application/json")
+//            ->contentType("application/json")
+//            ->get(config("services.empik.api_uri") . "/offers", [
+//                "sku" => $product->symbol,
+////                "max" => 100,
+//                //"offset"=>0,
+//                //"sort"=>"id",
+//                //"order"=>"asc",
+//            ]);
+//        if (!$response->successful()) {
+//            throw new \RuntimeException("Empik search offer error " . $response->status() . " " . json_encode($response->json()));
+//        }
+////        dd($response, $response->status(), $response->json());
+//        return $response;
+//    }
+
+    public static function updateOffers(Collection $products): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $offers = $products->map(function ($product) {
             return [
@@ -157,12 +158,12 @@ class Empik
         if (!$response->successful()) {
             throw new \RuntimeException("Empik update/create offer error " . $response->status() . " " . json_encode($response->json()));
         }
-        dd($response, $response->status(), $response->json(), $offers);
+//        dd($response, $response->status(), $response->json(), $offers);
         return $response;
     }
 
 
-    public static function listNewOrders()
+    public static function listNewOrders(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $response = Http::withoutVerifying()
             ->withToken(config("services.empik.api_key"), "")
@@ -180,7 +181,7 @@ class Empik
         return $response;
     }
 
-    public static function listReadyOrders()
+    public static function listReadyOrders(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $response = Http::withoutVerifying()
             ->withToken(config("services.empik.api_key"), "")
@@ -217,7 +218,7 @@ class Empik
 //        return $response;
 //    }
 
-    public static function acceptOrder(string $orderId, Collection $orderItems)
+    public static function acceptOrder(string $orderId, Collection $orderItems): bool
     {
 //        dd($orderId, $orderItems);
         $orderLines = $orderItems->map(function ($orderItem) {
