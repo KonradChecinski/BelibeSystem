@@ -40,20 +40,16 @@ class EmpikChangeShow implements ShouldQueue
      */
     public function handle(): void
     {
-        if ($this->value) {
-            $stat = $this->product->b2cStat;
+        $stat = $this->product->b2cStat;
 
-            if (is_null($stat)) {
-                $this->product->b2cStat()->create([
-                    'create_in_empik' => 1
-                ]);
-            } else {
-                $stat->update([
-                    'create_in_empik' => 1
-                ]);
-            }
-
-
+        if (is_null($stat)) {
+            $this->product->b2cStat()->create([
+                'create_in_empik' => $this->value
+            ]);
+        } else {
+            $stat->update([
+                'create_in_empik' => $this->value
+            ]);
         }
 
     }
