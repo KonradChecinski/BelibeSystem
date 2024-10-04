@@ -47,12 +47,21 @@ class TestController extends Controller
 //            $product->save();
 //        }
 
-//        $products = Product::query()->where("show_in_empik", 1)->get();
-//        foreach ($products as $product) {
-//            EmpikChangeShow::dispatch($product->id, true);
-//        }
-        EmpikUpdateProducts::dispatch();
+        $products = Product::query()->where("show_in_empik", 1)->get();
+        foreach ($products as $product) {
+            EmpikChangeShow::dispatch($product->id, true);
+        }
+//        EmpikUpdateProducts::dispatch();
 
+//        $models = ProductModel::query()->whereHas("products", function ($query) {
+//            $query->where("show_in_empik", 1);
+//        })
+//            ->whereNull("product_empik_category_id")
+//            ->get();
+//
+//        dd($models->map(function ($model) {
+//            return $model->symbol;
+//        }));
     }
 
     /**
