@@ -47,11 +47,11 @@ class TestController extends Controller
 //            $product->save();
 //        }
 
-        $products = Product::query()->where("show_in_empik", 1)->get();
-        foreach ($products as $product) {
-            EmpikChangeShow::dispatch($product->id, true);
-        }
-        
+//        $products = Product::query()->where("show_in_empik", 1)->get();
+//        foreach ($products as $product) {
+//            EmpikChangeShow::dispatch($product->id, true);
+//        }
+        EmpikUpdateProducts::dispatch();
 
     }
 
