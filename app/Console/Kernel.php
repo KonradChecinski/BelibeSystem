@@ -75,6 +75,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new EmpikGetNewOrder)->everyFiveMinutes();
         $schedule->job(new EmpikGetReadyOrder)->cron('2-59/5 * * * *');
 
+
         $schedule->job(new EmpikUpdateProducts())->everyFifteenMinutes();
         $schedule->job(new EmpikUpdateOffers())->everyFiveMinutes();
 

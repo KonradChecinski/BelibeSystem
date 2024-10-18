@@ -356,7 +356,7 @@ class Empik
                     ChangeQuantity::dispatch($product);
                 }
             }
-            EmpikAcceptOrder::dispatch($empikOrderObject->order_id, $empikOrderItemsObject);
+            EmpikAcceptOrder::dispatch($empikOrderModel, $empikOrderItemsObject);
 
         }
         return true;
