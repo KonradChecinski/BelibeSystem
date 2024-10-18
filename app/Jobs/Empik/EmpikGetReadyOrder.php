@@ -38,13 +38,16 @@ class EmpikGetReadyOrder implements ShouldQueue
 
         foreach ($orders as $order) {
             $response = Empik::getReadyOrder($order->order_id);
+
             if (!$response) {
                 $this->fail('getting ready order failed');
             }
 
             $empikOrder = $response->json()["orders"][0];
             $empikOrderObject = json_decode(json_encode($empikOrder));
-
+//            dd($response, $response->json(), $response->status(), $empikOrderObject,
+//                isset($empikOrderObject->customer->organization->tax_identification_number) ? true : false
+//            );
             $order->update([
 
                 "company" => Str::title($empikOrderObject->customer->billing_address->company),
@@ -53,10 +56,11 @@ class EmpikGetReadyOrder implements ShouldQueue
                 "street1" => Str::title($empikOrderObject->customer->billing_address->street_1) . ($empikOrderObject->customer->billing_address->street_2 ? " " . Str::title($empikOrderObject->customer->billing_address->street_2) : ""),
                 "country" => Str::title($empikOrderObject->customer->billing_address->country),
                 "phone" => $empikOrderObject->customer->billing_address->phone,
-                "tax_id" => $empikOrderObject->customer?->organization?->tax_identification_number,
+                "tax_id" => isset($empikOrderObject->customer->organization->tax_identification_number) ? $empikOrderObject->customer->organization->tax_identification_number : null,
 
                 "status" => 20,//20 - gotowe do wysyłki
             ]);
+//            dd($response, $response->json(), $response->status(), $empikOrderObject);
         }
 
         OrderCreateInSubiekt::dispatch();
