@@ -34,7 +34,7 @@ class EmpikGetReadyOrder implements ShouldQueue
      */
     public function handle(): void
     {
-        $orders = Order::query()->where("type", 3)->where('status', 10)->get();
+        $orders = Order::query()->where("type", 3)->where('status', 1)->get();
         foreach ($orders as $order) {
             $response = Empik::getReadyOrder($order->order_id);
             if (!$response) {

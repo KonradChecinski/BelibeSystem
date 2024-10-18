@@ -199,24 +199,24 @@ class Empik
         return $response;
     }
 
-//    public static function getReadyOrder($orderId)
-//    {
-//        $response = Http::withoutVerifying()
-//            ->withToken(config("services.empik.api_key"), "")
-//            ->accept("application/json")
-//            ->contentType("application/json")
-//            ->get(config("services.empik.api_uri") . "/orders", [
-//                "sort" => "dateCreated",
-//                "order" => "asc",
-//                "order_state_codes" => "SHIPPING",
-//                "order_ids" => $orderId,
-//            ]);
-//        if (!$response->successful()) {
-//            throw new \RuntimeException("Empik search ready order error " . $response->status() . " " . json_encode($response->json()));
-//        }
+    public static function getReadyOrder($orderId)
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(config("services.empik.api_key"), "")
+            ->accept("application/json")
+            ->contentType("application/json")
+            ->get(config("services.empik.api_uri") . "/orders", [
+                "sort" => "dateCreated",
+                "order" => "asc",
+                "order_state_codes" => "SHIPPING",
+                "order_ids" => $orderId,
+            ]);
+        if (!$response->successful()) {
+            throw new \RuntimeException("Empik search ready order error " . $response->status() . " " . json_encode($response->json()));
+        }
 //        dd($response, $response->status(), $response->json());
-//        return $response;
-//    }
+        return $response;
+    }
 
     public static function acceptOrder(string $orderId, Collection $orderItems): bool
     {
@@ -277,6 +277,7 @@ class Empik
             $empikOrderObject = json_decode(json_encode($empikOrder));
             $empikOrderItemsObject = collect($empikOrderObject->order_lines);
 
+            if (Order::query()->where("type", 3)->where("order_id", $empikOrderObject->order_id)->count() > 0) continue;
 
             $lastOrder = Order::query()->where("type", 3)->latest()->first();
             $lastNumber = $lastOrder?->number ?? 0;
