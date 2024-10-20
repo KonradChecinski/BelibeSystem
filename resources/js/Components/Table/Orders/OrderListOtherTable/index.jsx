@@ -26,6 +26,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import OrderMenu from "@/Components/Pages/Orders/Other/Menu/OrderMenu";
 import {Allegro} from "@/Icons/Allegro";
 import {Belibe} from "@/Icons/Belibe";
+import {Empik} from "@/Icons/Empik";
 
 
 export default function OrderListOtherTable({orders = [], readOnly, props}) {
@@ -64,6 +65,14 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                                     </span>
                                 </Tooltip>
                             )}
+
+                            {cell.getValue() === 3 && (
+                                <Tooltip title="Empik">
+                                    <span>
+                                        <Empik sx={{width: 20, height: 20}}/>
+                                    </span>
+                                </Tooltip>
+                            )}
                         </Box>
                     )
 
@@ -82,6 +91,10 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                     switch (cell.getValue()) {
                         case 1:
                             text = "Złożone";
+                            color = "success.main";
+                            break;
+                        case 10:
+                            text = "Oczekuje na informację od sklepu";
                             color = "success.main";
                             break;
                         case 20:

@@ -210,7 +210,7 @@ class Shoper
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
                 "stock" => [
-                    "price" => (float)$productModelColor->model->prices->retail_gross_price / 100,
+                    "price" => (float)$productModelColor->model->prices->b2c_gross_price / 100,
                 ]
             ]);
         if ($response->status() === 429) {
@@ -423,7 +423,7 @@ class Shoper
                     "code" => $productModelColor->model->symbol . "-" . $productModelColor->b2c_shortcut,
                     "producer_id" => $producerId,
                     "stock" => [
-                        "price" => $productModelColor->model->prices->retail_gross_price / 100,
+                        "price" => $productModelColor->model->prices->b2c_gross_price / 100,
                         "stock" => $productModelColor->products()->where("show_in_b2c", true)->sum("quantity"),
                         "delivery_id" => 1 //24h
                     ],
@@ -735,7 +735,7 @@ class Shoper
 
     public static function changeStockPrice(int $productStockId): bool
     {
-//        (float)$productModelColor->model->prices->retail_gross_price / 100
+//        (float)$productModelColor->model->prices->b2c_gross_price / 100
         $response = Http::withoutVerifying()
             ->withToken(self::getAccessToken())
             ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [

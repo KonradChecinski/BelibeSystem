@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateShowProductRequest;
+use App\Jobs\Empik\EmpikChangeShow;
 use App\Jobs\Shoper\ShoperChangeShow;
 use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
@@ -60,6 +61,7 @@ class ShowProductController extends Controller
         $product->save();
         if (!is_null($request->show_in_subiekt)) ChangeProductShowInSubiekt::dispatch($product->id);
         if (!is_null($request->show_in_b2c)) ShoperChangeShow::dispatch($product->id);
+        if (!is_null($request->show_in_empik)) EmpikChangeShow::dispatch($product->id, $request->show_in_empik);
 //        if (!is_null($request->show_in_empik)) ShoperChangeShow::dispatch($product->id);
 
 

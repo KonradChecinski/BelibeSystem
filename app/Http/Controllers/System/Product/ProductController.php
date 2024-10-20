@@ -179,6 +179,7 @@ class ProductController extends Controller
         $deleteModel = $product->model->colors->count() == 1 ? true : false;
 
         $product->barcodes()->delete();
+        $product->b2cStat()->delete();
         $product->delete();
 
         if ($deleteColorModel) {

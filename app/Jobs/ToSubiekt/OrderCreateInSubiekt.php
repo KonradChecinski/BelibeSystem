@@ -43,6 +43,8 @@ class OrderCreateInSubiekt implements ShouldQueue
         foreach ($orders as $order) {
             $orderProducts = $order->orderProducts;
 
+            $total_gross_with_delivery = $order->total_gross + $order->delivery_gross;
+
             $number = $order->number . " - ";
             if ($order->login !== null) {
                 $number .= $order->login;
@@ -130,7 +132,7 @@ class OrderCreateInSubiekt implements ShouldQueue
                     $zamowienie->Wystawil = "Allegro";
                     break;
 
-                case 1: //EMPIK
+                case 3: //EMPIK
                     $zamowienie->KontrahentId = 880;
                     $zamowienie->Wystawil = "Empik";
                     break;
@@ -156,7 +158,7 @@ class OrderCreateInSubiekt implements ShouldQueue
                     if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
                     break;
 
-                case 2: //EMPIK
+                case 3: //EMPIK
                     $uwagi = Str::ascii("Zamówienie z empik.pl - " . $order->number);
                     if ($order->comment !== null) $uwagi .= "\r\nUwagi - " . $order->comment;
                     break;
@@ -165,7 +167,13 @@ class OrderCreateInSubiekt implements ShouldQueue
 
             $zamowienie->Uwagi = $uwagi;
 
-            if ($zamowienie->WartoscBrutto != $order["total_gross"]) $this->fail("Niezgodne kwoty zamówienia");
+//            if ($zamowienie->WartoscBrutto != $order["total_gross"]) $this->fail("Niezgodne kwoty zamówienia");
+            if ((string)(((float)$zamowienie->WartoscBrutto) * 100) !== (string)($total_gross_with_delivery * 100)) {
+                $this->fail("Niezgodne kwoty zamówienia" . " " . (((float)$zamowienie->WartoscBrutto) * 100) . " " . ($total_gross_with_delivery * 100));
+                return;
+            }
+
+//            $zamowienie->Wyswietl();
             $zamowienie->Zapisz();
             $order->update([
                 'subiekt_id' => $zamowienie->Identyfikator,

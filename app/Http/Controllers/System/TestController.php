@@ -6,6 +6,8 @@ use App\Helpers\Allegro\Allegro;
 use App\Helpers\Empik\Empik;
 use App\Http\Controllers\Controller;
 use App\Jobs\Allegro\AllegroCheckMessage;
+use App\Jobs\Empik\EmpikChangeShow;
+use App\Jobs\Empik\EmpikUpdateProducts;
 use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
@@ -32,25 +34,34 @@ class TestController extends Controller
     public function index()
     {
 //        $productModel = ProductModel::find(37);
-        $product = Product::find(135);//0104-1-l
+//        $product = Product::find(135);//0104-1-l
 //        $product = Product::find(674);//0722-1-s
 //        Empik::createProductsCsv($productModel);
 //        Empik::listAllProducts();
 //        Empik::searchProduct($product);
-
-
-//        Empik::updateOffers(collect([$product]));
-//        Empik::getOrders();
-//        Empik::listReadyOrders();
-//        dd(Product::query()->where("show_in_empik", 1)->get());
-
-        EmpikGetReadyOrder::dispatchSync();
-
-//        $products = Product::all();
-//        foreach ($products as $product) {
-//            $product->name_b2c = ucfirst(mb_strtolower($product->name_b2c));
+//        $products = Product::query()->where("name_b2c", "!=", "")->get();
+//        foreach ($products->filter(function ($product) {
+//            return $product->show_in_empik == 0;
+//        }) as $product) {
+//            $product->show_in_empik = 1;
 //            $product->save();
 //        }
+
+//        $products = Product::query()->where("show_in_empik", 1)->get();
+//        foreach ($products as $product) {
+//            EmpikChangeShow::dispatch($product->id, true);
+//        }
+        EmpikUpdateProducts::dispatch();
+
+//        $models = ProductModel::query()->whereHas("products", function ($query) {
+//            $query->where("show_in_empik", 1);
+//        })
+//            ->whereNull("product_empik_category_id")
+//            ->get();
+//
+//        dd($models->map(function ($model) {
+//            return $model->symbol;
+//        }));
     }
 
     /**

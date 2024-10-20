@@ -6,6 +6,7 @@ use App\Models\B2bCart;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
 use App\Models\OrderProduct;
+use App\Models\ProductB2cStat;
 use App\Models\WarehouseDocumentProduct;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 
@@ -102,6 +104,11 @@ class Product extends Model
         return $this->hasOneDeepFromReverse(
             (new ProductModel())->products()
         );
+    }
+
+    public function b2cStat(): HasOne
+    {
+        return $this->hasOne(ProductB2cStat::class);
     }
 
 

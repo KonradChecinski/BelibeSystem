@@ -51,7 +51,7 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                 stickyHeader={true}
                 sx={{
                     "& th": {
-                        top: 81,
+                        top: 141,
                     },
                     "& th:first-of-type": {
                         borderRadius: 1,
