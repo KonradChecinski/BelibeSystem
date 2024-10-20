@@ -963,7 +963,7 @@ class Shoper
                 "order_id" => $shoperOrder["order_id"],
                 "ordered_at" => $shoperOrder["date"],
                 "total_quantity" => count($shoperOrderProducts),
-                "total_gross" => $shoperOrder["sum"],
+                "total_gross" => $shoperOrder["sum"] - $shoperOrder["shipping_cost"],
                 "payment_name" => $paymentName,
                 "delivery_name" => $shippingName,
                 "delivery_gross" => $shoperOrder["shipping_cost"],
