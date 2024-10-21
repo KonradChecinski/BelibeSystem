@@ -61,7 +61,7 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)', // Adjust the opacity (last value) as needed
+                        backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.6)', // Adjust the opacity (last value) as needed
                         pointerEvents: 'none', // Allow clicks to pass through the overlay
                     }}
                 />

@@ -75,7 +75,7 @@ export default function Page(props) {
 // Save the data to your database
     const save = (data) => {
         // console.log(data, pageData.id)
-        if (pageData.id) {
+        if (pageData) {
             router.patch(route("system.pages.page.update", {dynamicPage: pageData.id}), data, {
                 onSuccess: () => {
                     enqueueSnackbar("Strona została zaktualizowana", {variant: "success"})
@@ -92,6 +92,7 @@ export default function Page(props) {
             router.post(route("system.pages.page.create"), data, {
                 onSuccess: () => {
                     enqueueSnackbar("Strona została utworzona", {variant: "success"});
+                    router.visit(route("system.pages"));
                 },
                 onError: (error) => {
                     console.error(error)
@@ -148,6 +149,7 @@ export default function Page(props) {
                     config={config}
                     data={initialData}
                     onPublish={save}
+                    
                     style={{
                         border: "none",
                         boxShadow: "none",

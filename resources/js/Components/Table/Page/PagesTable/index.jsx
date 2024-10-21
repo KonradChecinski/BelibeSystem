@@ -103,7 +103,7 @@ export default function PagesTable(props) {
 
 
     const handleAdd = () => {
-        router.visit(route("system.pages.page.create"));
+        router.visit(route("system.pages.page"));
     }
 
     return (

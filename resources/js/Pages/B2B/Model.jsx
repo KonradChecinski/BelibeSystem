@@ -2,22 +2,10 @@ import {Head, Link} from "@inertiajs/react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {
-    Box, Button, Checkbox,
-    debounce, Divider,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField, Typography
-} from "@mui/material";
-import {sortBySizes, sortBySizesModelColorObject, sortBySizesName} from "@/Functions/sortBySizes";
+import {Box, Button, Checkbox, Divider, Paper, Typography} from "@mui/material";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import ProductOrderTable from "@/Components/Pages/B2B/Model/ProductOrderTable";
-import {useEffect, useRef, useState} from "react";
+import {Fragment, useEffect, useRef, useState} from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import 'photoswipe/style.css';
 import {Swiper, SwiperSlide} from 'swiper/react';
@@ -59,16 +47,15 @@ export default function B2bModel(props) {
         return color.images?.sort((imageA, imageB) => imageA.order - imageB.order)
     }).flat();
 
-    const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
-    const [lightbox, setLightBox] = useState(new PhotoSwipeLightbox({
+    let lightbox = new PhotoSwipeLightbox({
         gallery: "#" + "pswp-gallery", //props.galleryID,
         children: "a",
         pswpModule: () => import("photoswipe")
-    }));
+    });
 
     useEffect(() => {
-        setLightBox(new PhotoSwipeLightbox({
+        lightbox = (new PhotoSwipeLightbox({
             gallery: "#" + "pswp-gallery", //props.galleryID,
             children: "a",
             pswpModule: () => import("photoswipe")
@@ -78,9 +65,30 @@ export default function B2bModel(props) {
 
         return () => {
             lightbox.destroy();
-            setLightBox(null);
+            lightbox = (null);
         };
     }, []);
+
+    const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+    // useEffect(() => {
+    //     // Zainicjuj thumbsSwiper tutaj (można wprowadzić bardziej zaawansowaną inicjalizację jeśli potrzebna)
+    //     const swiper = new PhotoSwipeLightbox({
+    //         gallery: "#" + "thumbs-swiper-container", //props.galleryID,
+    //         children: "img",
+    //         pswpModule: () => import("photoswipe")
+    //     });
+    //
+    //     setThumbsSwiper(swiper);
+    //
+    //     return () => {
+    //         // Upewnij się, że zniszczysz thumbsSwiper podczas odmontowywania
+    //         if (swiper && swiper.destroy) {
+    //             swiper.destroy(true, true);
+    //         }
+    //     };
+    // }, []);
+
 
     const scrollTo = () => {
         ProductOrderTableRef.current.scrollIntoView({behavior: "smooth"});
@@ -142,14 +150,14 @@ export default function B2bModel(props) {
                                 }}
                                 navigation={true}
                                 loop={false}
-                                thumbs={{swiper: thumbsSwiper}}
+                                thumbs={{swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null}}
                                 modules={[Autoplay, Pagination, Navigation, Thumbs]}
                                 className="mySwiper"
                             >
                                 {
                                     imageArray.length > 0 ?
                                         (
-                                            <>
+                                            <Fragment key={"a1"}>
                                                 {
                                                     imageArray.map((image) => {
                                                         return (
@@ -190,7 +198,7 @@ export default function B2bModel(props) {
                                                     })
                                                 }
 
-                                            </>
+                                            </Fragment>
                                         )
                                         :
                                         (
@@ -228,24 +236,33 @@ export default function B2bModel(props) {
 
                             </Swiper>
                         </Box>
-                        <Box sx={{
-                            "& .swiper-slide": {
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: 50,
-                                width: "auto"
-                            }
-                        }}>
+                        <Box
+                            className="thumbs-swiper-container"
+                            id={"thumbs-swiper-container"}
+                            sx={{
+                                "& .swiper-slide": {
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: 50,
+                                    width: "auto"
+                                }
+                            }}>
                             <Swiper
                                 onSwiper={setThumbsSwiper}
+                                // onBeforeDestroy={(swiper) => {
+                                //     if (swiper && swiper.destroy) {
+                                //         swiper.destroy(true, true);
+                                //     }
+                                // }}
+
                                 loop={true}
                                 spaceBetween={5}
                                 slidesPerView={'auto'}
                                 freeMode={true}
                                 watchSlidesProgress={true}
                                 modules={[FreeMode, Navigation, Thumbs]}
-                                className="mySwiper"
+                                className="mySwiperThumbnails"
                             >
                                 {imageArray.length > 0 ?
                                     (
@@ -264,12 +281,22 @@ export default function B2bModel(props) {
                                                                         cursor: "pointer",
                                                                     }
                                                                 }}>
-                                                                    <img
-                                                                        src={route("images.webp", {path: image.path})}
-                                                                        alt={"brak"}
-                                                                        className={"product-image"}
-                                                                        loading="lazy"
-                                                                    />
+                                                                    <a
+                                                                        href={route("images.webp", {path: image.path})}
+                                                                        data-pswp-width={image.width}
+                                                                        data-pswp-height={image.height}
+                                                                        key={"pswp-gallery" + "-" + image.id}//index
+                                                                        target="_blank"
+                                                                        rel="noreferrer"
+                                                                        className={"relative"}
+                                                                    >
+                                                                        <img
+                                                                            src={route("images.webp", {path: image.path})}
+                                                                            alt={"brak"}
+                                                                            className={"product-image"}
+                                                                            loading="lazy"
+                                                                        />
+                                                                    </a>
                                                                 </Box>
                                                             </SwiperSlide>
                                                         )
@@ -429,7 +456,7 @@ export default function B2bModel(props) {
                     }}
                 />
             </Box>
-            <Box ref={ProductOrderTableRef} my={2} sx={{overflowX: "initial"}}>
+            <Box ref={ProductOrderTableRef} mt={2} sx={{overflowX: "initial"}}>
                 {Boolean(props.blacklist) === false ?
                     (
                         <>

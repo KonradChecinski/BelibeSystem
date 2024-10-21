@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, {useState} from "react";
 import {
     Box,
     IconButton,
@@ -18,9 +18,10 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { styled, alpha } from "@mui/material/styles";
+import {styled, alpha} from "@mui/material/styles";
+import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchComponent/B2bSearchModelComponent";
 
-const Search = styled("div")(({ theme }) => ({
+const Search = styled("div")(({theme}) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -36,7 +37,7 @@ const Search = styled("div")(({ theme }) => ({
     },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: "100%",
     position: "absolute",
@@ -46,7 +47,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
     justifyContent: "center",
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: "inherit",
     "& .MuiInputBase-input": {
         padding: theme.spacing(1, 1, 1, 0),
@@ -59,7 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
-export default function AppBar({ position, children }) {
+export default function AppBar({position, children}) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -108,7 +109,7 @@ export default function AppBar({ position, children }) {
                     color="inherit"
                 >
                     <Badge badgeContent={4} color="error">
-                        <MailIcon />
+                        <MailIcon/>
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -120,7 +121,7 @@ export default function AppBar({ position, children }) {
                     color="inherit"
                 >
                     <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
+                        <NotificationsIcon/>
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
@@ -133,7 +134,7 @@ export default function AppBar({ position, children }) {
                     aria-haspopup="true"
                     color="inherit"
                 >
-                    <AccountCircle />
+                    <AccountCircle/>
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
@@ -160,18 +161,23 @@ export default function AppBar({ position, children }) {
                         }}
                         onClick={() => setOpenDrawer(!openDrawer)}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ "aria-label": "search" }}
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
+                    {/*<Search>*/}
+                    {/*    <SearchIconWrapper>*/}
+                    {/*        <SearchIcon />*/}
+                    {/*    </SearchIconWrapper>*/}
+                    {/*    <StyledInputBase*/}
+                    {/*        placeholder="Search…"*/}
+                    {/*        inputProps={{ "aria-label": "search" }}*/}
+                    {/*    />*/}
+                    {/*</Search>*/}
+                    <Box sx={{my: 1, width: 1}}>
+                        <B2bSearchModelComponent searchRoute={route("b2b.model.search")}
+                                                 label={"Model"}/>
+                    </Box>
+
+                    <Box sx={{flexGrow: 1}}/>
                     {/*<Box sx={{ display: { xs: "none", md: "flex" } }}>*/}
                     {/*    <IconButton*/}
                     {/*        size="large"*/}
@@ -203,7 +209,7 @@ export default function AppBar({ position, children }) {
                     {/*        <AccountCircle />*/}
                     {/*    </IconButton>*/}
                     {/*</Box>*/}
-                    <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                    <Box sx={{display: {xs: "flex", md: "none"}}}>
                         <IconButton
                             size="large"
                             aria-label="show more"
@@ -212,7 +218,7 @@ export default function AppBar({ position, children }) {
                             onClick={handleMobileMenuOpen}
                             color="inherit"
                         >
-                            <MoreIcon />
+                            <MoreIcon/>
                         </IconButton>
                     </Box>
                 </Toolbar>
