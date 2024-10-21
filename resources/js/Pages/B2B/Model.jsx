@@ -371,7 +371,7 @@ export default function B2bModel(props) {
                         flexWrap: "wrap",
                         gap: 2,
                         flex: 1,
-                        minWidth: 400,
+                        // minWidth: 400,
                         maxWidth: 1
                     }}>
 
@@ -382,7 +382,7 @@ export default function B2bModel(props) {
                             flexWrap: "wrap",
                             gap: 2,
                             flex: 1,
-                            minWidth: 400,
+                            // minWidth: 400,
                             maxWidth: 1
                         }}>
                             <Box sx={{

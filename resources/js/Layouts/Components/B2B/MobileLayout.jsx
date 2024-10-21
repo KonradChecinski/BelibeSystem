@@ -36,6 +36,8 @@ export default function MobileLayout({
             </AppBar>
             <Box sx={{width: 1, height: 70}}></Box>
             <Box>
+                <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
+                
                 {children}
             </Box>
             <Box

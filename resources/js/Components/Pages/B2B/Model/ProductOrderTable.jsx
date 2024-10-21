@@ -197,8 +197,8 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                         const image = color.images?.find(i => i.order === 0);
                         const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
                         return (
-                            <TableRow>
-                                <TableCell colspan={2}>
+                            <TableRow key={color.id}>
+                                <TableCell colSpan={2}>
                                     <Table
                                         aria-label="simple table"
                                         stickyHeader={true}
@@ -215,7 +215,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                     >
                                         <TableHead>
                                             <TableRow hover key={color.id} sx={{height: 105}}>
-                                                <HoveringCell colspan={2}>
+                                                <HoveringCell colSpan={2}>
                                                     <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
                                                         <Box>
                                                             {image ?
@@ -266,7 +266,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                                 // if (quantity > 30) quantity = 30;
 
                                                 return (
-                                                    <TableRow hover key={color.id} sx={{height: 105}}>
+                                                    <TableRow hover key={color.id + "-" + size.id} sx={{height: 105}}>
                                                         <HoveringCell>
                                                             {size.name}
                                                         </HoveringCell>
@@ -455,10 +455,10 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
     );
 }
 
-const HoveringCell = ({children, colspan = 1, disabled = false, header = false, sx}) => {
+const HoveringCell = ({children, colSpan = 1, disabled = false, header = false, sx}) => {
     return (
         <TableCell
-            colspan={colspan}
+            colSpan={colSpan}
             align={"center"}
             sx={{
                 bgcolor: disabled ? "disabled.background" : "",
