@@ -37,7 +37,7 @@ export default function B2bMainPage(props) {
             <Head title={t("Client zone")}/>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={8}>
-                    <Paper sx={{height: 300, p: 2}}>
+                    <Paper sx={{minHeight: 300, p: 2}}>
                         <Box>
                             <Typography variant="h3" component="h4">
                                 {props.client.name}
@@ -79,7 +79,7 @@ export default function B2bMainPage(props) {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <Paper sx={{height: 300, p: 2}}>
+                    <Paper sx={{height: 1, p: 2}}>
 
                         <Typography variant="h5" gutterBottom sx={{pl: 1}}>
                             Skróty

@@ -190,14 +190,22 @@ export default function B2bSettlementsTable({settlements, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {height: 1}
+            sx: {
+                // height: 1
+                flex: 1,
+                maxHeight: "unset"
+            }
         },
         muiTablePaperProps: ({table}) => ({
             sx: {
                 // pl: 1,
-                height: 1,
+                // height: 1,
+                // display: "flex",
+                // flexDirection: "column",
+                flex: "1 1 0",
                 display: "flex",
                 flexDirection: "column",
+
             },
             style: {
                 zIndex: table.getState().isFullScreen ? 2000 : undefined,

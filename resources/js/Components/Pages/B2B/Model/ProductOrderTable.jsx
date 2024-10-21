@@ -17,31 +17,33 @@ import {useTheme} from "@mui/material/styles";
 import {useCallback, useMemo, useRef, useState} from "react";
 import {router} from "@inertiajs/react";
 import {keyframes} from "@emotion/css";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 export default function ProductOrderTable({model, cart, lightbox, imageArray, accountManager = false, props}) {
-    // const [hoveredColumn, setHoveredColumn] = useState(null);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    return (
+        <>
+            {!isMobile ?
+                (
+                    <DesktopTable model={model} cart={cart} lightbox={lightbox} imageArray={imageArray}
+                                  accountManager={accountManager} props={props}/>
+                )
+                :
+                (
+                    <MobileTable model={model} cart={cart} lightbox={lightbox} imageArray={imageArray}
+                                 accountManager={accountManager} props={props}/>
+                )
+            }
 
-    const HoveringCell = ({children, column, disabled = false, header = false, sx}) => {
-        return (
-            <TableCell
-                align={"center"}
-                sx={{
-                    bgcolor: disabled ? "disabled.background" : "",
-                    fontWeight: header ? "bold" : "normal",
-                    ...sx
-                }}
-                // sx={{
-                //     bgcolor: disabled ? "disabled.background" : hoveredColumn === column ? header ? "cyan" : "hoveredCell.background" : "",
-                //     ...sx
-                // }}
-                // onMouseEnter={() => setHoveredColumn(column)}
-                // onMouseLeave={() => setHoveredColumn(null)}
-            >
-                {children}
-            </TableCell>
-        )
-    }
+        </>
+    )
+
+
+}
+
+const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
 
 
     return (
@@ -144,6 +146,152 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
                                     )
                                 })}
                             </TableRow>
+                        )
+                    })}
+
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
+}
+
+const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
+
+
+    return (
+        <TableContainer sx={{overflowX: "initial", borderRadius: 1}} component={Paper}>
+            <Table
+                aria-label="simple table"
+                // stickyHeader={true}
+                sx={{
+                    "& th": {
+                        top: 141,
+                    },
+                    "& th:first-of-type": {
+                        borderRadius: 1,
+                        borderBottomRightRadius: 0,
+                        borderTopRightRadius: 0
+                    },
+                    "& th:last-of-type": {
+                        borderRadius: 1,
+                        borderBottomLeftRadius: 0,
+                        borderTopLeftRadius: 0
+                    },
+                }}
+            >
+
+                <TableHead>
+                    <TableRow sx={{
+                        borderRadius: 1
+                    }}>
+                        <HoveringCell column={1} header={true}>Produkt</HoveringCell>
+                        <HoveringCell column={2} header={true}>Ilość</HoveringCell>
+                        {/*{sortBySizesName(model.sizes).map(size => (*/}
+                        {/*    <HoveringCell column={2 + size.id} header={true} key={size.id}>{size.name}</HoveringCell>*/}
+                        {/*))}*/}
+                    </TableRow>
+                </TableHead>
+
+                <TableBody>
+                    {model.colors.sort(sortByColorShortcut).map(color => {
+                        const image = color.images?.find(i => i.order === 0);
+                        const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
+                        return (
+                            <TableRow>
+                                <TableCell colspan={2}>
+                                    <Table
+                                        aria-label="simple table"
+                                        stickyHeader={true}
+                                        sx={{
+                                            "& th": {
+                                                top: 75,
+                                            },
+                                            "& th:first-of-type": {
+                                                borderRadius: 1,
+                                                // borderBottomRightRadius: 0,
+                                                // borderTopRightRadius: 0
+                                            },
+                                        }}
+                                    >
+                                        <TableHead>
+                                            <TableRow hover key={color.id} sx={{height: 105}}>
+                                                <HoveringCell colspan={2}>
+                                                    <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                                                        <Box>
+                                                            {image ?
+                                                                (
+                                                                    <Box component={"img"}
+                                                                         src={route("images.webp", {path: image.path})}
+                                                                         width={50}
+                                                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                                         sx={{
+                                                                             m: "auto",
+                                                                             cursor: "pointer",
+                                                                         }}
+                                                                    />
+                                                                )
+                                                                :
+                                                                (
+                                                                    <Box component={"img"}
+                                                                         src={route("images.webp", {path: "brak.jpg"})}
+                                                                         width={50}
+                                                                         onClick={() => lightbox.loadAndOpen(1)}
+                                                                         sx={{
+                                                                             m: "auto",
+                                                                             cursor: "pointer",
+                                                                         }}
+                                                                    />
+                                                                )
+                                                            }
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography variant="h5" textAlign={"center"} gutterBottom>
+                                                                {color.shortcut}
+                                                            </Typography>
+                                                            <Typography variant="body2" textAlign={"center"}>
+                                                                {color.name}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+
+
+                                                </HoveringCell>
+
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {sortBySizesName(model.sizes).map((size, id) => {
+                                                const product = color.products.find(p => p.size.id === size.id);
+                                                let quantity = product?.available;
+                                                // if (quantity > 30) quantity = 30;
+
+                                                return (
+                                                    <TableRow hover key={color.id} sx={{height: 105}}>
+                                                        <HoveringCell>
+                                                            {size.name}
+                                                        </HoveringCell>
+                                                        <HoveringCell column={2 + size.id} key={id}
+                                                                      disabled={quantity === 0}>
+                                                            {product ?
+                                                                <ProductInput product={product} cart={cart}
+                                                                              maxQuantity={quantity}
+                                                                              enqueueSnackbar={enqueueSnackbar}
+                                                                              accountManager={accountManager}
+                                                                              props={props}
+                                                                />
+                                                                :
+                                                                ""
+                                                            }
+                                                        </HoveringCell>
+
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </TableCell>
+                            </TableRow>
+
                         )
                     })}
 
@@ -305,4 +453,26 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
 
         </Box>
     );
+}
+
+const HoveringCell = ({children, colspan = 1, disabled = false, header = false, sx}) => {
+    return (
+        <TableCell
+            colspan={colspan}
+            align={"center"}
+            sx={{
+                bgcolor: disabled ? "disabled.background" : "",
+                fontWeight: header ? "bold" : "normal",
+                ...sx
+            }}
+            // sx={{
+            //     bgcolor: disabled ? "disabled.background" : hoveredColumn === column ? header ? "cyan" : "hoveredCell.background" : "",
+            //     ...sx
+            // }}
+            // onMouseEnter={() => setHoveredColumn(column)}
+            // onMouseLeave={() => setHoveredColumn(null)}
+        >
+            {children}
+        </TableCell>
+    )
 }

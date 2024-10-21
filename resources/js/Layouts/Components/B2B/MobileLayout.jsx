@@ -38,6 +38,15 @@ export default function MobileLayout({
             <Box>
                 {children}
             </Box>
+            <Box
+                sx={{
+                    mt: 2,
+                    height: "400px",
+                    bgcolor: "rgba(0,0,0,0.5)",
+                }}
+            >
+
+            </Box>
         </>
     );
 }

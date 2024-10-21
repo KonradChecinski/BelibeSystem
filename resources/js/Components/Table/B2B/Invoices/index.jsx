@@ -168,12 +168,20 @@ export default function B2bInvoicesTable({invoices, props}) {
             ]
         },
         muiTableContainerProps: {
-            sx: {height: 1}
+            sx: {
+                // height: 1
+                // display: "flex",
+                flex: 1,
+                maxHeight: "unset"
+            }
         },
         muiTablePaperProps: ({table}) => ({
             sx: {
                 // pl: 1,
-                height: 1,
+                // height: 1,
+                // display: "flex",
+                // flexDirection: "column",
+                flex: "1 1 0",
                 display: "flex",
                 flexDirection: "column",
             },

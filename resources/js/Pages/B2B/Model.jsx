@@ -26,6 +26,7 @@ export default function B2bModel(props) {
     const ProductOrderTableRef = useRef(null)
     console.log(props)
 
+
     const [isFavorited, setIsFavorited] = useState(props.model.isFavorited)
 
     const handleFavorite = () => {
@@ -65,27 +66,39 @@ export default function B2bModel(props) {
 
         return () => {
             lightbox.destroy();
-            lightbox = (null);
+            lightbox = null;
         };
     }, []);
 
-    const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [thumbsSwiper, setThumbsSwiper] = useState(null)
+    console.log(thumbsSwiper)
+    // let thumbsSwiper = new PhotoSwipeLightbox({
+    //     gallery: "#" + "thumbs-swiper-container", //props.galleryID,
+    //     children: "a",
+    //     pswpModule: () => import("photoswipe")
+    // });
 
+    // thumbsSwiper.init()
+    //
+    //
     // useEffect(() => {
     //     // Zainicjuj thumbsSwiper tutaj (można wprowadzić bardziej zaawansowaną inicjalizację jeśli potrzebna)
-    //     const swiper = new PhotoSwipeLightbox({
+    //     let swiper = new PhotoSwipeLightbox({
     //         gallery: "#" + "thumbs-swiper-container", //props.galleryID,
-    //         children: "img",
+    //         children: "a",
     //         pswpModule: () => import("photoswipe")
     //     });
-    //
-    //     setThumbsSwiper(swiper);
-    //
+    //     swiper.init()
+    //     setThumbsSwiper(swiper)
     //     return () => {
-    //         // Upewnij się, że zniszczysz thumbsSwiper podczas odmontowywania
-    //         if (swiper && swiper.destroy) {
-    //             swiper.destroy(true, true);
-    //         }
+    //         // // Upewnij się, że zniszczysz thumbsSwiper podczas odmontowywania
+    //         // if (swiper && swiper.destroy) {
+    //         //     swiper.destroy(true, true);
+    //         // }
+    //         return () => {
+    //             thumbsSwiper.destroy();
+    //             setThumbsSwiper(null);
+    //         };
     //     };
     // }, []);
 
@@ -139,6 +152,15 @@ export default function B2bModel(props) {
                                     // '--swiper-pagination-color': '#fff',
                                     '--swiper-navigation-size': '25px',
                                 }}
+                                onBeforeDestroy={() => {
+                                    console.log("before destroy1")
+                                    thumbsSwiper.destroy()
+                                }}
+
+                                onDestroy={() => {
+                                    console.log("destroy1")
+                                    thumbsSwiper.destroy()
+                                }}
                                 centeredSlides={true}
                                 // autoplay={{
                                 //     delay: 2500,
@@ -157,7 +179,7 @@ export default function B2bModel(props) {
                                 {
                                     imageArray.length > 0 ?
                                         (
-                                            <Fragment key={"a1"}>
+                                            <Fragment key={(Math.random() + 1).toString(36).substring(7)}>
                                                 {
                                                     imageArray.map((image) => {
                                                         return (
@@ -202,7 +224,7 @@ export default function B2bModel(props) {
                                         )
                                         :
                                         (
-                                            <SwiperSlide key={1}>
+                                            <SwiperSlide key={new Date().getTime()}>
                                                 <Box sx={{
                                                     "& .product-image": {
                                                         // height: 600,
@@ -254,7 +276,25 @@ export default function B2bModel(props) {
                                 //     if (swiper && swiper.destroy) {
                                 //         swiper.destroy(true, true);
                                 //     }
+                                //     thumbsSwiper.destroy()
                                 // }}
+                                // onDestroy={(swiper) => {
+                                //     thumbsSwiper.destroy()
+                                // }}
+                                onBeforeDestroy={() => {
+                                    console.log("before destroy2")
+                                    if (thumbsSwiper && !thumbsSwiper.destroyed) {
+                                        // thumbsSwiper.destroy();
+                                        setThumbsSwiper(null);
+                                    }
+                                    // thumbsSwiper.destroy()
+                                }}
+
+                                // onDestroy={() => {
+                                //     console.log("destroy2")
+                                //     thumbsSwiper.destroy()
+                                // }}
+
 
                                 loop={true}
                                 spaceBetween={5}
@@ -281,22 +321,13 @@ export default function B2bModel(props) {
                                                                         cursor: "pointer",
                                                                     }
                                                                 }}>
-                                                                    <a
-                                                                        href={route("images.webp", {path: image.path})}
-                                                                        data-pswp-width={image.width}
-                                                                        data-pswp-height={image.height}
-                                                                        key={"pswp-gallery" + "-" + image.id}//index
-                                                                        target="_blank"
-                                                                        rel="noreferrer"
-                                                                        className={"relative"}
-                                                                    >
-                                                                        <img
-                                                                            src={route("images.webp", {path: image.path})}
-                                                                            alt={"brak"}
-                                                                            className={"product-image"}
-                                                                            loading="lazy"
-                                                                        />
-                                                                    </a>
+                                                                    <img
+                                                                        src={route("images.webp", {path: image.path})}
+                                                                        alt={"brak"}
+                                                                        className={"product-image"}
+                                                                        loading="lazy"
+                                                                    />
+
                                                                 </Box>
                                                             </SwiperSlide>
                                                         )
@@ -318,12 +349,14 @@ export default function B2bModel(props) {
                                                     cursor: "pointer",
                                                 }
                                             }}>
+
                                                 <img
                                                     src={route("images.webp", {path: "brak.jpg"})}
                                                     alt={"brak"}
                                                     className={"product-image"}
                                                     loading="lazy"
                                                 />
+
                                             </Box>
                                         </SwiperSlide>
                                     )

@@ -55,7 +55,7 @@ export default function DesktopLayout({
                             top: 8,
 
 
-                            zIndex: 5000,
+                            zIndex: 1000,
                             transition: "all .5s ease-in-out;",
                         }}
                     >
@@ -103,7 +103,7 @@ export default function DesktopLayout({
                             position: "sticky",
                             top: 8,
 
-                            zIndex: 5000,
+                            zIndex: 1000,
                         }}
                     > {/*Prawo nav*/}
                         <Box>

@@ -48,14 +48,16 @@ export default function ClientLayout({
                 {
                     !isMobile ?
                         (
-                            <DesktopLayout auth={auth} bgImage={bgImage} categories={categories} header={header}
+                            <DesktopLayout key={"desktop"} auth={auth} bgImage={bgImage} categories={categories}
+                                           header={header}
                                            accountManager={accountManager} cart={cart} clientId={clientId}
                                            blacklist={blacklist} children={children}/>
                         )
                         :
                         (
                             <>
-                                <MobileLayout auth={auth} bgImage={bgImage} categories={categories} header={header}
+                                <MobileLayout key={"mobile"} auth={auth} bgImage={bgImage} categories={categories}
+                                              header={header}
                                               accountManager={accountManager} cart={cart} clientId={clientId}
                                               blacklist={blacklist} children={children}/>
                             </>
