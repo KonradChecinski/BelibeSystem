@@ -3,6 +3,8 @@
 use App\Http\Controllers\AllegroTokenController;
 use App\Http\Controllers\B2bDeliveryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DynamicFooterController;
+use App\Http\Controllers\DynamicHeaderController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
@@ -219,12 +221,25 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     });
 
     Route::group(["prefix" => "/pages"], function () {
+        
+        Route::group(["prefix" => "/header"], function () {
+            Route::get("/edit", [DynamicHeaderController::class, 'edit'])->name("system.pages.header.edit");
+            Route::patch("/edit", [DynamicHeaderController::class, 'update'])->name("system.pages.header.update");
+        });
+
+        Route::group(["prefix" => "/footer"], function () {
+            Route::get("/edit", [DynamicFooterController::class, 'edit'])->name("system.pages.footer.edit");
+            Route::patch("/edit", [DynamicFooterController::class, 'update'])->name("system.pages.footer.update");
+        });
+
+
         Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");
         Route::get("/page", [DynamicPageController::class, 'create'])->name("system.pages.page");
         Route::post("/create", [DynamicPageController::class, 'store'])->name("system.pages.page.create");
         Route::get("/{dynamicPage}/edit", [DynamicPageController::class, 'edit'])->name("system.pages.page.edit");
         Route::patch("/{dynamicPage}", [DynamicPageController::class, 'update'])->name("system.pages.page.update");
         Route::delete("/{dynamicPage}", [DynamicPageController::class, 'destroy'])->name("system.pages.page.delete");
+
 
     });
 

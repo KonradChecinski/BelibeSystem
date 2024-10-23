@@ -69,6 +69,7 @@ export const Text = {
         paddingY: "24",
         color: "default",
     },
+    label: "Tekst",
     render: ({text, variant, align, paddingX, paddingY}) => {
         return (
             // <Section>

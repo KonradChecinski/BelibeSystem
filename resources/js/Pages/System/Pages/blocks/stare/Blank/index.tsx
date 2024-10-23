@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.css";
-import {getClassNameFactory} from "../../functions";
+import {getClassNameFactory} from "../../../functions";
 
 const getClassName = getClassNameFactory("Hero", styles);
 

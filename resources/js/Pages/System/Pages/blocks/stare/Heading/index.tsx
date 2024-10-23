@@ -1,6 +1,6 @@
 import React from "react";
-import {Section} from "../../components/Section";
-import {getClassNameFactory} from "../../functions";
+import {Section} from "../../../components/Section";
+import {getClassNameFactory} from "../../../functions";
 import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Heading", styles);

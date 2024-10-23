@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./styles.module.css";
-import {getClassNameFactory} from "../../functions";
+import {getClassNameFactory} from "../../../functions";
 // import { Button } from "@measured/puck/components/Button";
-import {Section} from "../../components/Section";
+import {Section} from "../../../components/Section";
 import {Button} from "@mui/material";
 // import createAdaptor from "@measured/puck-adaptor-fetch/index";
 

@@ -19,15 +19,22 @@ import ProductPriceTable from "@/Components/Pages/B2B/Model/ProductPriceTable";
 import ProductSizeTable from "@/Components/Pages/B2B/Model/ProductSizeTable";
 import ProductColorTable from "@/Components/Pages/B2B/Model/ProductColorTable";
 import {ArrowDownward, Favorite, FavoriteBorder} from "@mui/icons-material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useTheme} from "@mui/material/styles";
 
 export default function B2bModel(props) {
+    const theme = useTheme();
+
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     const ProductOrderTableRef = useRef(null)
-    console.log(props)
+    // console.log(props)
 
 
     const [isFavorited, setIsFavorited] = useState(props.model.isFavorited)
+
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
 
     const handleFavorite = () => {
         axios.patch(route('b2b.favorite.update', {productModel: props.model.id}))
@@ -71,7 +78,7 @@ export default function B2bModel(props) {
     }, []);
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null)
-    console.log(thumbsSwiper)
+    // console.log(thumbsSwiper)
     // let thumbsSwiper = new PhotoSwipeLightbox({
     //     gallery: "#" + "thumbs-swiper-container", //props.galleryID,
     //     children: "a",
@@ -152,15 +159,15 @@ export default function B2bModel(props) {
                                     // '--swiper-pagination-color': '#fff',
                                     '--swiper-navigation-size': '25px',
                                 }}
-                                onBeforeDestroy={() => {
-                                    console.log("before destroy1")
-                                    thumbsSwiper.destroy()
-                                }}
-
-                                onDestroy={() => {
-                                    console.log("destroy1")
-                                    thumbsSwiper.destroy()
-                                }}
+                                // onBeforeDestroy={() => {
+                                //     console.log("before destroy1")
+                                //     thumbsSwiper.destroy()
+                                // }}
+                                //
+                                // onDestroy={() => {
+                                //     console.log("destroy1")
+                                //     thumbsSwiper.destroy()
+                                // }}
                                 centeredSlides={true}
                                 // autoplay={{
                                 //     delay: 2500,
@@ -172,7 +179,7 @@ export default function B2bModel(props) {
                                 }}
                                 navigation={true}
                                 loop={false}
-                                thumbs={{swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null}}
+                                thumbs={!isMobile && {swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null}}
                                 modules={[Autoplay, Pagination, Navigation, Thumbs]}
                                 className="mySwiper"
                             >
@@ -258,112 +265,114 @@ export default function B2bModel(props) {
 
                             </Swiper>
                         </Box>
-                        <Box
-                            className="thumbs-swiper-container"
-                            id={"thumbs-swiper-container"}
-                            sx={{
-                                "& .swiper-slide": {
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    height: 50,
-                                    width: "auto"
-                                }
-                            }}>
-                            <Swiper
-                                onSwiper={setThumbsSwiper}
-                                // onBeforeDestroy={(swiper) => {
-                                //     if (swiper && swiper.destroy) {
-                                //         swiper.destroy(true, true);
-                                //     }
-                                //     thumbsSwiper.destroy()
-                                // }}
-                                // onDestroy={(swiper) => {
-                                //     thumbsSwiper.destroy()
-                                // }}
-                                onBeforeDestroy={() => {
-                                    console.log("before destroy2")
-                                    if (thumbsSwiper && !thumbsSwiper.destroyed) {
-                                        // thumbsSwiper.destroy();
-                                        setThumbsSwiper(null);
+                        {!isMobile && (
+                            <Box
+                                className="thumbs-swiper-container"
+                                id={"thumbs-swiper-container"}
+                                sx={{
+                                    "& .swiper-slide": {
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        height: 50,
+                                        width: "auto"
                                     }
-                                    // thumbsSwiper.destroy()
-                                }}
+                                }}>
+                                <Swiper
+                                    onSwiper={setThumbsSwiper}
+                                    // onBeforeDestroy={(swiper) => {
+                                    //     if (swiper && swiper.destroy) {
+                                    //         swiper.destroy(true, true);
+                                    //     }
+                                    //     thumbsSwiper.destroy()
+                                    // }}
+                                    // onDestroy={(swiper) => {
+                                    //     thumbsSwiper.destroy()
+                                    // }}
+                                    // onBeforeDestroy={() => {
+                                    //     console.log("before destroy2")
+                                    //     if (thumbsSwiper && !thumbsSwiper.destroyed) {
+                                    //         // thumbsSwiper.destroy();
+                                    //         setThumbsSwiper(null);
+                                    //     }
+                                    //     // thumbsSwiper.destroy()
+                                    // }}
 
-                                // onDestroy={() => {
-                                //     console.log("destroy2")
-                                //     thumbsSwiper.destroy()
-                                // }}
+                                    // onDestroy={() => {
+                                    //     console.log("destroy2")
+                                    //     thumbsSwiper.destroy()
+                                    // }}
 
 
-                                loop={true}
-                                spaceBetween={5}
-                                slidesPerView={'auto'}
-                                freeMode={true}
-                                watchSlidesProgress={true}
-                                modules={[FreeMode, Navigation, Thumbs]}
-                                className="mySwiperThumbnails"
-                            >
-                                {imageArray.length > 0 ?
-                                    (
-                                        <>
-                                            {imageArray.map((image) => {
+                                    loop={true}
+                                    spaceBetween={5}
+                                    slidesPerView={'auto'}
+                                    freeMode={true}
+                                    watchSlidesProgress={true}
+                                    modules={[FreeMode, Navigation, Thumbs]}
+                                    className="mySwiperThumbnails"
+                                >
+                                    {imageArray.length > 0 ?
+                                        (
+                                            <>
+                                                {imageArray.map((image) => {
 
-                                                return (
-                                                    <>
-                                                        {image && (
-                                                            <SwiperSlide key={image.id}>
-                                                                <Box sx={{
-                                                                    "& .product-image": {
-                                                                        height: 50,
-                                                                        maxWidth: "fit-content",
-                                                                        width: 1,
-                                                                        cursor: "pointer",
-                                                                    }
-                                                                }}>
-                                                                    <img
-                                                                        src={route("images.webp", {path: image.path})}
-                                                                        alt={"brak"}
-                                                                        className={"product-image"}
-                                                                        loading="lazy"
-                                                                    />
+                                                    return (
+                                                        <>
+                                                            {image && (
+                                                                <SwiperSlide key={image.id}>
+                                                                    <Box sx={{
+                                                                        "& .product-image": {
+                                                                            height: 50,
+                                                                            maxWidth: "fit-content",
+                                                                            width: 1,
+                                                                            cursor: "pointer",
+                                                                        }
+                                                                    }}>
+                                                                        <img
+                                                                            src={route("images.webp", {path: image.path})}
+                                                                            alt={"brak"}
+                                                                            className={"product-image"}
+                                                                            loading="lazy"
+                                                                        />
 
-                                                                </Box>
-                                                            </SwiperSlide>
-                                                        )
+                                                                    </Box>
+                                                                </SwiperSlide>
+                                                            )
 
-                                                        }
-                                                    </>
-                                                )
-                                            })}
-                                        </>
-                                    )
-                                    :
-                                    (
-                                        <SwiperSlide key={1}>
-                                            <Box sx={{
-                                                "& .product-image": {
-                                                    height: 50,
-                                                    maxWidth: "fit-content",
-                                                    width: 1,
-                                                    cursor: "pointer",
-                                                }
-                                            }}>
+                                                            }
+                                                        </>
+                                                    )
+                                                })}
+                                            </>
+                                        )
+                                        :
+                                        (
+                                            <SwiperSlide key={1}>
+                                                <Box sx={{
+                                                    "& .product-image": {
+                                                        height: 50,
+                                                        maxWidth: "fit-content",
+                                                        width: 1,
+                                                        cursor: "pointer",
+                                                    }
+                                                }}>
 
-                                                <img
-                                                    src={route("images.webp", {path: "brak.jpg"})}
-                                                    alt={"brak"}
-                                                    className={"product-image"}
-                                                    loading="lazy"
-                                                />
+                                                    <img
+                                                        src={route("images.webp", {path: "brak.jpg"})}
+                                                        alt={"brak"}
+                                                        className={"product-image"}
+                                                        loading="lazy"
+                                                    />
 
-                                            </Box>
-                                        </SwiperSlide>
-                                    )
-                                }
+                                                </Box>
+                                            </SwiperSlide>
+                                        )
+                                    }
 
-                            </Swiper>
-                        </Box>
+                                </Swiper>
+                            </Box>
+                        )}
                     </Box>
                     <Box sx={{
                         display: "flex",

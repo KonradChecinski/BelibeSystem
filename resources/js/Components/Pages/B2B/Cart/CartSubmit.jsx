@@ -40,7 +40,7 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                 </Typography>
             </Box>
             <Box sx={{display: "flex", gap: 2, flexWrap: "wrap"}}>
-                <Box>
+                <Box sx={{width: 1}}>
                     <Typography variant="body1">
                         Uwagi dla sprzedawcy {props.accountManager ? "(Od klienta)" : null}
                     </Typography>
@@ -53,7 +53,7 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                         onChange={(e) => setData("client_comment", e.target.value)}
                         minRows={4}
                         sx={{
-                            width: "50ch",
+                            width: 1,
                             minWidth: "30ch",
                             maxWidth: "50ch",
                             mt: 2,
@@ -64,7 +64,7 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                 </Box>
                 {props.accountManager &&
                     (
-                        <Box>
+                        <Box sx={{width: 1}}>
                             <Typography variant="body1">
                                 Uwagi systemowe (klient ich nie widzi)
                             </Typography>
@@ -77,7 +77,7 @@ export default function CartSubmit({props, data, setData, post, processing}) {
                                 onChange={(e) => setData("user_comment", e.target.value)}
                                 minRows={4}
                                 sx={{
-                                    width: "50ch",
+                                    width: 1,
                                     minWidth: "30ch",
                                     maxWidth: "50ch",
                                     mt: 2,

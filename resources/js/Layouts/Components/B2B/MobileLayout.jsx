@@ -1,11 +1,9 @@
 import {Box, Typography} from "@mui/material";
 import B2BMenu from "@/Components/Layout/B2BMenu";
-import B2BNavBar from "@/Components/Layout/B2BNavBar";
-import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
-import AppBar from "@/Components/Layout/AppBar";
 import {useTheme} from "@mui/material/styles";
 import {useState} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import B2BAppBar from "@/Components/Layout/B2BAppBar";
 
 export default function MobileLayout({
                                          auth,
@@ -28,16 +26,15 @@ export default function MobileLayout({
 
     return (
         <>
-            {/*<AppBar position={"static"}></AppBar>*/}
-            <AppBar position={"fixed"}>
+            <B2BAppBar position={"fixed"} cart={cart} clientId={clientId} accountManager={accountManager}>
                 <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage}
                          categories={categories}
                          accountManager={accountManager}/>
-            </AppBar>
+            </B2BAppBar>
             <Box sx={{width: 1, height: 70}}></Box>
             <Box>
                 <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
-                
+
                 {children}
             </Box>
             <Box

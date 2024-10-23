@@ -196,13 +196,13 @@ export default function Menu({showContent, auth}) {
                             }}
                         />
                         <SubMenuLink
-                            href={route("system.pages")}
-                            active={route().current("system.pages")}
+                            href={route("system.pages.header.edit")}
+                            active={route().current("system.pages.header.edit")}
                             text={t("Header")}
                         />
                         <SubMenuLink
-                            href={route("system.pages")}
-                            active={route().current("system.pages")}
+                            href={route("system.pages.footer.edit")}
+                            active={route().current("system.pages.footer.edit")}
                             text={t("Footer")}
                         />
 

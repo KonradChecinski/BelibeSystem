@@ -1,12 +1,16 @@
 import {Avatar, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {Link, router} from "@inertiajs/react";
-import {History, Logout, Payment, Person, ReceiptLong, Savings, Settings} from "@mui/icons-material";
+import {Favorite, History, Logout, Payment, Person, ReceiptLong, Savings, Settings} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import UserAvatar from "@/Components/Layout/UserAvatar";
+import {useTheme} from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManager, props}) {
     const {t} = useLaravelReactI18n();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
 
     const handleLogoutClick = () => {
@@ -74,6 +78,21 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
             </Link>
 
             <Divider/>
+            {isMobile && (
+                <>
+                    <Link href={route("b2b.favorites")}>
+                        <MenuItem onClick={onClose}>
+                            <ListItemIcon>
+                                <Favorite fontSize="small"/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                {t("Favorites")}
+                            </ListItemText>
+                        </MenuItem>
+                    </Link>
+                    <Divider/>
+                </>
+            )}
 
             <Link href={route("b2b.orders")}>
                 <MenuItem onClick={onClose}>

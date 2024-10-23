@@ -5,25 +5,23 @@ import {Puck} from "@measured/puck";
 import "@measured/puck/puck.css";
 import {Text} from "./blocks/Text";
 import {VerticalSpace} from "./blocks/VerticalSpace";
-import ClientLayout from "@/Layouts/ClientLayout";
 import {ArrowBack} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
 import {useEffect, useState} from "react";
-import {config as PuckMuiConfig} from 'puck-mui';
+import {Column} from "@/Pages/System/Pages/blocks/Column";
 
-
-export default function Page(props) {
+export default function Header(props) {
     const [pageData, setPageData] = useState(props?.page);
     console.log(props)
     const {t} = useLaravelReactI18n();
 
 
     const [config, setConfig] = useState({
-        // components: {
-        //     Text,
-        //     VerticalSpace,
-        // },
-        ...PuckMuiConfig,
+        components: {
+            Text,
+            VerticalSpace,
+            Column,
+        },
         root: {
             fields: {
                 title: {
@@ -110,6 +108,9 @@ export default function Page(props) {
                         background: "none !important",
                         border: "none !important",
                     },
+                    // "& #puck-preview>div:last-of-type": {
+                    //     // bgcolor: "green"
+                    // },
                     "& #puck-preview>div:last-of-type>div>div": {
 
                         border: 1

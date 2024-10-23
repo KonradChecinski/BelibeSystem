@@ -38,6 +38,7 @@ export const VerticalSpace = {
     defaultProps: {
         size: "24px",
     },
+    label: "Odstęp pionowy",
     render: ({size}) => {
         return <div style={{height: size, width: "100%"}}/>;
     },

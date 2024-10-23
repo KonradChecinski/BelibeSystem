@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./styles.module.css";
-import {getClassNameFactory} from "../../functions";
-import {Section} from "../../components/Section";
+import {getClassNameFactory} from "../../../functions";
+import {Section} from "../../../components/Section";
 
 const getClassName = getClassNameFactory("Logos", styles);
 

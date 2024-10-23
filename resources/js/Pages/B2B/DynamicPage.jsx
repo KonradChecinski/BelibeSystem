@@ -4,11 +4,11 @@ import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {Render} from "@measured/puck";
 import {useState} from "react";
-import {ButtonGroup} from "@/Pages/System/Pages/blocks/ButtonGroup";
-import {Hero} from "@/Pages/System/Pages/blocks/Hero";
-import {Heading} from "@/Pages/System/Pages/blocks/Heading";
-import {FeatureList} from "@/Pages/System/Pages/blocks/FeatureList";
-import {Logos} from "@/Pages/System/Pages/blocks/Logos";
+import {ButtonGroup} from "resources/js/Pages/System/Pages/blocks/stare/ButtonGroup";
+import {Hero} from "resources/js/Pages/System/Pages/blocks/stare/Hero";
+import {Heading} from "resources/js/Pages/System/Pages/blocks/stare/Heading";
+import {FeatureList} from "resources/js/Pages/System/Pages/blocks/stare/FeatureList";
+import {Logos} from "resources/js/Pages/System/Pages/blocks/stare/Logos";
 import {Text} from "@/Pages/System/Pages/blocks/Text";
 import {VerticalSpace} from "@/Pages/System/Pages/blocks/VerticalSpace";
 
