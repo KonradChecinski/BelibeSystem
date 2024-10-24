@@ -84,4 +84,44 @@ class DynamicPageController extends Controller
     {
         $dynamicPage->delete();
     }
+
+    public function link()
+    {
+        $links = collect([]);
+
+        $pages = [
+            "name" => "Pages",
+            "links" => DynamicPage::all(["id", "title", "slug"])->map(function ($page) {
+                return [
+                    "name" => $page->title,
+                    "url" => route("b2b.page", $page->slug)
+                ];
+            })
+        ];
+        $links->push($pages);
+
+        $categories = [
+            "name" => "Categories",
+            "links" => ProductCategory::query()->where("show_in_menu", true)->get(["id", "name", "slug"])->map(function ($category) {
+                return [
+                    "name" => $category->name,
+                    "url" => route("b2b.category", $category->slug)
+                ];
+            })
+        ];
+        $links->push($categories);
+
+//        $links["mainPage"] = [
+//            "name" => __("Main Page"),
+//            "links" => [
+//                [
+//                    "name" => __("Main Page"),
+//                    "url" => route("main-page")
+//                ]
+//            ]
+//        ];
+
+
+        return response()->json($links);
+    }
 }

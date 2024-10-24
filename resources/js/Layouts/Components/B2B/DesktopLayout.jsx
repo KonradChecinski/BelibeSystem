@@ -5,18 +5,25 @@ import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
 import {useTheme} from "@mui/material/styles";
 import {useState} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {config as PuckMuiConfig} from "puck-mui/dist/config";
+import {Render} from "@measured/puck";
+import {PDivider, PHeading, PParagraph, PTypography, PColumns} from 'puck-mui';
+import B2BFooter from "@/Layouts/Components/B2B/Footer/Footer";
 
 export default function DesktopLayout({
                                           auth,
                                           bgImage,
                                           categories,
                                           header,
+                                          headerMenu,
+                                          footer,
                                           children,
                                           fixed = true,
                                           accountManager,
                                           cart,
                                           clientId,
-                                          blacklist
+                                          blacklist,
+                                          props
                                       }) {
     const theme = useTheme();
     const [showMenu, setShowMenu] = useState(useMediaQuery(theme.breakpoints.up("md")));
@@ -131,7 +138,7 @@ export default function DesktopLayout({
                     bgcolor: "rgba(0,0,0,0.5)",
                 }}
             >
-
+                <B2BFooter footer={footer} props={props}/>
             </Box>
 
         </>

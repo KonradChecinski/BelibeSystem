@@ -42,14 +42,8 @@ export default function B2bOrderSuccess(props) {
 
     return (
         <ClientLayout
-            auth={props.auth}
-            errors={props.errors}
-            categories={props.menu}
-            bgImage={props.backgroundImage}
-            accountManager={props.accountManager}
-            cart={props.cartSummary}
-            clientId={props.clientId}
-            blacklist={props.blacklist}
+            props={props}
+
             // header={
             //     t("Zamówienie: ") + 1 + " " + t("zostało złożone")
             // }

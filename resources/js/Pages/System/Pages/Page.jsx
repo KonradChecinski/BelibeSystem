@@ -36,17 +36,8 @@ export default function Page(props) {
                 },
             },
             render: ({children, editMode, title}) => {
-                return (<ClientLayout
-                        auth={props.auth}
-                        errors={props.errors}
-                        categories={props.menu}
-                        bgImage={props.backgroundImage}
-                        cart={props.cartSummary}
-                        clientId={props.clientId}
-                        blacklist={false}
-                        fixed={false}
-                        header={title}
-                    >
+                return (
+                    <ClientLayout props={props} header={title}>
                         {children}
                     </ClientLayout>
                 );

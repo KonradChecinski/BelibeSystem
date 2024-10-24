@@ -11,7 +11,7 @@ class UpdateDynamicFooterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editPages", "user");
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdateDynamicFooterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "content" => "required|array",
+            "content.*.type" => "required|string",
+            "content.*.props" => "required|array",
+            "zones" => "required|array",
+            "zones.*" => "nullable|array",
+            "zones.*.*.type" => "required|string|nullable",
+            "zones.*.*.props" => "required|array|nullable",
         ];
     }
 }

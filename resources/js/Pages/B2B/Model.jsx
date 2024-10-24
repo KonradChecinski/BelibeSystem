@@ -117,14 +117,7 @@ export default function B2bModel(props) {
 
     return (
         <ClientLayout
-            auth={props.auth}
-            errors={props.errors}
-            categories={props.menu}
-            bgImage={props.backgroundImage}
-            accountManager={props.accountManager}
-            cart={props.cartSummary}
-            clientId={props.clientId}
-            blacklist={props.blacklist}
+            props={props}
             header={
                 t("Model") + " " + props.model.symbol + ": " + props.model.name
             }

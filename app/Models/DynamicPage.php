@@ -15,11 +15,13 @@ class DynamicPage extends Model
         "title",
         "slug",
         "content",
+        "zones",
         "is_active",
     ];
 
     protected $casts = [
         "content" => "array", // "content" is a JSON field in the database, so we need to cast it to an array
+        "zones" => "array", // "content" is a JSON field in the database, so we need to cast it to an array
         "is_active" => "boolean",
     ];
 

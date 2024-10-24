@@ -28,14 +28,7 @@ export default function B2bFavorites(props) {
 
     return (
         <ClientLayout
-            auth={props.auth}
-            errors={props.errors}
-            categories={props.menu}
-            bgImage={props.backgroundImage}
-            accountManager={props.accountManager}
-            cart={props.cartSummary}
-            clientId={props.clientId}
-            blacklist={props.blacklist}
+            props={props}
             header={t("Favorites")}
         >
             <Head title={t("Favorites")}/>

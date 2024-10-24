@@ -11,6 +11,7 @@ import {FeatureList} from "resources/js/Pages/System/Pages/blocks/stare/FeatureL
 import {Logos} from "resources/js/Pages/System/Pages/blocks/stare/Logos";
 import {Text} from "@/Pages/System/Pages/blocks/Text";
 import {VerticalSpace} from "@/Pages/System/Pages/blocks/VerticalSpace";
+import {config as PuckMuiConfig} from 'puck-mui';
 
 export default function DynamicPage(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -26,35 +27,28 @@ export default function DynamicPage(props) {
             }
         },
     };
-    const config = {
-        components: {
-            ButtonGroup,
-            Hero,
-            Heading,
-            FeatureList,
-            Logos,
-            Text,
-            VerticalSpace,
-        },
-    };
+    // const config = {
+    //     components: {
+    //         // ButtonGroup,
+    //         // Hero,
+    //         // Heading,
+    //         // FeatureList,
+    //         // Logos,
+    //         // Text,
+    //         // VerticalSpace,
+    //     },
+    // };
 
 
     return (
         <ClientLayout
-            auth={props.auth}
-            errors={props.errors}
-            categories={props.menu}
-            bgImage={props.backgroundImage}
-            accountManager={props.accountManager}
-            cart={props.cartSummary}
-            clientId={props.clientId}
-            blacklist={props.blacklist}
+            props={props}
             header={
                 t(props.page?.title)
             }
         >
             <Head title={t(props.page?.title)}/>
-            <Render config={config} data={initialData}/>
+            <Render config={PuckMuiConfig} data={initialData}/>
 
         </ClientLayout>
     );

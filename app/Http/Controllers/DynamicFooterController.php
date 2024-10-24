@@ -56,9 +56,16 @@ class DynamicFooterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDynamicFooterRequest $request, DynamicFooter $dynamicFooter)
+    public function update(UpdateDynamicFooterRequest $request)
     {
-        dd($request->all(), $dynamicFooter);
+        $dynamicFooter = DynamicFooter::first();
+        if (is_null($dynamicFooter)) {
+            $dynamicFooter = new DynamicFooter();
+        }
+        $dynamicFooter->fill($request->validated());
+        $dynamicFooter->save();
+//        dd($request->all(), $request->validated(), $dynamicFooter);
+
     }
 
     /**

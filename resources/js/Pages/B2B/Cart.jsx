@@ -50,17 +50,10 @@ export default function B2bCart(props) {
 
     return (
         <ClientLayout
-            auth={props.auth}
-            errors={props.errors}
-            categories={props.menu}
-            bgImage={props.backgroundImage}
-            accountManager={props.accountManager}
-            cart={props.cartSummary}
-            clientId={props.clientId}
-            blacklist={props.blacklist}
             header={
                 t("Cart")
             }
+            props={props}
         >
             <Head title={t("Cart")}/>
             <Box sx={{width: 1, minHeight: 400, position: "relative", pb: 3}}>

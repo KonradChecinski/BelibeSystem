@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('dynamic_footers', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
+            $table->json('content');
+            $table->json('zones');
             $table->timestamps();
         });
     }

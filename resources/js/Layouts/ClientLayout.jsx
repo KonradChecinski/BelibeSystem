@@ -12,18 +12,7 @@ import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
 import DesktopLayout from "@/Layouts/Components/B2B/DesktopLayout";
 import MobileLayout from "@/Layouts/Components/B2B/MobileLayout";
 
-export default function ClientLayout({
-                                         auth,
-                                         bgImage,
-                                         categories,
-                                         header,
-                                         children,
-                                         fixed = true,
-                                         accountManager,
-                                         cart,
-                                         clientId,
-                                         blacklist
-                                     }) {
+export default function ClientLayout({props, header, children,}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -32,6 +21,17 @@ export default function ClientLayout({
 
     const [showMenu, setShowMenu] = useState(useMediaQuery(theme.breakpoints.up("md")));
 
+    const auth = props.auth
+    const errors = props.errors
+    const categories = props.menu
+    const bgImage = props.backgroundImage
+    const accountManager = props.accountManager
+    const cart = props.cartSummary
+    const clientId = props.clientId
+    const blacklist = props.blacklist
+
+    const headerMenu = props.headerMenu
+    const footer = props.footer
 
     return (
         <Theme>
@@ -49,18 +49,18 @@ export default function ClientLayout({
                     !isMobile ?
                         (
                             <DesktopLayout key={"desktop"} auth={auth} bgImage={bgImage} categories={categories}
-                                           header={header}
+                                           header={header} footer={footer} headerMenu={headerMenu}
                                            accountManager={accountManager} cart={cart} clientId={clientId}
-                                           blacklist={blacklist} children={children}/>
+                                           blacklist={blacklist} children={children} props={props}/>
                         )
                         :
                         (
-                            <>
-                                <MobileLayout key={"mobile"} auth={auth} bgImage={bgImage} categories={categories}
-                                              header={header}
-                                              accountManager={accountManager} cart={cart} clientId={clientId}
-                                              blacklist={blacklist} children={children}/>
-                            </>
+
+                            <MobileLayout key={"mobile"} auth={auth} bgImage={bgImage} categories={categories}
+                                          header={header} footer={footer} headerMenu={headerMenu}
+                                          accountManager={accountManager} cart={cart} clientId={clientId}
+                                          blacklist={blacklist} children={children} props={props}/>
+
                         )
                 }
 

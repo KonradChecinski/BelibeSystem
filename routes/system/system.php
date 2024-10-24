@@ -221,7 +221,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     });
 
     Route::group(["prefix" => "/pages"], function () {
-        
+
         Route::group(["prefix" => "/header"], function () {
             Route::get("/edit", [DynamicHeaderController::class, 'edit'])->name("system.pages.header.edit");
             Route::patch("/edit", [DynamicHeaderController::class, 'update'])->name("system.pages.header.update");
@@ -231,6 +231,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::get("/edit", [DynamicFooterController::class, 'edit'])->name("system.pages.footer.edit");
             Route::patch("/edit", [DynamicFooterController::class, 'update'])->name("system.pages.footer.update");
         });
+        Route::get("/links", [DynamicPageController::class, 'link'])->name("system.pages.links");
 
 
         Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");

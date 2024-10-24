@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Helpers\Helper;
 use App\Helpers\SystemName;
+use App\Models\DynamicFooter;
+use App\Models\DynamicHeader;
 use App\Models\Products\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -58,6 +60,8 @@ class HandleInertiaRequests extends Middleware
             $cart = $client->cart()->with("productModel");
             $array = array_merge($array, [
                 "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
+                "footer" => DynamicFooter::first(["content", "zones"]),
+                "header" => DynamicHeader::first(["content", "zones"]),
                 "clientId" => Helper::getClientIdToB2b(),
                 "blacklist" => Helper::getClientToB2b()->blacklist || is_null(Helper::getClientToB2b()->subiekt_id),
                 "cartSummary" => Helper::getCartSummary($cart),

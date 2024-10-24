@@ -27,7 +27,10 @@ class StoreDynamicPageRequest extends FormRequest
             "content.*.props" => "required|array",
             "root.props.title" => "required|string",
             "root.props.slug" => "nullable|string",
-            "zones" => "nullable|array",
+            "zones" => "required|array",
+            "zones.*" => "nullable|array",
+            "zones.*.*.type" => "required|string|nullable",
+            "zones.*.*.props" => "required|array|nullable",
         ];
     }
 }
