@@ -154,6 +154,7 @@ class Allegro
             $lastNumber = (int)substr($lastNumber, -5);
             $lastNumber++;
             $number = "ALL " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
+            
 
             $allegroOrderModel = Order::create([
                 "number" => $number,
@@ -162,7 +163,7 @@ class Allegro
                 "order_id" => $allegroOrderObject->id,
                 "ordered_at" => Carbon::parse($allegroOrderObject->lineItems[0]->boughtAt)->setTimezone("Europe/Warsaw"),
                 "total_quantity" => $allegroOrderItemsObject->sum("quantity"),
-                "total_gross" => $allegroOrderItemsObject->sum("price.amount"),
+                "total_gross" => $allegroOrderItemsObject->sum(fn($item) => $item->price->amount * $item->quantity),
                 "payment_name" => $allegroOrderObject->payment->provider,
                 "delivery_name" => $allegroOrderObject->delivery->method->name,
                 "delivery_gross" => $allegroOrderObject->delivery->cost->amount,
