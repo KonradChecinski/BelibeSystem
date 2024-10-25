@@ -13,7 +13,7 @@ export default function Theme({children}) {
     let lightTheme = {
         primary: {
             // main: "#1A2035",
-            main: "#2a54d9",
+            main: "#1D71B8",
             second: "rgba(0,0,0,0.08)",
             third: "rgba(0,0,0,0.25)"
         },

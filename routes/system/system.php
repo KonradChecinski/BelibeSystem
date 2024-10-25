@@ -5,6 +5,7 @@ use App\Http\Controllers\B2bDeliveryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicFooterController;
 use App\Http\Controllers\DynamicHeaderController;
+use App\Http\Controllers\DynamicMainPageController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
@@ -231,6 +232,12 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::get("/edit", [DynamicFooterController::class, 'edit'])->name("system.pages.footer.edit");
             Route::patch("/edit", [DynamicFooterController::class, 'update'])->name("system.pages.footer.update");
         });
+
+        Route::group(["prefix" => "/main"], function () {
+            Route::get("/edit", [DynamicMainPageController::class, 'edit'])->name("system.pages.main.edit");
+            Route::patch("/edit", [DynamicMainPageController::class, 'update'])->name("system.pages.main.update");
+        });
+
         Route::get("/links", [DynamicPageController::class, 'link'])->name("system.pages.links");
 
 

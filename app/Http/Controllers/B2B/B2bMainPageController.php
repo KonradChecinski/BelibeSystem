@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\B2B;
 
 use App\Http\Controllers\Controller;
+use App\Models\DynamicMainPage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +14,10 @@ class B2bMainPageController extends Controller
      */
     public function index()
     {
-        return Inertia::render("B2B/MainPage");
+
+        return Inertia::render("B2B/MainPage", [
+            "page" => DynamicMainPage::first()
+        ]);
     }
 
     /**

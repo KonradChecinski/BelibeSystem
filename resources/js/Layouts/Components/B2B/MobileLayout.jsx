@@ -45,8 +45,9 @@ export default function MobileLayout({
             <Box
                 sx={{
                     mt: 2,
-                    height: "400px",
+                    // height: "400px",
                     bgcolor: "rgba(0,0,0,0.5)",
+                    color: "menuText.main"
                 }}
             >
                 <B2BFooter footer={footer} props={props}/>

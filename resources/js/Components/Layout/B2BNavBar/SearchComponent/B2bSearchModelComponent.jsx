@@ -54,6 +54,7 @@ export default function B2bSearchModelComponent({auth, searchRoute, label}) {
                 setOpen(false);
             }}
             options={options}
+            color={"menuText.main"}
             sx={{width: "100%"}}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => option.symbol + " - " + option.name}
@@ -101,6 +102,7 @@ export default function B2bSearchModelComponent({auth, searchRoute, label}) {
                 <TextField
                     {...params}
                     label={label}
+                    // color={"menuText.main"}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

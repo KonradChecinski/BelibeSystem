@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateDynamicPageRequest extends FormRequest
+class UpdateDynamicMainPageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,6 @@ class UpdateDynamicPageRequest extends FormRequest
             "content" => "required|array",
             "content.*.type" => "required|string",
             "content.*.props" => "required|array",
-            "root.props.title" => "required|string",
-            "root.props.slug" => "nullable|string",
             "zones" => "nullable|array",
             "zones.*" => "nullable|array",
             "zones.*.*.type" => "required|string|nullable",

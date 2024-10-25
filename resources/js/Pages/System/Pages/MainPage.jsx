@@ -15,8 +15,8 @@ import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from 
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 
-export default function Footer(props) {
-    const [pageData, setPageData] = useState(props?.dynamicFooter);
+export default function MainPage(props) {
+    const [pageData, setPageData] = useState(props?.dynamicMainPage);
     const theme = useTheme();
     console.log(props)
     const {t} = useLaravelReactI18n();
@@ -87,17 +87,17 @@ export default function Footer(props) {
         zones: pageData?.zones ? pageData?.zones : [],
         root: {
             props: {
-                title: t("Footer")
+                title: t("Dashboard")
             }
         },
     });
 // Save the data to your database
     const save = (data) => {
         // console.log(data, pageData.id)
-        router.patch(route("system.pages.footer.update"), data, {
+        router.patch(route("system.pages.main.update"), data, {
             onSuccess: () => {
                 enqueueSnackbar("Stopka została zaktualizowana", {variant: "success"})
-                router.visit(route("system.pages.footer.edit"));
+                router.visit(route("system.pages.main.edit"));
             },
             onError: (error) => {
                 console.error(error)
@@ -109,7 +109,7 @@ export default function Footer(props) {
 
     return (
         <>
-            <Head title={t("Footer")}/>
+            <Head title={t("Dashboard")}/>
             <Box
                 sx={{
                     "& .Puck div": {

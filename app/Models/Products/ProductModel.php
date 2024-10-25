@@ -166,11 +166,11 @@ class ProductModel extends Model
 
     public function mainImages()
     {
-        $images = $this->images()->whereIn("main", [1, 2])->get();
+        $images = $this->images()->whereIn("main", [1, 2]);
         if ($images->count() === 0) {
             return $this->images()->where("order", 0)->where("type", 1)->limit(2)->get();
         }
-        return $images;
+        return $images->get();
     }
 
 

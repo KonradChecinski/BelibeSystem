@@ -181,8 +181,8 @@ export default function Menu({showContent, auth}) {
                             }}
                         />
                         <SubMenuLink
-                            href={route("system.pages")}
-                            active={route().current("system.pages")}
+                            href={route("system.pages.main.edit")}
+                            active={route().current("system.pages.main.edit")}
                             text={t("Home page")}
                         />
                         <Divider

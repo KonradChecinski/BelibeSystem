@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System;
 use App\Helpers\Allegro\Allegro;
 use App\Helpers\Empik\Empik;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ExtraMainPageComponentsController;
 use App\Jobs\Allegro\AllegroCheckMessage;
 use App\Jobs\Empik\EmpikAcceptOrder;
 use App\Jobs\Empik\EmpikChangeShow;
@@ -54,7 +55,9 @@ class TestController extends Controller
 //            dd($order, $order->orderProducts);
 //        }
 
-        OrderCreateInSubiekt::dispatch();
+//        OrderCreateInSubiekt::dispatch();
+        $ExtraMainPageComponentsController = new ExtraMainPageComponentsController();
+        $ExtraMainPageComponentsController->bestsellers();
     }
 
     /**

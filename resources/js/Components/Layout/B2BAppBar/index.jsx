@@ -164,6 +164,7 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
     return (
         <>
             <MuiAppBar
+                color={"secondary"}
                 position={position}
                 sx={{
                     borderRadius: 1,
@@ -199,44 +200,13 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
                     </Box>
 
                     <Box sx={{flexGrow: 1}}/>
-                    {/*<Box sx={{ display: { xs: "none", md: "flex" } }}>*/}
-                    {/*    <IconButton*/}
-                    {/*        size="large"*/}
-                    {/*        aria-label="show 4 new mails"*/}
-                    {/*        color="inherit"*/}
-                    {/*    >*/}
-                    {/*        <Badge badgeContent={4} color="error">*/}
-                    {/*            <MailIcon />*/}
-                    {/*        </Badge>*/}
-                    {/*    </IconButton>*/}
-                    {/*    <IconButton*/}
-                    {/*        size="large"*/}
-                    {/*        aria-label="show 17 new notifications"*/}
-                    {/*        color="inherit"*/}
-                    {/*    >*/}
-                    {/*        <Badge badgeContent={17} color="error">*/}
-                    {/*            <NotificationsIcon />*/}
-                    {/*        </Badge>*/}
-                    {/*    </IconButton>*/}
-                    {/*    <IconButton*/}
-                    {/*        size="large"*/}
-                    {/*        edge="end"*/}
-                    {/*        aria-label="account of current user"*/}
-                    {/*        aria-controls={menuId}*/}
-                    {/*        aria-haspopup="true"*/}
-                    {/*        onClick={handleProfileMenuOpen}*/}
-                    {/*        color="inherit"*/}
-                    {/*    >*/}
-                    {/*        <AccountCircle />*/}
-                    {/*    </IconButton>*/}
-                    {/*</Box>*/}
 
 
                     <Box sx={{display: {xs: "flex", md: "none"}}}>
 
                         <Tooltip title={"Zobacz koszyk"}>
                             <Badge
-                                color="secondary"
+                                color="primary"
                                 badgeContent={
                                     <Tooltip title={"Ilość produktów w koszyku"} placement={"left"}>
                                         <span>{cartModel?.products}</span>
@@ -248,7 +218,7 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
                                     horizontal: 'right',
                                 }}>
                                 <Badge
-                                    color="secondary"
+                                    color="primary"
                                     badgeContent={
                                         <Tooltip title={"Ilość modeli w koszyku"} placement={"left"}>
                                             <span>{cartModel?.models}</span>
@@ -265,7 +235,7 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
                                                 }}>
 
 
-                                        <ShoppingCart sx={{fontSize: 25}}/>
+                                        <ShoppingCart sx={{fontSize: 25, color: "field.background"}}/>
                                     </IconButton>
                                 </Badge>
                             </Badge>

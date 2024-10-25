@@ -127,6 +127,11 @@ class Product extends Model
         return $this->hasMany(B2bCart::class);
     }
 
+    public function clientOrdersProducts(): HasMany
+    {
+        return $this->hasMany(ClientOrderProduct::class);
+    }
+
     /**
      * @return int|mixed
      */

@@ -134,8 +134,10 @@ export default function DesktopLayout({
 
             <Box
                 sx={{
-                    height: "400px",
-                    bgcolor: "rgba(0,0,0,0.5)",
+                    // height: "400px",
+                    bgcolor: "rgba(0,0,0)",
+                    color: "menuText.main",
+
                 }}
             >
                 <B2BFooter footer={footer} props={props}/>

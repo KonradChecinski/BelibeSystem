@@ -42,7 +42,8 @@ class DynamicPageController extends Controller
         }
         $data["content"] = $request->content;
 
-        DynamicPage::create($data);
+        $page = DynamicPage::create($data);
+        return redirect()->route('system.pages.page.edit', $page->id);
     }
 
     /**
@@ -89,6 +90,43 @@ class DynamicPageController extends Controller
     {
         $links = collect([]);
 
+
+        $other = [
+            "name" => __("Other"),
+            "links" => [
+                [
+                    "name" => __("Home page"),
+                    "url" => route("b2b.main")
+                ],
+                [
+                    "name" => __("Favorites"),
+                    "url" => route("b2b.favorites")
+                ],
+                [
+                    "name" => __("Cart"),
+                    "url" => route("b2b.cart")
+                ],
+                [
+                    "name" => __("Invoices"),
+                    "url" => route("b2b.invoices")
+                ],
+                [
+                    "name" => __("Orders"),
+                    "url" => route("b2b.orders")
+                ],
+                [
+                    "name" => __("Settlements"),
+                    "url" => route("b2b.settlements")
+                ],
+                [
+                    "name" => __("Client zone"),
+                    "url" => route("b2b.client")
+                ],
+            ]
+        ];
+        $links->push($other);
+
+
         $pages = [
             "name" => "Pages",
             "links" => DynamicPage::all(["id", "title", "slug"])->map(function ($page) {
@@ -110,17 +148,6 @@ class DynamicPageController extends Controller
             })
         ];
         $links->push($categories);
-
-//        $links["mainPage"] = [
-//            "name" => __("Main Page"),
-//            "links" => [
-//                [
-//                    "name" => __("Main Page"),
-//                    "url" => route("main-page")
-//                ]
-//            ]
-//        ];
-
 
         return response()->json($links);
     }

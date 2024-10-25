@@ -9,7 +9,18 @@ import ClientLayout from "@/Layouts/ClientLayout";
 import {ArrowBack} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
 import {useEffect, useState} from "react";
-import {config as PuckMuiConfig} from 'puck-mui';
+import {
+    config as PuckMuiConfig,
+    PAccordion,
+    PButton,
+    PButtonGroup,
+    PCard,
+    PColumns,
+    PContainer,
+    PDivider, PHeading, PPaper, PParagraph, PTypography
+} from 'puck-mui';
+import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 
 
 export default function Page(props) {
@@ -19,11 +30,81 @@ export default function Page(props) {
 
 
     const [config, setConfig] = useState({
-        // components: {
-        //     Text,
-        //     VerticalSpace,
-        // },
-        ...PuckMuiConfig,
+        components: {
+            accordion: {
+                ...PAccordion,
+                label: "Zwijana zakładka"
+            },
+            button: {
+                ...PButton,
+                label: "Guzik",
+            },
+            'button-group': {
+                ...PButtonGroup,
+                label: "Grupa guzików",
+            },
+            card: {
+                ...PCard,
+                label: "Karta"
+            },
+            columns: {
+                ...PColumns,
+                "label": "Kolumny",
+            },
+            container: {
+                ...PContainer,
+                "label": "Kontener",
+            },
+            divider: {
+                ...PDivider,
+                "label": "Oddzielacz",
+            },
+            heading: {
+                ...PHeading,
+                "label": "Nagłówek",
+            },
+            paragraph: {
+                ...PParagraph,
+                "label": "Paragraf",
+            },
+            typography: {
+                ...PTypography,
+                "label": "Tekst",
+            },
+            paper: {
+                ...PPaper,
+                label: "Kartka",
+            },
+            columnResponsive: {
+                ...ColumnResponsive,
+                "label": "Kolumny - responsywne",
+            },
+            link: PuckLink
+        },
+        categories: {
+            'data-display': {
+                title: 'Ułożenie',
+                components: ['divider', 'heading', 'paragraph', 'typography']
+            },
+            "link": {
+                title: 'Link',
+                components: ["link"]
+            },
+            inputs: {
+                title: 'Guziki',
+                components: ['button', 'button-group']
+            },
+            layout: {
+                title: 'Layout',
+                components: ['columns', 'container', 'columnResponsive']
+            },
+            surface: {
+                title: 'Powierzchnia',
+                components: ['accordion', 'card', 'paper']
+            }
+
+        },
+
         root: {
             fields: {
                 title: {
@@ -73,9 +154,10 @@ export default function Page(props) {
         } else {
             console.log("create")
             router.post(route("system.pages.page.create"), data, {
-                onSuccess: () => {
+                onSuccess: (cos, cos2) => {
                     enqueueSnackbar("Strona została utworzona", {variant: "success"});
-                    router.visit(route("system.pages"));
+                    // router.visit(route("system.pages"));
+                    console.log(cos, cos2)
                 },
                 onError: (error) => {
                     console.error(error)
@@ -88,25 +170,8 @@ export default function Page(props) {
 
     return (
         <>
-            <Head title={t("Nowa strona")}/>
-            <Box
-                sx={{
-                    "& .Puck div": {
-                        // border: "none",
-                        boxShadow: "none",
-                        // background: "none",
-                        // color: "primary.main"
-                    },
-                    "& .Puck>div>div>div": {
-                        background: "none !important",
-                        border: "none !important",
-                    },
-                    "& #puck-preview>div:last-of-type>div>div": {
-
-                        border: 1
-                    },
-                }}
-            >
+            <Head title={initialData.root.props.title === null ? initialData.root.props.title : t("New page")}/>
+            <Box>
                 <Box sx={{
                     position: "absolute",
                     top: 18,

@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateDynamicFooterRequest extends FormRequest
+class StoreDynamicMainPageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasPermissionTo("editPages", "user");
+        return false;
     }
 
     /**
@@ -22,13 +22,7 @@ class UpdateDynamicFooterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "content" => "required|array",
-            "content.*.type" => "required|string",
-            "content.*.props" => "required|array",
-            "zones" => "nullable|array",
-            "zones.*" => "nullable|array",
-            "zones.*.*.type" => "required|string|nullable",
-            "zones.*.*.props" => "required|array|nullable",
+            //
         ];
     }
 }

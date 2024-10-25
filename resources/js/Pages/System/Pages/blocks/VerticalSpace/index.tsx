@@ -1,4 +1,5 @@
 import React from "react";
+import {Box} from "@mui/material";
 
 const spacingOptions = [
     {label: "8px", value: "8px"},
@@ -40,6 +41,6 @@ export const VerticalSpace = {
     },
     label: "Odstęp pionowy",
     render: ({size}) => {
-        return <div style={{height: size, width: "100%"}}/>;
+        return <Box sx={{height: size, width: "100%"}}></Box>
     },
 };

@@ -27,7 +27,7 @@ class StoreDynamicPageRequest extends FormRequest
             "content.*.props" => "required|array",
             "root.props.title" => "required|string",
             "root.props.slug" => "nullable|string",
-            "zones" => "required|array",
+            "zones" => "nullable|array",
             "zones.*" => "nullable|array",
             "zones.*.*.type" => "required|string|nullable",
             "zones.*.*.props" => "required|array|nullable",

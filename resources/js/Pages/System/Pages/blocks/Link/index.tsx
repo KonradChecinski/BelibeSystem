@@ -4,8 +4,30 @@ import {Link} from "@inertiajs/react";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 
 
-export type ColumnProps = {
+const variantOptions = [
+    {label: "Nagłówek 1", value: "h1"},
+    {label: "Nagłówek 2", value: "h2"},
+    {label: "Nagłówek 3", value: "h3"},
+    {label: "Nagłówek 4", value: "h4"},
+    {label: "Nagłówek 5", value: "h5"},
+    {label: "Nagłówek 6", value: "h6"},
+    {label: "Tekst 1", value: "body1"},
+    {label: "Tekst 2", value: "body2"},
+    {label: "Podtytuł", value: "subtitle1"},
+    {label: "Podpis", value: "caption"},
+];
+const alignOptions = [
+    {label: "Do lewej", value: "left"},
+    {label: "Do środka", value: "center"},
+    {label: "Do prawej", value: "right"},
+    {label: "Wyjustowany", value: "justify"},
+    {label: "Dziedziczony", value: "inherit"},
+];
+
+export type PuckLinkProps = {
     link: object;
+    variant: string;
+    align: string;
 };
 
 export const PuckLink = {
@@ -73,16 +95,39 @@ export const PuckLink = {
                 );
             }
         },
+        variant: {
+            label: "Wariant",
+            type: "select",
+            options: variantOptions,
+        },
+        align: {
+            label: "Wyrównanie",
+            type: "select",
+            options: alignOptions,
+        },
     },
     defaultProps: {
         link: null,
+        variant: "body1",
+        align: "left",
     },
     label: "Link",
-    render: ({link}) => {
+    render: ({link, variant, align}) => {
         // console.log(link)
         return (
             <Link href={link?.url}>
-                <Typography variant="body1" gutterBottom>
+                <Typography
+                    variant={variant}
+                    align={align}
+                    sx={{
+                        px: 1,
+                        // py: 1,
+                        my: 1,
+                        textDecoration: "underline",
+                        "&:hover": {
+                            color: "primary.main",
+                        }
+                    }}>
                     {link?.label}
                 </Typography>
             </Link>

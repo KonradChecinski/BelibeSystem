@@ -93,7 +93,6 @@ export default function ModelComponent({model}) {
                                 }}>
 
                                     {model.mainImages?.map((image, id) => {
-                                        console.log(image, id)
                                         return (
                                             <CardMedia
                                                 key={id}

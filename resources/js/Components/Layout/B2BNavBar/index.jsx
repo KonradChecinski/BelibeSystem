@@ -172,7 +172,7 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
 
                                 <Tooltip title={"Zobacz koszyk"}>
                                     <Badge
-                                        color="secondary"
+                                        color="primary"
                                         badgeContent={
                                             <Tooltip title={"Ilość produktów w koszyku"} placement={"left"}>
                                                 <span>{cartModel?.products}</span>
@@ -184,7 +184,7 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
                                             horizontal: 'right',
                                         }}>
                                         <Badge
-                                            color="secondary"
+                                            color="primary"
                                             badgeContent={
                                                 <Tooltip title={"Ilość modeli w koszyku"} placement={"left"}>
                                                     <span>{cartModel?.models}</span>
