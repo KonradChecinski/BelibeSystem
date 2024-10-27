@@ -27,7 +27,7 @@ class ExtraMainPageComponentsController extends Controller
             ->join('product_model_colors', 'products.product_model_color_id', '=', 'product_model_colors.id')
             ->groupBy('product_model_colors.product_model_id')
             ->orderByDesc('total_quantity')
-            ->limit(15)
+            ->limit(10)
             ->get();
 
         $bestsellerModels = $products->map(function ($product) use ($discounts, $client) {
@@ -61,12 +61,12 @@ class ExtraMainPageComponentsController extends Controller
                             'isFavorited' => $model->isFavoritedByClient($client),
                         ];
                     }
-                    )
+                    )->first()
                 ,
                 'total_quantity' => $product->total_quantity
             ];
         });
-
+//        dd($bestsellerModels);
         return response()->json($bestsellerModels);
     }
 }

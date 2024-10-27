@@ -41,7 +41,9 @@ export default function DesktopLayout({
                     display: "flex",
                     flexDirection: "row",
                     gap: 1,
-                    m: 1,
+                    p: 1,
+                    width: 1,
+                    maxWidth: 1,
                 }}
             > {/*Góra*/}
                 <Box
@@ -80,6 +82,13 @@ export default function DesktopLayout({
                         display: "flex",
                         flexDirection: "column",
                         gap: 1,
+                        // width: 1,
+                        // width: "calc(86% - 16px)",
+                        width: "86%",
+                        [theme.breakpoints.down("lg")]: {
+                            // width: "calc(80% - 16px)",
+                            width: "80%",
+                        }
                     }}
                 > {/*Prawo*/}
 
@@ -123,7 +132,7 @@ export default function DesktopLayout({
                     </Box>
 
 
-                    <Box> {/*Prawo body*/}
+                    <Box sx={{width: 1,}}> {/*Prawo body*/}
                         <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
 
                         {children}

@@ -4,8 +4,6 @@ import {useTheme} from "@mui/material/styles";
 import {useState} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import B2BAppBar from "@/Components/Layout/B2BAppBar";
-import {Render} from "@measured/puck";
-import {PColumns, PDivider, PHeading, PParagraph, PTypography} from "puck-mui";
 import B2BFooter from "@/Layouts/Components/B2B/Footer/Footer";
 
 export default function MobileLayout({

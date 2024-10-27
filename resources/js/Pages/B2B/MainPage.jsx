@@ -17,7 +17,7 @@ import {
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {Render} from "@measured/puck";
-import {config as PuckMuiConfig} from "puck-mui/dist/config";
+import B2BBestsellers from "@/Components/Pages/B2B/ExtraMainPage/Bestsellers";
 
 export default function B2bMainPage(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -63,8 +63,7 @@ export default function B2bMainPage(props) {
         >
             <Head title={t("Dashboard")}/>
             <Render config={config} data={initialData}/>
-
-
+            <B2BBestsellers/>
         </ClientLayout>
     );
 }

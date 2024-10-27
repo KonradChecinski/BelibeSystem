@@ -10,6 +10,7 @@ use App\Http\Controllers\B2bInvoicesController;
 use App\Http\Controllers\B2bOrderController;
 use App\Http\Controllers\B2bPageController;
 use App\Http\Controllers\B2bSettlementsController;
+use App\Http\Controllers\ExtraMainPageComponentsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,6 +42,9 @@ Route::group([], function () {
     Route::get("/settlements", [B2bSettlementsController::class, 'index'])->name("b2b.settlements");
 
     Route::get("/client", [B2bClientController::class, 'index'])->name("b2b.client");
+
+
+    Route::get("/main/extra/bestsellers", [ExtraMainPageComponentsController::class, 'bestsellers'])->name("b2b.main.extra.bestsellers");
 
 });
 

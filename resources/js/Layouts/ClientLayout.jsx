@@ -42,6 +42,7 @@ export default function ClientLayout({props, header, children,}) {
                     display: "flex",
                     flexDirection: "column",
                     // gap: 1,
+                    width: 1,
                 }}
             >
 

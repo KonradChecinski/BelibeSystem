@@ -97,8 +97,14 @@ export default function ModelList(props) {
                 </>
             }
         >
+
             <Grid container spacing={3} sx={{minHeight: "95%", p: 1}} alignItems="stretch">
-                {items.map((model) => (<ModelComponent model={model} key={model.id}/>))}
+                {items.map((model) => (
+                        <Grid item xs={6} sm={4} md={3} lg={2} key={model.id} sx={{display: "flex"}}>
+                            <ModelComponent model={model} key={model.id}/>
+                        </Grid>
+                    )
+                )}
             </Grid>
 
         </InfiniteScroll>
