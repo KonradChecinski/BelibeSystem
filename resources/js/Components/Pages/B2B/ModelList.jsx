@@ -1,18 +1,4 @@
-import {
-    Box, Button,
-    Card,
-    CardActionArea, CardActions,
-    CardContent,
-    CardMedia, Checkbox,
-    CircularProgress,
-    Divider,
-    Grid,
-    Typography
-} from "@mui/material";
-import {router, useForm} from "@inertiajs/react";
-import {sortBySizes} from "@/Functions/sortBySizes";
-import toLocaleString from "@/Functions/toLocaleString";
-import {Favorite, FavoriteBorder} from "@mui/icons-material";
+import {Box, CircularProgress, Grid, Typography} from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useState} from "react";
 import {enqueueSnackbar} from "notistack";

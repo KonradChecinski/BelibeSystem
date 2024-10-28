@@ -45,6 +45,7 @@ export default function ModelComponent({model}) {
             width: 1,
             // height: 700,
             height: 1,
+            boxSizing: "border-box",
         }}>
             <CardActionArea
                 onClick={() => {
@@ -142,7 +143,11 @@ export default function ModelComponent({model}) {
                         width: 1,
                         pt: 1,
                         pb: 0,
-                        px: 1
+                        px: 1,
+                        boxSizing: "border-box",
+                        "&:last-child": {
+                            pb: 1
+                        }
                     }}>
 
 
@@ -170,7 +175,7 @@ export default function ModelComponent({model}) {
 
                             <Box
                                 sx={{
-                                    mt: 2
+                                    mt: 1
                                 }}>
                                 <Typography
                                     variant="body1"
@@ -224,7 +229,7 @@ export default function ModelComponent({model}) {
                             </Box>
 
                             <Box sx={{
-                                mt: 2
+                                mt: 0
                             }}>
                                 <Typography
                                     variant="body1"
@@ -270,7 +275,7 @@ export default function ModelComponent({model}) {
                                     })}
                                 </Box>
                             </Box>
-                            <Box sx={{mt: 2}}>
+                            <Box sx={{mt: 1}}>
                                 {/*<Typography variant="body1" component={"h2"}>*/}
                                 {/*    Cena*/}
                                 {/*    katalogowa: {toLocaleString(model.price.wholesale_net_price / 100)}*/}
