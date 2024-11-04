@@ -14,6 +14,7 @@ import {useTheme} from "@mui/material/styles";
 import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from 'puck-mui';
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {Bestsellers} from "@/Pages/System/Pages/blocks/Bestsellers";
 
 export default function MainPage(props) {
     const [pageData, setPageData] = useState(props?.dynamicMainPage);
@@ -58,7 +59,8 @@ export default function MainPage(props) {
                 ...PContainer,
                 "label": "Kontener",
             },
-            link: PuckLink
+            link: PuckLink,
+            bestsellers: Bestsellers,
         },
         categories: {
             "text": {
@@ -76,6 +78,10 @@ export default function MainPage(props) {
             "data-display": {
                 title: 'Ułożenie',
                 components: ["column", "columnResponsive", "container"]
+            },
+            "extra": {
+                title: 'Specjalne',
+                components: ["bestsellers"]
             },
         },
         root: {fields: {},}

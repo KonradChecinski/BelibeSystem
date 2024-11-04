@@ -11,10 +11,17 @@ import 'swiper/css/free-mode';
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import ModelSkeletonComponent from "@/Components/Pages/B2B/ModelSkeletonComponent";
 
-export default function B2BBestsellers() {
+export default function B2BBestsellers({quantity}) {
     const {t} = useLaravelReactI18n();
     const [data, setData] = useState([]);
-    axios.get(route("b2b.main.extra.bestsellers"))
+    axios.get(
+        route("b2b.main.extra.bestsellers"),
+        {
+            params: {
+                quantity: quantity
+            }
+
+        })
         .then(response => {
             // console.log(response.data)
             setData(response.data)
@@ -76,7 +83,7 @@ export default function B2BBestsellers() {
                         :
                         (
                             <>
-                                {Array(10).fill(0).map((item, id) => {
+                                {Array(quantity).fill(0).map((item, id) => {
                                     return (
                                         <SwiperSlide key={"skeleton" + id}>
                                             <Box sx={{width: 200, height: 1}}>

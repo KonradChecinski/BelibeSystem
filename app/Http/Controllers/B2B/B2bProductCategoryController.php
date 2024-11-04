@@ -68,7 +68,7 @@ class B2bProductCategoryController extends Controller
                     'slug' => $model->slug,
                     'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["path" => $image->path])->values() : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
-                    'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
+//                    'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
                     'icons' => $model->colorIcons,
                     'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique()->values(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),

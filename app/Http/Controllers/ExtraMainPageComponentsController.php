@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Helpers\Prices\PriceForClient;
+use App\Http\Requests\B2bExtraPageBestsellerComponentRequest;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
 use App\Models\Products\Product;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class ExtraMainPageComponentsController extends Controller
 {
-    public function bestsellers(): \Illuminate\Http\JsonResponse
+    public function bestsellers(B2bExtraPageBestsellerComponentRequest $request): \Illuminate\Http\JsonResponse
     {
         $client = Client::find(Helper::getClientIdToB2b());
         $discounts = $client->discounts;
@@ -27,7 +28,7 @@ class ExtraMainPageComponentsController extends Controller
             ->join('product_model_colors', 'products.product_model_color_id', '=', 'product_model_colors.id')
             ->groupBy('product_model_colors.product_model_id')
             ->orderByDesc('total_quantity')
-            ->limit(10)
+            ->limit($request->quantity)
             ->get();
 
         $bestsellerModels = $products->map(function ($product) use ($discounts, $client) {
@@ -54,7 +55,7 @@ class ExtraMainPageComponentsController extends Controller
                             'slug' => $model->slug,
                             'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["path" => $image->path])->values() : null,
                             'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
-                            'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
+//                            'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
                             'icons' => $model->colorIcons,
                             'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique()->values(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),

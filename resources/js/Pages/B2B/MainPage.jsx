@@ -18,6 +18,7 @@ import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {Render} from "@measured/puck";
 import B2BBestsellers from "@/Components/Pages/B2B/ExtraMainPage/Bestsellers";
+import {Bestsellers} from "@/Pages/System/Pages/blocks/Bestsellers";
 
 export default function B2bMainPage(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -49,7 +50,7 @@ export default function B2bMainPage(props) {
             typography: PTypography,
             columnResponsive: ColumnResponsive,
             link: PuckLink,
-
+            bestsellers: Bestsellers,
         },
     };
 
@@ -63,7 +64,7 @@ export default function B2bMainPage(props) {
         >
             <Head title={t("Dashboard")}/>
             <Render config={config} data={initialData}/>
-            <B2BBestsellers/>
+
         </ClientLayout>
     );
 }

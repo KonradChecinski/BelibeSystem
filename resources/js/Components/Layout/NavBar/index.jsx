@@ -133,7 +133,7 @@ export default function Navbar({auth}) {
                                 <Countdown date={Date.now() + 7200000}
 
                                            onComplete={() => {
-                                               router.post(route("logout"))
+                                               router.reload()
                                                // router.visit(route("logout"), {method:"post"})
                                            }}
                                            renderer={({hours, minutes, seconds}) => {
