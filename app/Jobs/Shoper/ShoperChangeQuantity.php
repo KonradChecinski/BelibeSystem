@@ -37,6 +37,8 @@ class ShoperChangeQuantity implements ShouldQueue
      */
     public function handle(): void
     {
+        if ($this->product->show_in_b2c == 0) $this->fail('Product not show in b2c');
+
         $shoperStocks = Shoper::getProductsStockBySymbol($this->product);
         if (count($shoperStocks) == 0) return;
         foreach ($shoperStocks as $shoperStock) {

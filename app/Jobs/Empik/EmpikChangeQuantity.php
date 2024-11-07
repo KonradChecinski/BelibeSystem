@@ -35,7 +35,7 @@ class EmpikChangeQuantity implements ShouldQueue
      */
     public function handle(): void
     {
-        if ($this->product->show_in_empik == 0) return;
+        if ($this->product->show_in_empik == 0) $this->fail('Product not show in empik');
         $this->product->b2cStat->update([
             'update_in_empik' => 1,
         ]);

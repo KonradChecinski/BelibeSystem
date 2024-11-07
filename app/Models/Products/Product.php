@@ -7,6 +7,7 @@ use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
 use App\Models\OrderProduct;
 use App\Models\ProductB2cStat;
+use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocumentProduct;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -183,5 +184,12 @@ class Product extends Model
 
         $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - $warehouseDocumentProductsQuantity;
         return $sum;
+    }
+
+
+    //Subiekt
+    public function towar(): HasOne
+    {
+        return $this->hasOne(Towar::class, "tw_Id", "subiekt_id");
     }
 }

@@ -96,4 +96,13 @@ class DaneDodatkowe extends Model
     {
         return DaneDodatkowe::Select("pwd_IdObiektu")->where("pwd_TypObiektu", "=", -150)->where("pwd_Flaga01", 1)->get();
     }
+
+//    public static function magazynyStanow()
+//    {
+//        return DaneDodatkowe::query()
+//            ->where("pwd_TypObiektu", "=", -150)
+//            ->where("pwd_Flaga01", 1)
+//            ->pluck("pwd_IdObiektu")
+//            ->toArray();
+//    }
 }

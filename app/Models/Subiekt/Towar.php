@@ -2,6 +2,7 @@
 
 namespace App\Models\Subiekt;
 
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -77,6 +78,11 @@ class Towar extends Model
     public function model(): BelongsToMany
     {
         return $this->belongsToMany(ModelTw::class, "sl_ModelTowar", "mtw_IdTowar", "mtw_IdModel");
+    }
+
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'subiekt_id', 'tw_Id');
     }
 
 }

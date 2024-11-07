@@ -21,6 +21,7 @@ use App\Jobs\FromSubiekt\UpdateOrderStatus;
 use App\Jobs\FromSubiekt\UpdateSubiektIdWhereNull;
 use App\Jobs\Mail\SendClientTaskMail;
 use App\Jobs\partners\MakePartnerExportFile;
+use App\Jobs\Quantity\UpdateAllQuantities;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\ToSubiekt\BlokadaMiesieczna;
@@ -45,6 +46,7 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('inspire')->hourly();
         $schedule->job(new UpdateQuantityFromSubiekt)->everyMinute();
+        $schedule->job(new UpdateAllQuantities)->dailyAt("04:00");
 //        $schedule->job(new UpdatePriceFromSubiekt)->everyMinute();
         $schedule->job(new UpdateSubiektIdWhereNull)->everyFiveMinutes();
         $schedule->job(new CreateModelFromSubiekt)->everyMinute();
