@@ -46,7 +46,7 @@ class B2bFavoritesController extends Controller
                     'name' => $model->name,
                     'symbol' => $model->symbol,
                     'slug' => $model->slug,
-                    'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["path" => $image->path]) : null,
+                    'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["slug" => $image->slug]) : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
                     'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
                     'icons' => $model->colorIcons,

@@ -117,7 +117,7 @@ export default function CartItems({props, discount}) {
                                                                 {color.images[0] ?
                                                                     (
                                                                         <Box component={"img"}
-                                                                             src={route("images.webp", {path: color.images[0].path})}
+                                                                             src={route("images.webp", {slug: color.images[0].slug})}
                                                                              width={50}
                                                                              sx={{
                                                                                  // m: "auto",
@@ -129,7 +129,7 @@ export default function CartItems({props, discount}) {
                                                                     :
                                                                     (
                                                                         <Box component={"img"}
-                                                                             src={route("images.webp", {path: "brak.jpg"})}
+                                                                             src={route("images.webp", {slug: "brak.jpg"})}
                                                                              width={50}
                                                                              sx={{
                                                                                  // m: "auto",

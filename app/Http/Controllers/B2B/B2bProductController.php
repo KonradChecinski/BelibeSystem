@@ -106,7 +106,7 @@ class B2bProductController extends Controller
                     'symbol' => $productModel->symbol,
                     'slug' => $productModel->slug,
                     'description_b2b' => $productModel->description_b2b,
-                    'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["path" => $image->path]) : null,
+                    'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["slug" => $image->slug]) : null,
                     'price' => $priceForClient,
 //                    'quantity' => $productModel->quantityToB2b(),
                     'colors' => $productModel->productsToB2bWithRelation,

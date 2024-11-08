@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class ProductImage extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug;
 
 
     /**
@@ -18,15 +20,30 @@ class ProductImage extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'slug',
         'product_model_color_id',
         'order',
-        'path',
+        'path_basic',
+        'path_square',
+        'path_webp',
+        'path_thumb',
         'width',
         'height',
         'type',
         'publish',
         'main'
     ];
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom(function () {
+                return $this->model->symbol . "-" . uniqid('', true);
+            })
+            ->saveSlugsTo('slug')
+//            ->skipGenerateWhen(fn() => $this->slug !== '')
+            ->preventOverwrite();
+    }
 
 
     public function color(): BelongsTo

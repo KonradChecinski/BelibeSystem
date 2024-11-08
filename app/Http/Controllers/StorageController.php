@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Products\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class StorageController extends Controller
@@ -14,49 +16,115 @@ class StorageController extends Controller
         return Storage::get('public/' . str_replace('>', '/', $path));
     }
 
-    public function images(string $path)
+    public function images(string $slug)
     {
-        $img = Storage::get('images/' . str_replace('\\', '/', $path));
-        $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
+        $image = ProductImage::findBySlug($slug);
+        $path = $image->path_basic;
+
+        $img = Storage::get('images/basic/' . str_replace('\\', '/', $path));
+        $mimeType = Storage::mimeType('images/basic/' . str_replace('\\', '/', $path));
         return response($img)->header('Content-Type', $mimeType);
     }
 
-    public function imagesThumb(string $path)
+    public function imagesThumb(string $slug)
     {
-//        $image = ProductImage::query()->where('path', $path)->firstOrFail();
-//        $path = $image->path;
-        $img = Storage::get('images/' . str_replace('\\', '/', $path));
-        $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
+        $productImage = ProductImage::findBySlug($slug);
+        $path = $productImage->path_thumb;
+
+        if ($path) {
+            $img = Storage::get('images/thumb/' . str_replace('\\', '/', $path));
+            $mimeType = Storage::mimeType('images/thumb/' . str_replace('\\', '/', $path));
+        } else {
+            $imgBasic = Storage::get('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $mimeType = Storage::mimeType('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $extension = File::extension('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
 
 
-        $img = Image::make($img)
-            ->resize(null, 450, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->encode($mimeType, 90);
+            $img = Image::make($imgBasic)
+                ->resize(null, 450, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->encode($mimeType, 90);
+
+            // Generowanie ścieżki z UUID
+            $thumbPath = (string)Str::uuid() . "." . $extension;
+
+            // Opcjonalnie, jeśli naprawdę chcesz sprawdzać istnienie, co jest rzadko potrzebne:
+            while (Storage::exists('images/thumb/' . $thumbPath)) {
+                $thumbPath = (string)Str::uuid() . "." . $extension;
+            }
+
+            Storage::put('images/thumb/' . $thumbPath, $img);
+
+            $productImage->path_thumb = $thumbPath;
+            $productImage->save();
+        }
+
+
         return response($img)->header('Content-Type', $mimeType);
     }
 
-    public function imagesWebp(string $path)
+    public function imagesWebp(string $slug)
     {
-//        $image = ProductImage::query()->where('path', $path)->firstOrFail();
-//        $path = $image->path;
-        $img = Storage::get('images/' . str_replace('\\', '/', $path));
+        $productImage = ProductImage::findBySlug($slug);
+        $path = $productImage->path_webp;
 
-        $img = Image::make($img)->encode('webp', 90);
+        if ($path) {
+            $img = Storage::get('images/webp/' . str_replace('\\', '/', $path));
+        } else {
+            $imgBasic = Storage::get('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $img = Image::make($imgBasic)->encode('webp', 90);
+
+            // Generowanie ścieżki z UUID
+            $webpPath = (string)Str::uuid() . ".webp";
+
+            // Opcjonalnie, jeśli naprawdę chcesz sprawdzać istnienie, co jest rzadko potrzebne:
+            while (Storage::exists('images/webp/' . $webpPath)) {
+                $webpPath = (string)Str::uuid() . ".webp";
+            }
+
+            Storage::put('images/webp/' . $webpPath, $img);
+
+            $productImage->path_webp = $webpPath;
+            $productImage->save();
+        }
+
 
         return response($img)->header('Content-Type', 'image/webp');
     }
 
-    public function imagesSquare(string $path)
+    public function imagesSquare(string $slug)
     {
-        $img = Storage::get('images/' . str_replace('\\', '/', $path));
-        $mimeType = Storage::mimeType('images/' . str_replace('\\', '/', $path));
-        $tempImg = Image::make($img);
+        $productImage = ProductImage::findBySlug($slug);
+        $path = $productImage->path_square;
 
-        $size = max($tempImg->width(), $tempImg->height());
+        if ($path) {
+            $img = Storage::get('images/square/' . str_replace('\\', '/', $path));
+            $mimeType = Storage::mimeType('images/square/' . str_replace('\\', '/', $path));
+        } else {
+            $imgBasic = Storage::get('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $mimeType = Storage::mimeType('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $extension = File::extension('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
 
-        $img = Image::canvas($size, $size, '#ffffff')->insert($img, 'center')->encode($mimeType, 100);
+            $tempImg = Image::make($imgBasic);
+            $size = max($tempImg->width(), $tempImg->height());
+
+            $img = Image::canvas($size, $size, '#ffffff')->insert($imgBasic, 'center')->encode($mimeType, 100);
+
+            // Generowanie ścieżki z UUID
+            $squarePath = (string)Str::uuid() . "." . $extension;
+
+            // Opcjonalnie, jeśli naprawdę chcesz sprawdzać istnienie, co jest rzadko potrzebne:
+            while (Storage::exists('images/square/' . $squarePath)) {
+                $squarePath = (string)Str::uuid() . "." . $extension;
+            }
+
+            Storage::put('images/square/' . $squarePath, $img);
+
+            $productImage->path_square = $squarePath;
+            $productImage->save();
+        }
+
         return response($img)->header('Content-Type', $mimeType);
     }
 

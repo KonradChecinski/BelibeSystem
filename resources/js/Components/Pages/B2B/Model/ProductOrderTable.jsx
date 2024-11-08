@@ -98,7 +98,7 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                     {image ?
                                         (
                                             <Box component={"img"}
-                                                 src={route("images.webp", {path: image.path})}
+                                                 src={route("images.webp", {slug: image.slug})}
                                                  width={50}
                                                  onClick={() => lightbox.loadAndOpen(imageIndex)}
                                                  sx={{
@@ -111,7 +111,7 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
 
                                         (
                                             <Box component={"img"}
-                                                 src={route("images.webp", {path: "brak.jpg"})}
+                                                 src={route("images.webp", {slug: "brak.jpg"})}
                                                  width={50}
                                                  onClick={() => lightbox.loadAndOpen(1)}
                                                  sx={{
@@ -221,7 +221,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                                             {image ?
                                                                 (
                                                                     <Box component={"img"}
-                                                                         src={route("images.webp", {path: image.path})}
+                                                                         src={route("images.webp", {slug: image.slug})}
                                                                          width={50}
                                                                          onClick={() => lightbox.loadAndOpen(imageIndex)}
                                                                          sx={{
@@ -233,7 +233,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                                                 :
                                                                 (
                                                                     <Box component={"img"}
-                                                                         src={route("images.webp", {path: "brak.jpg"})}
+                                                                         src={route("images.webp", {slug: "brak.jpg"})}
                                                                          width={50}
                                                                          onClick={() => lightbox.loadAndOpen(1)}
                                                                          sx={{

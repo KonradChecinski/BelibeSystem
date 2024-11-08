@@ -14,10 +14,15 @@ use Illuminate\Support\Facades\DB;
 
 class ExtraMainPageComponentsController extends Controller
 {
-    public function bestsellers(B2bExtraPageBestsellerComponentRequest $request): \Illuminate\Http\JsonResponse
+    public function bestsellers(B2bExtraPageBestsellerComponentRequest $request)
     {
-        $client = Client::find(Helper::getClientIdToB2b());
+        $client = Helper::getClientToB2b();
+        if (is_null($client)) {
+            return response()->json([], 400);
+        }
+//        dd($client);
         $discounts = $client->discounts;
+
 
         $products = ClientOrderProduct::query()
             ->whereHas('orders', function ($query) {
@@ -30,6 +35,7 @@ class ExtraMainPageComponentsController extends Controller
             ->orderByDesc('total_quantity')
             ->limit($request->quantity)
             ->get();
+
 
         $bestsellerModels = $products->map(function ($product) use ($discounts, $client) {
             return [
@@ -53,7 +59,7 @@ class ExtraMainPageComponentsController extends Controller
                             'name' => $model->name,
                             'symbol' => $model->symbol,
                             'slug' => $model->slug,
-                            'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["path" => $image->path])->values() : null,
+                            'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["slug" => $image->slug])->values() : null,
                             'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
 //                            'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
                             'icons' => $model->colorIcons,

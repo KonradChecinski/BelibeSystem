@@ -92,14 +92,14 @@ export default function QueryImagesTable({images, readOnly, props}) {
                 size: 20,
             },
             {
-                accessorKey: 'path',
+                accessorKey: 'slug',
                 header: 'Zdjęcie',
                 columnDefType: 'display',
                 Cell: ({cell, row}) => {
                     return (
                         <Box
                             component={"img"}
-                            src={route("images", {path: cell.getValue()})}
+                            src={route("images", {slug: cell.getValue()})}
                         />
 
                     )

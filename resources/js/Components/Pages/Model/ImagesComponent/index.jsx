@@ -491,7 +491,7 @@ const ImageColorList = ({props, dropId, imageArray, modelSymbol, color}) => {
                                                 }
                                             }}>
                                                 <a
-                                                    href={route("images", {path: image.path})}
+                                                    href={route("images", {slug: image.slug})}
                                                     data-pswp-width={image.width}
                                                     data-pswp-height={image.height}
                                                     key={"pswp-gallery" + "-" + "1"}//index
@@ -500,7 +500,7 @@ const ImageColorList = ({props, dropId, imageArray, modelSymbol, color}) => {
                                                     className={"relative"}
                                                 >
                                                     <img
-                                                        src={route("images", {path: image.path})}
+                                                        src={route("images", {slug: image.slug})}
                                                         // srcSet={`https://images.unsplash.com/photo-1522770179533-24471fcdba45?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                                         alt={"brak"}
                                                         className={"product-image"}
@@ -644,15 +644,15 @@ const ImageColorList = ({props, dropId, imageArray, modelSymbol, color}) => {
                                                     : ""}
                                                 <Tooltip title="Download">
                                                     <IconButton onClick={() => {
-                                                        // downloadImg(image.path.replaceAll("\\\\", "-").replaceAll("\\", "-"), route("images", {path: image.path}));
-                                                        downloadImg(modelSymbol + "-" + color.shortcut + "-" + (i + 1), route("images", {path: image.path}));
+                                                        // downloadImg(image.path.replaceAll("\\\\", "-").replaceAll("\\", "-"), route("images", {slug: image.slug}));
+                                                        downloadImg(modelSymbol + "-" + color.shortcut + "-" + (i + 1), route("images", {slug: image.slug}));
                                                     }}>
                                                         <FileDownload sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="Copy">
                                                     <IconButton onClick={() => {
-                                                        copyImg(route("images", {path: image.path}));
+                                                        copyImg(route("images", {slug: image.slug}));
                                                     }}>
                                                         <ContentCopy sx={{fontSize: 20, color: "menuText.main"}}/>
                                                     </IconButton>

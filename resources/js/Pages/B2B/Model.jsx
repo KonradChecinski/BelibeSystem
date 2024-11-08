@@ -195,7 +195,7 @@ export default function B2bModel(props) {
                                                                                 }
                                                                             }}>
                                                                                 <a
-                                                                                    href={route("images.webp", {path: image.path})}
+                                                                                    href={route("images.webp", {slug: image.slug})}
                                                                                     data-pswp-width={image.width}
                                                                                     data-pswp-height={image.height}
                                                                                     key={"pswp-gallery" + "-" + image.id}//index
@@ -204,7 +204,7 @@ export default function B2bModel(props) {
                                                                                     className={"relative"}
                                                                                 >
                                                                                     <img
-                                                                                        src={route("images.webp", {path: image.path})}
+                                                                                        src={route("images.webp", {slug: image.slug})}
                                                                                         alt={"brak"}
                                                                                         className={"product-image"}
                                                                                         loading="lazy"
@@ -233,7 +233,7 @@ export default function B2bModel(props) {
                                                     }
                                                 }}>
                                                     <a
-                                                        href={route("images.webp", {path: "brak.jpg"})}
+                                                        href={route("images.webp", {slug: "brak.jpg"})}
                                                         data-pswp-width={1280}
                                                         data-pswp-height={1920}
                                                         key={"pswp-gallery" + "-" + 1}//index
@@ -242,7 +242,7 @@ export default function B2bModel(props) {
                                                         className={"relative"}
                                                     >
                                                         <img
-                                                            src={route("images.webp", {path: "brak.jpg"})}
+                                                            src={route("images.webp", {slug: "brak.jpg"})}
                                                             alt={"brak"}
                                                             className={"product-image"}
                                                             loading="lazy"
@@ -323,7 +323,7 @@ export default function B2bModel(props) {
                                                                         }
                                                                     }}>
                                                                         <img
-                                                                            src={route("images.webp", {path: image.path})}
+                                                                            src={route("images.webp", {slug: image.slug})}
                                                                             alt={"brak"}
                                                                             className={"product-image"}
                                                                             loading="lazy"
@@ -352,7 +352,7 @@ export default function B2bModel(props) {
                                                 }}>
 
                                                     <img
-                                                        src={route("images.webp", {path: "brak.jpg"})}
+                                                        src={route("images.webp", {slug: "brak.jpg"})}
                                                         alt={"brak"}
                                                         className={"product-image"}
                                                         loading="lazy"

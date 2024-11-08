@@ -29,7 +29,7 @@ class Empik
         foreach ($products as $productToEmpik) {
             $images = $productToEmpik->images()->where("type", 1)->get()->sortBy("order")->values();
             $images = $images->map(function ($image) {
-                return str_replace("test", "pl", route("images.1x1", ["path" => $image->path]));
+                return str_replace("test", "pl", route("images.1x1", ["slug" => $image->slug]));
             });
 
             $productModel = $productToEmpik->model;

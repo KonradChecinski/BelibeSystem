@@ -73,7 +73,7 @@ export default function OrderItems({data}) {
                         <TableBody>
                             {}
                             {data.orderProducts.map((item) => {
-                                let productImagePath = item.product_model_color?.images[0]?.path ? item.product_model_color?.images[0]?.path : "brak.jpg"
+                                let productImagePath = item.product_model_color?.images[0]?.slug ? item.product_model_color?.images[0]?.slug : "brak.jpg"
 
                                 return (
                                     <Fragment key={"product" + item.id}>
@@ -86,7 +86,7 @@ export default function OrderItems({data}) {
                                             </TableCell>
                                             <TableCell align={"center"}>
                                                 <Box component={"img"}
-                                                     src={route("images.webp", {path: productImagePath})}
+                                                     src={route("images.webp", {slug: productImagePath})}
                                                      width={50}
                                                      sx={{
                                                          m: "auto"

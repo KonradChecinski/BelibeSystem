@@ -61,7 +61,7 @@ export default function ImagesDeleteDialog({open, setOpen, image, params}) {
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>Chcesz usunąć id:{image.id}</DialogContentText>
-                <img src={route("images", {path: image.path})} alt={"Usuwane zdjęcie"} className={"h-48"}/>
+                <img src={route("images", {slug: image.slug})} alt={"Usuwane zdjęcie"} className={"h-48"}/>
 
             </DialogContent>
             <DialogActions>

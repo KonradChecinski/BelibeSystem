@@ -64,7 +64,7 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 Zdjęcie
             </DialogTitle>
             <DialogContent>
-                <img src={route("images", {path: image.path})} alt={"Usuwane zdjęcie"} className={"h-48"}/>
+                <img src={route("images", {slug: image.slug})} alt={"Usuwane zdjęcie"} className={"h-48"}/>
                 <DialogContentText>
                     Wymiary [S x W]: {image.width} x {image.height} ({aspectRatio(image.width, image.height)})
                 </DialogContentText>
@@ -115,7 +115,7 @@ export default function ImagesInfoDialog({open, setOpen, image, props}) {
                 }
 
                 <DialogContentText>
-                    Ścieżka na dysku: {image.path.replaceAll("\\\\", "/").replaceAll("\\", "/")}
+                    Ścieżka na dysku: {image.path_basic.replaceAll("\\\\", "/").replaceAll("\\", "/")}
                 </DialogContentText>
                 <DialogContentText>
                     Data utworzenia: {moment(image.created_at).calendar()}

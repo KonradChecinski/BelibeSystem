@@ -99,7 +99,7 @@ export default function ModelComponent({model}) {
                                         <CardMedia
                                             key={id}
                                             component="img"
-                                            image={route('images.webp', {path: image.path ? image.path : "brak.jpg"})}
+                                            image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
                                             alt="Zdjęcie produktu"
                                             // sx={{
                                             //     width: 1
@@ -115,7 +115,7 @@ export default function ModelComponent({model}) {
                                         <CardMedia
                                             key={id}
                                             component="img"
-                                            image={route('images.webp', {path: image.path ? image.path : "brak.jpg"})}
+                                            image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
                                             alt="Zdjęcie produktu"
                                             // sx={{
                                             //     width: 1
@@ -126,7 +126,7 @@ export default function ModelComponent({model}) {
                                 :
                                 <CardMedia
                                     component="img"
-                                    image={route('images.webp', {path: "brak.jpg"})}
+                                    image={route('images.webp', {slug: "brak.jpg"})}
                                     alt="Zdjęcie produktu"
                                 />
                         }

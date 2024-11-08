@@ -66,7 +66,7 @@ export default function ModelColorComponent(props) {
                                         }}>
                                             <Box
                                                 component={"img"}
-                                                src={color.images.length ? route("images", {path: color.images.find(image => image.order === 0).path}) : route("images", {path: "brak.jpg"})}
+                                                src={color.images.length ? route("images", {slug: color.images.find(image => image.order === 0).slug}) : route("images", {slug: "brak.jpg"})}
                                                 alt={"brak"}
                                                 loading="lazy"
                                                 width={80}

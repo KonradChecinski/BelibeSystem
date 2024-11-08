@@ -113,7 +113,7 @@ export default function OrderItemsEdit({data}) {
 
                                                             }}>
                                                                 <Box component={"img"}
-                                                                     src={route("images.webp", {path: color.images[0].path})}
+                                                                     src={route("images.webp", {slug: color.images[0].slug})}
                                                                      width={50}
                                                                      sx={{
                                                                          // m: "auto",

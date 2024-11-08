@@ -22,7 +22,7 @@ export default function ModelsTable(props) {
                 return (
                     <Box
                         component="img"
-                        src={route("images", {path: params.row.mainImage ? params.row.mainImage.path : "brak.jpg"})}
+                        src={route("images", {slug: params.row.mainImage ? params.row.mainImage.slug : "brak.jpg"})}
                         alt={"Zdjęcie produktu"}
                         sx={{
                             width: 1,

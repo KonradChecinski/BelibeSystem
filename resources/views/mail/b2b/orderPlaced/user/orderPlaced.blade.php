@@ -44,7 +44,7 @@
     @foreach($productModels as $productModel)
         |<p>Model</p><td colspan="4"><h2>{{$productModel->symbol}}</h2></td>
         @foreach($productColors->where("product_model_id", $productModel->id) as $productColor)
-            |<div><img src="{{route("images.webp", ["path"=> $productColor->images[0]->path])}}" width="50"/></div> <td colspan="4"><p>Kolor {{$productColor->shortcut}}</p>{{$productColor->name}}</td>
+            |<div><img src="{{route("images.webp", ["slug"=> $productColor->images[0]->slug])}}" width="50"/></div> <td colspan="4"><p>Kolor {{$productColor->shortcut}}</p>{{$productColor->name}}</td>
             @foreach($products->where("product_model_color_id", $productColor->id) as $product)
                 @php $item = $orderProducts->where("product_id", $product->id)->first() @endphp
                 | {{$i++}}     | {{$product->size->name}}          | {{$item->price_net/100}}           | {{round($item->price_net * (1 + $item->vat_rate / 100) /100,2)}}           | {{$item->quantity}}       |
