@@ -44,8 +44,6 @@ Route::group([], function () {
     Route::get("/client", [B2bClientController::class, 'index'])->name("b2b.client");
 
 
-    Route::get("/main/extra/bestsellers", [ExtraMainPageComponentsController::class, 'bestsellers'])->name("b2b.main.extra.bestsellers");
-
 });
 
 

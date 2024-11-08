@@ -43,12 +43,16 @@ use Illuminate\Support\Facades\Route;
 if (request()->getHttpHost() === "system." . config("app.domain") || request()->getHttpHost() === 'localhost') {
     Route::domain("system." . config("app.domain"))->group(function () {
         require __DIR__ . "/system/system.php";
+
         if (request()->getHttpHost() !== 'localhost') {
-            Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
-                Route::group(["prefix" => "/b2b"], function () {
+            Route::group(["prefix" => "/b2b"], function () {
+                Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
                     require __DIR__ . "/b2b/b2b.php";
                 });
 
+                Route::middleware(["auth:user", "verified"])->group(function () {
+                    require __DIR__ . "/b2b/extra.php";
+                });
             });
         }
     });
@@ -65,7 +69,9 @@ if (request()->getHttpHost() === "b2b." . config("app.domain") || request()->get
     Route::domain("b2b." . config("app.domain"))->group(function () {
         Route::middleware(["auth:client", "verified"])->group(function () {
             require __DIR__ . "/b2b/b2b.php";
+            require __DIR__ . "/b2b/extra.php";
         });
+
 
         require __DIR__ . "/b2b/auth.php";
     });
@@ -76,10 +82,10 @@ Route::get('assets/{path}', function ($path) {
 })->name("assets");
 
 Route::get('storage/{path}', [StorageController::class, 'storage'])->name("storage");
-Route::get('images/basic/{path}', [StorageController::class, 'images'])->name("images");
-Route::get('images/thumbnail/{path}', [StorageController::class, 'imagesThumb'])->name("images.thumbnail");
-Route::get('images/webp/{path}', [StorageController::class, 'imagesWebp'])->name("images.webp");
-Route::get('images/1x1/{path}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
+Route::get('images/basic/{slug}', [StorageController::class, 'images'])->name("images");
+Route::get('images/thumbnail/{slug}', [StorageController::class, 'imagesThumb'])->name("images.thumbnail");
+Route::get('images/webp/{slug}', [StorageController::class, 'imagesWebp'])->name("images.webp");
+Route::get('images/1x1/{slug}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
 Route::get('color-icons/{path}', [StorageController::class, 'colorIcons'])->name("colorIcons");
 
 
