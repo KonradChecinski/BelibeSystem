@@ -29,7 +29,7 @@ class StoreClientLocationRequest extends FormRequest
             'street' => 'required|string',
             'postal_code' => 'required|string',
             'building_number' => 'required|string',
-            'apartment_number' => 'numeric|nullable',
+            'apartment_number' => 'string|nullable',
             'note' => 'required|string',
             'active' => 'required|boolean',
         ];
