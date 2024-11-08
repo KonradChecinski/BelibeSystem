@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DynamicHeader;
 use App\Http\Requests\StoreDynamicHeaderRequest;
 use App\Http\Requests\UpdateDynamicHeaderRequest;
+use Inertia\Inertia;
 
 class DynamicHeaderController extends Controller
 {
@@ -43,9 +44,14 @@ class DynamicHeaderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DynamicHeader $dynamicHeader)
+    public function edit()
     {
-        //
+        $dynamicHeader = DynamicHeader::all();
+//        dd($dynamicHeader);
+        return Inertia::render('System/Pages/Header',
+            [
+                "dynamicHeader" => $dynamicHeader
+            ]);
     }
 
     /**
