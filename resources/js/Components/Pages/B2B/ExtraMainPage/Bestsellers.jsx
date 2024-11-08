@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {Box, Divider, Grid, Paper, Skeleton, Typography} from "@mui/material";
 import ModelComponent from "@/Components/Pages/B2B/ModelComponent";
 import {Swiper, SwiperSlide} from "swiper/react";
@@ -14,21 +14,30 @@ import ModelSkeletonComponent from "@/Components/Pages/B2B/ModelSkeletonComponen
 export default function B2BBestsellers({quantity}) {
     const {t} = useLaravelReactI18n();
     const [data, setData] = useState([]);
-    axios.get(
-        route("b2b.main.extra.bestsellers"),
-        {
+    useEffect(() => {
+        axios.get(route("b2b.main.extra.bestsellers"), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
             params: {
                 quantity: quantity
             }
+        })
+            .then(response => {
+                console.log(response.data);
+                setData(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, [quantity]);
 
-        })
-        .then(response => {
-            // console.log(response.data)
-            setData(response.data)
-        })
-        .catch(error => {
-            console.error(error)
-        });
+    // Memoizacja danych w celu uniknięcia ponownego przetwarzania
+    const memoizedData = useMemo(() => {
+        return data;
+    }, [data]);
+
 
     return (
         <Paper elevation={4} sx={{p: 1, my: 1}}>
@@ -64,10 +73,10 @@ export default function B2BBestsellers({quantity}) {
                     navigation={true}
                     modules={[FreeMode, Navigation, Autoplay]}
                 >
-                    {data.length !== 0 ?
+                    {memoizedData && memoizedData.length !== 0 ?
                         (
                             <>
-                                {data.map((bestseller, id) => {
+                                {memoizedData.map((bestseller, id) => {
                                         return (
                                             <SwiperSlide key={id}>
                                                 <Box sx={{width: 200, height: 1}}>
