@@ -87,6 +87,7 @@ class OrderCreateInSubiekt implements ShouldQueue
                 } else {
                     $productSubiekt = Towar::where("tw_Symbol", $orderProduct->product_code)->first();
                     $productSubiektId = is_null($productSubiekt) ? null : $productSubiekt->tw_Id;
+                    $productDescription = $orderProduct->product_code;
                 }
 
 
