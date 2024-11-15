@@ -2,14 +2,11 @@ import {Link, router} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import {Box, Button, Card, Divider, IconButton, Tooltip, Typography} from "@mui/material";
 import React, {useState} from "react";
-import MainMenuLink from "@/Components/Layout/Menu/MenuMainLink";
-import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {ArrowBack, Category, Dashboard, Delete, ExitToApp, Group, QueryStats, Settings} from '@mui/icons-material';
+import {ArrowBack} from '@mui/icons-material';
 import MenuComponent from "@/Components/Layout/B2BMenu/MenuComponent";
-import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
 import B2BDynamicMenuResponsive from "@/Components/Layout/B2BDynamicMenuResponsive";
 
 export default function B2BMenu({showContent, auth, accountManager = false, bgImage, categories, header}) {

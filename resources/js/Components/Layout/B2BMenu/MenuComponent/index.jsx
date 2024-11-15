@@ -5,16 +5,18 @@ import {Add, KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 
 
 export default function MenuComponent({categories}) {
-    let tempCategory = {};
-    for (const node of categories) {
-        if (route().current("b2b.category", {slug: node.slug})) {
-            node.active = true;
-            tempCategory = node;
+    if (route().current() === "b2b.category") {
+        let tempCategory = {};
+        for (const node of categories) {
+            if (route().current("b2b.category", {slug: node.slug})) {
+                node.active = true;
+                tempCategory = node;
+            }
         }
-    }
-    while (tempCategory.parent !== 0) {
-        tempCategory = categories.find((category) => category.id === tempCategory.parent);
-        tempCategory.childActive = true;
+        while (tempCategory.parent !== 0) {
+            tempCategory = categories.find((category) => category.id === tempCategory.parent);
+            tempCategory.childActive = true;
+        }
     }
 
 
@@ -24,10 +26,11 @@ export default function MenuComponent({categories}) {
 
     return (
         <>
-            {filteredParentMenu.map((category) => {
+            {filteredParentMenu.map((category, i) => {
                 const children = getDescendants(category, categories);
                 return (
-                    <MenuElement node={category} children={children} defaultShowChildren={false}
+                    <MenuElement key={0 + "_" + i} id={0 + "_" + i} node={category} children={children}
+                                 defaultShowChildren={false}
                                  categories={categories}/>
                 )
             })
@@ -41,7 +44,7 @@ function getDescendants(node, nodes) {
     return nodes.filter((n) => n.parent === node.id);
 }
 
-function MenuElement({node, children, defaultShowChildren, categories}) {
+function MenuElement({node, children, defaultShowChildren, categories, id = "1"}) {
     const [showChildren, setShowChildren] = useState(defaultShowChildren || node.childActive);
 
     const hasChildren = Boolean(children.length)
@@ -86,10 +89,11 @@ function MenuElement({node, children, defaultShowChildren, categories}) {
             {hasChildren && (
                 <Collapse in={showChildren}>
                     <Box sx={{pl: 2}}>
-                        {children.map((child) => {
+                        {children.map((child, i) => {
                             const childChildren = getDescendants(child, categories);
                             return (
-                                <MenuElement node={child} children={childChildren} defaultShowChildren={false}
+                                <MenuElement key={id + "_" + i} id={id + "_" + i} node={child} children={childChildren}
+                                             defaultShowChildren={false}
                                              categories={categories}/>
                             )
                         })

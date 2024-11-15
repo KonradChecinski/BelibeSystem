@@ -20,8 +20,8 @@ export default function B2BDynamicMenu({auth, menu}) {
                     alignItems="center"
                 >
                     {menu.map((link, id) => (
-                            <Fragment key={link.id}>
-                                <Grid item xs={12} md={2} sx={{margin: 0}}>
+                            <Fragment key={link.url}>
+                                <Grid item xs={12} md={2} sx={{margin: 0, px: 1}}>
                                     <Link href={link.url}>
                                         <Box
                                             sx={{
@@ -33,6 +33,7 @@ export default function B2BDynamicMenu({auth, menu}) {
                                                 cursor: "pointer",
                                                 borderRadius: 1,
                                                 p: 0.5,
+                                                bgcolor: window.location.href === link.url ? "#1967d225" : "",
                                                 "&:hover": {
                                                     bgcolor: "primary.main",
                                                 },
