@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\DynamicPage;
 use App\Http\Requests\StoreDynamicPageRequest;
 use App\Http\Requests\UpdateDynamicPageRequest;
@@ -88,67 +89,10 @@ class DynamicPageController extends Controller
 
     public function link()
     {
-        $links = collect([]);
-
-
-        $other = [
-            "name" => __("Other"),
-            "links" => [
-                [
-                    "name" => __("Home page"),
-                    "url" => route("b2b.main")
-                ],
-                [
-                    "name" => __("Favorites"),
-                    "url" => route("b2b.favorites")
-                ],
-                [
-                    "name" => __("Cart"),
-                    "url" => route("b2b.cart")
-                ],
-                [
-                    "name" => __("Invoices"),
-                    "url" => route("b2b.invoices")
-                ],
-                [
-                    "name" => __("Orders"),
-                    "url" => route("b2b.orders")
-                ],
-                [
-                    "name" => __("Settlements"),
-                    "url" => route("b2b.settlements")
-                ],
-                [
-                    "name" => __("Client zone"),
-                    "url" => route("b2b.client")
-                ],
-            ]
-        ];
-        $links->push($other);
-
-
-        $pages = [
-            "name" => "Pages",
-            "links" => DynamicPage::all(["id", "title", "slug"])->map(function ($page) {
-                return [
-                    "name" => $page->title,
-                    "url" => route("b2b.page", $page->slug)
-                ];
-            })
-        ];
-        $links->push($pages);
-
-        $categories = [
-            "name" => "Categories",
-            "links" => ProductCategory::query()->where("show_in_menu", true)->get(["id", "name", "slug"])->map(function ($category) {
-                return [
-                    "name" => $category->name,
-                    "url" => route("b2b.category", $category->slug)
-                ];
-            })
-        ];
-        $links->push($categories);
+        $links = Helper::getLinks();
 
         return response()->json($links);
     }
+
+
 }
