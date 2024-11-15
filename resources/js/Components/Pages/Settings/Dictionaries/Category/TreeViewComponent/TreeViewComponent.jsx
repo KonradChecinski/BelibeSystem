@@ -62,6 +62,7 @@ export default function TreeViewComponent(props) {
         parent: 0,
         name: "Brak nazwy",
         show_in_menu: false,
+        order: 1000,
     })
 
     useEffect(() => {
@@ -108,6 +109,7 @@ export default function TreeViewComponent(props) {
             parent: e.parent,
             slug: e.slug,
             show_in_menu: e.show_in_menu,
+            order: e.order,
         }))
     );
 
@@ -195,36 +197,6 @@ export default function TreeViewComponent(props) {
             sortTreeDataChildrten(unsortedTreeData, sortedTreeData, nodeId);
         }
         return sortedTreeData;
-
-        // const sortTreeData = (treeData) => {
-        //     const unsortedTreeData = treeData.slice();
-        //     const sortedTreeData = [];
-        //
-        //     while (unsortedTreeData.length > 0) {
-        //         const node = unsortedTreeData.find(e => e.parent === 0);
-        //         if (node) {
-        //             const nodeId = node.id;
-        //             sortedTreeData.push(node);
-        //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
-        //             const children = unsortedTreeData.filter(e => e.parent === nodeId);
-        //             children.forEach(child => {
-        //                 sortedTreeData.push(child);
-        //                 unsortedTreeData.splice(unsortedTreeData.indexOf(child), 1);
-        //             });
-        //         } else {
-        //             const node = unsortedTreeData[0];
-        //             unsortedTreeData.splice(unsortedTreeData.indexOf(node), 1);
-        //             const parent = sortedTreeData.find(e => e.id === node.parent);
-        //             sortedTreeData.splice(sortedTreeData.indexOf(parent) + 1, 0, node);
-        //             console.log(unsortedTreeData, sortedTreeData)
-        //             // return sortTreeData(sortedTreeData);
-        //             return sortedTreeData;
-        //         }
-        //
-        //     }
-        //     console.log(treeData, sortedTreeData)
-        //     return sortedTreeData;
-        // }
     }
 
 
