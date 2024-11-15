@@ -19,6 +19,7 @@ class ProductCategory extends Model
         'slug',
         'parent',
         'show_in_menu',
+        'order',
     ];
 
     protected $hidden = [

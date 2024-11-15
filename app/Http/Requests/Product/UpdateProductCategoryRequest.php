@@ -34,6 +34,7 @@ class UpdateProductCategoryRequest extends FormRequest
                 }),
             "*.parent" => 'required|integer',
             "*.show_in_menu" => 'required|boolean',
+            "*.order" => 'required|integer',
         ];
     }
 }

@@ -18,6 +18,7 @@ class ProductCategoryController extends Controller
         return Inertia::render("System/Settings/Dictionaries/Models/Category", [
             'categories' => ProductCategory::withCount(["productModels", "clientsDiscounts"])
                 ->with(["productModels:id,symbol,name", "clientsDiscounts:id,product_category_id,client_id,value", "clientsDiscounts.client:id,name,nip"])
+                ->orderBy("order")
                 ->get(),
         ]);
     }
@@ -61,8 +62,13 @@ class ProductCategoryController extends Controller
      */
     public function update(UpdateProductCategoryRequest $request)
     {
-        foreach ($request->validated() as $item) {
-            ProductCategory::find($item['id'])->update($item);
+
+//        dd($request->validated());
+        foreach ($request->validated() as $id => $item) {
+            ProductCategory::find($item['id'])->update([
+                ...$item,
+                "order" => $id
+            ]);
         }
     }
 
