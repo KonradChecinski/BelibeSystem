@@ -1,5 +1,5 @@
-import {Box, Card, Divider, Grid, Typography,} from "@mui/material";
-import {Fragment, useEffect, useState} from "react";
+import {Box, Button, Card, Divider, Grid, Typography,} from "@mui/material";
+import React, {Fragment, useEffect, useState} from "react";
 import {Link} from "@inertiajs/react";
 
 export default function B2BDynamicMenuResponsive({auth, menu}) {
@@ -13,26 +13,16 @@ export default function B2BDynamicMenuResponsive({auth, menu}) {
             {menu.map((link, id) => (
                     <Fragment key={link.id}>
                         <Grid item xs={12} md={2} sx={{margin: 0,}}>
-                            <Link href={link.url}>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        height: "100%",
-                                        width: "100%",
-                                        cursor: "pointer",
-                                        borderRadius: 1,
-                                        p: 0.5,
-                                        "&:hover": {
-                                            backgroundColor: "#1967d225",
-                                        },
-                                    }}>
-                                    <Typography variant="h6" component="h5" textAlign={"center"}>
-                                        {link.name}
-                                    </Typography>
-                                </Box>
-                            </Link>
+                            <Button
+                                component={Link}
+                                href={link.url}
+                                sx={{width: 1, textTransform: 'none', justifyContent: "flex-start", pl: 1}}
+                            >
+                                <Typography variant="body1">
+                                    {link.name}
+                                </Typography>
+                            </Button>
+
                         </Grid>
 
 

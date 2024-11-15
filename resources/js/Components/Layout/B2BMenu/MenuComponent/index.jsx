@@ -1,35 +1,102 @@
 import React, {useEffect, useState} from "react";
-import {DndProvider} from "react-dnd";
-import {getBackendOptions, getDescendants, MultiBackend, Tree} from "@minoru/react-dnd-treeview";
-import {Node} from "@/Components/Layout/B2BMenu/MenuComponent/Components/Node";
-import styles from "@/Components/Layout/B2BMenu/MenuComponent/Components/Tree.module.css";
-import {Paper, Grid} from "@mui/material";
+import {Box, Button, Typography, IconButton, Grow, Collapse} from "@mui/material";
+import {Link} from "@inertiajs/react";
+import {Add, KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 
 
 export default function MenuComponent({categories}) {
-    return (
-        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-            <Tree
-                tree={categories}
-                listComponent={Grid}
-                listItemComponent={"div"}
-                rootId={0}
-                render={(node, {depth, isOpen, onToggle, handleRef, hasChild}) => (
-                    <Node
-                        node={node}
-                        depth={depth}
-                    />
-                )}
-                onDrop={() => {
-                }}
-                sort={false}
-                insertDroppableFirst={false}
-                enableAnimateExpand={true}
-                canDrag={() => false}
-                canDrop={() => false}
+    let tempCategory = {};
+    for (const node of categories) {
+        if (route().current("b2b.category", {slug: node.slug})) {
+            node.active = true;
+            tempCategory = node;
+        }
+    }
+    while (tempCategory.parent !== 0) {
+        tempCategory = categories.find((category) => category.id === tempCategory.parent);
+        tempCategory.childActive = true;
+    }
 
-                initialOpen={true}
-            />
-        </DndProvider>
+
+    const filteredParentMenu = categories.filter((category) => {
+        return category.parent === 0;
+    }).sort((a, b) => a.order - b.order);
+
+    return (
+        <>
+            {filteredParentMenu.map((category) => {
+                const children = getDescendants(category, categories);
+                return (
+                    <MenuElement node={category} children={children} defaultShowChildren={false}
+                                 categories={categories}/>
+                )
+            })
+            }
+        </>
     );
+}
+
+
+function getDescendants(node, nodes) {
+    return nodes.filter((n) => n.parent === node.id);
+}
+
+function MenuElement({node, children, defaultShowChildren, categories}) {
+    const [showChildren, setShowChildren] = useState(defaultShowChildren || node.childActive);
+
+    const hasChildren = Boolean(children.length)
+    return (
+        <Box sx={{width: 1}}>
+
+            <Box sx={{
+                width: 1,
+                display: "flex",
+                flexWrap: "nowrap",
+                justifyContent: "space-between",
+                alignItems: "center",
+            }}>
+                <Button
+                    component={Link}
+                    href={route("b2b.category", {slug: node.slug})}
+                    sx={{
+                        width: 1,
+                        textTransform: 'none',
+                        justifyContent: "flex-start",
+                        bgcolor: node.active ? "#1967d225" : "",
+                    }}
+                >
+                    <Typography variant="body1">
+                        {node.name}
+                    </Typography>
+                </Button>
+                {hasChildren && (
+                    <Box>
+                        <IconButton aria-label="add" onClick={() => setShowChildren(!showChildren)}>
+                            {showChildren ? (
+                                <KeyboardArrowDown sx={{color: "menuText.main"}}/>
+                            ) : (
+                                <KeyboardArrowUp sx={{color: "menuText.main"}}/>
+                            )}
+                        </IconButton>
+                    </Box>
+                )
+                }
+            </Box>
+
+            {hasChildren && (
+                <Collapse in={showChildren}>
+                    <Box sx={{pl: 2}}>
+                        {children.map((child) => {
+                            const childChildren = getDescendants(child, categories);
+                            return (
+                                <MenuElement node={child} children={childChildren} defaultShowChildren={false}
+                                             categories={categories}/>
+                            )
+                        })
+                        }
+                    </Box>
+                </Collapse>
+            )}
+        </Box>
+    )
 }
