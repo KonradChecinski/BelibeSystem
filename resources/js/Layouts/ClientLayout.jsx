@@ -12,7 +12,7 @@ import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
 import DesktopLayout from "@/Layouts/Components/B2B/DesktopLayout";
 import MobileLayout from "@/Layouts/Components/B2B/MobileLayout";
 
-export default function ClientLayout({props, header, children,}) {
+export default function ClientLayout({props, header, children}) {
     const theme = useTheme();
     const mdBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
     const smBreakpointUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -30,7 +30,7 @@ export default function ClientLayout({props, header, children,}) {
     const clientId = props.clientId
     const blacklist = props.blacklist
 
-    const headerMenu = props.headerMenu
+    const headerMenu = props.header
     const footer = props.footer
 
     return (
@@ -50,7 +50,7 @@ export default function ClientLayout({props, header, children,}) {
                     !isMobile ?
                         (
                             <DesktopLayout key={"desktop"} auth={auth} bgImage={bgImage} categories={categories}
-                                           header={header} footer={footer} headerMenu={headerMenu}
+                                           headerTitle={header} footer={footer} header={headerMenu}
                                            accountManager={accountManager} cart={cart} clientId={clientId}
                                            blacklist={blacklist} children={children} props={props}/>
                         )
@@ -58,7 +58,7 @@ export default function ClientLayout({props, header, children,}) {
                         (
 
                             <MobileLayout key={"mobile"} auth={auth} bgImage={bgImage} categories={categories}
-                                          header={header} footer={footer} headerMenu={headerMenu}
+                                          headerTitle={header} footer={footer} header={headerMenu}
                                           accountManager={accountManager} cart={cart} clientId={clientId}
                                           blacklist={blacklist} children={children} props={props}/>
 

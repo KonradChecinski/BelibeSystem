@@ -1,7 +1,7 @@
 import {Link, router} from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import {Box, Button, Card, Divider, IconButton, Tooltip} from "@mui/material";
-import React from "react";
+import {Box, Button, Card, Divider, IconButton, Tooltip, Typography} from "@mui/material";
+import React, {useState} from "react";
 import MainMenuLink from "@/Components/Layout/Menu/MenuMainLink";
 import SubMenuLink from "@/Components/Layout/Menu/SubMenuLink";
 import {useTheme} from "@mui/material/styles";
@@ -9,11 +9,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {ArrowBack, Category, Dashboard, Delete, ExitToApp, Group, QueryStats, Settings} from '@mui/icons-material';
 import MenuComponent from "@/Components/Layout/B2BMenu/MenuComponent";
+import B2BDynamicMenu from "@/Components/Layout/B2BDynamicMenu";
+import B2BDynamicMenuResponsive from "@/Components/Layout/B2BDynamicMenuResponsive";
 
-export default function B2BMenu({showContent, auth, accountManager = false, bgImage, categories}) {
+export default function B2BMenu({showContent, auth, accountManager = false, bgImage, categories, header}) {
     const theme = useTheme();
+    const [showMenu, setShowMenu] = useState(useMediaQuery(theme.breakpoints.up("md")));
     const darkMode = theme.palette.mode === "dark";
-    const smBreakpointUp = useMediaQuery(theme.breakpoints.up("md"));
+
     const {t} = useLaravelReactI18n();
 
     return (
@@ -114,17 +117,65 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
                         my: 1
                     }}
                 />
-                <Box
-                    sx={{
-                        overflowY: "auto",
-                        overflowX: "hidden",
-                        height: 1,
-                        width: "80%"
-                    }}
-                >
-                    <MenuComponent categories={categories}/>
+                {showMenu ?
+                    (
+                        <>
+                            <Box
+                                sx={{
+                                    overflowY: "auto",
+                                    overflowX: "hidden",
+                                    height: 1,
+                                    width: "80%"
+                                }}
+                            >
+                                <MenuComponent categories={categories}/>
 
-                </Box>
+                            </Box>
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            <Box
+                                sx={{
+                                    width: "80%",
+                                    height: "fit-content"
+                                }}
+                            >
+                                <B2BDynamicMenuResponsive auth={auth} menu={header}/>
+                            </Box>
+                            <Divider
+                                component="div"
+                                sx={{
+                                    // background:
+                                    //     "linear-gradient(90deg, rgba(31,40,62,1) 0%, rgba(255,255,255,0.5) 50%, rgba(31,40,62,1) 100%)",
+                                    background: theme.palette.gradient.divider,
+                                    height: "2px",
+                                    width: "80%",
+                                    mx: "auto",
+                                    my: 1
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    overflowY: "auto",
+                                    overflowX: "hidden",
+                                    height: 1,
+                                    width: "80%"
+                                }}
+                            >
+
+                                <Typography variant="h5" gutterBottom component="h5">
+                                    Kategorie
+                                </Typography>
+                                <MenuComponent categories={categories}/>
+
+                            </Box>
+                        </>
+                    )
+                }
+
+
             </Box>
         </Card>
     );

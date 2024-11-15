@@ -14,8 +14,8 @@ export default function DesktopLayout({
                                           auth,
                                           bgImage,
                                           categories,
+                                          headerTitle,
                                           header,
-                                          headerMenu,
                                           footer,
                                           children,
                                           fixed = true,
@@ -126,14 +126,14 @@ export default function DesktopLayout({
                             <Box>
                                 <B2BNavBar clientId={clientId} cart={cart} auth={auth}
                                            accountManager={accountManager}/>
-                                <B2BDynamicMenu auth={auth} menu={[]}/>
+                                <B2BDynamicMenu auth={auth} menu={header}/>
                             </Box>
                         </Box>
                     </Box>
 
 
                     <Box sx={{width: 1,}}> {/*Prawo body*/}
-                        <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
+                        <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{headerTitle}</Typography>
 
                         {children}
                     </Box>

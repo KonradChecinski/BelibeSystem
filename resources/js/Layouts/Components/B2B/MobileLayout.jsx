@@ -10,8 +10,8 @@ export default function MobileLayout({
                                          auth,
                                          bgImage,
                                          categories,
+                                         headerTitle,
                                          header,
-                                         headerMenu,
                                          footer,
                                          children,
                                          fixed = true,
@@ -32,11 +32,11 @@ export default function MobileLayout({
             <B2BAppBar position={"fixed"} cart={cart} clientId={clientId} accountManager={accountManager}>
                 <B2BMenu showContent={showMenu} auth={auth} bgImage={bgImage}
                          categories={categories}
-                         accountManager={accountManager}/>
+                         accountManager={accountManager} header={header}/>
             </B2BAppBar>
             <Box sx={{width: 1, height: 70}}></Box>
             <Box>
-                <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{header}</Typography>
+                <Typography variant="h4" sx={{my: 1, mx: 1, pt: 1}}>{headerTitle}</Typography>
 
                 {children}
             </Box>
