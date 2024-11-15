@@ -1,4 +1,4 @@
-import {Avatar, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
+import {Avatar, Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {Link, router} from "@inertiajs/react";
 import {Favorite, History, Logout, Payment, Person, ReceiptLong, Savings, Settings} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
@@ -26,35 +26,6 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
             onClick={onClose}
             hideBackdrop={true}
             disableScrollLock
-            // slotProps={{
-            //     Paper:
-            //         {
-            //             elevation: 0,
-            //             // sx: {
-            //             //     overflow: "visible",
-            //             //     filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            //             //     mt: 1.5,
-            //             //     "& .MuiAvatar-root": {
-            //             //         width: 32,
-            //             //         height: 32,
-            //             //         ml: -0.5,
-            //             //         mr: 1
-            //             //     },
-            //             //     "&:before": {
-            //             //         content: "\"\"",
-            //             //         display: "block",
-            //             //         position: "absolute",
-            //             //         top: 0,
-            //             //         right: 14,
-            //             //         width: 10,
-            //             //         height: 10,
-            //             //         bgcolor: "background.paper",
-            //             //         transform: "translateY(-50%) rotate(45deg)",
-            //             //         zIndex: 0
-            //             //     }
-            //             // }
-            //         }
-            // }}
             transformOrigin={{
                 horizontal: "right",
                 vertical: "top"
@@ -64,79 +35,80 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
                 vertical: "bottom"
             }}
         >
-            <Link href={route("b2b.client")}>
-                <MenuItem onClick={onClose}>
-                    <ListItemIcon sx={{mr: 1}}>
+            <Box>
+                <Link href={route("b2b.client")}>
+                    <MenuItem onClick={onClose}>
+                        <ListItemIcon sx={{mr: 1}}>
 
-                        <Avatar>
-                            <Person fontSize={"large"}/>
-                        </Avatar>
-                    </ListItemIcon>
+                            <Avatar>
+                                <Person fontSize={"large"}/>
+                            </Avatar>
+                        </ListItemIcon>
 
-                    <ListItemText>{t("Client zone")}</ListItemText>
-                </MenuItem>
-            </Link>
+                        <ListItemText>{t("Client zone")}</ListItemText>
+                    </MenuItem>
+                </Link>
 
-            <Divider/>
-            {isMobile && (
-                <>
-                    <Link href={route("b2b.favorites")}>
-                        <MenuItem onClick={onClose}>
-                            <ListItemIcon>
-                                <Favorite fontSize="small"/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t("Favorites")}
-                            </ListItemText>
-                        </MenuItem>
-                    </Link>
-                    <Divider/>
-                </>
-            )}
+                <Divider/>
+                {isMobile && (
+                    <>
+                        <Link href={route("b2b.favorites")}>
+                            <MenuItem onClick={onClose}>
+                                <ListItemIcon>
+                                    <Favorite fontSize="small"/>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t("Favorites")}
+                                </ListItemText>
+                            </MenuItem>
+                        </Link>
+                        <Divider/>
+                    </>
+                )}
 
-            <Link href={route("b2b.orders")}>
-                <MenuItem onClick={onClose}>
+                <Link href={route("b2b.orders")}>
+                    <MenuItem onClick={onClose}>
+                        <ListItemIcon>
+                            <History fontSize="small"/>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("Orders")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Link href={route("b2b.invoices")}>
+                    <MenuItem onClick={onClose}>
+                        <ListItemIcon>
+                            <ReceiptLong fontSize="small"/>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("Invoices")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Link href={route("b2b.settlements")}>
+                    <MenuItem onClick={onClose}>
+                        <ListItemIcon>
+                            <Payment fontSize="small"/>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("Settlements")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+
+                <Divider/>
+
+
+                <MenuItem onClick={handleLogoutClick} disabled={accountManager}>
                     <ListItemIcon>
-                        <History fontSize="small"/>
+                        <Logout fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>
-                        {t("Orders")}
+                        {t("Logout")}
                     </ListItemText>
                 </MenuItem>
-            </Link>
-            <Link href={route("b2b.invoices")}>
-                <MenuItem onClick={onClose}>
-                    <ListItemIcon>
-                        <ReceiptLong fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText>
-                        {t("Invoices")}
-                    </ListItemText>
-                </MenuItem>
-            </Link>
-            <Link href={route("b2b.settlements")}>
-                <MenuItem onClick={onClose}>
-                    <ListItemIcon>
-                        <Payment fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText>
-                        {t("Settlements")}
-                    </ListItemText>
-                </MenuItem>
-            </Link>
-
-            <Divider/>
-
-
-            <MenuItem onClick={handleLogoutClick} disabled={accountManager}>
-                <ListItemIcon>
-                    <Logout fontSize="small"/>
-                </ListItemIcon>
-                <ListItemText>
-                    {t("Logout")}
-                </ListItemText>
-            </MenuItem>
-
+            </Box>
         </Menu>
     );
 }
