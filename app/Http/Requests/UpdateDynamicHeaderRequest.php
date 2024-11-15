@@ -11,7 +11,7 @@ class UpdateDynamicHeaderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editPages", "user");
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateDynamicHeaderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "header" => "required|array|max:6",
+            "header.*.name" => "required|string|max:255",
+            "header.*.url" => "required|string|max:255",
         ];
     }
 }

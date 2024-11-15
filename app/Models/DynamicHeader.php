@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class DynamicHeader extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'order',
+        'name',
+        'url'
+    ];
 }

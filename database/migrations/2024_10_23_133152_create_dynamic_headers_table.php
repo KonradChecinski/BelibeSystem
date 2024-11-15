@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('dynamic_headers', function (Blueprint $table) {
             $table->id();
-            $table->json('content');
-            $table->json('zones');
+            $table->unsignedInteger('order');
+            $table->string('name');
+            $table->string('url');
             $table->timestamps();
         });
     }

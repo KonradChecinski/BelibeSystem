@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\DynamicHeader;
 use App\Http\Requests\StoreDynamicHeaderRequest;
 use App\Http\Requests\UpdateDynamicHeaderRequest;
@@ -47,19 +48,29 @@ class DynamicHeaderController extends Controller
     public function edit()
     {
         $dynamicHeader = DynamicHeader::all();
+        $links = Helper::getLinks();
+
 //        dd($dynamicHeader);
         return Inertia::render('System/Pages/Header',
             [
-                "dynamicHeader" => $dynamicHeader
+                "dynamicHeader" => $dynamicHeader,
+                "links" => $links
             ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDynamicHeaderRequest $request, DynamicHeader $dynamicHeader)
+    public function update(UpdateDynamicHeaderRequest $request)
     {
-        //
+        DynamicHeader::truncate();
+        foreach ($request->validated()["header"] as $key => $value) {
+            DynamicHeader::create([
+                'order' => $key,
+                'name' => $value['name'],
+                'url' => $value['url']
+            ]);
+        }
     }
 
     /**
