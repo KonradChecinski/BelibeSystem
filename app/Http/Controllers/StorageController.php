@@ -18,6 +18,11 @@ class StorageController extends Controller
 
     public function images(string $slug)
     {
+        if ($slug === "brak.jpg") {
+            $img = Storage::get('images/basic/brak.jpg');
+            return response($img)->header('Content-Type', 'image/jpg');
+        }
+
         $image = ProductImage::findBySlug($slug);
         $path = $image->path_basic;
 
@@ -66,6 +71,12 @@ class StorageController extends Controller
 
     public function imagesWebp(string $slug)
     {
+        if ($slug === "brak.jpg") {
+            $img = Storage::get('images/webp/brak.webp');
+            return response($img)->header('Content-Type', 'image/webp');
+        }
+
+
         $productImage = ProductImage::findBySlug($slug);
         $path = $productImage->path_webp;
 
