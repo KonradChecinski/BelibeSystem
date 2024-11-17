@@ -65,6 +65,7 @@ use App\Http\Controllers\System\TestController;
 use App\Http\Controllers\System\XmlGeneratorController;
 use App\Http\Controllers\WarehouseDocumentController;
 use App\Install\ClearDBController;
+use App\Install\Install10Controller;
 use App\Install\Install1Controller;
 use App\Install\Install2Controller;
 use App\Install\Install3Controller;
@@ -431,6 +432,8 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::get("install8", [Install8Controller::class, 'install'])->name("install8");
 
     Route::get("install9", [Install9Controller::class, 'install'])->name("install9");
+    
+    Route::get("install10", [Install10Controller::class, 'install'])->name("install10");
 
     Route::get("cleardb", [ClearDBController::class, 'clear'])->name("cleardb");
 });
