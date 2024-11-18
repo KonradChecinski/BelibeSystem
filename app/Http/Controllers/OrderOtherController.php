@@ -57,7 +57,7 @@ class OrderOtherController extends Controller
                 $query->withWhereHas("images", function ($query) {
                     $query->where("type", 1);
                     $query->where("order", 0);
-                    $query->select("product_model_color_id", "path");
+                    $query->select("product_model_color_id", "slug");
                 });
             },
         ]);
