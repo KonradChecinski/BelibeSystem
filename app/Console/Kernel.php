@@ -98,6 +98,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('telescope:prune')->daily();
         //Websocket
         $schedule->command('websockets:clean')->daily();
+        //Jobs
+        $schedule->command('queue:prune-failed --hours=48')->dailyAt("03:00");
 
         $partnerExports = PartnerExport::all();
         foreach ($partnerExports as $partnerExport) {
