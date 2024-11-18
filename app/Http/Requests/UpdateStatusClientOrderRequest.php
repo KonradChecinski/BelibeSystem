@@ -46,7 +46,7 @@ class UpdateStatusClientOrderRequest extends FormRequest
                     return "in:20,0";
                 }),
                 Rule::when($this->clientOrder->status == 90, function () {
-                    return "in:20,60";
+                    return "in:0,20,60";
                 }),
                 Rule::when($this->clientOrder->status == 100, function () {
                     return "in:";
