@@ -309,7 +309,11 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
 
     Echo.private("cart." + props.clientId + ".product." + product.id).listen("CartProductUpdated", (e) => {
         setRunAnimation(true);
-        inputRef?.current?.scrollIntoView({behavior: "smooth"});
+        inputRef?.current?.scrollIntoView({
+            behavior: "smooth",
+            block: 'center',
+            inline: 'center'
+        });
         setTimeout(() => {
             setRunAnimation(false);
             setValue(e.quantity);
