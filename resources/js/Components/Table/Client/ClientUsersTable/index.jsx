@@ -29,12 +29,12 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
 
     const column = [
         {field: "id", headerName: "Id"},
-        {field: "name", headerName: "Użytkownik", width: 150},
-        {field: "email", headerName: "Email", width: 250},
+        {field: "name", headerName: "Użytkownik", width: 100},
+        {field: "email", headerName: "Email", width: 200},
         {
             field: "email_verified_at",
             headerName: "Zweryfikowany",
-            width: 150,
+            flex: 1,
             sortable: true,
             filterable: true,
             headerAlign: 'center',
@@ -56,7 +56,7 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
         {
             field: "action",
             headerName: "Akcje",
-            width: 120,
+            width: 90,
             sortable: false,
             renderCell: (params) => {
                 const [openDialogDelete, setOpenDialogDelete] = useState(false);
@@ -92,8 +92,6 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
                                                 user={params.row} params={props}/>
                         <ClientAddEditUsersDialog open={openDialogAdd} setOpen={setOpenDialogAdd}
                                                   clickedUser={params.row} props={props}/>
-                        {/*<ProductsAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} color={color}*/}
-                        {/*                   method={"update"} actualState={params.row} props={props}/>*/}
                     </>
 
                 );

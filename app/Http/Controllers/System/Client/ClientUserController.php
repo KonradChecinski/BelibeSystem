@@ -80,7 +80,7 @@ class ClientUserController extends Controller
         if (strlen($request->password) > 0) {
             $clientUser->forceFill([
                 'password' => Hash::make($request->password),
-                'remember_token' => Str::random(60),
+                'remember_token' => null,
             ])->save();
             event(new PasswordReset($clientUser));
         }

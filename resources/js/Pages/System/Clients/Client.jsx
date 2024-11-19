@@ -12,7 +12,7 @@ import {
     EventAvailable,
     NoteAdd,
     AddBox,
-    History, Description, ReceiptLong
+    History, Description, ReceiptLong, PeopleAlt
 } from "@mui/icons-material";
 
 import IconGrid from "@/Components/Layout/IconGrid";
@@ -26,6 +26,8 @@ import ClientLocationsComponent from "@/Components/Pages/Client/ClientLocationsC
 import ClientSettlementsTable from "@/Components/Table/Client/ClientSettlementsTable";
 import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHistoryComponent";
 import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
+import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 
 export default function Client(props) {
@@ -74,6 +76,10 @@ export default function Client(props) {
                         <IconGrid xs={12} lg={12} title={"Punkty klienta"} icon={<LocationOn/>} iconColor={"blue"}>
                             <ClientLocationsComponent {...props} />
                         </IconGrid>
+
+                        <IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAlt/>} iconColor={"gray"}>
+                            <ClientUsersComponent {...props} />
+                        </IconGrid>
                     </Grid>
                 </Grid>
             </Grid>
@@ -117,12 +123,6 @@ export default function Client(props) {
                         </Grid>
                     </Grid>
                 </IconGrid>
-
-
-                {/*To dopiero jak będą zamówienia*/}
-                {/*<IconGrid xs={12} md={12} title={"Użytkownicy klienta"} icon={<PeopleAltIcon/>} iconColor={"gray"}>*/}
-                {/*    <ClientUsersComponent {...props} />*/}
-                {/*</IconGrid>*/}
 
 
             </Grid>

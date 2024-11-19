@@ -2,7 +2,7 @@ import {
     Box, Button,
     Dialog, DialogActions,
     DialogContent,
-    DialogTitle, Paper,
+    DialogTitle, IconButton, InputAdornment, Paper,
     Step,
     StepLabel,
     Stepper,
@@ -19,6 +19,8 @@ import {
     addSchema,
     editSchema
 } from "@/Components/Dialogs/ClientDialog/ClientAddEditDialogs/ClientAddEditUsersDialog/form/clientUsersDialogFormSchema";
+import {Visibility} from "@mui/icons-material";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function ClientAddEditUsersDialog({
                                                      open,
@@ -190,6 +192,7 @@ export default function ClientAddEditUsersDialog({
 }
 
 function Step1({data, setData, clickedUser = null, register, errors}) {
+    const [showPassword, setShowPassword] = useState(false);
     return (
         <Box sx={{
             display: "flex", flexDirection: "column", overflowX: "hidden",
@@ -198,7 +201,7 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
             <Box>
                 <TextField
                     type="text"
-                    id="name"
+                    name={"login"}
                     label="Nazwa użytkownika"
                     color={errors.name?.message && "error"}
                     {...register("name")}
@@ -218,8 +221,8 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
             <Box>
                 <TextField
                     type="text"
-                    id="email"
                     label="Email"
+                    name={"email"}
                     color={errors.email?.message && "error"}
                     {...register("email")}
                     onChange={(value) => {
@@ -237,8 +240,8 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
 
             <Box>
                 <TextField
-                    type="text"
-                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    name={"password"}
                     label={clickedUser ? "Hasło (uzupełnij w przypadku zmiany)" : "Hasło"}
                     color={errors.password?.message && "error"}
                     {...register("password")}
@@ -246,6 +249,19 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                         setData('password', value.target.value);
                     }}
                     defaultValue={data.password}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position='end'>
+                                <IconButton
+                                    aria-label='toggle password visibility'
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword && <Visibility/>}
+                                    {!showPassword && <VisibilityOff/>}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     sx={{width: "30ch", my: 1}}
                 />
                 {errors.password?.message && (
@@ -272,6 +288,7 @@ function Step2({data, errors}) {
                        sx={{width: "30ch", my: 1}}/>
 
             <TextField id={"password"} label={"Hasło (uzupełnij w przypadku zmiany)"} variant={"outlined"}
+                       type={"password"}
                        value={data.password}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
