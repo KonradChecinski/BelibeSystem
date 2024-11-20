@@ -68,7 +68,7 @@ function MenuElement({node, children, defaultShowChildren, categories, id = "1"}
                         bgcolor: node.active ? "#1967d225" : "",
                     }}
                 >
-                    <Typography variant="body1">
+                    <Typography variant="body1" color={"menuText.main"}>
                         {node.name}
                     </Typography>
                 </Button>
