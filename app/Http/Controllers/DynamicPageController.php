@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\DynamicHeader;
 use App\Models\DynamicPage;
 use App\Http\Requests\StoreDynamicPageRequest;
 use App\Http\Requests\UpdateDynamicPageRequest;
@@ -27,7 +28,8 @@ class DynamicPageController extends Controller
     public function create()
     {
         return Inertia::render("System/Pages/Page", [
-            "menu" => ProductCategory::query()->where("show_in_menu", true)->get()
+            "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
+            "header" => DynamicHeader::all(["name", "url"]),
         ]);
     }
 
@@ -42,6 +44,7 @@ class DynamicPageController extends Controller
             $data["slug"] = $request->root["props"]["slug"];
         }
         $data["content"] = $request->content;
+        $data["zones"] = $request->zones;
 
         $page = DynamicPage::create($data);
         return redirect()->route('system.pages.page.edit', $page->id);
@@ -62,6 +65,7 @@ class DynamicPageController extends Controller
     {
         return Inertia::render("System/Pages/Page", [
             "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
+            "header" => DynamicHeader::all(["name", "url"]),
             "page" => $dynamicPage
         ]);
     }
