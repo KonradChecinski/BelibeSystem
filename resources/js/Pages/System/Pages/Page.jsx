@@ -21,6 +21,7 @@ import {
 } from 'puck-mui';
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
+import ClearLayout from "@/Layouts/ClearLayout";
 
 
 export default function Page(props) {
@@ -169,7 +170,7 @@ export default function Page(props) {
     };
 
     return (
-        <>
+        <ClearLayout>
             <Head title={initialData.root.props.title === null ? initialData.root.props.title : t("New page")}/>
             <Box>
                 <Box sx={{
@@ -200,6 +201,6 @@ export default function Page(props) {
                         boxShadow: "none",
                     }}/>
             </Box>
-        </>
+        </ClearLayout>
     );
 }
