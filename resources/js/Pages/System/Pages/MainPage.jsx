@@ -160,7 +160,7 @@ export default function MainPage(props) {
                         config={config}
                         data={initialData}
                         onPublish={save}
-
+                        iframe={{enabled: false}}
                         style={{
                             border: "none",
                             boxShadow: "none",
