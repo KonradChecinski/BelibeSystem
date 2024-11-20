@@ -1,14 +1,12 @@
-import {Head, Link, router, useForm} from "@inertiajs/react";
-import {Box, Button, Card, Tooltip} from "@mui/material";
+import {Head, router} from "@inertiajs/react";
+import {Box, Button, Tooltip} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Puck} from "@measured/puck";
+import {Puck, Config} from "@measured/puck";
 import "@measured/puck/puck.css";
-import {Text} from "./blocks/Text";
-import {VerticalSpace} from "./blocks/VerticalSpace";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {ArrowBack} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {
     config as PuckMuiConfig,
     PAccordion,
@@ -195,7 +193,7 @@ export default function Page(props) {
                     config={config}
                     data={initialData}
                     onPublish={save}
-
+                    iframe={{enabled: false}}
                     style={{
                         border: "none",
                         boxShadow: "none",
