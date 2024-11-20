@@ -30,11 +30,29 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
     const column = [
         {field: "id", headerName: "Id"},
         {field: "name", headerName: "Użytkownik", width: 100},
-        {field: "email", headerName: "Email", width: 200},
+        {field: "email", headerName: "Email", flex: 1},
+        {
+            field: "main",
+            headerName: "Główny",
+            width: 50,
+            sortable: true,
+            filterable: true,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => {
+                return (
+                    <Checkbox
+                        disabled={true}
+                        checked={!!params.row.main}
+                        sx={{"& .MuiSvgIcon-root": {fontSize: 28}}}
+                    />
+                );
+            }
+        },
         {
             field: "email_verified_at",
             headerName: "Zweryfikowany",
-            flex: 1,
+            width: 50,
             sortable: true,
             filterable: true,
             headerAlign: 'center',
@@ -83,7 +101,7 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
                         </Tooltip>
 
                         <Tooltip title="Usuń">
-                            <IconButton aria-label="delete" onClick={onDeleteClick}>
+                            <IconButton aria-label="delete" onClick={onDeleteClick} disabled={params.row.main}>
                                 <Delete/>
                             </IconButton>
                         </Tooltip>

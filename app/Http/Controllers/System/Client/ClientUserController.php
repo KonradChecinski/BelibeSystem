@@ -39,6 +39,7 @@ class ClientUserController extends Controller
             "name" => $request->name,
             "email" => $request->email,
             "password" => Hash::make($request->password),
+            "main" => !$client->clientUsers()->count(),
         ];
 
         $clientUser = new ClientUser($validatedClientUserCredential);
@@ -92,6 +93,8 @@ class ClientUserController extends Controller
     public function destroy(Client $client, ClientUser $clientUser)
     {
         if ($clientUser->client != $client) abort(403);
+
+        if ($clientUser->main) abort(403);
 
         $clientUser->delete();
 //        dd($clientUser);

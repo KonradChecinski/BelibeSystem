@@ -2,26 +2,26 @@
 
 namespace App\Models\Client;
 
+use App\Helpers\Auth\ExtendedMustVerifyEmail;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class ClientUser extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Impersonate, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, ExtendedMustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = ["name", "email", "password"];
+    protected $fillable = ["name", "email", "password", "main", "client_id"];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,28 +38,6 @@ class ClientUser extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         "email_verified_at" => "datetime",
     ];
-
-    public function canImpersonate(): bool
-    {
-        return false;
-    }
-
-    public function canBeImpersonated(): bool
-    {
-        if (
-            auth()
-                ->guard("user")
-                ->user() ==
-            User::find(
-                auth()
-                    ->guard("user")
-                    ->user()->id
-            )
-        ) {
-            return true;
-        }
-        return false;
-    }
 
     public function client(): BelongsTo
     {

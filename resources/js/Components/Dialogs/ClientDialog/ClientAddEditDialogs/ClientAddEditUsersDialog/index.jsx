@@ -202,6 +202,7 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                 <TextField
                     type="text"
                     name={"login"}
+                    autoComplete={"login"}
                     label="Nazwa użytkownika"
                     color={errors.name?.message && "error"}
                     {...register("name")}
@@ -223,6 +224,7 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                     type="text"
                     label="Email"
                     name={"email"}
+                    autoComplete={"email"}
                     color={errors.email?.message && "error"}
                     {...register("email")}
                     onChange={(value) => {
@@ -242,6 +244,7 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                 <TextField
                     type={showPassword ? 'text' : 'password'}
                     name={"password"}
+                    autoComplete={"password"}
                     label={clickedUser ? "Hasło (uzupełnij w przypadku zmiany)" : "Hasło"}
                     color={errors.password?.message && "error"}
                     {...register("password")}
