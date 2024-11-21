@@ -350,7 +350,7 @@ export default function BasicClientInfoComponent(props) {
                     </Typography>
 
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
-                        <Box>
+                        <Box sx={{width: 1}}>
                             <TextField id="phone" label="Telefony" variant="outlined"
                                        value={data.phone}
                                        {...register("phone")}
@@ -369,7 +369,7 @@ export default function BasicClientInfoComponent(props) {
                             )}
                         </Box>
 
-                        <Box>
+                        <Box sx={{width: 1}}>
                             <TextField id="email" label="Adres Email" variant="outlined"
                                        value={data.email}
                                        {...register("email")}
@@ -380,7 +380,7 @@ export default function BasicClientInfoComponent(props) {
                                            setEdited(true)
                                        }}
                                        inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "50ch"}}/>
+                                       sx={{width: "50ch", maxWidth: 1}}/>
                             {fieldErrors.email?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1}}>
                                     {fieldErrors.email?.message.toString()}

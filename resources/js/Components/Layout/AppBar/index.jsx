@@ -143,6 +143,7 @@ export default function AppBar({position, children}) {
     return (
         <>
             <MuiAppBar
+                color={"menuText"}
                 position={position}
                 sx={{
                     borderRadius: 1,
