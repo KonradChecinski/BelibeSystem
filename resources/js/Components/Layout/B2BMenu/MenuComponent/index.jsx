@@ -57,6 +57,7 @@ function MenuElement({node, children, defaultShowChildren, categories, id = "1"}
                 flexWrap: "nowrap",
                 justifyContent: "space-between",
                 alignItems: "center",
+
             }}>
                 <Button
                     component={Link}
@@ -65,7 +66,11 @@ function MenuElement({node, children, defaultShowChildren, categories, id = "1"}
                         width: 1,
                         textTransform: 'none',
                         justifyContent: "flex-start",
-                        bgcolor: node.active ? "#1967d225" : "",
+                        bgcolor: node.active ? "#1967d2" : "",
+                        "&:hover": {
+                            bgcolor: "#1967d2bb",
+                            color: "menuText.main"
+                        },
                     }}
                 >
                     <Typography variant="body1" color={"menuText.main"}>
@@ -74,7 +79,13 @@ function MenuElement({node, children, defaultShowChildren, categories, id = "1"}
                 </Button>
                 {hasChildren && (
                     <Box>
-                        <IconButton aria-label="add" onClick={() => setShowChildren(!showChildren)}>
+                        <IconButton aria-label="add" onClick={() => setShowChildren(!showChildren)}
+                                    sx={{
+                                        "&:hover": {
+                                            bgcolor: "#1967d2bb",
+                                            color: "menuText.main"
+                                        },
+                                    }}>
                             {showChildren ? (
                                 <KeyboardArrowDown sx={{color: "menuText.main"}}/>
                             ) : (

@@ -33,9 +33,11 @@ export default function B2BDynamicMenu({auth, menu}) {
                                                 cursor: "pointer",
                                                 borderRadius: 1,
                                                 p: 0.5,
-                                                bgcolor: window.location.href === link.url ? "#1967d225" : "",
+                                                bgcolor: window.location.href === link.url ? "#1967d2" : "",
+                                                color: window.location.href === link.url ? "menuText.main" : "",
                                                 "&:hover": {
-                                                    bgcolor: "primary.main",
+                                                    bgcolor: "#1967d2bb",
+                                                    color: "menuText.main"
                                                 },
                                             }}>
                                             <Typography variant="h6" component="h5" textAlign={"center"}>

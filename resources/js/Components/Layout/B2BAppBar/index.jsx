@@ -23,6 +23,7 @@ import B2bSearchModelComponent from "@/Components/Layout/B2BNavBar/SearchCompone
 import {router} from "@inertiajs/react";
 import {Person, ShoppingCart} from "@mui/icons-material";
 import B2bUserAvatarMenu from "@/Components/Layout/B2BNavBar/B2bUserAvatar/Menu";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Search = styled("div")(({theme}) => ({
     position: "relative",
@@ -164,7 +165,7 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
     return (
         <>
             <MuiAppBar
-                color={"secondary"}
+                color={"menuText"}
                 position={position}
                 sx={{
                     borderRadius: 1,

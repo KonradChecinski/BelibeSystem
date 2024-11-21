@@ -20,11 +20,16 @@ export default function B2BDynamicMenuResponsive({auth, menu}) {
                                     width: 1,
                                     textTransform: 'none',
                                     justifyContent: "flex-start",
-                                    bgcolor: window.location.href === link.url ? "#1967d225" : "",
-                                    pl: 1
+                                    pl: 1,
+
+                                    bgcolor: window.location.href === link.url ? "#1967d2" : "",
+                                    "&:hover": {
+                                        bgcolor: "#1967d2bb",
+                                        color: "menuText.main"
+                                    },
                                 }}
                             >
-                                <Typography variant="body1">
+                                <Typography variant="body1" color={"menuText.main"}>
                                     {link.name}
                                 </Typography>
                             </Button>

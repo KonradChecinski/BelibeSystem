@@ -13,6 +13,7 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
     const theme = useTheme();
     const [showMenu, setShowMenu] = useState(useMediaQuery(theme.breakpoints.up("md")));
     const darkMode = theme.palette.mode === "dark";
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const {t} = useLaravelReactI18n();
 
@@ -26,7 +27,9 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
                 flexDirection: "column",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                overflow: "hidden", // Ensure overflow doesn't cause issues
+                overflow: "hidden", // Ensure overflow doesn't cause issues,
+                borderRadius: isMobile ? 0 : 1,
+                maxWidth: isMobile ? "70vw" : "50vw",
             }}
         >
             {/* Background image and overlay container */}
@@ -158,11 +161,11 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
                                     overflowY: "auto",
                                     overflowX: "hidden",
                                     height: 1,
-                                    width: "80%"
+                                    width: "80%",
                                 }}
                             >
 
-                                <Typography variant="h5" gutterBottom component="h5">
+                                <Typography variant="h5" gutterBottom component="h5" color={"menuText.main"}>
                                     Kategorie
                                 </Typography>
                                 <MenuComponent categories={categories}/>
