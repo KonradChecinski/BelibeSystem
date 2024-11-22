@@ -38,14 +38,14 @@ class ProductImageController extends Controller
         $type = $request->type["id"];
         $numberOfImages = $modelColor->images()->where('type', $type)->count();
         $model = $modelColor->model;
-        $path = "images/" . $model->symbol . "/" . $modelColor->shortcut . "/" . $type . "/";
+        $path = "images/basic/" . $model->symbol . "/" . $modelColor->shortcut . "/" . $type . "/";
         foreach ($request->allFiles()['files'] as $id => $file) {
             $pathImage = Storage::putFileAs($path, $file, uniqid('', true) . "." . $file->getClientOriginalExtension());
             $image = Image::make($file);
             if ($pathImage) {
                 $image = new ProductImage([
                     'order' => $numberOfImages + $id,
-                    'path' => str_replace('/', '\\', substr($pathImage, 7)),
+                    'path_basic' => str_replace('/', '\\', substr($pathImage, 12)),
                     'width' => $image->width(),
                     'height' => $image->height(),
                     'type' => $type,
