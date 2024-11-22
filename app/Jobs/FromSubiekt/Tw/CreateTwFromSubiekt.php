@@ -2,10 +2,7 @@
 
 namespace App\Jobs\FromSubiekt\Tw;
 
-use App\Jobs\ToSubiekt\Towar\ChangePriceInModelInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
-use App\Models\B2cColor;
+use App\Jobs\FromSubiekt\Stan\UpdateProductQuantityFromSubiekt;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductModel;
@@ -13,7 +10,6 @@ use App\Models\Products\ProductModelColor;
 use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
 use App\Models\Subiekt\DaneDodatkowe;
-use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -166,7 +162,8 @@ class CreateTwFromSubiekt implements ShouldQueue, ShouldBeUnique
             }
 
             DB::connection("subiekt")->table("Belibe_System_Tw_Created")->where("id", $createdTw->id)->delete();
-//TODO: stany od razu widoczne
+
+            UpdateProductQuantityFromSubiekt::dispatch($product);
 
 //            ChangeProductInSubiekt::dispatch($product->id);
 //            ChangeProductShowInSubiekt::dispatch($product->id);
