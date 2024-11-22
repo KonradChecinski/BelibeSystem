@@ -42,7 +42,7 @@ class UpdateAllQuantities implements ShouldQueue
 
 
         foreach ($products as $product) {
-            if ((float)$product->quantity !== (float)$product->towar->stany->sum("st_Stan")) {
+            if (!is_null($product->towar) && (float)$product->quantity !== (float)$product->towar->stany->sum("st_Stan")) {
 //                print($product->symbol . "\n");
 //                dd($product, $product->symbol, (float)$product->quantity, (float)$product->towar->stany->sum("st_Stan"));
                 $product->quantity = $product->towar->stany->sum("st_Stan");
