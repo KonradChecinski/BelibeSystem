@@ -10,6 +10,7 @@ use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use App\Singleton\SubiektDodatki;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Nette\Utils\Image;
 
-class AddImagesToSubiekt implements ShouldQueue
+class AddImagesToSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -36,6 +37,11 @@ class AddImagesToSubiekt implements ShouldQueue
     {
         $this->onQueue('sfera');
         $this->productModelColor = $productModelColor;
+    }
+
+    public function uniqueId()
+    {
+        return $this->productModelColor->id;
     }
 
     /**

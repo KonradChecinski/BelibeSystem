@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperChangePrice implements ShouldQueue
+class ShoperChangePrice implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,6 +29,11 @@ class ShoperChangePrice implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->productModel = $productModel;
+    }
+
+    public function uniqueId()
+    {
+        return $this->productModel->id;
     }
 
     /**

@@ -15,7 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ShoperChangeShow implements ShouldQueue
+class ShoperChangeShow implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,6 +31,11 @@ class ShoperChangeShow implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->product = Product::find($productId);
+    }
+
+    public function uniqueId()
+    {
+        return $this->product->id;
     }
 
     /**

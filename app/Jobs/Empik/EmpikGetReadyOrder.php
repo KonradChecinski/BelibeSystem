@@ -6,13 +6,14 @@ use App\Helpers\Empik\Empik;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 
-class EmpikGetReadyOrder implements ShouldQueue
+class EmpikGetReadyOrder implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,30 +38,35 @@ class EmpikGetReadyOrder implements ShouldQueue
         $orders = Order::query()->where("type", 3)->where('status', 10)->get();
 
         foreach ($orders as $order) {
-            $response = Empik::getReadyOrder($order->order_id);
+            try {
+                $response = Empik::getReadyOrder($order->order_id);
 
-            if (!$response) {
-                $this->fail('getting ready order failed');
-            }
+                if (!$response->successful()) {
+                    $this->fail('getting ready order failed');
+                }
 
-            $empikOrder = $response->json()["orders"][0];
-            $empikOrderObject = json_decode(json_encode($empikOrder));
+                $empikOrder = $response->json()["orders"][0];
+                $empikOrderObject = json_decode(json_encode($empikOrder));
 //            dd($response, $response->json(), $response->status(), $empikOrderObject,
 //                isset($empikOrderObject->customer->organization->tax_identification_number) ? true : false
 //            );
-            $order->update([
+                $order->update([
 
-                "company" => Str::title($empikOrderObject->customer->billing_address->company),
-                "city" => Str::title($empikOrderObject->customer->billing_address->city),
-                "postcode" => $empikOrderObject->customer->billing_address->zip_code,
-                "street1" => Str::title($empikOrderObject->customer->billing_address->street_1) . ($empikOrderObject->customer->billing_address->street_2 ? " " . Str::title($empikOrderObject->customer->billing_address->street_2) : ""),
-                "country" => Str::title($empikOrderObject->customer->billing_address->country),
-                "phone" => $empikOrderObject->customer->billing_address->phone,
-                "tax_id" => isset($empikOrderObject->customer->organization->tax_identification_number) ? $empikOrderObject->customer->organization->tax_identification_number : null,
+                    "company" => Str::title($empikOrderObject->customer->billing_address->company),
+                    "city" => Str::title($empikOrderObject->customer->billing_address->city),
+                    "postcode" => $empikOrderObject->customer->billing_address->zip_code,
+                    "street1" => Str::title($empikOrderObject->customer->billing_address->street_1) . ($empikOrderObject->customer->billing_address->street_2 ? " " . Str::title($empikOrderObject->customer->billing_address->street_2) : ""),
+                    "country" => Str::title($empikOrderObject->customer->billing_address->country),
+                    "phone" => $empikOrderObject->customer->billing_address->phone,
+                    "tax_id" => isset($empikOrderObject->customer->organization->tax_identification_number) ? $empikOrderObject->customer->organization->tax_identification_number : null,
 
-                "status" => 20,//20 - gotowe do wysyłki
-            ]);
+                    "status" => 20,//20 - gotowe do wysyłki
+                ]);
 //            dd($response, $response->json(), $response->status(), $empikOrderObject);
+            } catch (\Exception $e) {
+                //dd($e);
+                continue;
+            }
         }
 
         OrderCreateInSubiekt::dispatch();

@@ -5,13 +5,14 @@ namespace App\Jobs\ToSubiekt\Towar;
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Cena;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class ChangePriceInModelInSubiekt implements ShouldQueue
+class ChangePriceInModelInSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,6 +27,11 @@ class ChangePriceInModelInSubiekt implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->productModel = $productModel;
+    }
+
+    public function uniqueId()
+    {
+        return $this->productModel->id;
     }
 
     /**

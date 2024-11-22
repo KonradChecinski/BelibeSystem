@@ -14,7 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperChangeQuantity implements ShouldQueue
+class ShoperChangeQuantity implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,6 +30,11 @@ class ShoperChangeQuantity implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->product = $product;
+    }
+
+    public function uniqueId()
+    {
+        return $this->product->id;
     }
 
     /**

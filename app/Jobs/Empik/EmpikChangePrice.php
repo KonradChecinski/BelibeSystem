@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class EmpikChangePrice implements ShouldQueue
+class EmpikChangePrice implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,6 +29,14 @@ class EmpikChangePrice implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->productModel = $productModel;
+    }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return $this->productModel->id;
     }
 
     /**

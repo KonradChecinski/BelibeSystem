@@ -10,13 +10,14 @@ use App\Models\Subiekt\Towar;
 use App\Models\SubiektObligation;
 use App\Models\SubiektReceivable;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class UpdateSettlementsFromSubiekt implements ShouldQueue
+class UpdateSettlementsFromSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

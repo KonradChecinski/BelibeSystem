@@ -7,13 +7,14 @@ use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class ChangeB2CInModelInSubiekt implements ShouldQueue
+class ChangeB2CInModelInSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,6 +29,11 @@ class ChangeB2CInModelInSubiekt implements ShouldQueue
     {
         $this->onQueue('sfera');
         $this->productModel = $productModel;
+    }
+
+    public function uniqueId()
+    {
+        return $this->productModel->id;
     }
 
     /**

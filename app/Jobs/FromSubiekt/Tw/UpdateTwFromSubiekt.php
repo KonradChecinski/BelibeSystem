@@ -16,13 +16,14 @@ use App\Models\Subiekt\DaneDodatkowe;
 use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class UpdateTwFromSubiekt implements ShouldQueue
+class UpdateTwFromSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

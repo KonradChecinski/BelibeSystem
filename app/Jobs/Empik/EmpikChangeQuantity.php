@@ -6,12 +6,13 @@ use App\Helpers\Empik\Empik;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Models\Products\Product;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class EmpikChangeQuantity implements ShouldQueue
+class EmpikChangeQuantity implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,6 +29,15 @@ class EmpikChangeQuantity implements ShouldQueue
         $this->onQueue('linux');
         $this->product = $product;
     }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return $this->product->id;
+    }
+
 
     /**
      * Execute the job.

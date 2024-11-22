@@ -11,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class AllegroChangeQuantity implements ShouldQueue
+class AllegroChangeQuantity implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -62,5 +62,13 @@ class AllegroChangeQuantity implements ShouldQueue
     {
         // Send user notification of failure, etc...
         //TODO: Add logging (send mail)
+    }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return $this->product->id;
     }
 }

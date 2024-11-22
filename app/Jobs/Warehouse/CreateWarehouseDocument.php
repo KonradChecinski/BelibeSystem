@@ -16,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class CreateWarehouseDocument implements ShouldQueue
+class CreateWarehouseDocument implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,6 +33,11 @@ class CreateWarehouseDocument implements ShouldQueue
     {
         $this->onQueue('linux');
         $this->clientOrder = $clientOrder;
+    }
+
+    public function uniqueId()
+    {
+        return $this->clientOrder->id;
     }
 
     /**

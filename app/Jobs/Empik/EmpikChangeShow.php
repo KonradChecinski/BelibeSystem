@@ -15,7 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class EmpikChangeShow implements ShouldQueue
+class EmpikChangeShow implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,6 +33,14 @@ class EmpikChangeShow implements ShouldQueue
         $this->onQueue('linux');
         $this->product = Product::find($productId);
         $this->value = $value;
+    }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return $this->product->id;
     }
 
     /**

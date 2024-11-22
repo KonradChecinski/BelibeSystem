@@ -6,13 +6,14 @@ use App\Helpers\Empik\Empik;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class EmpikAcceptOrder implements ShouldQueue
+class EmpikAcceptOrder implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,6 +32,15 @@ class EmpikAcceptOrder implements ShouldQueue
         $this->order = $order;
         $this->orderItems = $orderItems;
     }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return $this->order->id;
+    }
+
 
     /**
      * Execute the job.

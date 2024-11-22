@@ -5,6 +5,7 @@ namespace App\Jobs\ToSubiekt;
 use App\Helpers\Subiekt\SubiektQueries;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ZestawienieSprzedazySklepy implements ShouldQueue
+class ZestawienieSprzedazySklepy implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

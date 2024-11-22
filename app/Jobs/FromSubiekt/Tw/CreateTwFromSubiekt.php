@@ -16,13 +16,14 @@ use App\Models\Subiekt\DaneDodatkowe;
 use App\Models\Subiekt\ModelTw;
 use App\Models\Subiekt\Towar;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class CreateTwFromSubiekt implements ShouldQueue
+class CreateTwFromSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -36,6 +37,7 @@ class CreateTwFromSubiekt implements ShouldQueue
     {
         $this->onQueue('linux');
     }
+
 
     /**
      * Execute the job.
@@ -165,7 +167,7 @@ class CreateTwFromSubiekt implements ShouldQueue
 
             DB::connection("subiekt")->table("Belibe_System_Tw_Created")->where("id", $createdTw->id)->delete();
 //TODO: stany od razu widoczne
-            
+
 //            ChangeProductInSubiekt::dispatch($product->id);
 //            ChangeProductShowInSubiekt::dispatch($product->id);
 //            ChangePriceInModelInSubiekt::dispatch($product->model);

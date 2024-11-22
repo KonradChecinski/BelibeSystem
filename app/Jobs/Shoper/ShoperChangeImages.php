@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ShoperChangeImages implements ShouldQueue
+class ShoperChangeImages implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,6 +32,11 @@ class ShoperChangeImages implements ShouldQueue
         $this->productModelColor = $productModelColor;
     }
 
+    public function uniqueId()
+    {
+        return $this->productModelColor->id;
+    }
+
     /**
      * Execute the job.
      */
@@ -46,6 +51,6 @@ class ShoperChangeImages implements ShouldQueue
                 $this->fail('Change images failed');
             }
         }
-        
+
     }
 }

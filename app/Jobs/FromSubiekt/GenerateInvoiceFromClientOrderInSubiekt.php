@@ -10,6 +10,7 @@ use App\Models\Subiekt\Towar;
 use App\Notifications\b2b\InvoiceGeneratedClient;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue
+class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,6 +35,11 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue
     {
         $this->clientOrder = $clientOrder;
         $this->onQueue('sfera');
+    }
+
+    public function uniqueId()
+    {
+        return $this->clientOrder->id;
     }
 
     /**

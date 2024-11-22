@@ -7,6 +7,7 @@ use App\Mail\QueryShopSale;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-class ZestawienieSprzedazySklep implements ShouldQueue
+class ZestawienieSprzedazySklep implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -42,6 +43,11 @@ class ZestawienieSprzedazySklep implements ShouldQueue
         $this->email = $email;
         $this->from = $from;
         $this->to = $to;
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->warehouseId . $this->clientId . $this->from->toDateString() . $this->to->toDateString();
     }
 
     /**

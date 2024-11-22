@@ -6,6 +6,7 @@ use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class ChangeProductInSubiekt implements ShouldQueue
+class ChangeProductInSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,6 +29,11 @@ class ChangeProductInSubiekt implements ShouldQueue
     {
         $this->onQueue('sfera');
         $this->product = Product::find($productId);
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->product->id;
     }
 
     /**
