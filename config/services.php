@@ -31,6 +31,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+//    Wew usługi
     'allegro' => [
         'client_id' => env('ALLEGRO_CLIENT_ID'),
         'client_secret' => env('ALLEGRO_CLIENT_SECRET'),
@@ -41,5 +42,9 @@ return [
     'empik' => [
         'api_key' => env('EMPIK_API_KEY'),
         'api_uri' => env('EMPIK_API_URI'),
+    ],
+
+    'gus' => [
+        'api_key' => env('GUS_API_KEY'),
     ],
 ];
