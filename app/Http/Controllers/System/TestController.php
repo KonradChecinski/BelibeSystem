@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Allegro\Allegro;
 use App\Helpers\Empik\Empik;
+use App\Helpers\Gus\Gus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ExtraMainPageComponentsController;
 use App\Jobs\Allegro\AllegroCheckMessage;
@@ -11,6 +12,7 @@ use App\Jobs\Empik\EmpikAcceptOrder;
 use App\Jobs\Empik\EmpikChangeShow;
 use App\Jobs\Empik\EmpikUpdateProducts;
 use App\Jobs\Empik\EmpikGetReadyOrder;
+use App\Jobs\Quantity\UpdateAllQuantities;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
@@ -22,6 +24,7 @@ use App\Models\ClientOrder;
 use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
+use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
@@ -37,27 +40,7 @@ class TestController extends Controller
      */
     public function index()
     {
-//        EmpikGetReadyOrder::dispatchSync();
-//        $response = Empik::listNewOrders();
-////        dd($response->status(), $response->json());
-//        foreach ($response->json()["orders"] as $order) {
-//            $empikOrderObject = json_decode(json_encode($order));
-//            $empikOrderItemsObject = collect($empikOrderObject->order_lines);
-//            $empikOrderModel = Order::query()->where("order_id", $empikOrderObject->order_id)->first();
-////            dd($empikOrderModel, $empikOrderItemsObject);
-//            EmpikAcceptOrder::dispatchSync($empikOrderModel, $empikOrderItemsObject);
-//            dd($empikOrderObject, $empikOrderItemsObject);
-//        }
-
-//        $orders = Order::query()->where("type", 3)->get();
-////        dd($orders);
-//        foreach ($orders as $order) {
-//            dd($order, $order->orderProducts);
-//        }
-
-//        OrderCreateInSubiekt::dispatch();
-        $ExtraMainPageComponentsController = new ExtraMainPageComponentsController();
-        $ExtraMainPageComponentsController->bestsellers();
+        Gus::search("6252455803");
     }
 
     /**
