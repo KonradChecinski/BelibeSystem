@@ -8,19 +8,17 @@ import {
     TextField, Tooltip,
     Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
+import {Cancel, CloudDownload, Save, Home, Phone} from "@mui/icons-material";
 import {useBasicClientInfoForm} from "@/Components/Pages/Client/BasicClientInfoComponent/form/useBasicClientInfoForm";
-import InfoIcon from "@mui/icons-material/Info";
-import HomeIcon from '@mui/icons-material/Home';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ClientFindGusDialog from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog";
 import {enqueueSnackbar} from "notistack";
+import {useTheme} from "@mui/material/styles";
 
 export default function BasicClientInfoComponent(props) {
     const [edited, setEdited] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
+    const theme = useTheme();
     // console.log("Propsy: ", props)
 
     const {
@@ -143,25 +141,54 @@ export default function BasicClientInfoComponent(props) {
                     {/*</Typography>*/}
 
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
-                        <Box>
-                            <TextField id="nip" label="NIP" variant="outlined"
-                                       value={data.nip}
-                                       {...register("nip")}
-                                       color={fieldErrors.name?.message ? "error" : null}
-                                       onChange={(value) => {
-                                           // setProductModel({...productModel, name: value.target.value});
-                                           setData("nip", value.target.value)
-                                           setEdited(true)
-                                       }}
-                                       disabled={true}
-                                       inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "30ch"}}/>
-                            {fieldErrors.nip?.message && (
-                                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                    {fieldErrors.nip?.message.toString()}
-                                </Typography>
-                            )}
+                        <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                            <Box>
+                                <TextField id="id_subiekt" label="Id w Subiekt" variant="outlined"
+                                           value={props.client.subiekt_id ? props.client.subiekt_id : "Brak"}
+                                           color={props.client.subiekt_id === null ? "error" : null}
+                                           error={props.client.subiekt_id === null}
+                                           disabled={true}
+                                           inputProps={{readOnly: true}}
+                                           sx={{
+                                               width: "12ch",
+                                               '& .MuiOutlinedInput-notchedOutline': {
+                                                   borderColor: `${theme.palette.error.main} !important`,
+                                               },
+                                           }}/>
+                            </Box>
+
+                            <Box>
+                                <TextField id="nip" label="NIP" variant="outlined"
+                                           value={data.nip}
+                                           {...register("nip")}
+                                           color={fieldErrors.name?.message ? "error" : null}
+                                           onChange={(value) => {
+                                               // setProductModel({...productModel, name: value.target.value});
+                                               setData("nip", value.target.value)
+                                               setEdited(true)
+                                           }}
+                                           disabled={true}
+                                           inputProps={{readOnly: !props.editing}}
+                                           sx={{width: "30ch"}}/>
+                                {fieldErrors.nip?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {fieldErrors.nip?.message.toString()}
+                                    </Typography>
+                                )}
+
+                            </Box>
+                            <Tooltip title={"Pobierz dane z GUS"}>
+                                <IconButton
+                                    // type="submit"
+                                    // color="success"
+                                    // size={"large"}
+                                    disabled={processing}
+                                >
+                                    <CloudDownload fontSize={"large"}/>
+                                </IconButton>
+                            </Tooltip>
                         </Box>
+
 
                         <Box>
                             <TextField id="name" label="Nazwa" variant="outlined"
@@ -187,7 +214,7 @@ export default function BasicClientInfoComponent(props) {
                 <Box>
                     <Typography
                         sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <HomeIcon fontSize={"large"}/>
+                        <Home fontSize={"large"}/>
                         Informacje adresowe
                     </Typography>
 
@@ -345,7 +372,7 @@ export default function BasicClientInfoComponent(props) {
                 <Box>
                     <Typography
                         sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <PhoneIcon fontSize={"large"}/>
+                        <Phone fontSize={"large"}/>
                         Informacje kontaktowe
                     </Typography>
 

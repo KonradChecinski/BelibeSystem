@@ -19,6 +19,14 @@ class Gus
     {
     } //Singleton
 
+    public function __destruct()
+    {
+        if (self::$sid) {
+            $this->gus->logout(self::$sid);
+        }
+        self::$instance = null;
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {
@@ -67,12 +75,15 @@ class Gus
             if ($company->getType() === "p") {
                 $buildingNumberObject = (array)($fullReport->praw_adSiedzNumerNieruchomosci);
                 $apartmentNumberObject = (array)($fullReport->praw_adSiedzNumerLokalu);
+                $emailAddressObject = (array)($fullReport->praw_adresEmail);
             } else if ($company->getType() === "f") {
                 $buildingNumberObject = (array)($fullReport->fiz_adSiedzNumerNieruchomosci);
                 $apartmentNumberObject = (array)($fullReport->fiz_adSiedzNumerLokalu);
+                $emailAddressObject = (array)($fullReport->fiz_adresEmail);
             } else {
                 $buildingNumberObject = [];
                 $apartmentNumberObject = [];
+                $emailAddressObject = [];
             }
 
 
@@ -90,6 +101,7 @@ class Gus
                 "street" => $street,
                 "buildingNumber" => count($buildingNumberObject) > 0 ? $buildingNumberObject[0] : null,
                 "apartmentNumber" => count($apartmentNumberObject) > 0 ? $apartmentNumberObject[0] : null,
+                "email" => count($emailAddressObject) > 0 ? $emailAddressObject[0] : null,
             ];
 
         } catch (NotFoundException $e) {
@@ -98,9 +110,5 @@ class Gus
         return $result;
     }
 
-    public function __destruct()
-    {
-        $this->gus->logout(self::$sid);
-    }
 
 }

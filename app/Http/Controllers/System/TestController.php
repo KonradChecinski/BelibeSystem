@@ -41,7 +41,8 @@ class TestController extends Controller
     public function index()
     {
 //        dd(Gus::search("6252455803"));
-        dd(Gus::search("8940042553"));
+        dd(Gus::search("5211382774"));
+//        dd(Gus::search("8940042553"));
     }
 
     /**

@@ -101,9 +101,12 @@ export default function ClientUsersTable({users, readOnly, color, props}) {
                         </Tooltip>
 
                         <Tooltip title="Usuń">
-                            <IconButton aria-label="delete" onClick={onDeleteClick} disabled={params.row.main}>
-                                <Delete/>
-                            </IconButton>
+                            <span>
+                                <IconButton aria-label="delete" onClick={onDeleteClick}
+                                            disabled={Boolean(params.row.main)}>
+                                    <Delete/>
+                                </IconButton>
+                            </span>
                         </Tooltip>
 
                         <DeleteClientUserDialog open={openDialogDelete} setOpen={setOpenDialogDelete}
