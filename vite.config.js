@@ -2,9 +2,7 @@ import {defineConfig} from "vite";
 import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
 import i18n from "laravel-react-i18n/vite";
-// import { existsSync, readFileSync } from "fs";
-
-// let host = "system.belibe.test";
+import removeConsole from "vite-plugin-remove-console";
 
 export default defineConfig({
     plugins: [
@@ -15,31 +13,6 @@ export default defineConfig({
         }),
         react(),
         i18n(),
+        removeConsole(),
     ],
-    // optimizeDeps: {
-    //     exclude: ['quill', 'parchment']
-    // }
-    //server: detectServerConfig(host),
 });
-//
-// function detectServerConfig(host) {
-//     let keyPath = `@/.config/valet/Certificates/${host}.key`;
-//     let certificatePath = `@/.config/valet/Certificates/${host}.crt`;
-//
-//     if (!existsSync(keyPath)) {
-//         return {};
-//     }
-//
-//     if (!existsSync(certificatePath)) {
-//         return {};
-//     }
-//
-//     return {
-//         hmr: { host },
-//         host,
-//         https: {
-//             key: readFileSync(keyPath),
-//             cert: readFileSync(certificatePath),
-//         },
-//     };
-// }
