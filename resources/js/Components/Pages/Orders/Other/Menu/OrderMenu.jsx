@@ -52,21 +52,18 @@ export default function OrderMenu({row}) {
                 onClose={handleMenuClose}
             >
 
-                <MenuItem disabled={![1].includes(row.original.status)}
-                          onClick={() => console.log("accept")}>
+                <MenuItem disabled={![1].includes(row.original.status)}>
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}
-                          onClick={() => console.log("cancel")}>
+                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
                 </MenuItem>
 
                 <Divider/>
 
-                <MenuItem disabled={![55, 90].includes(row.original.status)}
-                          onClick={() => console.log("subiekt")}>
+                <MenuItem disabled={![55, 90].includes(row.original.status)}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
                 </MenuItem>
