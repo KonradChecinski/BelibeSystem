@@ -70,66 +70,61 @@ export default function ModelComponent({model}) {
                         height: "auto",
                         aspectRatio: 2 / 3,
                     }}>
-                        {model.mainImages.length === 2 ?
-                            <Box sx={{
-                                position: "relative",
-                                width: "100%",
+                        <Box sx={{
+                            position: "relative",
+                            width: "100%",
+                            height: 1,
+
+                            "& img": {
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                transition: "opacity 0.3s linear",
                                 height: 1,
+                                objectFit: "contain"
+                            },
+                            "& img:first-of-type": {
+                                zIndex: 50,
+                                opacity: 1,
+                            },
+                            "&:hover img:first-of-type": {
+                                opacity: model.mainImages.length === 2 ? 0 : 1,
+                            },
 
-                                "& img": {
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    transition: "opacity 0.3s linear",
-                                    height: 1,
-                                    objectFit: "contain"
-                                },
-                                "& img:first-of-type": {
-                                    zIndex: 50,
-                                    opacity: 1,
-                                },
-                                "&:hover img:first-of-type": {
-                                    opacity: 0,
-                                },
-
-                            }}>
-
-                                {model.mainImages?.map((image, id) => {
-                                    return (
-                                        <CardMedia
-                                            key={id}
-                                            component="img"
-                                            image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
-                                            alt="Zdjęcie produktu"
-                                            // sx={{
-                                            //     width: 1
-                                            // }}
-                                        />
-                                    )
-                                })}
-                            </Box>
-                            :
-                            model.mainImages.length === 1 ?
-                                model.mainImages?.map((image, id) => {
-                                    return (
-                                        <CardMedia
-                                            key={id}
-                                            component="img"
-                                            image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
-                                            alt="Zdjęcie produktu"
-                                            // sx={{
-                                            //     width: 1
-                                            // }}
-                                        />
-                                    )
-                                })
+                        }}>
+                            {model.mainImages.length === 2 ?
+                                <>
+                                    {model.mainImages?.map((image, id) => {
+                                        return (
+                                            <CardMedia
+                                                key={id}
+                                                component="img"
+                                                image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
+                                                alt="Zdjęcie produktu"
+                                            />
+                                        )
+                                    })}
+                                </>
                                 :
-                                <CardMedia
-                                    component="img"
-                                    image={route('images.webp', {slug: "brak.jpg"})}
-                                    alt="Zdjęcie produktu"
-                                />
-                        }
+                                model.mainImages.length === 1 ?
+                                    model.mainImages?.map((image, id) => {
+                                        return (
+                                            <CardMedia
+                                                key={id}
+                                                component="img"
+                                                image={route('images.webp', {slug: image.slug ? image.slug : "brak.jpg"})}
+                                                alt="Zdjęcie produktu"
+                                            />
+                                        )
+                                    })
+                                    :
+                                    <CardMedia
+                                        component="img"
+                                        image={route('images.webp', {slug: "brak.jpg"})}
+                                        alt="Zdjęcie produktu"
+                                    />
+                            }
+                        </Box>
                     </Box>
                     <Box sx={{width: 1, height: "auto",}}>
                         <Divider sx={{mt: 0}}/>
