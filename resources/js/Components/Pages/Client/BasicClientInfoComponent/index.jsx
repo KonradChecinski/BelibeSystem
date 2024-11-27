@@ -134,11 +134,6 @@ export default function BasicClientInfoComponent(props) {
                 {/*    }*/}
 
                 <Box>
-                    {/*<Typography*/}
-                    {/*    sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>*/}
-                    {/*    <InfoIcon fontSize={"large"}/>*/}
-                    {/*    Informacje podstawowe*/}
-                    {/*</Typography>*/}
 
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
                         <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
@@ -152,7 +147,7 @@ export default function BasicClientInfoComponent(props) {
                                            sx={{
                                                width: "12ch",
                                                '& .MuiOutlinedInput-notchedOutline': {
-                                                   borderColor: `${theme.palette.error.main} !important`,
+                                                   borderColor: props.client.subiekt_id === null ? `${theme.palette.error.main} !important` : '',
                                                },
                                            }}/>
                             </Box>
@@ -177,16 +172,21 @@ export default function BasicClientInfoComponent(props) {
                                 )}
 
                             </Box>
-                            <Tooltip title={"Pobierz dane z GUS"}>
-                                <IconButton
-                                    // type="submit"
-                                    // color="success"
-                                    // size={"large"}
-                                    disabled={processing}
-                                >
-                                    <CloudDownload fontSize={"large"}/>
-                                </IconButton>
-                            </Tooltip>
+                            {props.editing && (
+                                <Tooltip title={"Pobierz dane z GUS"}>
+                                    <IconButton
+                                        // type="submit"
+                                        // color="success"
+                                        // size={"large"}
+                                        disabled={processing}
+                                        onClick={() => {
+                                            setDialogOpen(true)
+                                        }}
+                                    >
+                                        <CloudDownload fontSize={"large"}/>
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                         </Box>
 
 
