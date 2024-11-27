@@ -93,7 +93,7 @@ class Gus
 
             $result = (object)[
                 "name" => Str::title($company->getName()),
-                "nip" => $nip,
+//                "nip" => $nip,
 //                "regon" => $company->getRegon(),
                 "voivodeship" => Str::title($company->getProvince()),
                 "city" => $company->getCity(),
