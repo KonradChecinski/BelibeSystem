@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
-import {useForm} from "@inertiajs/react";
+import {router, useForm} from "@inertiajs/react";
 import {useClientFindGusForm} from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog/form/useClientFindGusForm";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientFindGusDialog({
                                                 open,
@@ -35,6 +36,25 @@ export default function ClientFindGusDialog({
         setValue("nip", data.nip)
     }, [setValue]);
 
+
+    const getGUSdata = () => {
+        axios.get(route('system.clients.findGus', {nip: nip}),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            },
+        )
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                enqueueSnackbar("Błąd przy pobieraniu danych z GUS", {variant: 'error'})
+                console.error(error)
+            });
+        
+    }
 
     const onSubmit = (data) => {
         setData(data)
@@ -141,8 +161,10 @@ export default function ClientFindGusDialog({
                         Wstecz
                     </Button>
 
-                    <Button type="submit"
-                            sx={{display: activeStep === 1 ? "none" : "block"}}>
+                    <Button
+                        // type="submit"
+                        onClick={() => getGUSdata(data.nip)}
+                        sx={{display: activeStep === 1 ? "none" : "block"}}>
                         Następne
                     </Button>
 

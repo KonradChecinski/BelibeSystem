@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System\Client;
 ini_set('max_execution_time', 600);
 
+use App\Helpers\Gus\Gus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreClientRequest;
 use App\Http\Requests\Auth\UpdateClientRequest;
@@ -21,6 +22,7 @@ use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ClientController extends Controller
@@ -353,5 +355,11 @@ class ClientController extends Controller
     public function destroy(Client $client)
     {
         //
+    }
+
+
+    public function getDataFromGUS(Request $request, string $nip)
+    {
+        return response()->json(Gus::search($nip));
     }
 }
