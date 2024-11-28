@@ -40,6 +40,8 @@ class ExtendedVerifyEmail extends VerifyEmail
             return call_user_func(static::$createUrlCallback, $notifiable);
         }
 
+        config(['app.url' => "https://b2b.belibe.pl"]);
+
         $url = URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
@@ -48,7 +50,7 @@ class ExtendedVerifyEmail extends VerifyEmail
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
-
-        return str_replace("https://system.belibe.pl", 'https://b2b.belibe.pl', $url);
+        return $url;
+//        return str_replace("https://system.belibe.pl", 'https://b2b.belibe.pl', $url);
     }
 }
