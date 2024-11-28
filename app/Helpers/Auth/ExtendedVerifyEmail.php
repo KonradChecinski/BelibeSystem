@@ -41,7 +41,7 @@ class ExtendedVerifyEmail extends VerifyEmail
         }
 
         config(['app.url' => "https://b2b.belibe.pl"]);
-
+        URL::forceRootUrl("https://b2b.belibe.pl");
         $url = URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
