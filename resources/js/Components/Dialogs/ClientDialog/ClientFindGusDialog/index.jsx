@@ -17,24 +17,23 @@ import {enqueueSnackbar} from "notistack";
 export default function ClientFindGusDialog({
                                                 open,
                                                 setOpen,
-                                                nip = ''
+                                                nip = '',
+                                                props,
                                             }) {
-    const {
-        register,
-        handleSubmit,
-        errors: fieldErrors,
-        setValue,
-        clearErrors: clrErrors,
-    } = useClientFindGusForm()
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
-        nip: nip,
+        name: '',
+        city: '',
+        zip_code: '',
+        street: '',
+        building_number: '',
+        apartment_number: '',
+        email: '',
     })
 
     useEffect(() => {
         // inicjacja wartości pól
-        setValue("nip", data.nip)
-    }, [setValue]);
+    }, []);
 
 
     const getGUSdata = () => {
@@ -53,7 +52,7 @@ export default function ClientFindGusDialog({
                 enqueueSnackbar("Błąd przy pobieraniu danych z GUS", {variant: 'error'})
                 console.error(error)
             });
-        
+
     }
 
     const onSubmit = (data) => {
@@ -73,7 +72,6 @@ export default function ClientFindGusDialog({
     }
 
     const handleClose = () => {
-        clrErrors("name")
         setActiveStep(0);
         setOpen(false);
     };
@@ -127,7 +125,7 @@ export default function ClientFindGusDialog({
             scroll="paper"
         >
 
-            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+            <form autoComplete="off">
 
                 <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
                     {"Uzupełnij dane adresowe z GUS"}
@@ -143,8 +141,6 @@ export default function ClientFindGusDialog({
 
                     {activeStep === 0 ?
                         <Step1
-                            register={register}
-                            errors={fieldErrors}
                             data={data}
                             setData={setData}
                         />
@@ -185,20 +181,20 @@ function Step1({register, errors, data}) {
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
 
-            <TextField
-                type="text"
-                id="nip"
-                label="NIP"
-                color={errors.nip?.message && "error"}
-                {...register("nip")}
-                defaultValue={data.nip}
-                sx={{width: "30ch", my: 1}}
-            />
-            {errors.nip?.message && (
-                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                    {errors.nip?.message.toString()}
-                </Typography>
-            )}
+            {/*<TextField*/}
+            {/*    type="text"*/}
+            {/*    id="nip"*/}
+            {/*    label="NIP"*/}
+            {/*    color={errors.nip?.message && "error"}*/}
+            {/*    {...register("nip")}*/}
+            {/*    defaultValue={data.nip}*/}
+            {/*    sx={{width: "30ch", my: 1}}*/}
+            {/*/>*/}
+            {/*{errors.nip?.message && (*/}
+            {/*    <Typography variant="body2" color="error" sx={{ml: 1}}>*/}
+            {/*        {errors.nip?.message.toString()}*/}
+            {/*    </Typography>*/}
+            {/*)}*/}
         </Box>
     );
 }
@@ -207,10 +203,10 @@ function Step2({data, errors}) {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-            <TextField id="nip" label="NIP" variant="outlined"
-                       value={data?.nip}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
+            {/*<TextField id="nip" label="NIP" variant="outlined"*/}
+            {/*           value={data?.nip}*/}
+            {/*           disabled={true}*/}
+            {/*           sx={{width: "30ch", my: 1}}/>*/}
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body2" color={"error"} align={"center"} gutterBottom key={index}>
