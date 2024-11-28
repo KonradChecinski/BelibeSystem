@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\UpdateBasicClientRequest;
+use App\Http\Requests\Client\UpdateBasicGUSClientRequest;
 use App\Models\Client\Client;
 use Illuminate\Http\Request;
 
@@ -66,5 +67,11 @@ class BasicClientController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateFromGUS(UpdateBasicGUSClientRequest $request, Client $client)
+    {
+        $client->update($request->validated());
+        $client->save();
     }
 }

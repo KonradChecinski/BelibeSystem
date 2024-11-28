@@ -130,6 +130,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
 
             Route::post("/client/{client}/update/basic", [BasicClientController::class, 'update'])->name("system.clients.client.update.basic");
+            Route::post("/client/{client}/update/basic/gus", [BasicClientController::class, 'updateFromGUS'])->name("system.clients.client.update.basic.gus");
             Route::post("/client/{client}/update/additional", [AdditionalClientController::class, 'update'])->name("system.clients.client.update.additional");
 
             Route::post("/client/{client}/user/", [ClientUserController::class, 'store'])->name("system.clients.client.user");

@@ -65,7 +65,12 @@ export default function BasicClientInfoComponent(props) {
         initializeFieldValues()
     }, [setValue]);
 
-    const onSubmit = (formData) => {
+    useEffect(() => {
+        resetForm()
+    }, [props]);
+
+    const onSubmit = (formData, e) => {
+        e.preventDefault()
         saveBasic()
     }
 
@@ -115,344 +120,350 @@ export default function BasicClientInfoComponent(props) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen} nip={data.nip}/>
+        <>
+            {props.client.country_id === 1 && (
+                <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen} nip={data.nip} props={props}/>)}
 
-            <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
-                {/*    {props.editing ? (*/}
-                {/*        <Button*/}
-                {/*            variant="outlined"*/}
-                {/*            startIcon={<PersonSearchIcon/>}*/}
-                {/*            sx={{mt: 1, height: 40}}*/}
-                {/*            onClick={() => {*/}
-                {/*                setDialogOpen(true)*/}
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            Uzupełnij dane adresowe z GUS*/}
-                {/*        </Button>*/}
-                {/*    ) : null*/}
-                {/*    }*/}
 
-                <Box>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
-                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
-                        <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                            <Box>
-                                <TextField id="id_subiekt" label="Id w Subiekt" variant="outlined"
-                                           value={props.client.subiekt_id ? props.client.subiekt_id : "Brak"}
-                                           color={props.client.subiekt_id === null ? "error" : null}
-                                           error={props.client.subiekt_id === null}
-                                           disabled={true}
-                                           inputProps={{readOnly: true}}
-                                           sx={{
-                                               width: "12ch",
-                                               '& .MuiOutlinedInput-notchedOutline': {
-                                                   borderColor: props.client.subiekt_id === null ? `${theme.palette.error.main} !important` : '',
-                                               },
-                                           }}/>
+
+                <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
+                    {/*    {props.editing ? (*/}
+                    {/*        <Button*/}
+                    {/*            variant="outlined"*/}
+                    {/*            startIcon={<PersonSearchIcon/>}*/}
+                    {/*            sx={{mt: 1, height: 40}}*/}
+                    {/*            onClick={() => {*/}
+                    {/*                setDialogOpen(true)*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            Uzupełnij dane adresowe z GUS*/}
+                    {/*        </Button>*/}
+                    {/*    ) : null*/}
+                    {/*    }*/}
+
+                    <Box>
+
+                        <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
+                            <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                                <Box>
+                                    <TextField id="id_subiekt" label="Id w Subiekt" variant="outlined"
+                                               value={props.client.subiekt_id ? props.client.subiekt_id : "Brak"}
+                                               color={props.client.subiekt_id === null ? "error" : null}
+                                               error={props.client.subiekt_id === null}
+                                               disabled={true}
+                                               inputProps={{readOnly: true}}
+                                               sx={{
+                                                   width: "12ch",
+                                                   '& .MuiOutlinedInput-notchedOutline': {
+                                                       borderColor: props.client.subiekt_id === null ? `${theme.palette.error.main} !important` : '',
+                                                   },
+                                               }}/>
+                                </Box>
+
+                                <Box>
+                                    <TextField id="nip" label="NIP" variant="outlined"
+                                               value={data.nip}
+                                               {...register("nip")}
+                                               color={fieldErrors.name?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("nip", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               disabled={true}
+                                               inputProps={{readOnly: !props.editing}}
+                                               sx={{width: "30ch"}}/>
+                                    {fieldErrors.nip?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.nip?.message.toString()}
+                                        </Typography>
+                                    )}
+
+                                </Box>
+                                {props.client.country_id === 1 && props.editing && (
+                                    <Tooltip title={"Pobierz dane z GUS"}>
+                                        <IconButton
+                                            // type="submit"
+                                            // color="success"
+                                            // size={"large"}
+                                            disabled={processing}
+                                            onClick={() => {
+                                                setDialogOpen(true)
+                                            }}
+                                        >
+                                            <CloudDownload fontSize={"large"}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
                             </Box>
 
+
                             <Box>
-                                <TextField id="nip" label="NIP" variant="outlined"
-                                           value={data.nip}
-                                           {...register("nip")}
+                                <TextField id="name" label="Nazwa" variant="outlined"
+                                           value={data.name}
+                                           {...register("name")}
                                            color={fieldErrors.name?.message ? "error" : null}
                                            onChange={(value) => {
                                                // setProductModel({...productModel, name: value.target.value});
-                                               setData("nip", value.target.value)
+                                               setData("name", value.target.value)
                                                setEdited(true)
                                            }}
-                                           disabled={true}
                                            inputProps={{readOnly: !props.editing}}
-                                           sx={{width: "30ch"}}/>
-                                {fieldErrors.nip?.message && (
+                                           sx={{width: 1}}/>
+                                {fieldErrors.name?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.nip?.message.toString()}
+                                        {fieldErrors.name?.message.toString()}
                                     </Typography>
                                 )}
-
                             </Box>
-                            {props.editing && (
-                                <Tooltip title={"Pobierz dane z GUS"}>
-                                    <IconButton
-                                        // type="submit"
-                                        // color="success"
-                                        // size={"large"}
-                                        disabled={processing}
-                                        onClick={() => {
-                                            setDialogOpen(true)
-                                        }}
-                                    >
-                                        <CloudDownload fontSize={"large"}/>
-                                    </IconButton>
-                                </Tooltip>
-                            )}
                         </Box>
+                    </Box>
+                    <Divider/>
+                    <Box>
+                        <Typography
+                            sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                            <Home fontSize={"large"}/>
+                            Informacje adresowe
+                        </Typography>
 
+                        <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
 
-                        <Box>
-                            <TextField id="name" label="Nazwa" variant="outlined"
-                                       value={data.name}
-                                       {...register("name")}
-                                       color={fieldErrors.name?.message ? "error" : null}
-                                       onChange={(value) => {
-                                           // setProductModel({...productModel, name: value.target.value});
-                                           setData("name", value.target.value)
-                                           setEdited(true)
-                                       }}
-                                       inputProps={{readOnly: !props.editing}}
-                                       sx={{width: 1}}/>
-                            {fieldErrors.name?.message && (
-                                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                    {fieldErrors.name?.message.toString()}
-                                </Typography>
+                            {props.editing ? (
+                                <>
+                                    <Autocomplete
+                                        id="country"
+                                        options={props.country.map(e => ({
+                                            id: e.id,
+                                            name: e.name,
+                                            label: e.name
+                                        }))}
+                                        // options={["test1", "test2", "test3"]}
+                                        sx={{width: "25ch"}}
+                                        value={data.country.name}
+                                        isOptionEqualToValue={(option, value) => option.name === value}
+                                        onChange={(e, value) => {
+                                            setData({
+                                                ...data,
+                                                country: value,
+                                            })
+                                            setEdited(true)
+                                        }}
+                                        renderInput={(params) =>
+                                            <TextField
+                                                {...params}
+                                                label="Kraj"
+                                                sx={{my: 1}}
+                                                {...register("country")}
+                                                value={data.country}
+                                                color={fieldErrors.country?.message && "error"}
+                                            />
+                                        }
+                                    />
+                                    {fieldErrors.country?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
+                                            {fieldErrors.country?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </>
+                            ) : (
+                                <TextField id="country" label="Kraj" variant="outlined"
+                                           {...register("country")}
+                                           inputProps={{readOnly: true}}
+                                           sx={{width: "30ch"}}/>
                             )}
+
+                            <Box sx={{display: "flex", flexWrap: "wrap", gap: 2}}>
+                                <Box>
+                                    <TextField id="street" label="Ulica" variant="outlined"
+                                               value={data.street}
+                                               {...register("street")}
+                                               color={fieldErrors.street?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("street", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               inputProps={{readOnly: !props.editing}}
+                                               sx={{width: "32ch"}}/>
+                                    {fieldErrors.street?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.street?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </Box>
+
+                                <Box>
+                                    <TextField id="building_number" label="Numer budynku" variant="outlined"
+                                               value={data.building_number}
+                                               {...register("building_number")}
+                                               color={fieldErrors.building_number?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("building_number", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
+                                               sx={{width: "12.5ch"}}/>
+                                    {fieldErrors.building_number?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.building_number?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </Box>
+
+                                <Box>
+                                    <TextField id="apartment_number" label="Numer lokalu" variant="outlined"
+                                               value={data.apartment_number ? data.apartment_number : ""}
+                                               {...register("apartment_number")}
+                                               color={fieldErrors.city?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("apartment_number", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
+                                               InputLabelProps={{shrink: true}}
+                                               sx={{width: "12.5ch"}}/>
+                                    {fieldErrors.apartment_number?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.apartment_number?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Box>
+
+
+                            <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
+                                <Box>
+                                    <TextField id="postal_code" label="Kod pocztowy" variant="outlined"
+                                               value={data.postal_code}
+                                               {...register("postal_code")}
+                                               color={fieldErrors.postal_code?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("postal_code", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               inputProps={{readOnly: !props.editing}}
+                                               sx={{width: "15ch"}}/>
+                                    {fieldErrors.postal_code?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.postal_code?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </Box>
+
+                                <Box>
+                                    <TextField id="city" label="Miasto" variant="outlined"
+                                               value={data.city}
+                                               {...register("city")}
+                                               color={fieldErrors.city?.message ? "error" : null}
+                                               onChange={(value) => {
+                                                   // setProductModel({...productModel, name: value.target.value});
+                                                   setData("city", value.target.value)
+                                                   setEdited(true)
+                                               }}
+                                               inputProps={{readOnly: !props.editing}}
+                                               sx={{width: "35ch"}}/>
+                                    {fieldErrors.city?.message && (
+                                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                            {fieldErrors.city?.message.toString()}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Box>
+
+
                         </Box>
                     </Box>
-                </Box>
-                <Divider/>
-                <Box>
-                    <Typography
-                        sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <Home fontSize={"large"}/>
-                        Informacje adresowe
-                    </Typography>
-
-                    <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
-
-                        {props.editing ? (
-                            <>
-                                <Autocomplete
-                                    id="country"
-                                    options={props.country.map(e => ({
-                                        id: e.id,
-                                        name: e.name,
-                                        label: e.name
-                                    }))}
-                                    // options={["test1", "test2", "test3"]}
-                                    sx={{width: "25ch"}}
-                                    value={data.country.name}
-                                    isOptionEqualToValue={(option, value) => option.name === value}
-                                    onChange={(e, value) => {
-                                        setData({
-                                            ...data,
-                                            country: value,
-                                        })
-                                        setEdited(true)
-                                    }}
-                                    renderInput={(params) =>
-                                        <TextField
-                                            {...params}
-                                            label="Kraj"
-                                            sx={{my: 1}}
-                                            {...register("country")}
-                                            value={data.country}
-                                            color={fieldErrors.country?.message && "error"}
-                                        />
-                                    }
-                                />
-                                {fieldErrors.country?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>
-                                        {fieldErrors.country?.message.toString()}
-                                    </Typography>
-                                )}
-                            </>
-                        ) : (
-                            <TextField id="country" label="Kraj" variant="outlined"
-                                       {...register("country")}
-                                       inputProps={{readOnly: true}}
-                                       sx={{width: "30ch"}}/>
-                        )}
-
-                        <Box sx={{display: "flex", flexWrap: "wrap", gap: 2}}>
-                            <Box>
-                                <TextField id="street" label="Ulica" variant="outlined"
-                                           value={data.street}
-                                           {...register("street")}
-                                           color={fieldErrors.street?.message ? "error" : null}
-                                           onChange={(value) => {
-                                               // setProductModel({...productModel, name: value.target.value});
-                                               setData("street", value.target.value)
-                                               setEdited(true)
-                                           }}
-                                           inputProps={{readOnly: !props.editing}}
-                                           sx={{width: "32ch"}}/>
-                                {fieldErrors.street?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.street?.message.toString()}
-                                    </Typography>
-                                )}
-                            </Box>
-
-                            <Box>
-                                <TextField id="building_number" label="Numer budynku" variant="outlined"
-                                           value={data.building_number}
-                                           {...register("building_number")}
-                                           color={fieldErrors.building_number?.message ? "error" : null}
-                                           onChange={(value) => {
-                                               // setProductModel({...productModel, name: value.target.value});
-                                               setData("building_number", value.target.value)
-                                               setEdited(true)
-                                           }}
-                                           inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
-                                           sx={{width: "12.5ch"}}/>
-                                {fieldErrors.building_number?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.building_number?.message.toString()}
-                                    </Typography>
-                                )}
-                            </Box>
-
-                            <Box>
-                                <TextField id="apartment_number" label="Numer lokalu" variant="outlined"
-                                           value={data.apartment_number ? data.apartment_number : ""}
-                                           {...register("apartment_number")}
-                                           color={fieldErrors.city?.message ? "error" : null}
-                                           onChange={(value) => {
-                                               // setProductModel({...productModel, name: value.target.value});
-                                               setData("apartment_number", value.target.value)
-                                               setEdited(true)
-                                           }}
-                                           inputProps={{style: {textAlign: 'center'}, readOnly: !props.editing}}
-                                           InputLabelProps={{shrink: true}}
-                                           sx={{width: "12.5ch"}}/>
-                                {fieldErrors.apartment_number?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.apartment_number?.message.toString()}
-                                    </Typography>
-                                )}
-                            </Box>
-                        </Box>
-
+                    <Divider/>
+                    <Box>
+                        <Typography
+                            sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
+                            <Phone fontSize={"large"}/>
+                            Informacje kontaktowe
+                        </Typography>
 
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
-                            <Box>
-                                <TextField id="postal_code" label="Kod pocztowy" variant="outlined"
-                                           value={data.postal_code}
-                                           {...register("postal_code")}
-                                           color={fieldErrors.postal_code?.message ? "error" : null}
+                            <Box sx={{width: 1}}>
+                                <TextField id="phone" label="Telefony" variant="outlined"
+                                           value={data.phone}
+                                           {...register("phone")}
+                                           color={fieldErrors.phone?.message ? "error" : null}
                                            onChange={(value) => {
                                                // setProductModel({...productModel, name: value.target.value});
-                                               setData("postal_code", value.target.value)
-                                               setEdited(true)
-                                           }}
-                                           inputProps={{readOnly: !props.editing}}
-                                           sx={{width: "15ch"}}/>
-                                {fieldErrors.postal_code?.message && (
-                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.postal_code?.message.toString()}
-                                    </Typography>
-                                )}
-                            </Box>
-
-                            <Box>
-                                <TextField id="city" label="Miasto" variant="outlined"
-                                           value={data.city}
-                                           {...register("city")}
-                                           color={fieldErrors.city?.message ? "error" : null}
-                                           onChange={(value) => {
-                                               // setProductModel({...productModel, name: value.target.value});
-                                               setData("city", value.target.value)
+                                               setData("phone", value.target.value)
                                                setEdited(true)
                                            }}
                                            inputProps={{readOnly: !props.editing}}
                                            sx={{width: "35ch"}}/>
-                                {fieldErrors.city?.message && (
+                                {fieldErrors.phone?.message && (
                                     <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                        {fieldErrors.city?.message.toString()}
+                                        {fieldErrors.phone?.message.toString()}
+                                    </Typography>
+                                )}
+                            </Box>
+
+                            <Box sx={{width: 1}}>
+                                <TextField id="email" label="Adres Email" variant="outlined"
+                                           value={data.email}
+                                           {...register("email")}
+                                           color={fieldErrors.email?.message ? "error" : null}
+                                           onChange={(value) => {
+                                               // setProductModel({...productModel, name: value.target.value});
+                                               setData("email", value.target.value)
+                                               setEdited(true)
+                                           }}
+                                           inputProps={{readOnly: !props.editing}}
+                                           sx={{width: "50ch", maxWidth: 1}}/>
+                                {fieldErrors.email?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {fieldErrors.email?.message.toString()}
                                     </Typography>
                                 )}
                             </Box>
                         </Box>
-
-
                     </Box>
+
+
+                    <Fade in={edited}>
+                        <Tooltip title={"Zapisz"}>
+                            <IconButton
+                                type="submit"
+                                color="success"
+                                size={"small"}
+                                disabled={processing}
+                                sx={{
+                                    position: "absolute",
+                                    top: 7,
+                                    right: 230,
+                                }}>
+                                <Save fontSize={"large"}/>
+                            </IconButton>
+                        </Tooltip>
+
+                    </Fade>
+                    <Fade in={edited}>
+                        <Tooltip title={"Cofnij zmiany"}>
+                            <IconButton
+                                color="error"
+                                size={"small"}
+                                disabled={processing}
+                                onClick={resetForm}
+                                sx={{
+                                    position: "absolute",
+                                    top: 7,
+                                    right: 280,
+                                }}
+                            >
+                                <Cancel fontSize={"large"}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Fade>
                 </Box>
-                <Divider/>
-                <Box>
-                    <Typography
-                        sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
-                        <Phone fontSize={"large"}/>
-                        Informacje kontaktowe
-                    </Typography>
-
-                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
-                        <Box sx={{width: 1}}>
-                            <TextField id="phone" label="Telefony" variant="outlined"
-                                       value={data.phone}
-                                       {...register("phone")}
-                                       color={fieldErrors.phone?.message ? "error" : null}
-                                       onChange={(value) => {
-                                           // setProductModel({...productModel, name: value.target.value});
-                                           setData("phone", value.target.value)
-                                           setEdited(true)
-                                       }}
-                                       inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "35ch"}}/>
-                            {fieldErrors.phone?.message && (
-                                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                    {fieldErrors.phone?.message.toString()}
-                                </Typography>
-                            )}
-                        </Box>
-
-                        <Box sx={{width: 1}}>
-                            <TextField id="email" label="Adres Email" variant="outlined"
-                                       value={data.email}
-                                       {...register("email")}
-                                       color={fieldErrors.email?.message ? "error" : null}
-                                       onChange={(value) => {
-                                           // setProductModel({...productModel, name: value.target.value});
-                                           setData("email", value.target.value)
-                                           setEdited(true)
-                                       }}
-                                       inputProps={{readOnly: !props.editing}}
-                                       sx={{width: "50ch", maxWidth: 1}}/>
-                            {fieldErrors.email?.message && (
-                                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                                    {fieldErrors.email?.message.toString()}
-                                </Typography>
-                            )}
-                        </Box>
-                    </Box>
-                </Box>
-
-
-                <Fade in={edited}>
-                    <Tooltip title={"Zapisz"}>
-                        <IconButton
-                            type="submit"
-                            color="success"
-                            size={"small"}
-                            disabled={processing}
-                            sx={{
-                                position: "absolute",
-                                top: 7,
-                                right: 230,
-                            }}>
-                            <Save fontSize={"large"}/>
-                        </IconButton>
-                    </Tooltip>
-
-                </Fade>
-                <Fade in={edited}>
-                    <Tooltip title={"Cofnij zmiany"}>
-                        <IconButton
-                            color="error"
-                            size={"small"}
-                            disabled={processing}
-                            onClick={resetForm}
-                            sx={{
-                                position: "absolute",
-                                top: 7,
-                                right: 280,
-                            }}
-                        >
-                            <Cancel fontSize={"large"}/>
-                        </IconButton>
-                    </Tooltip>
-                </Fade>
-            </Box>
-        </form>
+            </form>
+        </>
     );
 }

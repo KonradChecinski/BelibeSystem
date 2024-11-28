@@ -97,10 +97,10 @@ class Gus
 //                "regon" => $company->getRegon(),
                 "voivodeship" => Str::title($company->getProvince()),
                 "city" => $company->getCity(),
-                "zipCode" => $company->getZipCode(),
+                "postal_code" => $company->getZipCode(),
                 "street" => $street,
-                "buildingNumber" => count($buildingNumberObject) > 0 ? $buildingNumberObject[0] : null,
-                "apartmentNumber" => count($apartmentNumberObject) > 0 ? $apartmentNumberObject[0] : null,
+                "building_number" => count($buildingNumberObject) > 0 ? $buildingNumberObject[0] : null,
+                "apartment_number" => count($apartmentNumberObject) > 0 ? $apartmentNumberObject[0] : null,
                 "email" => count($emailAddressObject) > 0 ? $emailAddressObject[0] : null,
             ];
 
