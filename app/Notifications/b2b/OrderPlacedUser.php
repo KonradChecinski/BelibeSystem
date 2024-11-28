@@ -8,12 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
 class OrderPlacedUser extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $tries = 5;
+    public $tries = 1;
     public $backoff = 20;
     public $timeout = 60;
 
@@ -56,11 +57,14 @@ class OrderPlacedUser extends Notification implements ShouldQueue
                 $query->withWhereHas("images", function ($query) {
                     $query->where("type", 1);
                     $query->where("order", 0);
-                    $query->select("product_model_color_id", "path");
+                    $query->select("product_model_color_id", "slug");
                 });
             },
         ]);
         $clientOrderModel = collect([$this->clientOrder]);
+
+        URL::forceRootUrl("https://b2b.belibe.pl");
+        URL::forceScheme("https");
 
         return (new MailMessage)
             ->subject("Zamówienie twojego klienta zostało złożone")

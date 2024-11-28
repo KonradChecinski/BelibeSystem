@@ -1,7 +1,8 @@
+{{--@formatter:off--}}
 <x-mail::layout>
 {{-- Header --}}
 <x-slot:header>
-<x-mail::header :url="config('app.url')">
+<x-mail::header :url="URL::to('/')">
 {{ config('app.name') }}
 </x-mail::header>
 </x-slot:header>
