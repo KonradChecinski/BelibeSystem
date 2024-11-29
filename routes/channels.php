@@ -24,7 +24,6 @@ Broadcast::channel('cart.{clientId}', function ($user, $clientId) {
 }, ['guards' => ['user', 'client']]);
 
 Broadcast::channel('cart.{clientId}.product.{productId}', function ($user, $clientId, $productId) {
-    dd($user, $clientId, $productId, Helper::getClientIdToB2b());
     return Helper::getClientIdToB2b() === (int)$clientId;
 }, ['guards' => ['user', 'client']]);
 
