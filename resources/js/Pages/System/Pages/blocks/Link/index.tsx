@@ -49,7 +49,8 @@ export const PuckLink = {
                                 for (const link of group.links) {
                                     tempLinks.push({
                                         label: link.name,
-                                        url: link.url,
+                                        route: link.route,
+                                        parameters: link.parameters,
                                         group: group.name
                                     })
                                 }
@@ -85,7 +86,7 @@ export const PuckLink = {
                         )}
                         renderOption={(props, option) => {
                             return (
-                                <li {...props} key={option.link}>
+                                <li {...props} key={option.route + JSON.stringify(option.parameters)}>
                                     {option.label}
                                 </li>
                             );
@@ -113,9 +114,8 @@ export const PuckLink = {
     },
     label: "Link",
     render: ({link, variant, align}) => {
-        // console.log(link)
         return (
-            <Link href={link?.url}>
+            <Link href={link?.route && route(link?.route, link?.parameters)}>
                 <Typography
                     variant={variant}
                     align={align}
@@ -128,7 +128,7 @@ export const PuckLink = {
                             color: "primary.main",
                         }
                     }}>
-                    {link?.label}
+                    {link?.label ? link.label : "Brak linku"}
                 </Typography>
             </Link>
 

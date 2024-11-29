@@ -10,35 +10,40 @@ export default function B2BDynamicMenuResponsive({auth, menu}) {
             justifyContent="flex-start"
             alignItems="center"
         >
-            {menu.map((link, id) => (
-                    <Fragment key={link.url}>
-                        <Grid item xs={12} md={2} sx={{margin: 0,}}>
-                            <Button
-                                component={Link}
-                                href={link.url}
-                                sx={{
-                                    width: 1,
-                                    textTransform: 'none',
-                                    justifyContent: "flex-start",
-                                    pl: 1,
-
-                                    bgcolor: window.location.href === link.url ? "#1967d2" : "",
-                                    "&:hover": {
-                                        bgcolor: "#1967d2bb",
-                                        color: "menuText.main"
-                                    },
-                                }}
-                            >
-                                <Typography variant="body1" color={"menuText.main"}>
-                                    {link.name}
-                                </Typography>
-                            </Button>
-
-                        </Grid>
+            {menu.map((link, id) => {
+                    const linkUrl = route(link.route, link.parameters)
 
 
-                    </Fragment>
-                )
+                    return (
+                        <Fragment key={route(link.route, link.parameters)}>
+                            <Grid item xs={12} md={2} sx={{margin: 0,}}>
+                                <Button
+                                    component={Link}
+                                    href={linkUrl}
+                                    sx={{
+                                        width: 1,
+                                        textTransform: 'none',
+                                        justifyContent: "flex-start",
+                                        pl: 1,
+
+                                        bgcolor: window.location.href === linkUrl ? "#1967d2" : "",
+                                        "&:hover": {
+                                            bgcolor: "#1967d2bb",
+                                            color: "menuText.main"
+                                        },
+                                    }}
+                                >
+                                    <Typography variant="body1" color={"menuText.main"}>
+                                        {link.name}
+                                    </Typography>
+                                </Button>
+
+                            </Grid>
+
+
+                        </Fragment>
+                    )
+                }
             )}
 
 

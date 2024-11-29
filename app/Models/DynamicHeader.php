@@ -12,6 +12,11 @@ class DynamicHeader extends Model
     protected $fillable = [
         'order',
         'name',
-        'url'
+        'route',
+        'parameters',
+    ];
+
+    protected $casts = [
+        'parameters' => 'array',
     ];
 }

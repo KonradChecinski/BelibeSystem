@@ -24,7 +24,8 @@ class UpdateDynamicHeaderRequest extends FormRequest
         return [
             "header" => "required|array|max:6",
             "header.*.name" => "required|string|max:255",
-            "header.*.url" => "required|string|max:255",
+            "header.*.route" => "required|string|max:255",
+            "header.*.parameters" => "nullable|array",
         ];
     }
 }

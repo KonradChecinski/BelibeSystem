@@ -290,31 +290,38 @@ class Helper
             "links" => [
                 [
                     "name" => __("Home page"),
-                    "url" => route("b2b.main")
+                    "route" => "b2b.main",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Favorites"),
-                    "url" => route("b2b.favorites")
+                    "route" => "b2b.favorites",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Cart"),
-                    "url" => route("b2b.cart")
+                    "route" => "b2b.cart",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Invoices"),
-                    "url" => route("b2b.invoices")
+                    "route" => "b2b.invoices",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Orders"),
-                    "url" => route("b2b.orders")
+                    "route" => "b2b.orders",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Settlements"),
-                    "url" => route("b2b.settlements")
+                    "route" => "b2b.settlements",
+                    "parameters" => null
                 ],
                 [
                     "name" => __("Client zone"),
-                    "url" => route("b2b.client")
+                    "route" => "b2b.client",
+                    "parameters" => null
                 ],
             ]
         ];
@@ -326,7 +333,8 @@ class Helper
             "links" => DynamicPage::all(["id", "title", "slug"])->map(function ($page) {
                 return [
                     "name" => $page->title,
-                    "url" => route("b2b.page", $page->slug)
+                    "route" => "b2b.page",
+                    "parameters" => ["slug" => $page->slug]
                 ];
             })
         ];
@@ -337,7 +345,8 @@ class Helper
             "links" => ProductCategory::query()->where("show_in_menu", true)->get(["id", "name", "slug"])->map(function ($category) {
                 return [
                     "name" => $category->name,
-                    "url" => route("b2b.category", $category->slug)
+                    "route" => "b2b.category",
+                    "parameters" => ["slug" => $category->slug]
                 ];
             })
         ];

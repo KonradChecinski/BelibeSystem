@@ -33,7 +33,8 @@ export default function Header(props) {
         for (const link of group.links) {
             tempLinks.push({
                 label: link.name,
-                url: link.url,
+                route: link.route,
+                parameters: link.parameters,
                 group: group.name
             })
         }
@@ -65,7 +66,8 @@ export default function Header(props) {
             setData("header", [
                 ...data.header,
                 {
-                    url: value.url,
+                    route: value.route,
+                    parameters: value.parameters,
                     name: value.label
                 }
             ])
@@ -74,8 +76,8 @@ export default function Header(props) {
         }
     }
 
-    const deleteLink = (url) => {
-        setData("header", data.header.filter((row) => (row.url !== url)))
+    const deleteLink = (route, parameters) => {
+        setData("header", data.header.filter((row) => !(row.route === route && row.parameters === parameters)))
         setEdited(true)
     }
 
@@ -208,9 +210,9 @@ export default function Header(props) {
                                         <List>
                                             {data.header.map((item, index) => (
                                                 <Draggable
-                                                    draggableId={"link_" + item.url}//do zmiany na id
+                                                    draggableId={"link_" + item.route + item.order}//do zmiany na id
                                                     index={index}
-                                                    key={item.url}//do zmiany na id
+                                                    key={item.route + item.order}//do zmiany na id
                                                     sx={{height: "50px"}}
                                                 >
                                                     {(provided, snapshot) => {
@@ -230,7 +232,7 @@ export default function Header(props) {
                                                                 }}
                                                                 secondaryAction={
                                                                     <IconButton edge="end" aria-label="delete"
-                                                                                onClick={() => deleteLink(item.url)}>
+                                                                                onClick={() => deleteLink(item.route, item.parameters)}>
                                                                         <Delete/>
                                                                     </IconButton>
                                                                 }

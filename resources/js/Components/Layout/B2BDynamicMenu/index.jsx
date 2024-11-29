@@ -19,39 +19,43 @@ export default function B2BDynamicMenu({auth, menu}) {
                     justifyContent="flex-start"
                     alignItems="center"
                 >
-                    {menu.map((link, id) => (
-                            <Fragment key={link.url}>
-                                <Grid item xs={12} md={2} sx={{margin: 0, px: 1}}>
-                                    <Link href={link.url}>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                                height: "100%",
-                                                width: "100%",
-                                                cursor: "pointer",
-                                                borderRadius: 1,
-                                                p: 0.5,
-                                                bgcolor: window.location.href === link.url ? "#1967d2" : "",
-                                                color: window.location.href === link.url ? "menuText.main" : "",
-                                                "&:hover": {
-                                                    bgcolor: "#1967d2bb",
-                                                    color: "menuText.main"
-                                                },
-                                            }}>
-                                            <Typography variant="h6" component="h5" textAlign={"center"}>
-                                                {link.name}
-                                            </Typography>
-                                        </Box>
-                                    </Link>
-                                </Grid>
+                    {menu.map((link, id) => {
+                            const linkUrl = route(link.route, link.parameters)
 
-                                {id !== 5 && (<Divider orientation="vertical" flexItem variant="middle"
-                                                       sx={{mr: "-1px", mt: 2}}/>)}
+                            return (
+                                <Fragment key={link.url}>
+                                    <Grid item xs={12} md={2} sx={{margin: 0, px: 1}}>
+                                        <Link href={linkUrl}>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    cursor: "pointer",
+                                                    borderRadius: 1,
+                                                    p: 0.5,
+                                                    bgcolor: window.location.href === linkUrl ? "#1967d2" : "",
+                                                    color: window.location.href === linkUrl ? "menuText.main" : "",
+                                                    "&:hover": {
+                                                        bgcolor: "#1967d2bb",
+                                                        color: "menuText.main"
+                                                    },
+                                                }}>
+                                                <Typography variant="h6" component="h5" textAlign={"center"}>
+                                                    {link.name}
+                                                </Typography>
+                                            </Box>
+                                        </Link>
+                                    </Grid>
 
-                            </Fragment>
-                        )
+                                    {id !== 5 && (<Divider orientation="vertical" flexItem variant="middle"
+                                                           sx={{mr: "-1px", mt: 2}}/>)}
+
+                                </Fragment>
+                            )
+                        }
                     )}
 
 

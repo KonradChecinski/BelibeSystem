@@ -65,7 +65,7 @@ class DynamicPageController extends Controller
     {
         return Inertia::render("System/Pages/Page", [
             "menu" => ProductCategory::query()->where("show_in_menu", true)->get(),
-            "header" => DynamicHeader::all(["name", "url"]),
+            "header" => DynamicHeader::all(["name", "order", "route", "parameters"]),
             "page" => $dynamicPage
         ]);
     }

@@ -68,7 +68,8 @@ class DynamicHeaderController extends Controller
             DynamicHeader::create([
                 'order' => $key,
                 'name' => $value['name'],
-                'url' => $value['url']
+                'route' => $value['route'],
+                'parameters' => $value['parameters'],
             ]);
         }
     }
