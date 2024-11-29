@@ -23,7 +23,7 @@ export default function B2BDynamicMenu({auth, menu}) {
                             const linkUrl = route(link.route, link.parameters)
 
                             return (
-                                <Fragment key={link.url}>
+                                <Fragment key={linkUrl}>
                                     <Grid item xs={12} md={2} sx={{margin: 0, px: 1}}>
                                         <Link href={linkUrl}>
                                             <Box
