@@ -90,6 +90,11 @@ class ProductModel extends Model
         return $this->hasManyThrough(ProductColorIcon::class, ProductModelColor::class, "product_model_id", "id", "id", "product_color_icon_id");
     }
 
+    public function colorIconsOnlyProductToB2b()
+    {
+        return $this->hasManyDeepFromRelationsWithConstraints([$this, 'colorsToB2b'], [new ProductModelColor(), 'colorIcon']);
+    }
+
     public function products(): HasManyDeep
     {
 //        return $this->hasManyThrough(Product::class, ProductModelColor::class)->with(['barcodes', 'size', 'unit']);

@@ -40,7 +40,7 @@ class B2bProductCategoryController extends Controller
 //                'quantity' => $model->quantityToB2b(),
 //            ]
 //            );
-
+//        dd($category->productModels()->limit(1)->get()[0]->colorIconsB2b);
         $models = $category->productModels()
             ->whereHas("productsToB2bWithoutRelation", function ($query) {
 //                $query->where("quantity", ">", 0);
@@ -55,7 +55,8 @@ class B2bProductCategoryController extends Controller
                 'productsToB2bWithoutRelation.size',
 //                'productsToB2bWithoutRelation:quantity,product_model_id',
 //                'products.size',
-                'colorIcons'
+//                'colorIcons',
+                "colorIconsOnlyProductToB2b",
             ])
             ->paginate(24)
             ->through(function ($model) use ($discounts, $client) {
@@ -69,7 +70,7 @@ class B2bProductCategoryController extends Controller
                     'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["slug" => $image->slug])->values() : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
 //                    'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
-                    'icons' => $model->colorIcons,
+                    'icons' => $model->colorIconsOnlyProductToB2b,
                     'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique()->values(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),
                     'isFavorited' => $model->isFavoritedByClient($client),
