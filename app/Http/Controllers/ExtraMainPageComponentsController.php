@@ -47,7 +47,8 @@ class ExtraMainPageComponentsController extends Controller
                     'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id,products.id',
                     'productsToB2bWithoutRelation.size',
 
-                    'colorIcons',
+//                    'colorIcons',
+                    "colorIconsOnlyProductToB2b",
 //                    'mainImages'
                 ])
                     ->where("id", $product->product_model_id)
@@ -62,7 +63,7 @@ class ExtraMainPageComponentsController extends Controller
                             'mainImages' => $mainImages ? $mainImages->sortBy("main")->map(fn($image) => ["slug" => $image->slug])->values() : null,
                             'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
 //                            'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
-                            'icons' => $model->colorIcons,
+                            'icons' => $model->colorIconsOnlyProductToB2b,
                             'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique()->values(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),
                             'isFavorited' => $model->isFavoritedByClient($client),

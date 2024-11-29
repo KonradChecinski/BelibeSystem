@@ -34,7 +34,8 @@ class B2bFavoritesController extends Controller
                 'productsToB2bWithoutRelation.size',
 //                'productsToB2bWithoutRelation:quantity,product_model_id',
 //                'products.size',
-                'colorIcons'
+//                'colorIcons',
+                "colorIconsOnlyProductToB2b",
             ])
             ->paginate(24)
             ->through(function ($model) use ($discounts, $client) {
@@ -49,7 +50,7 @@ class B2bFavoritesController extends Controller
                     'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["slug" => $image->slug]) : null,
                     'price' => PriceForClient::getPrice($model, $model->categories, $model->group, $model->brand, $model->prices, $discounts),
                     'quantity' => $model->productsToB2bWithoutRelation->sum("quantity"),
-                    'icons' => $model->colorIcons,
+                    'icons' => $model->colorIconsOnlyProductToB2b,
                     'sizes' => $model->productsToB2bWithoutRelation->map(fn($product) => $product->size->name)->unique(),
 //                    'sizes' => $model->products->map(fn($product) => $product->size->name)->unique(),
                     'isFavorited' => $model->isFavoritedByClient($client),
