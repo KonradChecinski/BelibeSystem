@@ -21,18 +21,19 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('cart.{clientId}', function ($user, $clientId) {
     return Helper::getClientIdToB2b() === (int)$clientId;
-});
+}, ['guards' => ['user', 'client']]);
 
 Broadcast::channel('cart.{clientId}.product.{productId}', function ($user, $clientId, $productId) {
+    dd($user, $clientId, $productId, Helper::getClientIdToB2b());
     return Helper::getClientIdToB2b() === (int)$clientId;
-});
+}, ['guards' => ['user', 'client']]);
 
 Broadcast::channel('cart.{clientId}.updated', function ($user, $clientId) {
     return Helper::getClientIdToB2b() === (int)$clientId;
-});
+}, ['guards' => ['user', 'client']]);
 
 Broadcast::channel('cart.summary.{clientId}', function ($user, $clientId) {
     return Helper::getClientIdToB2b() === (int)$clientId;
-});
+}, ['guards' => ['user', 'client']]);
 
 
