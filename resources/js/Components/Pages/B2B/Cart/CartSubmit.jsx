@@ -5,27 +5,35 @@ import {Send} from "@mui/icons-material";
 export default function CartSubmit({props, data, setData, post, processing}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-    const canSend = () => {
-        return data.payment && data.delivery && data.location
-    }
-    const send = () => {
-        if (canSend()) {
-            post(route("b2b.order.store"),
-                {
-                    preserveScroll: true,
-                    onSuccess: (e) => {
-                        enqueueSnackbar("Zamówienie zostało złożone", {variant: 'success'})
-                    },
-                    onError: errors => {
-                        enqueueSnackbar("Wystąpił błąd podczas składania zamówienia", {variant: 'error'})
-                        if (errors[403]) enqueueSnackbar(errors[403].message, {variant: 'error'})
 
-                        console.error(errors)
-                    },
-                })
-        } else {
-            enqueueSnackbar("Proszę wybrać metodę płatności, dostawy i adres dostawy", {variant: 'info'})
+    const send = () => {
+        if (!data.payment) {
+            enqueueSnackbar("Proszę wybrać metodę płatności", {variant: 'info'})
+            return
         }
+        if (!data.delivery) {
+            enqueueSnackbar("Proszę wybrać metodę dostawy", {variant: 'info'})
+            return
+        }
+        if (!data.location) {
+            enqueueSnackbar("Proszę wybrać adres dostawy", {variant: 'info'})
+            return
+        }
+
+
+        post(route("b2b.order.store"),
+            {
+                preserveScroll: true,
+                onSuccess: (e) => {
+                    enqueueSnackbar("Zamówienie zostało złożone", {variant: 'success'})
+                },
+                onError: errors => {
+                    enqueueSnackbar("Wystąpił błąd podczas składania zamówienia", {variant: 'error'})
+                    if (errors[403]) enqueueSnackbar(errors[403].message, {variant: 'error'})
+
+                    console.error(errors)
+                },
+            })
     }
 
     return (
