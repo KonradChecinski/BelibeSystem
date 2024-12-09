@@ -40,7 +40,7 @@ class CreatePWInInwentaryzacjaWarehouse extends Command
         if (!$magId) {
             $magIds = [33, 9, 30, 43, 1, 29, 5, 3, 32, 28];
         } else {
-            $magIds = [$magId];
+            $magIds = explode(',', $magId);
         }
 
 
