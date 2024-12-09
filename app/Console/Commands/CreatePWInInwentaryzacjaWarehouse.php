@@ -36,7 +36,13 @@ class CreatePWInInwentaryzacjaWarehouse extends Command
      */
     public function handle()
     {
-        $magIds = $this->ask('WarehouseId?', [33, 9, 30, 43, 1, 29, 5, 3, 32, 28]);
+        $magId = $this->ask('WarehouseId?', null);
+        if (!$magId) {
+            $magIds = [33, 9, 30, 43, 1, 29, 5, 3, 32, 28];
+        } else {
+            $magIds = [$magId];
+        }
+
 
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
