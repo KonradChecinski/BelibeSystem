@@ -63,6 +63,8 @@ class CreatePWInInwentaryzacjaWarehouse extends Command
 
             $pw->Uwagi = "Inwentaryzacja z magazynu: " . $magNazwa;
             $pw->Zapisz();
+
+            $this->info("PW z magazynu: " . $magNazwa . " został dodany");
         }
 
 
