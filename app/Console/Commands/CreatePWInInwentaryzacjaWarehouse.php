@@ -36,7 +36,13 @@ class CreatePWInInwentaryzacjaWarehouse extends Command
      */
     public function handle()
     {
-        $magIds = [33, 9, 30, 43, 1, 29, 5, 3, 32, 28];
+        $magId = $this->ask('WarehouseId?', null);
+        if (!$magId) {
+            $magIds = [33, 9, 30, 43, 1, 29, 5, 3, 32, 28];
+        } else {
+            $magIds = explode(',', $magId);
+        }
+
 
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
@@ -58,11 +64,14 @@ class CreatePWInInwentaryzacjaWarehouse extends Command
                 $pozycja->Jm = (string)$towar->tw_JednMiary;
                 $pozycja->CenaNettoPrzedRabatem = (float)$towar->cena;
                 $pozycja->IloscJm = (int)$towar->ilosc;
+                $this->info("Dodano towar: " . $towar->tw_symbol . " w ilości: " . $towar->ilosc);
             }
 
 
             $pw->Uwagi = "Inwentaryzacja z magazynu: " . $magNazwa;
             $pw->Zapisz();
+
+            $this->info("PW z magazynu: " . $magNazwa . " został dodany");
         }
 
 
