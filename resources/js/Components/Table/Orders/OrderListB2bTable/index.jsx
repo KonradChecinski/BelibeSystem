@@ -183,7 +183,29 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                 accessorKey: 'client.name',
                 header: 'Klient',
                 size: 250,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    return (
+                        <Box>
+                            {cell.getValue() && (
+                                <Tooltip arrow title={
+                                    <>
+                                        <Typography variant={"body2"}>
+                                            Przejdź do edycji klienta
+                                        </Typography>
+                                    </>
+                                }>
+                                    <Link
+                                        href={route("system.clients.client.edit", {id: row.original.client.id})}
+                                    >
+                                        {cell.getValue()}
+                                    </Link>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
 
+                },
                 enableResizing: true,
                 enableColumnActions: false,
                 enableColumnDragging: false,
