@@ -99,7 +99,7 @@ class ClientOrderController extends Controller
 
     public function createInvoice(ClientOrder $clientOrder)
     {
-        if ($clientOrder->status === 5) {
+        if ($clientOrder->status === 100) {
             GenerateInvoiceFromClientOrderInSubiekt::dispatch($clientOrder);
         }
     }
