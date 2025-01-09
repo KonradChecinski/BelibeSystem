@@ -109,7 +109,8 @@ class ClientOrderController extends Controller
      */
     public function store(Request $request, Client $client)
     {
-        $request->session()->push('client', $client);
+        $request->session()->put('client', $client);
+//        dd(session()->all());
         return Redirect::route("b2b.main");
     }
 

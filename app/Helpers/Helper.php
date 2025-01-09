@@ -49,7 +49,8 @@ class Helper
             return auth()->user()->client_id;
         }
         if ($guardName === "user") {
-            return Arr::first(session("client"))->id;
+            $client = session("client");
+            return $client->id;
         }
         return null;
     }
@@ -61,7 +62,7 @@ class Helper
             return auth()->user()->client;
         }
         if ($guardName === "user") {
-            $client = Arr::first(session("client"));
+            $client = session("client");
             if (!is_null($client)) {
                 return $client;
             }
