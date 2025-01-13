@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Helper;
+use App\Helpers\SystemName;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,10 +17,25 @@ class PasswordResetLinkController extends Controller
     /**
      * Display the password reset link request view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        switch (Helper::getSystemNameFromDomain($request)) {
+            case SystemName::SYSTEM:
+                $route = 'system.password.email';
+                break;
+
+            case SystemName::B2B:
+                $route = 'b2b.password.email';
+                break;
+
+            default:
+                $route = '';
+                break;
+        }
+
         return Inertia::render('Auth/ForgotPassword', [
             'status' => session('status'),
+            'routePasswordEmail' => $route,
         ]);
     }
 
@@ -36,8 +53,22 @@ class PasswordResetLinkController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
+        switch (Helper::getSystemNameFromDomain($request)) {
+            case SystemName::SYSTEM:
+                $brokerName = 'users';
+                break;
+
+            case SystemName::B2B:
+                $brokerName = 'clients';
+                break;
+
+            default:
+                $brokerName = '';
+                break;
+        }
+
+        $status = Password::broker($brokerName)->sendResetLink(
+            $request->only('email'),
         );
 
         if ($status == Password::RESET_LINK_SENT) {

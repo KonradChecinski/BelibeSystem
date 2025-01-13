@@ -9,7 +9,7 @@ import {FormControl, IconButton, Input, InputAdornment} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 
-export default function ForgotPassword({status, backgroundImage}) {
+export default function ForgotPassword({status, routePasswordEmail, backgroundImage}) {
     const {t} = useLaravelReactI18n()
 
     const {data, setData, post, processing, errors} = useForm({
@@ -23,7 +23,7 @@ export default function ForgotPassword({status, backgroundImage}) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('password.email'));
+        post(route(routePasswordEmail));
     };
 
     return (
