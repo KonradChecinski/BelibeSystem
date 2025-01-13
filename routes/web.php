@@ -86,6 +86,7 @@ Route::get('images/basic/{slug}', [StorageController::class, 'images'])->name("i
 Route::get('images/thumbnail/{slug}', [StorageController::class, 'imagesThumb'])->name("images.thumbnail");
 Route::get('images/webp/{slug}', [StorageController::class, 'imagesWebp'])->name("images.webp");
 Route::get('images/1x1/{slug}', [StorageController::class, 'imagesSquare'])->name("images.1x1");
+Route::get('images/2x3/{slug}', [StorageController::class, 'images2x3'])->name("images.2x3");
 Route::get('color-icons/{path}', [StorageController::class, 'colorIcons'])->name("colorIcons");
 
 

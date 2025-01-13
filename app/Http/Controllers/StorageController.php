@@ -139,6 +139,64 @@ class StorageController extends Controller
         return response($img)->header('Content-Type', $mimeType);
     }
 
+    public function images2x3(string $slug)
+    {
+        $productImage = ProductImage::findBySlug($slug);
+        $path = $productImage->path_2x3;
+
+        if ($path) {
+            $img = Storage::get('images/2x3/' . str_replace('\\', '/', $path));
+            $mimeType = Storage::mimeType('images/2x3/' . str_replace('\\', '/', $path));
+        } else {
+            $imgBasic = Storage::get('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $mimeType = Storage::mimeType('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+            $extension = File::extension('images/basic/' . str_replace('\\', '/', $productImage->path_basic));
+
+            $tempImg = Image::make($imgBasic);
+
+            // Wymiary maksymalne: 1280x1920
+            $maxWidth = 1280;
+            $maxHeight = 1920;
+
+            // Ustal proporcje 2x3, bez zmiany rozdzielczości większych obrazów
+            $targetWidth = $tempImg->width();
+            $targetHeight = $tempImg->height();
+
+            if ($tempImg->width() / $tempImg->height() != 2 / 3) {
+                $targetWidth = min($tempImg->width(), $tempImg->height() * (2 / 3));
+                $targetHeight = min($tempImg->height(), $tempImg->width() / (2 / 3));
+            }
+
+            // Zmniejszenie do maksymalnych wymiarów, jeśli jest większy
+            if ($targetWidth > $maxWidth || $targetHeight > $maxHeight) {
+                $targetWidth = $maxWidth;
+                $targetHeight = $maxHeight;
+            }
+
+            $img = $tempImg
+                ->fit($targetWidth, $targetHeight, function ($constraint) {
+                    $constraint->upsize(); // Zapobiega powiększaniu mniejszego obrazu
+                })
+                ->encode($mimeType, 100);
+
+            // Generowanie ścieżki z UUID
+            $path2x3 = (string)Str::uuid() . "." . $extension;
+
+            // Opcjonalnie, sprawdzanie istnienia pliku (np. przy generowaniu UUID)
+            while (Storage::exists('images/2x3/' . $path2x3)) {
+                $path2x3 = (string)Str::uuid() . "." . $extension;
+            }
+
+            // Zapis obrazu na serwerze
+            Storage::put('images/2x3/' . $path2x3, $img);
+
+            $productImage->path_2x3 = $path2x3;
+            $productImage->save();
+        }
+
+        return response($img)->header('Content-Type', $mimeType);
+    }
+
     public function colorIcons(string $path)
     {
         $img = Storage::get('colors/' . str_replace('\\', '/', $path));

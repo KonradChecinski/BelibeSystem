@@ -27,6 +27,7 @@ class ProductImage extends Model
         'path_square',
         'path_webp',
         'path_thumb',
+        'path_2x3',
         'width',
         'height',
         'type',
