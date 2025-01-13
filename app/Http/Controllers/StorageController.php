@@ -154,42 +154,59 @@ class StorageController extends Controller
 
             $tempImg = Image::make($imgBasic);
 
-            // Wymiary maksymalne: 1280x1920
+            // Maksymalne wymiary kanwy
             $maxWidth = 1280;
             $maxHeight = 1920;
 
-            // Ustal proporcje 2x3, bez zmiany rozdzielczości większych obrazów
-            $targetWidth = $tempImg->width();
-            $targetHeight = $tempImg->height();
+            // Rozmiary obrazu wejściowego
+            $originalWidth = $tempImg->width();
+            $originalHeight = $tempImg->height();
 
-            if ($tempImg->width() / $tempImg->height() != 2 / 3) {
-                $targetWidth = min($tempImg->width(), $tempImg->height() * (2 / 3));
-                $targetHeight = min($tempImg->height(), $tempImg->width() / (2 / 3));
+            // Obliczamy proporcje obrazu wejściowego
+            $originalRatio = $originalWidth / $originalHeight;
+            $targetRatio = 2 / 3; // Docelowe proporcje kanwy
+
+            // Oblicz dynamiczny rozmiar kanwy w zależności od wymiarów wejściowego obrazu
+            if ($originalRatio > $targetRatio) {
+                // Obraz jest szerszy niż proporcja 2x3 -> dopasowanie do szerokości
+                $canvasWidth = min($originalWidth, $maxWidth);
+                $canvasHeight = intval($canvasWidth / $targetRatio);
+            } else {
+                // Obraz jest węższy niż proporcja 2x3 -> dopasowanie do wysokości
+                $canvasHeight = min($originalHeight, $maxHeight);
+                $canvasWidth = intval($canvasHeight * $targetRatio);
             }
 
-            // Zmniejszenie do maksymalnych wymiarów, jeśli jest większy
-            if ($targetWidth > $maxWidth || $targetHeight > $maxHeight) {
-                $targetWidth = $maxWidth;
-                $targetHeight = $maxHeight;
-            }
+            // Tworzymy kanwę o obliczonych wymiarach i proporcjach 2x3
+            $canvas = Image::canvas($canvasWidth, $canvasHeight, '#ffffff');
 
-            $img = $tempImg
-                ->fit($targetWidth, $targetHeight, function ($constraint) {
-                    $constraint->upsize(); // Zapobiega powiększaniu mniejszego obrazu
-                })
-                ->encode($mimeType, 100);
+            // Skalujemy obraz wejściowy, aby dopasować go do kanwy, bez zmiany proporcji
+            $tempImg->resize(
+                $canvasWidth,
+                $canvasHeight,
+                function ($constraint) {
+                    $constraint->aspectRatio(); // Zachowaj proporcje
+                    $constraint->upsize(); // Nie powiększaj mniejszych obrazów
+                }
+            );
 
-            // Generowanie ścieżki z UUID
+            // Wstawiamy obraz na środek kanwy
+            $canvas->insert($tempImg, 'center');
+
+            // Generujemy unikalną nazwę pliku
             $path2x3 = (string)Str::uuid() . "." . $extension;
 
-            // Opcjonalnie, sprawdzanie istnienia pliku (np. przy generowaniu UUID)
+            // Sprawdzamy unikalność nazwy pliku
             while (Storage::exists('images/2x3/' . $path2x3)) {
                 $path2x3 = (string)Str::uuid() . "." . $extension;
             }
 
-            // Zapis obrazu na serwerze
+            $img = $canvas->encode($mimeType, 100);
+
+            // Zapisujemy obraz na serwerze
             Storage::put('images/2x3/' . $path2x3, $img);
 
+            // Aktualizujemy ścieżkę w tabeli ProductImage
             $productImage->path_2x3 = $path2x3;
             $productImage->save();
         }
