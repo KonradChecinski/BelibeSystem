@@ -76,7 +76,8 @@ class TestController extends Controller
 //        dd($productModelColors->toArray());
 
         foreach ($productModelColors as $productModelColor) {
-            ShoperChangeImages::dispatch($productModelColor);
+//            dd($productModelColor, ProductModelColor::find($productModelColor->id));
+            ShoperChangeImages::dispatch(ProductModelColor::find($productModelColor->id));
         }
     }
 
