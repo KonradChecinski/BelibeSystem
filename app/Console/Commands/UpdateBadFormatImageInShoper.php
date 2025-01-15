@@ -65,10 +65,11 @@ class UpdateBadFormatImageInShoper extends Command
 
         foreach ($productModelColors as $id => $productModelColor) {
             if ($id % 20 === 0) {
+                $this->info("Przerwa na 30 sekund");
                 sleep(30);
             }
             ShoperChangeImages::dispatch(ProductModelColor::find($productModelColor->id));
-            $this->info("Zlecono zmiany" . $productModelColor->model->symbol . "-" . $productModelColor->shortcut);
+            $this->info("Zlecono zmiany: " . $productModelColor->model->symbol . "-" . $productModelColor->shortcut);
             sleep(2);
         }
 
