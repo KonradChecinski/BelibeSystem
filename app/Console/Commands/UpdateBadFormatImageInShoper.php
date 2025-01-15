@@ -65,11 +65,11 @@ class UpdateBadFormatImageInShoper extends Command
 
         foreach ($productModelColors as $id => $productModelColor) {
             if ($id % 20 === 0) {
-                sleep(10);
+                sleep(30);
             }
             ShoperChangeImages::dispatch(ProductModelColor::find($productModelColor->id));
             $this->info("Zlecono zmiany" . $productModelColor->model->symbol . "-" . $productModelColor->shortcut);
-            sleep(1);
+            sleep(2);
         }
 
         return self::SUCCESS;
