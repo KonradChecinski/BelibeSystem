@@ -69,7 +69,7 @@ class TestController extends Controller
                             ->orWhere("height", "!=", 1920);
                     });
             }])
-//            ->skip(200)
+            ->skip(1)
             ->take(2)
             ->get();
 
