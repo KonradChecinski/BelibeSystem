@@ -69,8 +69,8 @@ class TestController extends Controller
                             ->orWhere("height", "!=", 1920);
                     });
             }])
-            ->skip(1)
-            ->take(2)
+//            ->skip(1)
+//            ->take(2)
             ->get();
 
 //        dd($productModelColors->toArray());
