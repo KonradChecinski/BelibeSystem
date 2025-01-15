@@ -68,7 +68,7 @@ class UpdateBadFormatImageInShoper extends Command
                 sleep(10);
             }
             ShoperChangeImages::dispatch(ProductModelColor::find($productModelColor->id));
-            $this->info("Zlecono zmiany" . $productModelColor->shortcut);
+            $this->info("Zlecono zmiany" . $productModelColor->model->symbol . "-" . $productModelColor->shortcut);
             sleep(1);
         }
 
