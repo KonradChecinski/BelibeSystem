@@ -13,6 +13,7 @@ use App\Jobs\Empik\EmpikChangeShow;
 use App\Jobs\Empik\EmpikUpdateProducts;
 use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\Quantity\UpdateAllQuantities;
+use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
@@ -26,6 +27,7 @@ use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
@@ -40,9 +42,42 @@ class TestController extends Controller
      */
     public function index()
     {
-//        dd(Gus::search("6252455803"));
-        dd(Gus::search("5211382774"));
-//        dd(Gus::search("8940042553"));
+
+        $productModelColors = ProductModelColor::query()
+            ->whereHas('products', function ($query) {
+                $query->where("show_in_b2c", true);
+            })
+            ->whereHas('images', function ($query) {
+                $query
+                    ->where("type", 1)
+                    ->whereIn("order", [1, 2, 3])
+                    ->where(function ($query) {
+                        $query
+                            ->where("width", "!=", 1280)
+                            ->orWhere("height", "!=", 1920);
+                    });
+
+            })
+            ->with(['products'])
+            ->with(['images' => function ($query) {
+                $query
+                    ->where("type", 1)
+                    ->whereIn("order", [1, 2, 3])
+                    ->where(function ($query) {
+                        $query
+                            ->where("width", "!=", 1280)
+                            ->orWhere("height", "!=", 1920);
+                    });
+            }])
+//            ->skip(200)
+            ->take(2)
+            ->get();
+
+//        dd($productModelColors->toArray());
+
+        foreach ($productModelColors as $productModelColor) {
+            ShoperChangeImages::dispatch($productModelColor);
+        }
     }
 
     /**
