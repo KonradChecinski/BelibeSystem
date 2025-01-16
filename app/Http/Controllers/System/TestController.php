@@ -42,43 +42,7 @@ class TestController extends Controller
      */
     public function index()
     {
-
-        $productModelColors = ProductModelColor::query()
-            ->whereHas('products', function ($query) {
-                $query->where("show_in_b2c", true);
-            })
-            ->whereHas('images', function ($query) {
-                $query
-                    ->where("type", 1)
-                    ->whereIn("order", [1, 2, 3])
-                    ->where(function ($query) {
-                        $query
-                            ->where("width", "!=", 1280)
-                            ->orWhere("height", "!=", 1920);
-                    });
-
-            })
-            ->with(['products'])
-            ->with(['images' => function ($query) {
-                $query
-                    ->where("type", 1)
-                    ->whereIn("order", [1, 2, 3])
-                    ->where(function ($query) {
-                        $query
-                            ->where("width", "!=", 1280)
-                            ->orWhere("height", "!=", 1920);
-                    });
-            }])
-//            ->skip(1)
-//            ->take(2)
-            ->get();
-
-//        dd($productModelColors->toArray());
-
-        foreach ($productModelColors as $productModelColor) {
-//            dd($productModelColor, ProductModelColor::find($productModelColor->id));
-            ShoperChangeImages::dispatch(ProductModelColor::find($productModelColor->id));
-        }
+        
     }
 
     /**
