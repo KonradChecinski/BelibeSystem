@@ -13,6 +13,7 @@ use App\Jobs\Empik\EmpikChangeShow;
 use App\Jobs\Empik\EmpikUpdateProducts;
 use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\Quantity\UpdateAllQuantities;
+use App\Jobs\Shoper\ShoperChangeImages;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
@@ -26,6 +27,7 @@ use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModel;
+use App\Models\Products\ProductModelColor;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
@@ -40,9 +42,7 @@ class TestController extends Controller
      */
     public function index()
     {
-//        dd(Gus::search("6252455803"));
-        dd(Gus::search("5211382774"));
-//        dd(Gus::search("8940042553"));
+        
     }
 
     /**

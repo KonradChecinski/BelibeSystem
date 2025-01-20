@@ -32,7 +32,7 @@ class ShoperChangeImages implements ShouldQueue, ShouldBeUnique
         $this->productModelColor = $productModelColor;
     }
 
-    public function uniqueId()
+    public function uniqueId(): string
     {
         return $this->productModelColor->id;
     }
