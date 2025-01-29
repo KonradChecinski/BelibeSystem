@@ -8,6 +8,7 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import {ArrowBack} from '@mui/icons-material';
 import MenuComponent from "@/Components/Layout/B2BMenu/MenuComponent";
 import B2BDynamicMenuResponsive from "@/Components/Layout/B2BDynamicMenuResponsive";
+import HomeIcon from "@mui/icons-material/Home";
 
 export default function B2BMenu({showContent, auth, accountManager = false, bgImage, categories, header}) {
     const theme = useTheme();
@@ -95,7 +96,7 @@ export default function B2BMenu({showContent, auth, accountManager = false, bgIm
                                 left: 5,
                                 color: "menuText.main"
                             }}>
-                            <ArrowBack/>
+                            <HomeIcon/>
                         </IconButton>
                     </Tooltip>
                 )}
