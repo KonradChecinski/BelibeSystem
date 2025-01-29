@@ -42,7 +42,7 @@ export default function BeforeLoginLayout({background, children}) {
                             display: "flex",
                             flexDirection: "column",
                             width: lgBreakpointUp ? "25%" : smBreakpointUp ? "40%" : "96%",
-                            minWidth: "fit-content",
+                            // minWidth: "fit-content",
                             backdropFilter: isLightMode ? "blur(8px) brightness(1.25) contrast(0.75)" : "blur(8px) brightness(1) contrast(1)",
                             justifyContent: smBreakpointUp ? "center" : "flex-start",
                             alignItems: "center",
@@ -51,7 +51,7 @@ export default function BeforeLoginLayout({background, children}) {
                             border: 2,
                             borderColor: "rgb(55 65 81 / 1)",
                             boxShadow: 2,
-                            bgcolor: isLightMode ? "rgb(55 65 81 / 0.15)" : "rgb(17 24 39 / 0.75)",
+                            bgcolor: isLightMode ? "rgb(17 24 39 / 0.75)" : "rgb(17 24 39 / 0.75)",
                         }}
                     >
 

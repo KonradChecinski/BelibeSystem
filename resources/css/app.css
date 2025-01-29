@@ -21,6 +21,25 @@ body {
 /*    background: #121212;*/
 /*}*/
 /* Change Autocomplete styles in Chrome*/
+/*input:-webkit-autofill,*/
+/*input:-webkit-autofill:hover,*/
+/*input:-webkit-autofill:focus,*/
+/*textarea:-webkit-autofill,*/
+/*textarea:-webkit-autofill:hover,*/
+/*textarea:-webkit-autofill:focus,*/
+/*select:-webkit-autofill,*/
+/*select:-webkit-autofill:hover,*/
+/*select:-webkit-autofill:focus {*/
+/*    !*border: 1px solid #253341;*!*/
+/*    border: 1px solid transparent;*/
+/*    -webkit-text-fill-color: white;*/
+/*    -webkit-box-shadow: 0 0 0px 1000px transparent inset;*/
+/*    box-shadow: 0 0 0px 1000px transparent inset;*/
+/*    transition: background-color 5000s ease-in-out 0s;*/
+/*    color: white;*/
+/*}*/
+
+/* Change autocomplete styles in WebKit */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -30,13 +49,10 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-    /*border: 1px solid #253341;*/
-    border: 1px solid transparent;
-    -webkit-text-fill-color: white;
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
-    box-shadow: 0 0 0px 1000px transparent inset;
+    border: 1px solid #434346;
+    -webkit-text-fill-color: #F1F1F1;
+    -webkit-box-shadow: 0 0 0px 1000px #1B1B1C inset;
     transition: background-color 5000s ease-in-out 0s;
-    color: white;
 }
 
 input:focus {
