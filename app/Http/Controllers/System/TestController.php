@@ -2,38 +2,16 @@
 
 namespace App\Http\Controllers\System;
 
-use App\Helpers\Allegro\Allegro;
-use App\Helpers\Empik\Empik;
-use App\Helpers\Gus\Gus;
+use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\ExtraMainPageComponentsController;
-use App\Jobs\Allegro\AllegroCheckMessage;
-use App\Jobs\Empik\EmpikAcceptOrder;
-use App\Jobs\Empik\EmpikChangeShow;
-use App\Jobs\Empik\EmpikUpdateProducts;
-use App\Jobs\Empik\EmpikGetReadyOrder;
-use App\Jobs\Quantity\UpdateAllQuantities;
-use App\Jobs\Shoper\ShoperChangeImages;
-use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
-use App\Jobs\ToSubiekt\OrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Jobs\ToSubiekt\ZestawienieSprzedazySklepy;
-use App\Jobs\Warehouse\CreateWarehouseDocument;
-use App\Mail\WarehouseDocumentCreated;
-use App\Models\ClientOrder;
-use App\Models\Order;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
-use App\Models\Products\ProductImage;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
 use App\Models\Subiekt\Towar;
-use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Jejik\MT940\Reader;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class TestController extends Controller
@@ -47,22 +25,17 @@ class TestController extends Controller
 //        $subiekt = $subiekt->connect();
 
         $path = storage_path("app/test/1.sta");
-        $reader = new Reader();
-        dd(file_get_contents($path));
-        $statements = $reader->getStatements(file_get_contents($path));
+//        $path = storage_path("app/test/pko.mt940");
 
-        foreach ($statements as $statement) {
-            echo $statement->getOpeningBalance()->getAmount() . "\n";
-
-            foreach ($statement->getTransactions() as $transaction) {
-                echo $transaction->getAmount() . "\n";
-            }
-
-            echo $statement->getClosingBalance()->getAmount() . "\n";
+        $parser = new Mt940Parser();
+        try {
+            $statement = $parser->parse($path);
+            dd($statement);
+        } catch (Exception $e) {
+            dd($e->getMessage());
         }
-
-        dd($statements);
     }
+
 
     /**
      * Show the form for creating a new resource.
