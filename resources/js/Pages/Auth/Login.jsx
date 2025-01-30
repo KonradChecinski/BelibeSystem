@@ -1,16 +1,19 @@
 import {useEffect, useState} from 'react';
-import Checkbox from '@/Components/Checkbox';
 import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import {Head, Link, useForm} from '@inertiajs/react';
-
 import {useLaravelReactI18n} from 'laravel-react-i18n'
-import {FormControl, IconButton, Input, InputAdornment, OutlinedInput, TextField} from "@mui/material";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {
+    Box, Button, Checkbox,
+    createTheme,
+    FormControlLabel, FormGroup,
+    IconButton,
+    InputAdornment,
+    TextField,
+    ThemeProvider, Typography
+} from "@mui/material";
+import {Visibility, VisibilityOff} from '@mui/icons-material';
+import {darkTheme} from "@/Theme/Theme";
+import {plPL} from "@mui/material/locale";
 
 export default function Login({
                                   status,
@@ -55,99 +58,167 @@ export default function Login({
         event.preventDefault();
     };
 
+
+    const theme = createTheme({
+        palette: {
+            mode: "dark",
+            ...darkTheme
+        },
+        typography: {
+            fontSize: 11
+        },
+        shape: {
+            borderRadius: 16
+        },
+
+    }, plPL)
+
     return (
         <BeforeLoginLayout background={backgroundImage}>
             <Head title={t("Log in")}/>
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+            <ThemeProvider theme={theme}>
+                {status && (
+                    <Typography variant="body1" gutterBottom
+                                sx={{
+                                    color: "success.main",
+                                    fontWeight: 700,
+                                    fontSize: "0.85rem"
+                                }}>
+                        {status}
+                    </Typography>
+                )}
 
-            <form onSubmit={submit} className="guest">
-                <div>
-                    <FormControl className="w-full autofill:bg-none px-2" variant="standard">
-                        <InputLabel htmlFor="email" className="ml-2 text-white">{t("Email")}</InputLabel>
-                        <Input
+
+                <Box component={"form"} onSubmit={submit} sx={{
+                    width: 1,
+                }}>
+                    <Box>
+                        <TextField
                             id="email"
                             name="email"
                             type="email"
-                            error={errors.email}
-                            inputProps={{className: "text-white"}}
+                            label={t("Email")}
+                            error={Boolean(errors.email)}
                             autoComplete="username"
                             value={data.email}
-                            className="mt-1 block w-full"
-                            autoFocus
                             onChange={handleOnChange}
-                            sx={{color: 'white', px: 1}}
+                            autoFocus={true}
+                            color="primary"
+
+                            sx={{
+                                mt: 2,
+                                width: 1,
+                            }}
                         />
-                    </FormControl>
 
-                    <InputError message={errors.email} className="mt-2 ml-2"/>
-                </div>
+                        <Typography variant="body1" color={"error"} sx={{ml: 1, mt: 1}}>
+                            {errors.email}
+                        </Typography>
+                    </Box>
 
-                <div className="mt-8">
-                    <FormControl className="w-full autofill:bg-none px-2" variant="standard">
-                        <InputLabel htmlFor="password" className="ml-2 text-white">{t("Password")}</InputLabel>
-                        <Input
+
+                    <Box>
+                        <TextField
                             id="password"
                             name="password"
                             type={showPassword ? 'text' : 'password'}
-                            error={errors.password}
-                            inputProps={{className: "text-white"}}
+                            label={t("Password")}
+                            error={Boolean(errors.password)}
                             autoComplete="current-password"
                             value={data.password}
                             onChange={handleOnChange}
-                            sx={{color: 'white', px: 1}}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        className="text-white"
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                    >
-                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
+                            color="primary"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+
+                            sx={{
+                                mt: 2,
+                                width: 1,
+                            }}
+
                         />
-                    </FormControl>
 
-                    <InputError message={errors.password} className="mt-2 ml-2"/>
-                </div>
+                        <Typography variant="body1" color={"error"} sx={{ml: 1, mt: 1}}>
+                            {errors.password}
+                        </Typography>
+                    </Box>
 
-                <div className="flex items-center justify-between mt-8">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} onChange={handleOnChange}/>
-                        <span className="ml-2 text-sm text-white dark:text-gray-400">{t("Remember me")}</span>
-                    </label>
+                    <div className="flex items-center justify-between mt-8">
 
-                    {canResetPassword && (
-                        <Link
-                            href={route(routePasswordRequest)}
-                            className="underline text-sm text-white dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                        >
-                            {t("Forgot your password?")}
-                        </Link>
-                    )}
-                </div>
+                        <Box>
 
-                <div className="flex items-center justify-end mt-8">
-                    <PrimaryButton className="w-full flex justify-center " disabled={processing}>
-                        {t("Log in")}
-                    </PrimaryButton>
-                </div>
+                            <FormGroup>
+                                <FormControlLabel
+                                    name="remember"
+                                    control={
+                                        <Checkbox
+                                            name="remember"
+                                            checked={data.remember}
+                                            onChange={handleOnChange}
+                                            color="primary"
+                                            size={"medium"}
+                                        />
 
-                <div className="flex items-center justify-center mt-4">
-                    {canRegister && (
-                        <Link
-                            href={route(routeRegister)}
-                            // href=""
-                            className="underline text-sm text-white dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                        >
-                            {t("Register")}
-                        </Link>
-                    )}
-                </div>
-            </form>
+                                    }
+                                    label={t("Remember me")}
+                                    sx={{
+                                        "& .MuiFormControlLabel-label": {
+                                            fontSize: "0.85rem"
+                                        }
+                                    }}
+                                />
+                            </FormGroup>
+                        </Box>
+
+                        {canResetPassword && (
+                            <Button
+                                component={Link}
+                                variant="text"
+                                href={route(routePasswordRequest)}
+                                sx={{fontSize: "0.85rem", textTransform: "none"}}
+                            >
+                                {t("Forgot your password?")}
+                            </Button>
+                        )}
+
+                    </div>
+
+                    <Box sx={{display: "flex", width: 1}}>
+                        <Button variant="contained" sx={{mt: 2, width: 1}} disabled={processing} type={"submit"}>
+                            <Typography variant="body1" sx={{fontWeight: "bold"}}>
+                                {t("Log in")}
+                            </Typography>
+                        </Button>
+                    </Box>
+
+                    
+                    <Box>
+                        {canRegister && (
+                            <Button
+                                component={Link}
+                                variant="text"
+                                href={route(routeRegister)}
+                                sx={{mt: 2, width: 1}}
+                            >
+                                {t("Register")}
+                            </Button>
+                        )}
+                    </Box>
+
+                </Box>
+            </ThemeProvider>
         </BeforeLoginLayout>
     );
 }

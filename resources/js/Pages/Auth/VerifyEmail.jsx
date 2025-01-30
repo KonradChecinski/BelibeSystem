@@ -1,7 +1,10 @@
 import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
-import PrimaryButton from '@/Components/PrimaryButton';
+// import PrimaryButton from '@/Components/PrimaryButton';
 import {Head, Link, useForm} from '@inertiajs/react';
 import {useLaravelReactI18n} from "laravel-react-i18n";
+import {Box, Button, createTheme, ThemeProvider, Typography} from "@mui/material";
+import {darkTheme} from "@/Theme/Theme";
+import {plPL} from "@mui/material/locale";
 
 export default function VerifyEmail({status, backgroundImage}) {
     const {t} = useLaravelReactI18n()
@@ -14,34 +17,69 @@ export default function VerifyEmail({status, backgroundImage}) {
         post(route('verification.send'));
     };
 
+    const theme = createTheme({
+        palette: {
+            mode: "dark",
+            ...darkTheme
+        },
+        typography: {
+            fontSize: 11
+        },
+        shape: {
+            borderRadius: 16
+        },
+
+    }, plPL)
+
     return (
         <BeforeLoginLayout background={backgroundImage}>
             <Head title="Email Verification"/>
 
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                {t("Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.")}
-            </div>
+            <ThemeProvider theme={theme}>
+                <Typography variant="body1" gutterBottom textAlign={"center"}>
+                    {t("Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.")}
+                </Typography>
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                    {t("A new verification link has been sent to the email address you provided during registration.")}
-                </div>
-            )}
 
-            <form onSubmit={submit} className="guest">
-                <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>{t("Resend Verification Email")}</PrimaryButton>
+                {status === 'verification-link-sent' && (
+                    <Typography variant="body1" gutterBottom
+                                sx={{
+                                    color: "success.main",
+                                    fontWeight: 700,
+                                    fontSize: "0.85rem"
+                                }}>
+                        {t("A new verification link has been sent to the email address you provided during registration.")}
+                    </Typography>
+                )}
 
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                    >
-                        {t("Log Out")}
-                    </Link>
-                </div>
-            </form>
+
+                <Box component={"form"} onSubmit={submit} sx={{
+                    width: 1,
+                    mt: 4
+                }}>
+                    <div className="mt-4 flex items-center justify-between">
+
+                        <Box sx={{display: "flex"}}>
+                            <Button variant="contained" disabled={processing} type={"submit"}>
+                                <Typography variant="body1" sx={{fontWeight: "bold"}}>
+                                    {t("Resend Verification Email")}
+                                </Typography>
+                            </Button>
+                        </Box>
+                        
+
+                        <Button
+                            component={Link}
+                            variant="text"
+                            href={route('logout')}
+                            method="post"
+                            sx={{fontSize: "0.85rem", textTransform: "none"}}
+                        >
+                            {t("Log Out")}
+                        </Button>
+                    </div>
+                </Box>
+            </ThemeProvider>
         </BeforeLoginLayout>
     );
 }

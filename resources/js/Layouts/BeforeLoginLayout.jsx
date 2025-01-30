@@ -41,8 +41,8 @@ export default function BeforeLoginLayout({background, children}) {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            width: lgBreakpointUp ? "25%" : smBreakpointUp ? "40%" : "96%",
-                            // minWidth: "fit-content",
+                            minWidth: lgBreakpointUp ? "25%" : smBreakpointUp ? "40%" : "96%",
+                            maxWidth: lgBreakpointUp ? "50%" : smBreakpointUp ? "60%" : "96%",
                             backdropFilter: isLightMode ? "blur(8px) brightness(1.25) contrast(0.75)" : "blur(8px) brightness(1) contrast(1)",
                             justifyContent: smBreakpointUp ? "center" : "flex-start",
                             alignItems: "center",

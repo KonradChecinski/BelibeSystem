@@ -6,9 +6,20 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import {Head, useForm} from '@inertiajs/react';
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {FormControl, IconButton, Input, InputAdornment} from "@mui/material";
+import {
+    Box, Button,
+    createTheme,
+    FormControl,
+    IconButton,
+    Input,
+    InputAdornment,
+    TextField,
+    ThemeProvider, Typography
+} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import {darkTheme} from "@/Theme/Theme";
+import {plPL} from "@mui/material/locale";
 
 export default function ResetPassword({token, email, backgroundImage}) {
     const {t} = useLaravelReactI18n()
@@ -52,101 +63,139 @@ export default function ResetPassword({token, email, backgroundImage}) {
         event.preventDefault();
     };
 
+    const theme = createTheme({
+        palette: {
+            mode: "dark",
+            ...darkTheme
+        },
+        typography: {
+            fontSize: 11
+        },
+        shape: {
+            borderRadius: 16
+        },
+
+    }, plPL)
+
     return (
         <BeforeLoginLayout background={backgroundImage}>
             <Head title={t("Reset Password")}/>
 
-            <form onSubmit={submit} className="guest">
-                <div>
-                    <FormControl className="w-full autofill:bg-none px-2" variant="standard">
-                        <InputLabel htmlFor="email" className="ml-2 font-bold">{t("Email")}</InputLabel>
-                        <Input
+            <ThemeProvider theme={theme}>
+                <Box component={"form"} onSubmit={submit} sx={{
+                    width: 1,
+                }}>
+
+                    <Box>
+                        <TextField
                             id="email"
                             name="email"
                             type="email"
-                            error={errors.email ? 'error' : ''}
-                            inputProps={{className: "text-white-50"}}
+                            label={t("Email")}
+                            error={Boolean(errors.email)}
                             autoComplete="username"
                             value={data.email}
-                            className="mt-1 block w-full"
-                            isFocused={true}
                             onChange={onHandleChange}
-                            sx={{color: 'white', px: 1}}
+                            autoFocus={true}
+                            color="primary"
+
+                            sx={{
+                                mt: 2,
+                                width: 1,
+                            }}
                         />
-                    </FormControl>
 
-                    <InputError message={errors.email} className="mt-2 ml-2"/>
-                </div>
+                        <Typography variant="body1" color={"error"} sx={{ml: 1, mt: 1}}>
+                            {errors.email}
+                        </Typography>
+                    </Box>
 
-                <div className="mt-4">
-                    <FormControl className="w-full autofill:bg-none px-2" variant="standard">
-                        <InputLabel htmlFor="password" className="ml-2">{t("Password")}</InputLabel>
-                        <Input
+
+                    <Box>
+                        <TextField
                             id="password"
                             name="password"
                             type={showPassword ? 'text' : 'password'}
-                            error={errors.password ? 'error' : ''}
-                            inputProps={{className: "text-white-50"}}
+                            label={t("Password")}
+                            error={Boolean(errors.password)}
                             autoComplete="new-password"
                             value={data.password}
                             onChange={onHandleChange}
-                            sx={{color: 'white', px: 1}}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        className="text-white"
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                    >
-                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
+                            color="primary"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+
+                            sx={{
+                                mt: 2,
+                                width: 1,
+                            }}
+
                         />
-                    </FormControl>
 
-                    <InputError message={errors.password} className="mt-2 ml-2"/>
-                </div>
+                        <Typography variant="body1" color={"error"} sx={{ml: 1, mt: 1}}>
+                            {errors.password}
+                        </Typography>
+                    </Box>
 
-                <div className="mt-4">
 
-                    <FormControl className="w-full autofill:bg-none px-2" variant="standard">
-                        <InputLabel htmlFor="password" className="ml-2">{t("Confirm Password")}</InputLabel>
-                        <Input
+                    <Box>
+                        <TextField
                             id="password_confirmation"
                             name="password_confirmation"
                             type={showPasswordConfirmation ? 'text' : 'password'}
-                            error={errors.password_confirmation ? 'error' : ''}
-                            inputProps={{className: "text-white-50"}}
+                            label={t("Confirm Password")}
+                            error={Boolean(errors.password_confirmation)}
                             autoComplete="new-password"
                             value={data.password_confirmation}
                             onChange={onHandleChange}
-                            sx={{color: 'white', px: 1}}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        className="text-white"
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPasswordConfirmation}
-                                        onMouseDown={handleMouseDownPasswordConfirmation}
-                                    >
-                                        {showPasswordConfirmation ? <VisibilityOff/> : <Visibility/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
+                            color="primary"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPasswordConfirmation}
+                                            onMouseDown={handleMouseDownPasswordConfirmation}
+                                        >
+                                            {showPasswordConfirmation ? <VisibilityOff/> : <Visibility/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+
+                            sx={{
+                                mt: 2,
+                                width: 1,
+                            }}
+
                         />
-                    </FormControl>
 
-                    <InputError message={errors.password_confirmation} className="mt-2 ml-2"/>
-                </div>
+                        <Typography variant="body1" color={"error"} sx={{ml: 1, mt: 1}}>
+                            {errors.password_confirmation}
+                        </Typography>
+                    </Box>
 
-                <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        {t("Reset Password")}
-                    </PrimaryButton>
-                </div>
-            </form>
+
+                    <Box sx={{display: "flex", width: 1}}>
+                        <Button variant="contained" sx={{mt: 2, width: 1}} disabled={processing} type={"submit"}>
+                            <Typography variant="body1" sx={{fontWeight: "bold"}}>
+                                {t("Reset Password")}
+                            </Typography>
+                        </Button>
+                    </Box>
+                </Box>
+            </ThemeProvider>
         </BeforeLoginLayout>
     );
 }

@@ -1,16 +1,10 @@
 import BeforeLoginLayout from '@/Layouts/BeforeLoginLayout';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
 import {Head, useForm} from '@inertiajs/react';
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
     Box,
     Button,
     createTheme,
-    FormControl,
-    IconButton,
-    Input,
-    InputAdornment,
     TextField, ThemeProvider,
     Typography
 } from "@mui/material";
@@ -58,13 +52,19 @@ export default function ForgotPassword({status, routePasswordEmail, backgroundIm
             </Typography>
 
             {status && (
-                <Typography variant="body1" gutterBottom textAlign={"center"}>
+                <Typography variant="body1" gutterBottom
+                            sx={{
+                                color: "success.main",
+                                fontWeight: 700,
+                                fontSize: "0.85rem"
+                            }}>
                     {status}
                 </Typography>
-                // <div className="mb-4 font-medium text-sm text-green-600 dark:text-green-400"></div>
             )}
 
-            <form onSubmit={submit}>
+            <Box component={"form"} onSubmit={submit} sx={{
+                width: 1,
+            }}>
 
                 <ThemeProvider theme={theme}>
                     <TextField
@@ -83,7 +83,6 @@ export default function ForgotPassword({status, routePasswordEmail, backgroundIm
                         }}
 
                         sx={{
-                            mx: 1,
                             mt: 2,
                             width: 1,
                         }}
@@ -100,32 +99,8 @@ export default function ForgotPassword({status, routePasswordEmail, backgroundIm
                     </Button>
                 </Box>
 
-                {/*<FormControl className="w-full autofill:bg-none px-2" variant="standard">*/}
-                {/*    <InputLabel htmlFor="email" className="ml-2">{t("Email")}</InputLabel>*/}
-                {/*    <Input*/}
-                {/*        id="email"*/}
-                {/*        name="email"*/}
-                {/*        type="email"*/}
-                {/*        error={errors.email ? 'error' : ''}*/}
-                {/*        inputProps={{className: "text-white-50"}}*/}
-                {/*        autoComplete="new-password"*/}
-                {/*        value={data.email}*/}
-                {/*        onChange={onHandleChange}*/}
-                {/*        isFocused={true}*/}
-                {/*        sx={{color: 'white', px: 1}}*/}
-                {/*    />*/}
-                {/*</FormControl>*/}
 
-                {/*<InputError message={errors.email} className="mt-2 ml-2"/>*/}
-
-                {/*<div className="flex items-center justify-end mt-4">*/}
-                {/*    <PrimaryButton className="ml-4" disabled={processing}>*/}
-                {/*        {t("Email Password Reset Link")}*/}
-                {/*    </PrimaryButton>*/}
-                {/*</div>*/}
-
-
-            </form>
+            </Box>
         </BeforeLoginLayout>
     );
 }

@@ -18,45 +18,50 @@ export default function B2bRegister(props) {
             </Typography>
             <Stack
                 my={4}
+                mx={1}
                 direction="row"
                 spacing={2}
                 justifyContent={"space-evenly"}
             >
-                {props.accountManagers.map(accountManager => (
+                {props.accountManagers.map((accountManager, id) => (
+                        <>
+                            <Box sx={{display: "flex", flexDirection: "column", gap: 2, alignItems: "", mt: 2}}>
+                                <Typography variant="h5" component="h4" textAlign={"center"}>
+                                    {accountManager.firstname} {accountManager.lastname}
+                                </Typography>
+                                <a href={"mailto:" + accountManager.email}>
+                                    <Box sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        alignItems: "center",
+                                        "&:hover": {transform: "scale(1.1)", color: "#eeeeee"}
+                                    }}>
+                                        <Email fontSize="large"/>
+                                        <Typography variant="body1" component="h4">
+                                            {accountManager.email}
+                                        </Typography>
+                                    </Box>
+                                </a>
+                                <a href={"tel:" + parsePhoneNumberFromString(new AsYouType('PL').input(accountManager.phone)).format("E.164")}>
+                                    <Box sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        alignItems: "center",
+                                        "&:hover": {transform: "scale(1.1)", color: "#eeeeee"}
+                                    }}>
+                                        <Phone fontSize="large"/>
 
-                        <Box sx={{display: "flex", flexDirection: "column", gap: 2, alignItems: "", mt: 2}}>
-                            <Typography variant="h5" component="h4" textAlign={"center"}>
-                                {accountManager.firstname} {accountManager.lastname}
-                            </Typography>
-                            <a href={"mailto:" + accountManager.email}>
-                                <Box sx={{
-                                    display: "flex",
-                                    gap: 2,
-                                    alignItems: "center",
-                                    "&:hover": {transform: "scale(1.1)", color: "#eeeeee"}
-                                }}>
-                                    <Email fontSize="large"/>
-                                    <Typography variant="body1" component="h4">
-                                        {accountManager.email}
-                                    </Typography>
-                                </Box>
-                            </a>
-                            <a href={"tel:" + parsePhoneNumberFromString(new AsYouType('PL').input(accountManager.phone)).format("E.164")}>
-                                <Box sx={{
-                                    display: "flex",
-                                    gap: 2,
-                                    alignItems: "center",
-                                    "&:hover": {transform: "scale(1.1)", color: "#eeeeee"}
-                                }}>
-                                    <Phone fontSize="large"/>
+                                        <Typography variant="body1" component="h4">
+                                            {new AsYouType('PL').input(accountManager.phone)}
+                                        </Typography>
 
-                                    <Typography variant="body1" component="h4">
-                                        {new AsYouType('PL').input(accountManager.phone)}
-                                    </Typography>
-
-                                </Box>
-                            </a>
-                        </Box>
+                                    </Box>
+                                </a>
+                            </Box>
+                            {props.accountManagers.length - 1 !== id && (
+                                <Divider orientation={"vertical"} flexItem/>
+                            )}
+                        </>
                     )
                 )}
             </Stack>
