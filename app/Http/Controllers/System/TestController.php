@@ -33,6 +33,7 @@ use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Jejik\MT940\Reader;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class TestController extends Controller
@@ -42,7 +43,25 @@ class TestController extends Controller
      */
     public function index()
     {
-        
+//        $subiekt = app(Subiekt::class)->getInstance();
+//        $subiekt = $subiekt->connect();
+
+        $path = storage_path("app/test/1.sta");
+        $reader = new Reader();
+        dd(file_get_contents($path));
+        $statements = $reader->getStatements(file_get_contents($path));
+
+        foreach ($statements as $statement) {
+            echo $statement->getOpeningBalance()->getAmount() . "\n";
+
+            foreach ($statement->getTransactions() as $transaction) {
+                echo $transaction->getAmount() . "\n";
+            }
+
+            echo $statement->getClosingBalance()->getAmount() . "\n";
+        }
+
+        dd($statements);
     }
 
     /**
