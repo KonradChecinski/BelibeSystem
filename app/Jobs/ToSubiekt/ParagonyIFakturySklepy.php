@@ -55,7 +55,12 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
                 "warehouseId" => 37,
                 "categoryId" => 158,
                 "paymentId" => 18
-            ]
+            ],
+            [//Ruda slaska
+                "warehouseId" => 47,
+                "categoryId" => 204,
+                "paymentId" => 24
+            ],
         ];
 //        dd($this->date->toDateString());
 //        $date = Carbon::today()->subDays(2);

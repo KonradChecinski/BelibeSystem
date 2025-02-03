@@ -53,6 +53,12 @@ class ZestawienieSprzedazySklepy implements ShouldQueue, ShouldBeUnique
                 "client" => 1543,
                 "email" => "sklep.blonie@belibe.pl",
 //                "email" => "konrad.checinski@belibe.pl",
+            ],
+            (object)[//Ruda slaska
+                "warehouseId" => 47,
+                "client" => 2262,
+                "email" => "sklep.rudaslaska@belibe.pl",
+//                "email" => "konrad.checinski@belibe.pl",
             ]
         ];
 
