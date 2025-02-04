@@ -81,7 +81,7 @@ class AddImagesToSubiekt implements ShouldQueue, ShouldBeUnique
             foreach ($product->color->images->sortBy("order")->values() as $id => $image) {
                 if ($id > 1) continue;
 
-                Storage::disk("local")->put("temp/temp", Storage::get('images/basic/' . str_replace('\\', '/', $image->path)));
+                Storage::disk("local")->put("temp/temp", Storage::get('images/basic/' . str_replace('\\', '/', $image->path_basic)));
                 $imageSubiekt = $subiektTowar->Zdjecia->Dodaj(Storage::disk("local")->path("temp/temp"));
                 $imageSubiekt->Glowne = (bool)$id == 0;
             }
