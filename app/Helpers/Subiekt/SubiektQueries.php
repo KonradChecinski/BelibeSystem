@@ -3,6 +3,7 @@
 namespace App\Helpers\Subiekt;
 
 use App\Models\Subiekt\Towar;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -68,5 +69,104 @@ class SubiektQueries
             ]);
 
         return $twSale;
+    }
+
+
+    public static function whatRemainInKFS(int $warehouseId, int $product_id, int $client_id): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array
+    {
+        $subQuery1 = DB::connection("subiekt")
+            ->table("vwZstSprzWgKhnt", "subq")
+            ->leftJoin("tw__Towar", "ob_TowId", "tw_Id")
+            ->leftJoin("adr_Historia", "dok_PlatnikAdreshId", "adrh_Id")
+            ->leftJoin("adr__Ewid", "adrh_IdAdresu", "adr_Id")
+            ->select([
+                DB::raw("ISNULL(SUM(ob_IloscMag * ob_Znak),0) as zw_Ilosc"),
+            ])
+            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                $query
+                    ->where("adr_TypAdresu", 1)
+                    ->orWhereNull("dok_PlatnikAdreshId");
+            })
+            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                $query
+                    ->whereIn("TypDlugi", [
+                        393216,
+                        393217,
+                        393218,
+                        4390912,
+                        4390913,
+                        917504,
+                        917505
+                    ])
+                    ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                        $query
+                            ->where("adr_TypAdresu", 1)
+                            ->where("adr_IdObiektu", $client_id);
+                    })
+                    ->where("tw_Id", $product_id)
+                    ->where("dok_MagId", $warehouseId)
+                    ->where("dok_DoDokId", DB::raw("q.dok_Id"));
+            })
+            ->groupBy([
+                "dok_DoDokId",
+                "tw_Id",
+                "tw_Symbol"
+            ]);
+
+
+        $subQuery2 = DB::connection("subiekt")
+            ->table("vwZstSprzWgKhnt", "q")
+            ->leftJoin("tw__Towar", "ob_TowId", "tw_Id")
+            ->leftJoin("adr_Historia", "dok_PlatnikAdreshId", "adrh_Id")
+            ->leftJoin("adr__Ewid", "adrh_IdAdresu", "adr_Id")
+            ->select([
+                "dok_Id",
+                "tw_Id",
+                DB::raw("SUM(ob_IloscMag * ob_Znak) as sp_Ilosc"),
+            ])
+            ->selectSub($subQuery1, "zw_Ilosc")
+            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                $query
+                    ->where("adr_TypAdresu", 1)
+                    ->orWhereNull("dok_PlatnikAdreshId");
+            })
+            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                $query
+                    ->whereIn("TypDlugi", [
+                        131072,
+                        131075,
+                        131077,
+                        131074,
+                        4063232,
+                        262144,
+                        1376256,
+                        1376258,
+                        1376257,
+                        1376259
+                    ])
+                    ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                        $query
+                            ->where("adr_TypAdresu", 1)
+                            ->where("adr_IdObiektu", $client_id);
+                    })
+                    ->where("tw_Id", $product_id)
+                    ->where("dok_MagId", $warehouseId);
+            })
+            ->groupBy([
+                "dok_Id",
+                "tw_Id",
+                "tw_Symbol"
+            ]);
+//        dd($subQuery->toSql(), $subQuery2->toSql());
+
+        $query = DB::connection("subiekt")
+            ->query()
+            ->fromSub($subQuery2, "a")
+            ->select([
+                DB::raw("a.*"),
+                DB::raw("(a.sp_ilosc + ISNULL(a.zw_Ilosc,0)) as suma_Ilosc"),
+            ]);
+
+        return $query->get();
     }
 }

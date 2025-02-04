@@ -4,8 +4,11 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
+use App\Jobs\partners\CreateFvFromPartnerSummaryFile;
+use App\Jobs\partners\CreateKFvFromPartnerSummaryFile;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Models\Partner;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Subiekt\Towar;
@@ -22,18 +25,20 @@ class TestController extends Controller
     public function index()
     {
 //        $subiekt = app(Subiekt::class)->getInstance();
-//        $subiekt = $subiekt->connect();
+////        $subiekt = $subiekt->connect();
+//
+//        $path = storage_path("app/test/1.sta");
+////        $path = storage_path("app/test/pko.mt940");
+//
+//        $parser = new Mt940Parser();
+//        try {
+//            $statement = $parser->parse($path);
+//            dd($statement);
+//        } catch (Exception $e) {
+//            dd($e->getMessage());
+//        }
 
-        $path = storage_path("app/test/1.sta");
-//        $path = storage_path("app/test/pko.mt940");
-
-        $parser = new Mt940Parser();
-        try {
-            $statement = $parser->parse($path);
-            dd($statement);
-        } catch (Exception $e) {
-            dd($e->getMessage());
-        }
+        self::bikinarium();
     }
 
 
@@ -233,5 +238,56 @@ class TestController extends Controller
         });
 
         $fz->Zapisz();
+    }
+
+
+    public static function bikinarium()
+    {
+//        $subiekt = app(Subiekt::class)->getInstance();
+//        $subiekt = $subiekt->connect();
+
+        $path = storage_path("app/test/bikinarium.csv");
+        $csv = SimpleExcelReader::create($path)
+            ->useHeaders(["Symbol", "Sprzedaz", "Zwroty", "Bilans", "Cena", "Cena_brutto", "Wartosc_netto", "Wartosc_brutto"])
+            ->useDelimiter(";");
+
+        $rowsJson = json_encode($csv->getRows());
+        $rows = collect(json_decode($rowsJson, true));
+        $rows = $rows->map(function ($row) {
+            $row['Cena'] = (float)str_replace(',', '.', $row['Cena']);
+            $row['Cena_brutto'] = (float)str_replace(',', '.', $row['Cena_brutto']);
+            $row['Wartosc_netto'] = (float)str_replace(',', '.', $row['Wartosc_netto']);
+            $row['Wartosc_brutto'] = (float)str_replace(',', '.', $row['Wartosc_brutto']);
+            return $row;
+        });
+
+
+        $sold = $rows->where("Bilans", ">", 0);
+        $returned = $rows->where("Bilans", "<", 0);
+
+//        CreateFvFromPartnerSummaryFile::dispatch(Partner::find(1), $sold);
+        CreateKFvFromPartnerSummaryFile::dispatchSync(Partner::find(1), $returned);
+        dd($sold->toArray(), $returned->toArray(), $rows->toArray());
+
+//        $fz = $subiekt->SuDokumentyManager->DodajFZ();
+//        $fz->KontrahentId = 128;
+//        $fz->NumerOryginalny = "???";
+//        $fz->LiczonyOdCenBrutto = false;
+//        $fz->PoziomCenyId = 2;
+//        $fz->Pozycje->PrzeliczWedlugPoziomuCen();
+
+
+//        $rows->each(function ($row) use ($fz) {
+////            dd($row);
+//            $towarId = Towar::query()->where("tw_Symbol", $row["symbol"])->first()->tw_Id;
+//            $cena = (float)str_replace(',', '.', str_replace('.', '', $row["cena_magazynowa"]));
+//
+//
+//            $pozycja = $fz->Pozycje->Dodaj($towarId);
+//            $pozycja->CenaNettoPrzedRabatem = $cena;
+//            $pozycja->IloscJm = (int)$row["stan"];
+//        });
+//
+//        $fz->Zapisz();
     }
 }
