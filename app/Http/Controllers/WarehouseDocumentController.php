@@ -28,7 +28,7 @@ class WarehouseDocumentController extends Controller
     public function archivalDocuments()
     {
         return Inertia::render('System/Warehouse/DocumentListArchive', [
-            'warehouseDocuments' => WarehouseDocument::with(["clientOrder.client"])->whereIn('status', [100])->get()
+            'warehouseDocuments' => WarehouseDocument::with(["clientOrder.client"])->whereIn('status', [0, 100])->get()
         ]);
     }
 

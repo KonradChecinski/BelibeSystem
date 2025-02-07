@@ -100,6 +100,10 @@ class ClientOrderController extends Controller
             $clientOrder->status = 0;
             $clientOrder->save();
 
+
+            $clientOrder->warehouseDocument()->update([
+                "status" => 0
+            ]);
         }
     }
 

@@ -150,7 +150,7 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 50, 55, 60, 90].includes(row.original.status)}
                           onClick={handleCancel}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
@@ -158,7 +158,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![55, 60, 90].includes(row.original.status)}
+                <MenuItem disabled={![60, 90].includes(row.original.status)}
                           onClick={handleProcessAgain}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
@@ -174,7 +174,7 @@ export default function OrderMenu({row}) {
 
                 <Divider/>
 
-                <MenuItem disabled={![1, 20, 55, 90, 100, 0].includes(row.original.status)}
+                <MenuItem disabled={![1, 20, 50, 55, 60, 90, 100, 0].includes(row.original.status)}
                           onClick={handleOpenDetails}>
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
