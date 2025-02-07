@@ -205,11 +205,16 @@ class B2bOrderController extends Controller
                     "product_model_colors.shortcut",
                     "product_model_colors.name",
                     "product_model_colors.product_model_id");
-                $query->withWhereHas("images", function ($query) {
-                    $query->where("type", 1);
-                    $query->where("order", 0);
-                    $query->select("product_model_color_id", "slug");
-                });
+//                $query->withWhereHas("images", function ($query) {
+//                    $query->where("type", 1);
+//                    $query->where("order", 0);
+//                    $query->select("product_model_color_id", "slug");
+//                });
+                $query->with(["images" => function ($query) {
+                    $query->where("type", 1)
+                        ->where("order", 0)
+                        ->select("product_model_color_id", "slug");
+                }]);
             },
         ]);
         $clientOrderModel = collect([$clientOrder]);
