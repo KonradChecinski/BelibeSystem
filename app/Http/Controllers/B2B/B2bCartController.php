@@ -24,39 +24,51 @@ class B2bCartController extends Controller
     public function index()
     {
         $client = Helper::getClientToB2b();
-        $cart = $client->cart()->with([
-            "product:id,symbol,quantity,product_size_id,product_unit_id",
-            "product.size:id,name",
-            "product.unit:id,name",
-            "productModel:product_models.id,product_models.name,product_models.symbol",
-            "productModelColor" => function ($query) {
-                $query->select("product_model_colors.id",
-                    "product_model_colors.shortcut",
-                    "product_model_colors.name",
-                    "product_model_colors.product_model_id");
-                $query->with("images", function ($query) {
-                    $query->where("type", 1);
-                    $query->where("order", 0);
-                    $query->select("product_model_color_id", "slug");
-                });
-            },
-        ]);
-        $cartModel = $cart->get();
-//        $priceSummary = $cartModel->map(function ($item) {
-//            return [
-////                "price_net" => $item->price_net,
-////                "price_gross" => round($item->price_net * (1 + $item->vat_rate / 100)),
-////                "quantity" => $item->quantity,
-//                "total_net" => $item->price_net * $item->quantity,
-//                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
-//            ];
-//        })->reduce(function ($carry, $item) {
-//            $carry["total_net"] += $item["total_net"];
-//            $carry["total_gross"] += $item["total_gross"];
-//            return $carry;
-//        }, collect(["total_net" => 0, "total_gross" => 0]))->map(function ($item) {
-//            return round($item, 0);
-//        });
+
+        if (Helper::isOrderToEdit()) {
+            $clientOrder = session()->get('clientOrderToEdit');
+
+            $cart = $clientOrder->orderProducts()->with([
+                "product:id,symbol,quantity,product_size_id,product_unit_id",
+                "product.size:id,name",
+                "product.unit:id,name",
+                "productModel:product_models.id,product_models.name,product_models.symbol",
+                "productModelColor" => function ($query) {
+                    $query->select("product_model_colors.id",
+                        "product_model_colors.shortcut",
+                        "product_model_colors.name",
+                        "product_model_colors.product_model_id");
+                    $query->with("images", function ($query) {
+                        $query->where("type", 1);
+                        $query->where("order", 0);
+                        $query->select("product_model_color_id", "slug");
+                    });
+                },
+            ]);
+            $cartModel = $cart->get();
+//            dd($clientOrder, $clientOrder->products, $cart, $cartModel);
+        } else {
+            $cart = $client->cart()->with([
+                "product:id,symbol,quantity,product_size_id,product_unit_id",
+                "product.size:id,name",
+                "product.unit:id,name",
+                "productModel:product_models.id,product_models.name,product_models.symbol",
+                "productModelColor" => function ($query) {
+                    $query->select("product_model_colors.id",
+                        "product_model_colors.shortcut",
+                        "product_model_colors.name",
+                        "product_model_colors.product_model_id");
+                    $query->with("images", function ($query) {
+                        $query->where("type", 1);
+                        $query->where("order", 0);
+                        $query->select("product_model_color_id", "slug");
+                    });
+                },
+            ]);
+            $cartModel = $cart->get();
+        }
+
+
         $priceSummaryGrouped = $cartModel->map(function ($item) {
             return collect([
                 "quantity" => $item->quantity,
@@ -65,6 +77,7 @@ class B2bCartController extends Controller
                 "vat_rate" => $item->vat_rate,
             ]);
         })->groupBy("vat_rate");
+
 
         $priceSummaryGroupByVat = collect();
         foreach ($priceSummaryGrouped as $vat_rate => $items) {
@@ -87,6 +100,22 @@ class B2bCartController extends Controller
         }, ["total_net" => 0, "total_gross" => 0]);
 
 //        dd($priceSummary);
+//        dd([
+//            "cart" => $cartModel,
+//            "cartModels" => $cartModel->pluck("productModel")->unique("id")->values(),
+//            "cartColors" => $cartModel->pluck("productModelColor")->unique("id")->values(),
+//            "cartPriceSummary" => $priceSummary,
+//            "client" => $client,
+//
+//            "locations" => $client->locations()->where("active", true)->with("country:id,name")->get(),
+//            "payments" => $client->payments,
+//            "deliveries" => B2bDelivery::all(["id", "name", "price_net", "price_gross",
+//                'description',
+//                'free_from',
+//                'active',
+//                'delivery_time_min',
+//                'delivery_time_max',]),
+//        ]);
 
         return Inertia::render('B2B/Cart', [
             "cart" => $cartModel,

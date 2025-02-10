@@ -71,6 +71,33 @@ class Helper
         return null;
     }
 
+    public static function isOrderToEdit()
+    {
+        $guardName = auth()->guard()->name;
+
+        if ($guardName === "user") {
+            $client = session("client");
+            $clientOrder = session("clientOrderToEdit");
+            if (!is_null($client) && !is_null($clientOrder)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function getClientOrderToEditToB2b()
+    {
+        $guardName = auth()->guard()->name;
+        if ($guardName === "user") {
+            $client = session("client");
+            $clientOrder = session("clientOrderToEdit");
+            if (!is_null($client) && !is_null($clientOrder)) {
+                return $clientOrder;
+            }
+        }
+        return null;
+    }
+
     public static function getBackgroundImage(): string
     {
         $backgrounds = [
@@ -97,7 +124,11 @@ class Helper
     public static function getCartSummary($cart = null): array
     {
         if ($cart === null) {
-            $cart = self::getClientToB2b()->cart()->with("productModel");
+            if (!self::isOrderToEdit()) {
+                $cart = self::getClientToB2b()->cart()->with("productModel");
+            } else {
+                $cart = self::getClientOrderToEditToB2b()->orderProducts()->with("productModel");
+            }
         }
 
         return [

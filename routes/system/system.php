@@ -162,6 +162,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
             Route::post("/order/b2b/start/{client}", [ClientOrderController::class, 'store'])->name("system.b2b.order.start");
             Route::post("/order/b2b/end", [ClientOrderController::class, 'destroy'])->name("system.b2b.order.end");
+            Route::post("/order/b2b/edit/{clientOrder}", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
 
             Route::get("/gus/{nip}", [ClientController::class, 'getDataFromGUS'])->name("system.clients.findGus");
         });

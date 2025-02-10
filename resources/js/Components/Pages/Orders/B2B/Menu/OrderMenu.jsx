@@ -37,15 +37,15 @@ export default function OrderMenu({row}) {
     };
 
 
-    //Details Edit
-    const [openDetailsEdit, setOpenDetailsEdit] = useState(false);
-    const handleOpenDetailsEdit = () => {
-        setOpenDetailsEdit(true);
-        handleMenuClose()
-    };
-    const handleCloseDetailsEdit = () => {
-        setOpenDetailsEdit(false);
-    };
+    // //Details Edit
+    // const [openDetailsEdit, setOpenDetailsEdit] = useState(false);
+    // const handleOpenDetailsEdit = () => {
+    //     setOpenDetailsEdit(true);
+    //     handleMenuClose()
+    // };
+    // const handleCloseDetailsEdit = () => {
+    //     setOpenDetailsEdit(false);
+    // };
 
 
     const handleAccept = () => {
@@ -129,6 +129,10 @@ export default function OrderMenu({row}) {
         )
     };
 
+    const handleEdit = () => {
+
+    }
+
     return (
         <>
             <Box>
@@ -179,14 +183,14 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1].includes(row.original.status) || true}
-                          onClick={handleOpenDetailsEdit}>
+                <MenuItem disabled={![1].includes(row.original.status)}
+                          onClick={() => router.post(route("system.b2b.order.edit", {clientOrder: row.original.id}))}>
                     <ListItemIcon><Edit/></ListItemIcon>
                     <ListItemText>Edytuj</ListItemText>
                 </MenuItem>
             </Menu>
             <OrderDetails open={openDetails} handleClose={handleCloseDetails} row={row}/>
-            <OrderDetailsEdit open={openDetailsEdit} handleClose={handleCloseDetailsEdit} row={row}/>
+            {/*<OrderDetailsEdit open={openDetailsEdit} handleClose={handleCloseDetailsEdit} row={row}/>*/}
         </>
     );
 

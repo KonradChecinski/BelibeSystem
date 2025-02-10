@@ -65,6 +65,7 @@ class ClientOrderController extends Controller
     public function update(Request $request, ClientOrder $clientOrder)
     {
         dd($request->all(), $clientOrder);
+
     }
 
     public function updateProduct(Request $request, ClientOrder $clientOrder, Product $product)
@@ -114,6 +115,16 @@ class ClientOrderController extends Controller
         return Redirect::route("b2b.main");
     }
 
+    public function edit(Request $request, ClientOrder $clientOrder)
+    {
+        $client = $clientOrder->client;
+
+        $request->session()->put('client', $client);
+        $request->session()->put('clientOrderToEdit', $clientOrder);
+//        dd(session()->all(), $clientOrder, $client);
+        return Redirect::route("b2b.main");
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -121,6 +132,7 @@ class ClientOrderController extends Controller
     {
         $clientId = Helper::getClientIdToB2b();
         $request->session()->forget('client');
+        $request->session()->forget('clientOrderToEdit');
         return Redirect::route("system.clients.client.edit", ["id" => $clientId]);
     }
 }
