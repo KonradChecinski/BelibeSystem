@@ -16,6 +16,7 @@ export default function OrderDetails({row, open, handleClose}) {
         axios.get(route("system.orders.order.b2b", {clientOrder: row.original.id}))
             .then(response => {
                 setData(response.data)
+                console.log(response.data)
             })
             .catch(error => {
                 console.error(error)

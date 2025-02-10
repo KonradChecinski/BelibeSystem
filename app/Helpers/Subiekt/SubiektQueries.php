@@ -72,7 +72,7 @@ class SubiektQueries
     }
 
 
-    public static function whatRemainInKFS(int $warehouseId, int $product_id, int $client_id): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array
+    public static function whatRemainInInvoiceAfterCorrections(int $warehouse_id, int $product_id, int $client_id): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array
     {
         $subQuery1 = DB::connection("subiekt")
             ->table("vwZstSprzWgKhnt", "subq")
@@ -82,12 +82,12 @@ class SubiektQueries
             ->select([
                 DB::raw("ISNULL(SUM(ob_IloscMag * ob_Znak),0) as zw_Ilosc"),
             ])
-            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+            ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                 $query
                     ->where("adr_TypAdresu", 1)
                     ->orWhereNull("dok_PlatnikAdreshId");
             })
-            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+            ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                 $query
                     ->whereIn("TypDlugi", [
                         393216,
@@ -98,13 +98,13 @@ class SubiektQueries
                         917504,
                         917505
                     ])
-                    ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                    ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                         $query
                             ->where("adr_TypAdresu", 1)
                             ->where("adr_IdObiektu", $client_id);
                     })
                     ->where("tw_Id", $product_id)
-                    ->where("dok_MagId", $warehouseId)
+                    ->where("dok_MagId", $warehouse_id)
                     ->where("dok_DoDokId", DB::raw("q.dok_Id"));
             })
             ->groupBy([
@@ -117,21 +117,27 @@ class SubiektQueries
         $subQuery2 = DB::connection("subiekt")
             ->table("vwZstSprzWgKhnt", "q")
             ->leftJoin("tw__Towar", "ob_TowId", "tw_Id")
+            ->leftJoin('dok_Pozycja as poz', function ($join) {
+                $join->on('poz.ob_DokHanId', '=', 'q.dok_Id')
+                    ->on('poz.ob_TowId', '=', 'q.ob_TowId');
+            })
             ->leftJoin("adr_Historia", "dok_PlatnikAdreshId", "adrh_Id")
             ->leftJoin("adr__Ewid", "adrh_IdAdresu", "adr_Id")
             ->select([
                 "dok_Id",
                 "tw_Id",
-                DB::raw("SUM(ob_IloscMag * ob_Znak) as sp_Ilosc"),
+                "poz.ob_DokMagLp",
+                DB::raw("SUM(q.ob_IloscMag * q.ob_Znak) as sp_Ilosc"),
             ])
             ->selectSub($subQuery1, "zw_Ilosc")
-            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+            ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                 $query
                     ->where("adr_TypAdresu", 1)
                     ->orWhereNull("dok_PlatnikAdreshId");
             })
-            ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+            ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                 $query
+                    ->whereDate("dok_DataWyst", ">", Carbon::now()->subYear())
                     ->whereIn("TypDlugi", [
                         131072,
                         131075,
@@ -144,20 +150,21 @@ class SubiektQueries
                         1376257,
                         1376259
                     ])
-                    ->where(function (Builder $query) use ($warehouseId, $product_id, $client_id) {
+                    ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
                         $query
                             ->where("adr_TypAdresu", 1)
                             ->where("adr_IdObiektu", $client_id);
                     })
                     ->where("tw_Id", $product_id)
-                    ->where("dok_MagId", $warehouseId);
+                    ->where("dok_MagId", $warehouse_id);
             })
             ->groupBy([
                 "dok_Id",
                 "tw_Id",
+                "poz.ob_DokMagLp",
                 "tw_Symbol"
             ]);
-//        dd($subQuery->toSql(), $subQuery2->toSql());
+//        dd($subQuery2->get());
 
         $query = DB::connection("subiekt")
             ->query()

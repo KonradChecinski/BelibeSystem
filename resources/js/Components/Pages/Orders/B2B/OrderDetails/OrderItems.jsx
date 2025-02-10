@@ -30,7 +30,7 @@ export default function OrderItems({data}) {
                     overflowX: "auto",
                     width: 1,
                     minHeight: 200,
-                    maxHeight: 800
+                    maxHeight: 460
                 }}>
 
 
@@ -113,7 +113,7 @@ export default function OrderItems({data}) {
 
                                                             }}>
                                                                 <Box component={"img"}
-                                                                     src={route("images.webp", {slug: color.images[0].slug})}
+                                                                     src={route("images.webp", {slug: color.images.length > 0 ? color.images[0].slug : "brak.jpg"})}
                                                                      width={50}
                                                                      sx={{
                                                                          // m: "auto",

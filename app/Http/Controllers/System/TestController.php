@@ -4,10 +4,12 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
-use App\Jobs\partners\CreateFvFromPartnerSummaryFile;
-use App\Jobs\partners\CreateKFvFromPartnerSummaryFile;
+use App\Jobs\partners\CreateInvoiceFromPartnerSummaryFile;
+use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSummaryFile;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Models\B2bPayment;
+use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
@@ -243,6 +245,12 @@ class TestController extends Controller
 
     public static function bikinarium()
     {
+        $partner = Partner::find(1);
+        $client = Client::find(329);
+        $payment = B2bPayment::find(3);
+        $mag_id = 46;
+
+
 //        $subiekt = app(Subiekt::class)->getInstance();
 //        $subiekt = $subiekt->connect();
 
@@ -265,29 +273,9 @@ class TestController extends Controller
         $sold = $rows->where("Bilans", ">", 0);
         $returned = $rows->where("Bilans", "<", 0);
 
-//        CreateFvFromPartnerSummaryFile::dispatch(Partner::find(1), $sold);
-        CreateKFvFromPartnerSummaryFile::dispatchSync(Partner::find(1), $returned);
-        dd($sold->toArray(), $returned->toArray(), $rows->toArray());
-
-//        $fz = $subiekt->SuDokumentyManager->DodajFZ();
-//        $fz->KontrahentId = 128;
-//        $fz->NumerOryginalny = "???";
-//        $fz->LiczonyOdCenBrutto = false;
-//        $fz->PoziomCenyId = 2;
-//        $fz->Pozycje->PrzeliczWedlugPoziomuCen();
-
-
-//        $rows->each(function ($row) use ($fz) {
-////            dd($row);
-//            $towarId = Towar::query()->where("tw_Symbol", $row["symbol"])->first()->tw_Id;
-//            $cena = (float)str_replace(',', '.', str_replace('.', '', $row["cena_magazynowa"]));
-//
-//
-//            $pozycja = $fz->Pozycje->Dodaj($towarId);
-//            $pozycja->CenaNettoPrzedRabatem = $cena;
-//            $pozycja->IloscJm = (int)$row["stan"];
-//        });
-//
-//        $fz->Zapisz();
+        CreateInvoiceFromPartnerSummaryFile::dispatch($partner, $client, $sold, $payment, $mag_id);
+        CreateInvoiceCorrectionsFromPartnerSummaryFile::dispatch($partner, $client, $returned, $payment, $mag_id);
+//        CreateInvoiceCorrectionsFromPartnerSummaryFile::dispatchSync($partner, $client, $returned, $payment, $mag_id);
+//        dd($sold->toArray(), $returned->toArray(), $rows->toArray());
     }
 }
