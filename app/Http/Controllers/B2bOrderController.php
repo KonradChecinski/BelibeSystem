@@ -70,6 +70,12 @@ class B2bOrderController extends Controller
      */
     public function store(StoreClientOrderRequest $request)
     {
+        $isToEdit = Helper::isOrderToEdit();
+        if ($isToEdit) {
+            $clientOrder = Helper::getClientOrderToEditToB2b();
+            $clientOrderId = Helper::getClientOrderIdToEditToB2b();
+        }
+
 
         $client = Helper::getClientToB2b();
 
@@ -80,8 +86,12 @@ class B2bOrderController extends Controller
             return redirect()->back()->withErrors(["message" => "Client does not have access to this delivery, payment or location"], 403);
         }
 
+        if ($isToEdit) {
+            $cart = Helper::getClientOrderProductToEdit($clientOrderId);
+        } else {
+            $cart = $client->cart();
+        }
 
-        $cart = $client->cart();
         $cartModel = $cart->get();
 
         $quantity = $cartModel->sum("quantity");
@@ -104,13 +114,63 @@ class B2bOrderController extends Controller
         }
 
         foreach ($cartModel as $item) {
-            if ($item->quantity > Product::find($item->product_id)->available) {
+            if ($item->quantity > Product::find($item->product_id)->available_without_order_to_edit) {
 //                return redirect()->back()->withErrors(["message" => "Product " . Product::find($item->product_id)->name . " is out of stock"], 403);
                 return redirect()->back()->withErrors(["message" => trans("send-message.product_out_of_stock", [
                     "productName" => Product::find($item->product_id)->name,
                 ])], 403);
             }
         }
+
+        if ($isToEdit) {
+            $order = $clientOrder;
+            $order->update([
+                "status" => 1,
+                "total_quantity" => $quantity,
+                "total_net" => $priceSummary["total_net"],
+                "total_gross" => $priceSummary["total_gross"],
+
+                "discount" => $discount === true ? $discountValue : 0,
+                "discounted_total_net" => $discountedPriceSummary["total_net"],
+                "discounted_total_gross" => $discountedPriceSummary["total_gross"],
+
+                "delivery_net" => $deliveryNet,
+                "delivery_gross" => $deliveryGross,
+
+                "currency" => $cartModel[0]->currency,
+                "client_comment" => $request->client_comment,
+            ]);
+            if (auth()->guard()->name === 'user') {
+                $order->user_comment = $request->user_comment;
+            }
+
+            $order->client()->associate($client);
+            $order->payment()->associate($request->payment["id"]);
+            $order->delivery()->associate($request->delivery["id"]);
+            $order->location()->associate($request->location["id"]);
+            $order->save();
+
+            $order->orderProducts()->delete();
+
+            foreach ($cartModel as $item) {
+                $orderProduct = new ClientOrderProduct([
+                    "product_id" => $item->product_id,
+                    "quantity" => $item->quantity,
+                    "original_price_net" => $item->original_price_net,
+                    "price_net" => $item->price_net,
+                    "vat_rate" => $item->vat_rate,
+                    "currency" => $item->currency,
+                ]);
+                $order->orderProducts()->save($orderProduct);
+
+                if (!is_null($orderProduct->product)) {
+                    ChangeQuantity::dispatch($orderProduct->product);
+                }
+            }
+
+            return redirect()->route("b2b.order.success")->with(["order" => $order]);
+        }
+
         $lastOrder = ClientOrder::query()->latest()->first();
         $lastNumber = $lastOrder->number ?? 1000;
         $lastNumber = (int)substr($lastNumber, -7);
@@ -134,6 +194,7 @@ class B2bOrderController extends Controller
             "currency" => $cartModel[0]->currency,
             "client_comment" => $request->client_comment,
         ]);
+
 
         if (auth()->guard()->name === 'user') {
             $order->user_comment = $request->user_comment;
@@ -182,6 +243,7 @@ class B2bOrderController extends Controller
 
 
         return redirect()->route("b2b.order.success")->with(["order" => $order]);
+
     }
 
     /**
@@ -243,8 +305,12 @@ class B2bOrderController extends Controller
 
     public function success(Request $request)
     {
+        if (Helper::isOrderToEdit()) {
+            $order = Helper::getClientOrderToEditToB2b();
+        } else {
+            $order = Helper::getClientToB2b()->orders()->latest()->first();
+        }
 //        $order = session()->get("order");
-        $order = Helper::getClientToB2b()->orders()->latest()->first();
         $order->load([
             "delivery:id,name,description,delivery_time_max,delivery_time_min",
             "location:id,street,city,postal_code,apartment_number,building_number",

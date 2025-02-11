@@ -11,6 +11,7 @@ use App\Http\Requests\Cart\StoreB2bCartRequest;
 use App\Http\Requests\Cart\UpdateB2bCartRequest;
 use App\Models\B2bCart;
 use App\Models\B2bDelivery;
+use App\Models\ClientOrderProductEdit;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
@@ -26,9 +27,10 @@ class B2bCartController extends Controller
         $client = Helper::getClientToB2b();
 
         if (Helper::isOrderToEdit()) {
-            $clientOrder = session()->get('clientOrderToEdit');
+//            $clientOrder = Helper::getClientOrderToEditToB2b();
+            $clientOrderId = Helper::getClientOrderIdToEditToB2b();
 
-            $cart = $clientOrder->orderProducts()->with([
+            $cart = Helper::getClientOrderProductToEdit($clientOrderId)->with([
                 "product:id,symbol,quantity,product_size_id,product_unit_id",
                 "product.size:id,name",
                 "product.unit:id,name",
@@ -173,36 +175,75 @@ class B2bCartController extends Controller
     public function update(UpdateB2bCartRequest $request, Product $product)
     {
         $client = Helper::getClientToB2b();
-        if ($client->cart()->where("product_id", $product->id)->count() == 0) {
-            $discountedPrices = $product->model->priceForClientB2b($client);
-            $prices = $product->model->prices;
-            $currency = $prices->currency;
+
+        if (Helper::isOrderToEdit()) {
+//            $clientOrder = Helper::getClientOrderToEditToB2b();
+            $clientOrderId = Helper::getClientOrderIdToEditToB2b();
+
+            if (Helper::getClientOrderProductToEdit($clientOrderId)->where("product_id", $product->id)->count() === 0) {
+                $discountedPrices = $product->model->priceForClientB2b($client);
+                $prices = $product->model->prices;
+                $currency = $prices->currency;
 
 //            dd($request->all(), $discountedPrices, $discountedPrices['show_discount_on_invoice'], $prices);
-            $cartProduct = new B2bCart([
-                "quantity" => $request->quantity,
-                'original_price_net' => $discountedPrices['show_discount_on_invoice'] ? $prices['wholesale_net_price'] : $discountedPrices['discounted_wholesale_net_price'],
-                'price_net' => $discountedPrices['discounted_wholesale_net_price'],
-                'vat_rate' => $discountedPrices['vat_rate'],
-                'currency' => $currency,
-            ]);
-
-            $cartProduct->product()->associate($product);
-//            dd($cartProduct->toArray());
-            $client->cart()->save($cartProduct);
-        } else {
-            if ($request->quantity == 0) {
-                $client->cart()->where("product_id", $product->id)->delete();
-            } else {
-                $cartProduct = $client->cart()->where("product_id", $product->id)->first();
-                $cartProduct->quantity = $request->quantity;
+                $cartProduct = new ClientOrderProductEdit([
+                    "client_order_id" => $clientOrderId,
+                    "product_id" => $product->id,
+                    "quantity" => $request->quantity,
+                    'original_price_net' => $discountedPrices['show_discount_on_invoice'] ? $prices['wholesale_net_price'] : $discountedPrices['discounted_wholesale_net_price'],
+                    'price_net' => $discountedPrices['discounted_wholesale_net_price'],
+                    'vat_rate' => $discountedPrices['vat_rate'],
+                    'currency' => $currency,
+                ]);
                 $cartProduct->save();
+
+//                $cartProduct->product()->associate($product);
+//            dd($cartProduct->toArray());
+//                $client->cart()->save($cartProduct);
+            } else {
+                if ($request->quantity == 0) {
+                    Helper::getClientOrderProductToEdit($clientOrderId)->where("product_id", $product->id)->delete();
+                } else {
+                    $cartProduct = Helper::getClientOrderProductToEdit($clientOrderId)->where("product_id", $product->id)->first();
+                    $cartProduct->quantity = $request->quantity;
+                    $cartProduct->save();
+                }
+
             }
 
+        } else {
+            if ($client->cart()->where("product_id", $product->id)->count() == 0) {
+                $discountedPrices = $product->model->priceForClientB2b($client);
+                $prices = $product->model->prices;
+                $currency = $prices->currency;
+
+//            dd($request->all(), $discountedPrices, $discountedPrices['show_discount_on_invoice'], $prices);
+                $cartProduct = new B2bCart([
+                    "quantity" => $request->quantity,
+                    'original_price_net' => $discountedPrices['show_discount_on_invoice'] ? $prices['wholesale_net_price'] : $discountedPrices['discounted_wholesale_net_price'],
+                    'price_net' => $discountedPrices['discounted_wholesale_net_price'],
+                    'vat_rate' => $discountedPrices['vat_rate'],
+                    'currency' => $currency,
+                ]);
+
+                $cartProduct->product()->associate($product);
+//            dd($cartProduct->toArray());
+                $client->cart()->save($cartProduct);
+            } else {
+                if ($request->quantity == 0) {
+                    $client->cart()->where("product_id", $product->id)->delete();
+                } else {
+                    $cartProduct = $client->cart()->where("product_id", $product->id)->first();
+                    $cartProduct->quantity = $request->quantity;
+                    $cartProduct->save();
+                }
+
+            }
+            CartUpdated::dispatch($client->id);
+            CartSummaryUpdated::dispatch($client->id);
+            CartProductUpdated::dispatch($client->id, $product->id, $request->quantity);
         }
-        CartUpdated::dispatch($client->id);
-        CartSummaryUpdated::dispatch($client->id);
-        CartProductUpdated::dispatch($client->id, $product->id, $request->quantity);
+
     }
 
     /**

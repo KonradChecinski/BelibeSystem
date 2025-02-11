@@ -11,6 +11,7 @@ use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\Warehouse\CreateWarehouseDocument;
 use App\Models\Client\Client;
 use App\Models\ClientOrder;
+use App\Models\ClientOrderProductEdit;
 use App\Models\Products\Product;
 use App\Notifications\b2b\OrderAcceptedClient;
 use Illuminate\Http\Request;
@@ -129,6 +130,16 @@ class ClientOrderController extends Controller
     {
         $client = $clientOrder->client;
 
+
+        if (ClientOrderProductEdit::query()->where("client_order_id", $clientOrder->id)->count() === 0) {
+            $clientOrderProducts = $clientOrder->orderProducts;
+
+            foreach ($clientOrderProducts as $clientOrderProduct) {
+                ClientOrderProductEdit::create($clientOrderProduct->toArray());
+            }
+        }
+
+
         $request->session()->put('client', $client);
         $request->session()->put('clientOrderToEdit', $clientOrder);
 //        dd(session()->all(), $clientOrder, $client);
@@ -141,6 +152,12 @@ class ClientOrderController extends Controller
     public function destroy(Request $request)
     {
         $clientId = Helper::getClientIdToB2b();
+
+        if (Helper::isOrderToEdit()) {
+            Helper::getClientOrderProductToEdit(Helper::getClientOrderIdToEditToB2b())->delete();
+        }
+
+
         $request->session()->forget('client');
         $request->session()->forget('clientOrderToEdit');
         return Redirect::route("system.clients.client.edit", ["id" => $clientId]);

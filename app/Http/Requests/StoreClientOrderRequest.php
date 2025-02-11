@@ -13,6 +13,9 @@ class StoreClientOrderRequest extends FormRequest
     public function authorize(): bool
     {
         $client = Helper::getClientToB2b();
+        if (Helper::isOrderToEdit()) {
+            return $client->blacklist === 0 && Helper::getClientOrderProductToEdit(Helper::getClientOrderIdToEditToB2b())->count() > 0;
+        }
         return $client->blacklist === 0 && $client->cart()->count() > 0;
     }
 

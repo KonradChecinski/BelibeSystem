@@ -126,7 +126,7 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                 </HoveringCell>
                                 {sortBySizesName(model.sizes).map((size, id) => {
                                     const product = color.products.find(p => p.size.id === size.id);
-                                    let quantity = product?.available;
+                                    let quantity = product?.available_without_order_to_edit;
                                     // if (quantity > 30) quantity = 30;
 
                                     return (
@@ -262,7 +262,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                         <TableBody>
                                             {sortBySizesName(model.sizes).map((size, id) => {
                                                 const product = color.products.find(p => p.size.id === size.id);
-                                                let quantity = product?.available;
+                                                let quantity = product?.available_without_order_to_edit;
                                                 // if (quantity > 30) quantity = 30;
 
                                                 return (
@@ -451,7 +451,7 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
                     {/*({quantity})*/}
-                    {accountManager && (" (" + product.available + ")")}
+                    {accountManager && (" (" + product.available_without_order_to_edit + ")")}
                 </Typography>
             </Box>
 

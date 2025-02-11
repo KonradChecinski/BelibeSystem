@@ -2,6 +2,7 @@
 
 namespace App\Models\Products;
 
+use App\Helpers\Helper;
 use App\Models\B2bCart;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
@@ -49,7 +50,7 @@ class Product extends Model
         'show_in_subiekt',
     ];
 
-    protected $appends = ["available", "available_b2c"];
+    protected $appends = ["available", "available_b2c", "available_without_order_to_edit"];
 
     public function getAvailableAttribute()
     {
@@ -65,6 +66,22 @@ class Product extends Model
     {
         $sum = $this->getAvailableQuantity();
         --$sum;
+
+        if ($sum < 0) {
+            return 0;
+        }
+        return $sum;
+    }
+
+    public function getAvailableWithoutOrderToEditAttribute()
+    {
+        if (Helper::isOrderToEdit()) {
+            $orderId = Helper::getClientOrderToEditToB2b()?->id;
+            $sum = $this->getAvailableQuantityWithoutClientOrder($orderId);
+        } else {
+            $sum = $this->getAvailableQuantity();
+
+        }
 
         if ($sum < 0) {
             return 0;
@@ -149,8 +166,6 @@ class Product extends Model
             });
         })->sum("quantity");
 
-//        if ($this->symbol === "S-0100-0104-4-XL") dd($this->id, $this->symbol, $baseQuantity, $clientOrderProductsQuantity, $warehouseDocumentProductsQuantity);
-
         $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
             $query->where("status", ">", 0)->where("status", "<", 100);
         })->sum("quantity");
@@ -176,7 +191,29 @@ class Product extends Model
             });
         })->sum("quantity");
 
-//        if ($this->symbol === "S-0100-0104-4-XL") dd($this->id, $this->symbol, $baseQuantity, $clientOrderProductsQuantity, $warehouseDocumentProductsQuantity);
+        $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
+            $query->where("status", ">", 0)->where("status", "<", 100);
+        })->sum("quantity");
+
+        $sum = $baseQuantity - $clientOrderProductsQuantity - $otherOrderProductsQuantity - $warehouseDocumentProductsQuantity;
+        return $sum;
+    }
+
+    public function getAvailableQuantityWithoutClientOrder(int $clientOrderId): mixed
+    {
+        $baseQuantity = $this->quantity;
+        $clientOrderProductsQuantity = ClientOrderProduct::query()->where("product_id", $this->id)->whereHas("orders", function (Builder $query) use ($clientOrderId) {
+            $query
+                ->where("status", ">", 0)
+                ->where("status", "<=", 20)
+                ->where("client_order_id", "!=", $clientOrderId);
+        })->sum("quantity");
+
+        $warehouseDocumentProductsQuantity = WarehouseDocumentProduct::query()->where("product_id", $this->id)->whereHas("warehouseDocument", function (Builder $query) {
+            $query->whereHas("clientOrder", function (Builder $query) {
+                $query->where("status", ">", 20)->where("status", "<", 100);
+            });
+        })->sum("quantity");
 
         $otherOrderProductsQuantity = OrderProduct::query()->where("product_id", $this->id)->whereHas("order", function (Builder $query) {
             $query->where("status", ">", 0)->where("status", "<", 100);

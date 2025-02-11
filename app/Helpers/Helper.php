@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\ClientOrderProductEdit;
 use App\Models\DynamicPage;
 use App\Models\Products\ProductCategory;
 use Illuminate\Http\Request;
@@ -98,6 +99,19 @@ class Helper
         return null;
     }
 
+    public static function getClientOrderIdToEditToB2b()
+    {
+        $guardName = auth()->guard()->name;
+        if ($guardName === "user") {
+            $client = session("client");
+            $clientOrder = session("clientOrderToEdit");
+            if (!is_null($client) && !is_null($clientOrder)) {
+                return $clientOrder["id"];
+            }
+        }
+        return null;
+    }
+
     public static function getBackgroundImage(): string
     {
         $backgrounds = [
@@ -120,6 +134,10 @@ class Helper
         return route("storage", ["path" => "backgrounds>" . $backgrounds[array_rand($backgrounds)]]);
     }
 
+    public static function getClientOrderProductToEdit(int $orderId): \Illuminate\Database\Eloquent\Builder
+    {
+        return ClientOrderProductEdit::query()->where("client_order_id", $orderId);
+    }
 
     public static function getCartSummary($cart = null): array
     {
@@ -127,7 +145,11 @@ class Helper
             if (!self::isOrderToEdit()) {
                 $cart = self::getClientToB2b()->cart()->with("productModel");
             } else {
-                $cart = self::getClientOrderToEditToB2b()->orderProducts()->with("productModel");
+                $orderId = self::getClientOrderToEditToB2b()->id;
+
+                $cart = self::getClientOrderProductToEdit($orderId)->with("productModel");
+//                    self::getClientOrderToEditToB2b()->orderProducts()->with("productModel");
+//                dd($cart);
             }
         }
 

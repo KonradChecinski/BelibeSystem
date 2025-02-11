@@ -28,7 +28,7 @@ export default function B2bModel(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
     const ProductOrderTableRef = useRef(null)
-    // console.log(props)
+    console.log(props)
 
 
     const [isFavorited, setIsFavorited] = useState(props.model.isFavorited)

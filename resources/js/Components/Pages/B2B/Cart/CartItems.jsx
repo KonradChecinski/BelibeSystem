@@ -205,7 +205,7 @@ export default function CartItems({props, discount}) {
                                                                     <TableCell align={"center"} sx={{p: 0}}>
                                                                         <ProductInput
                                                                             product={product}
-                                                                            maxQuantity={product.available}
+                                                                            maxQuantity={product.available_without_order_to_edit}
                                                                             accountManager={props.accountManager}
                                                                             initialValue={item.quantity}
                                                                         />
@@ -376,7 +376,7 @@ const ProductInput = ({product, maxQuantity, accountManager, initialValue}) => {
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
                     {/*({quantity})*/}
-                    {accountManager && (" (" + product.available + ")")}
+                    {accountManager && (" (" + product.available_without_order_to_edit + ")")}
                 </Typography>
             </Box>
 
