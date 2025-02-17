@@ -78,8 +78,11 @@ class CreateInvoiceFromPartnerSummaryFile implements ShouldQueue, ShouldBeUnique
             $product = Product::query()->where("symbol", $item->Symbol)->firstOrFail();
 
             $pozycja = $faktura->Pozycje->Dodaj((int)$product->subiekt_id);
-            $pozycja->CenaNettoPrzedRabatem = (float)$item->Cena; // / 100;
-            $pozycja->CenaNettoPoRabacie = (float)$item->Cena; // / 100;
+//            $pozycja->CenaNettoPrzedRabatem = (float)$item->Cena; // / 100;
+//            $pozycja->CenaNettoPoRabacie = (float)$item->Cena; // / 100;
+            $price = $product->model->priceForClientB2b($this->client);
+            $pozycja->CenaNettoPrzedRabatem = (float)$price->discounted_wholesale_net_price / 100;
+            $pozycja->CenaNettoPoRabacie = (float)$price->discounted_wholesale_net_price / 100;
             $pozycja->IloscJm = (int)$item->Bilans;
         }
 
