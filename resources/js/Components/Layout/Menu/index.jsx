@@ -263,6 +263,11 @@ export default function Menu({showContent, auth}) {
                             active={route().current("system.queries.images")}
                             text={t("Images")}
                         />
+                        <SubMenuLink
+                            href={route("system.queries.shopSales")}
+                            active={route().current("system.queries.shopSales")}
+                            text={t("Shop sales")}
+                        />
                     </MainMenuLink> : ""}
 
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PartnerExportController;
 use App\Http\Controllers\PartnerExportProductController;
 use App\Http\Controllers\ProductColorIconController;
+use App\Http\Controllers\QueryShopSalesController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;
 use App\Http\Controllers\System\Client\ClientActivityController;
@@ -227,6 +228,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     Route::group(["prefix" => "/queries"], function () {
         Route::get("/images/", [QueryImagesController::class, 'index'])->name("system.queries.images");
+        Route::get("/shop-sales/", [QueryShopSalesController::class, 'index'])->name("system.queries.shopSales");
 
     });
 

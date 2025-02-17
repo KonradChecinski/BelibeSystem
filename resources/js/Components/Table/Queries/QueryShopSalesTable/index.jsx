@@ -1,5 +1,5 @@
 import {useMemo} from "react";
-import {Box, Checkbox} from "@mui/material";
+import {Box, Card, Checkbox, Paper} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Done, Close} from '@mui/icons-material';
 import {
@@ -9,9 +9,9 @@ import {
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 
 
-export default function QueryImagesTable({images, readOnly, props}) {
+export default function QueryShopSalesTable({sales, readOnly, props}) {
     const theme = useTheme();
-    const data = images;
+    const data = sales;
 
 
     const columns = useMemo(
@@ -126,21 +126,21 @@ export default function QueryImagesTable({images, readOnly, props}) {
             density: 'compact',
             pagination: {pageSize: 50, pageIndex: 0},
             expanded: true,
-            grouping: ['model.symbol', 'color.shortcut', 'color.name'],
-            sorting: [
-                {
-                    id: 'model.symbol',
-                    desc: false,
-                },
-                {
-                    id: 'color.shortcut',
-                    desc: false,
-                },
-                {
-                    id: 'order',
-                    desc: false,
-                },
-            ]
+            // grouping: ['model.symbol', 'color.shortcut', 'color.name'],
+            // sorting: [
+            //     {
+            //         id: 'model.symbol',
+            //         desc: false,
+            //     },
+            //     {
+            //         id: 'color.shortcut',
+            //         desc: false,
+            //     },
+            //     {
+            //         id: 'order',
+            //         desc: false,
+            //     },
+            // ]
         },
         // muiTableProps: {
         //     sx: {
@@ -150,9 +150,9 @@ export default function QueryImagesTable({images, readOnly, props}) {
         //         height: "100%"
         //     },
         // },
-        muiTableContainerProps: {
-            sx: {height: "calc(100% - 56px - 56px)"},
-        },
+        // muiTableContainerProps: {
+        //     sx: {height: "calc(100% - 56px - 56px)"},
+        // },
         muiTablePaperProps: ({table}) => ({
             sx: {
                 pl: 1,
@@ -173,7 +173,14 @@ export default function QueryImagesTable({images, readOnly, props}) {
 
 
     return (
-        <MaterialReactTable table={table}/>
+        <Box>
+            <Card sx={{height: 20}}>
+                csa
+            </Card>
+
+            <MaterialReactTable table={table}/>
+
+        </Box>
 
     );
 }

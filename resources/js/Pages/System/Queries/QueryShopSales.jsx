@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import QueryImagesTable from "@/Components/Table/Queries/QueryImagesTable";
+import QueryShopSalesTable from "@/Components/Table/Queries/QueryShopSalesTable";
 
 export default function QueryImages(props) {
     console.log(props)
@@ -18,7 +18,7 @@ export default function QueryImages(props) {
         >
             <Head title={t("Images")}/>
             <Card sx={{height: "100%", width: 1}}>
-                <QueryImagesTable images={props.images} props={props}/>
+                <QueryShopSalesTable sales={[]} props={props}/>
             </Card>
         </UserLayout>
     );
