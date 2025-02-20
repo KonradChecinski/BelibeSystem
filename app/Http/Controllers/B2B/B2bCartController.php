@@ -213,6 +213,9 @@ class B2bCartController extends Controller
 
         } else {
             if ($client->cart()->where("product_id", $product->id)->count() == 0) {
+                if ($request->quantity == 0) {
+                    return;
+                }
                 $discountedPrices = $product->model->priceForClientB2b($client);
                 $prices = $product->model->prices;
                 $currency = $prices->currency;
