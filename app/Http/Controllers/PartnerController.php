@@ -50,9 +50,15 @@ class PartnerController extends Controller
      */
     public function edit(Partner $partner)
     {
+        $products = $partner->products()
+//            ->select(["id", "symbol", "name", "quantity"]) // Pobieramy tylko te kolumny, które są w bazie
+            ->get()
+            ->each->setAppends([]);
+
+//        dd($products);
         return Inertia::render("System/Partners/Partner", [
             "partner" => $partner,
-            "products" => $partner->products,
+            "products" => $products,
             "exports" => $partner->partnerExports,
         ]);
     }

@@ -2,7 +2,6 @@ import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Box, Card} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import TreeViewComponent from "@/Components/Pages/Settings/Dictionaries/Category/TreeViewComponent/TreeViewComponent";
 import BasicInfoComponent from "@/Components/Pages/Partners/BasicInfoComponent";
 import ExportComponent from "@/Components/Pages/Partners/ExportComponent";
 import ProductsComponent from "@/Components/Pages/Partners/ProductsComponent";

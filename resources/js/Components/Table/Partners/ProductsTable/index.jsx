@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {Box, Button, Fab, IconButton, Tooltip, Typography,} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Done, Close, DownloadDone, Delete, Add} from '@mui/icons-material';
+import {Delete, Add} from '@mui/icons-material';
 import moment from "moment";
 import {
     MaterialReactTable,
@@ -38,8 +38,8 @@ export default function ProductsTable({products, readOnly, props, partner}) {
                 size: 50,
             },
             {
-                accessorKey: 'available',
-                header: 'Dostępność',
+                accessorKey: 'quantity',
+                header: 'Ilość',
                 size: 50,
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -107,6 +107,7 @@ export default function ProductsTable({products, readOnly, props, partner}) {
         enableStickyHeader: true,
         // enableStickyFooter: true,
         localization: MRT_Localization_PL,
+        autoResetPageIndex: false,
         initialState: {
             columnVisibility: {id: false},
             density: 'compact',
