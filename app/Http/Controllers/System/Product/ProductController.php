@@ -101,7 +101,14 @@ class ProductController extends Controller
     {
         if ($request->size['id'] !== $product->size->id) $product->size()->associate($request->size['id']);
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
-        if ($request->color['id'] !== $product->color->id) $product->color()->associate($request->color['id']);
+        if ($request->color['id'] !== $product->color->id) {
+            $deleteColorModel = $product->color->products()->count() == 1 ? true : false;
+            $product->color()->associate($request->color['id']);
+
+            if ($deleteColorModel) {
+                $product->color->delete();
+            }
+        }
 
 
         if (collect($request->barcodes)->where("type", 1)->count() > 1) return response("Nie można wygenerować nowego kodu GS1", 503);
