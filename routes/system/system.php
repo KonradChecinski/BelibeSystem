@@ -211,14 +211,18 @@ Route::middleware(["auth:user", "verified"])->group(function () {
     Route::group(["prefix" => "/partners"], function () {
         Route::get("/", [PartnerController::class, 'index'])->name("system.partners");
         Route::post("/", [PartnerController::class, 'store'])->name("system.partners.create");
-        Route::get("/{partner}", [PartnerController::class, 'edit'])->name("system.partners.partner.edit");
-        Route::patch("/{partner}", [PartnerController::class, 'update'])->name("system.partners.partner.update");
+        Route::get("/{partner}/edit", [PartnerController::class, 'edit'])->name("system.partners.partner.edit");
+        Route::patch("/{partner}/edit", [PartnerController::class, 'update'])->name("system.partners.partner.update");
         Route::delete("/{partner}", [PartnerController::class, 'destroy'])->name("system.partners.partner.delete");
+
+        Route::get("/{partner}/settlements", [PartnerController::class, 'edit'])->name("system.partners.partner.settlements");
+
 
         Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");
         Route::delete("/{partner}/products/{product}", [PartnerExportProductController::class, 'destroy'])->name("system.partners.partner.products.delete");
         Route::get("/products/search", [PartnerExportProductController::class, 'search'])->name("system.partners.products.search");
 
+        Route::get("/{partner}/export", [PartnerExportController::class, 'edit'])->name("system.partners.partner.export");
         Route::post("/{partner}/export/", [PartnerExportController::class, 'store'])->name("system.partners.partner.export.create");
         Route::patch("/{partner}/export/{export}", [PartnerExportController::class, 'update'])->name("system.partners.partner.export.update");
         Route::delete("/{partner}/export/{export}", [PartnerExportController::class, 'destroy'])->name("system.partners.partner.export.delete");

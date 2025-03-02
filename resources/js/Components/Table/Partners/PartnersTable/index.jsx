@@ -1,7 +1,7 @@
 import {DataGrid, GridFooter, GridFooterContainer, GridToolbar, plPL} from "@mui/x-data-grid";
 import {useCallback, useEffect, useState} from "react";
 import {router} from "@inertiajs/react";
-import {Box, Fab, IconButton, Tooltip, Typography} from "@mui/material";
+import {Box, Button, Fab, IconButton, Tooltip, Typography} from "@mui/material";
 import {Add, ContentCopy, Delete, Edit, Visibility} from "@mui/icons-material";
 import ClientsAddDialog from "@/Components/Dialogs/ClientsDialog/ClientsAddDialog";
 import moment from "moment";
@@ -42,7 +42,7 @@ export default function PartnersTable(props) {
         {
             field: "action",
             headerName: "Akcje",
-            width: 120,
+            width: 400,
             type: 'actions',
             sortable: false,
             filterable: false,
@@ -54,6 +54,20 @@ export default function PartnersTable(props) {
                         route("system.partners.partner.edit", {partner: params.row.id})
                     );
                 };
+
+                const onSettlementsClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    router.visit(
+                        route("system.partners.partner.settlements", {partner: params.row.id})
+                    );
+                }
+
+                const onExportClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    router.visit(
+                        route("system.partners.partner.export", {partner: params.row.id})
+                    );
+                }
 
                 const onDeleteClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -71,8 +85,25 @@ export default function PartnersTable(props) {
                 };
 
                 return (
-                    <>
-                        {props.auth.permissions.includes("editPages") ?
+                    <Box sx={{display: "flex", gap: 1, justifyContent: "flex-end", width: 1}}>
+
+                        {props.auth.permissions.includes("editPartners") ?
+                            <Tooltip title="Rozliczenia">
+                                <Button variant="outlined" aria-label="edit" onClick={onSettlementsClick}>
+                                    Rozliczenia
+                                </Button>
+                            </Tooltip>
+                            : ""}
+
+                        {props.auth.permissions.includes("editPartners") ?
+                            <Tooltip title="Eksport stanów">
+                                <Button variant="outlined" aria-label="edit" onClick={onExportClick}>
+                                    Eksport stanów
+                                </Button>
+                            </Tooltip>
+                            : ""}
+
+                        {props.auth.permissions.includes("editPartners") ?
                             <Tooltip title="Edycja">
                                 <IconButton aria-label="edit" onClick={onEditClick}>
                                     <Edit/>
@@ -80,7 +111,7 @@ export default function PartnersTable(props) {
                             </Tooltip>
                             : ""}
 
-                        {props.auth.permissions.includes("editPages") ?
+                        {props.auth.permissions.includes("deletePartners") ?
 
                             <Tooltip title="Usuń">
                                 <IconButton aria-label="delete" onClick={onDeleteClick}>
@@ -88,7 +119,7 @@ export default function PartnersTable(props) {
                                 </IconButton>
                             </Tooltip>
                             : ""}
-                    </>
+                    </Box>
                 );
             }
         }

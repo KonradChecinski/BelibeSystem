@@ -9,6 +9,7 @@ use App\Http\Requests\StorePartnerExportRequest;
 use App\Http\Requests\UpdatePartnerExportRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PartnerExportController extends Controller
 {
@@ -73,9 +74,19 @@ class PartnerExportController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PartnerExport $partnerExport)
+    public function edit(Partner $partner)
     {
-        //
+        $products = $partner->products()
+//            ->select(["id", "symbol", "name", "quantity"]) // Pobieramy tylko te kolumny, które są w bazie
+            ->get()
+            ->each->setAppends([]);
+
+//        dd($products);
+        return Inertia::render("System/Partners/PartnerExport", [
+            "partner" => $partner,
+            "products" => $products,
+            "exports" => $partner->partnerExports,
+        ]);
     }
 
     /**
