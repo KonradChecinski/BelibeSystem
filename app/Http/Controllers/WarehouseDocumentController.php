@@ -146,10 +146,10 @@ class WarehouseDocumentController extends Controller
         }
 
 
-//        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
-//        return $pdf->stream($warehouseDocument->number . '.pdf');
+        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
+        return $pdf->stream($warehouseDocument->number . '.pdf');
 //        dd($result["products"]->toArray());
-        return view('pdf.system.warehouseDocument.warehouseDocument', $result);
+//        return view('pdf.system.warehouseDocument.warehouseDocument', $result);
     }
 
     /**
