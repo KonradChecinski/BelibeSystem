@@ -118,6 +118,9 @@ class WarehouseDocumentController extends Controller
 ////                });
 //            },
         ]);
+        // Wyłączenie appendów dla każdego produktu
+        $warehouseDocument->products->each->setAppends([]);
+
         $warehouseDocumentModel = collect([$warehouseDocument]);
 
         $result = [
@@ -143,10 +146,10 @@ class WarehouseDocumentController extends Controller
         }
 
 
-        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
-        return $pdf->stream($warehouseDocument->number . '.pdf');
-
-//        return view('pdf.system.warehouseDocument.warehouseDocument', $result);
+//        $pdf = Pdf::loadView('pdf.system.warehouseDocument.warehouseDocument', $result);
+//        return $pdf->stream($warehouseDocument->number . '.pdf');
+//        dd($result["products"]->toArray());
+        return view('pdf.system.warehouseDocument.warehouseDocument', $result);
     }
 
     /**
