@@ -152,10 +152,17 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 $total_net += $order->delivery_net;
             }
 
-
-            $zamowienie->PlatnoscKredytKwota = $zamowienie->KwotaDoZaplaty;
-            $zamowienie->PlatnoscKredytId = $payment->subiekt_id;
-            $zamowienie->Rozliczony = false;
+            if ($payment->type === 1) {
+//                Do poprawy w przypadku większej ilości kurierów
+                $zamowienie->PlatnoscRatyId = $payment->subiekt_id;
+                $zamowienie->PlatnoscRatyKwota = $zamowienie->KwotaDoZaplaty;
+            } else if ($payment->type === 2) {
+                $zamowienie->PlatnoscKredytId = $payment->subiekt_id;
+                $zamowienie->PlatnoscKredytKwota = $zamowienie->KwotaDoZaplaty;
+            }
+//            $zamowienie->PlatnoscKredytKwota = $zamowienie->KwotaDoZaplaty;
+//            $zamowienie->PlatnoscKredytId = $payment->subiekt_id;
+//            $zamowienie->Rozliczony = false;
 
 
             $zamowienie->Wystawil = "B2B";
