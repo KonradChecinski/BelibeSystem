@@ -176,4 +176,25 @@ class SubiektQueries
 
         return $query->get();
     }
+
+
+    public static function getActiveWarehouse(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array
+    {
+        return DB::connection("subiekt")
+            ->table("sl_Magazyn")
+            ->where("mag_status", 1)
+            ->get([
+                "mag_Id",
+                "mag_Symbol",
+                "mag_Nazwa"
+            ]);
+    }
+
+    public static function getDocumentCategory(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array
+    {
+        return DB::connection("subiekt")->table("sl_Kategoria")->get([
+            "kat_Id",
+            "kat_Nazwa"
+        ]);
+    }
 }

@@ -14,6 +14,7 @@ use App\Http\Controllers\OrderOtherController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PartnerExportController;
 use App\Http\Controllers\PartnerExportProductController;
+use App\Http\Controllers\PartnerSettlementController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\QueryShopSalesController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
@@ -215,7 +216,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::patch("/{partner}/edit", [PartnerController::class, 'update'])->name("system.partners.partner.update");
         Route::delete("/{partner}", [PartnerController::class, 'destroy'])->name("system.partners.partner.delete");
 
-        Route::get("/{partner}/settlements", [PartnerController::class, 'edit'])->name("system.partners.partner.settlements");
+        Route::get("/{partner}/settlements", [PartnerSettlementController::class, 'index'])->name("system.partners.partner.settlements");
 
 
         Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");

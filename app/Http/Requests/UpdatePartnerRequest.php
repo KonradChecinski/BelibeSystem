@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\Subiekt\SubiektQueries;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePartnerRequest extends FormRequest
 {
@@ -23,6 +25,17 @@ class UpdatePartnerRequest extends FormRequest
     {
         return [
             "name" => "required|string|max:255",
+            "warehouse_id" => [
+                "required",
+                "integer",
+                Rule::in(collect(SubiektQueries::getActiveWarehouse())->pluck("mag_Id")->toArray()),
+            ],
+            "subiekt_category_id" => [
+                "required",
+                "integer",
+                Rule::in(collect(SubiektQueries::getDocumentCategory())->pluck("kat_Id")->toArray()),
+            ]
+
         ];
     }
 }
