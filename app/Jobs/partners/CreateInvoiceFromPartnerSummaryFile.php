@@ -81,6 +81,7 @@ class CreateInvoiceFromPartnerSummaryFile implements ShouldQueue, ShouldBeUnique
 //            $pozycja->CenaNettoPrzedRabatem = (float)$item->Cena; // / 100;
 //            $pozycja->CenaNettoPoRabacie = (float)$item->Cena; // / 100;
             $price = $product->model->priceForClientB2b($this->client);
+            $price = (object)$price;
             $pozycja->CenaNettoPrzedRabatem = (float)$price->discounted_wholesale_net_price / 100;
             $pozycja->CenaNettoPoRabacie = (float)$price->discounted_wholesale_net_price / 100;
             $pozycja->IloscJm = (int)$item->Bilans;
