@@ -40,7 +40,7 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
     const initializeFieldValues = () => {
         setValue('name', data.name)
         setValue('warehouse_id', data.warehouse_id)
-        setValue('subiekt_category_id', data.subiekt_category)
+        setValue('subiekt_category_id', data.subiekt_category_id)
     }
 
     useEffect(() => {

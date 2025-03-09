@@ -13,7 +13,7 @@ import {useState, useEffect} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
-import {useClientsAddForm} from "@/Components/Dialogs/PartnersDialog/PartnersAddDialog/form/useClientsAddForm";
+import {usePartnerAddForm} from "@/Components/Dialogs/PartnersDialog/PartnersAddDialog/form/usePartnerAddForm";
 
 export default function PartnersAddDialog({open, setOpen, reloadData}) {
     const {
@@ -22,7 +22,7 @@ export default function PartnersAddDialog({open, setOpen, reloadData}) {
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useClientsAddForm()
+    } = usePartnerAddForm()
 
     const {data, setData, post, processing, reset} = useForm({
         name: '',

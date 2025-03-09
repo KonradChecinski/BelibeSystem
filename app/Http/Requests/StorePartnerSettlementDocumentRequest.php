@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePartnerSettlementRequest extends FormRequest
+class StorePartnerSettlementDocumentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasPermissionTo("editPartners", "user");
+        return false;
     }
 
     /**
@@ -22,8 +22,7 @@ class StorePartnerSettlementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "date" => ["required", "date"],
-            "file" => ["required", "file", "max:10240"],
+            //
         ];
     }
 }

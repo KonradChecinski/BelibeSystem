@@ -13,7 +13,6 @@ class PartnerSettlementItem extends Model
     protected $fillable = [
         "partner_settlement_id",
         "product_id",
-        "client_invoice_id",
         "quantity",
         "price_net_original",
         "price_gross_original",
@@ -21,9 +20,9 @@ class PartnerSettlementItem extends Model
         "price_gross_computed",
     ];
 
-    public function settlement()
+    public function settlementDocument()
     {
-        return $this->belongsTo(PartnerSettlement::class);
+        return $this->belongsTo(PartnerSettlementDocument::class);
     }
 
     public function product()
@@ -31,8 +30,5 @@ class PartnerSettlementItem extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function clientInvoice()
-    {
-        return $this->belongsTo(ClientInvoice::class);
-    }
+
 }

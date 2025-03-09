@@ -10,16 +10,22 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('partner_settlement_items', function (Blueprint $table) {
+        Schema::create('partner_settlement_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('partner_settlement_id')->references("id")->on("partner_settlements")->restrictOnDelete();
-            $table->foreignId('product_id')->references("id")->on("products")->restrictOnDelete();
             $table->foreignId("client_invoice_id")->nullable()->references("id")->on("client_invoices")->restrictOnDelete();
+            $table->string("name");
+            $table->integer("type");
+            $table->integer("document_subiekt_id")->nullable();
+            $table->string("document_name")->nullable();
+            $table->integer("do_document_subiekt_id")->nullable();
+            $table->string("do_document_name")->nullable();
             $table->integer("quantity");
             $table->integer("price_net_original");
-            $table->integer("price_gross_original");
             $table->integer("price_net_computed");
+            $table->integer("price_gross_original");
             $table->integer("price_gross_computed");
+            $table->integer("status")->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +35,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('partner_settlement_items');
+        Schema::dropIfExists('partner_settlement_documents');
     }
 };

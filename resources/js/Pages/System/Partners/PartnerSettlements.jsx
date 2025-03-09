@@ -1,14 +1,27 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Box, Card} from "@mui/material";
+import {Box} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import BasicInfoComponent from "@/Components/Pages/Partners/BasicInfoComponent";
-import ExportComponent from "@/Components/Pages/Partners/ExportComponent";
-import ProductsComponent from "@/Components/Pages/Partners/ProductsComponent";
+import SettlementsComponent from "@/Components/Pages/Partners/SettlementsComponent";
+import SettlementItemsComponent from "@/Components/Pages/Partners/SettlementItemsComponent";
+import {useState} from "react";
+import SettlementDocumentsComponent from "@/Components/Pages/Partners/SettlementDocumentsComponent";
 
 export default function Partner(props) {
     console.log(props)
     const {t} = useLaravelReactI18n();
+
+    const [settlementDocuments, setSettlementDocuments] = useState(null);
+    const [settlementDocumentItems, setSettlementDocumentItems] = useState(null);
+
+    const changeSettlementDocuments = (settlementDocument) => {
+        setSettlementDocuments(settlementDocument);
+        // setSettlementDocumentItems(settlementDocument.settlement_document_items);
+    }
+
+    const changeSettlementDocumentItems = (settlementDocumentItems) => {
+        setSettlementDocumentItems(settlementDocumentItems);
+    }
 
     return (
         <UserLayout
@@ -22,18 +35,20 @@ export default function Partner(props) {
             <Box sx={{height: 1, width: 1, display: "flex", gap: 1, flexWrap: "wrap"}}>
                 <Box sx={{flex: 1, minWidth: 500}}>
                     <Box sx={{height: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                        {/*<BasicInfoComponent partner={props.partner}/>*/}
-                        {/*<ExportComponent partner={props.partner} exports={props.exports}/>*/}
-                        sss
+                        <SettlementsComponent settlements={props.settlements} partner={props.partner}
+                                              changeSettlementDocuments={changeSettlementDocuments}/>
                     </Box>
-
                 </Box>
                 <Box sx={{flex: 1, minWidth: 500}}>
-                    <Box sx={{height: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                        {/*<ProductsComponent partner={props.partner} products={props.products}/>*/}
+                    <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
+                        <SettlementDocumentsComponent settlementDocuments={settlementDocuments}
+                                                      partner={props.partner}
+                                                      changeSettlementDocumentItems={changeSettlementDocumentItems}/>
+                        <SettlementItemsComponent settlementDocumentItems={settlementDocumentItems}
+                                                  partner={props.partner}/>
                     </Box>
-                </Box>
 
+                </Box>
             </Box>
         </UserLayout>
     );

@@ -132,7 +132,7 @@ export default function PartnersTable(props) {
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
         ...columnVisibility
     });
-    const [openDialogAdd, setOpenDialogAdd] = useState(false);
+    // const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
 
     const reloadData = () => {
@@ -187,19 +187,19 @@ export default function PartnersTable(props) {
                     "& .MuiDataGrid-row:hover": {
                         bgcolor: "primary"
                     },
-                    "& .MuiTablePagination-root": {
-                        mr: 10
-                    }
+                    // "& .MuiTablePagination-root": {
+                    //     mr: 10
+                    // }
                 }}
             />
-            <Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20}}>
-                <Fab color="primary" aria-label="add" onClick={() => {
-                    setOpenDialogAdd(true)
-                }}>
-                    <Add/>
-                </Fab>
-            </Box>
-            <PartnersAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>
+            {/*<Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20}}>*/}
+            {/*    <Fab color="primary" aria-label="add" onClick={() => {*/}
+            {/*        setOpenDialogAdd(true)*/}
+            {/*    }}>*/}
+            {/*        <Add/>*/}
+            {/*    </Fab>*/}
+            {/*</Box>*/}
+            {/*<PartnersAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} reloadData={reloadData}/>*/}
         </>
     );
 

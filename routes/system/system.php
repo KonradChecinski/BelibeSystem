@@ -217,6 +217,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::delete("/{partner}", [PartnerController::class, 'destroy'])->name("system.partners.partner.delete");
 
         Route::get("/{partner}/settlements", [PartnerSettlementController::class, 'index'])->name("system.partners.partner.settlements");
+        Route::post("/{partner}/settlements", [PartnerSettlementController::class, 'store'])->name("system.partners.partner.settlements.create");
 
 
         Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");
