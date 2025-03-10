@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Subiekt\SubiektQueries;
+use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Models\PartnerSettlement;
 use App\Http\Requests\StorePartnerSettlementRequest;
@@ -9,6 +11,7 @@ use App\Http\Requests\UpdatePartnerSettlementRequest;
 use App\Models\PartnerSettlementDocument;
 use App\Models\PartnerSettlementItem;
 use App\Models\Products\Product;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
@@ -124,10 +127,63 @@ class PartnerSettlementController extends Controller
 //        dd($rows, $sold, $returned);
 
         //Zapisanie danych
+        $settlement = new PartnerSettlement([
+            "user_id" => auth()->user()->id,
+            "settlement_date" => $request->date,
+            "sold_net" => 0,
+            "sold_gross" => 0,
+            "return_net" => 0,
+            "return_gross" => 0,
+            "total_net" => 0,
+            "total_gross" => 0,
+        ]);
+
         //Sprzedane
+//        $this->createInvoice($sold, $settlement, $partner, $client, $request);
+
+        //Zwroty
+        $this->createInvoicesCorrections($returned, $settlement, $partner, $client, $request);
+
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(PartnerSettlement $partnerSettlement)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(PartnerSettlement $partnerSettlement)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdatePartnerSettlementRequest $request, PartnerSettlement $partnerSettlement)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(PartnerSettlement $partnerSettlement)
+    {
+        //
+    }
+
+
+    private function createInvoice(Collection $sold, PartnerSettlement $settlement, Partner $partner, Client $client, StorePartnerSettlementRequest $request)
+    {
         $soldArray = collect();
         foreach ($sold as $soldRow) {
-            $product = Product::query()->where("symbol", $soldRow["Symbol"])->first();
+            $product = Product::query()->where("symbol", $soldRow["Symbol"])->firstOrFail();
             $price = $product->model->priceForClientB2b($client);
 
             $soldItem = new PartnerSettlementItem([
@@ -190,52 +246,122 @@ class PartnerSettlementController extends Controller
         ]);
 
 
-        $settlement = new PartnerSettlement([
-            "user_id" => auth()->user()->id,
-            "settlement_date" => $request->date,
+        $settlement->update([
             "sold_net" => $settlementInvoice->price_net_computed,
             "sold_gross" => $settlementInvoice->price_gross_computed,
-            "return_net" => 0,
-            "return_gross" => 0,
-            "total_net" => 0,
-            "total_gross" => 0,
         ]);
-
-        $partner->partnerSettlements()->save($settlement);
         $settlement->documents()->save($settlementInvoice);
         $settlementInvoice->items()->saveMany($soldArray->pluck("item"));
-
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(PartnerSettlement $partnerSettlement)
+    private function createInvoicesCorrections(Collection $returned, PartnerSettlement $settlement, Partner $partner, Client $client, StorePartnerSettlementRequest $request)
     {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PartnerSettlement $partnerSettlement)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePartnerSettlementRequest $request, PartnerSettlement $partnerSettlement)
-    {
-        //
-    }
+        $returnedArray = collect();
+        $invoicesToCorrection = collect();
+        foreach ($returned as $returnedRow) {
+            $product = Product::query()->where("symbol", $returnedRow["Symbol"])->firstOrFail();
+            $queryResult = SubiektQueries::whatRemainInInvoiceAfterCorrections($partner->warehouse_id, $product->subiekt_id, $client->subiekt_id);
+//            dd($queryResult);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PartnerSettlement $partnerSettlement)
-    {
-        //
+            $invoicesToCorrectionWithProduct = collect();
+            $howManyToCorrection = $returnedRow["Bilans"] * (-1);
+            foreach ($queryResult as $invoice) {
+                $invoice = (object)$invoice;
+
+                // Jeśli nie ma już nic do korekty, zakończ pętlę
+                if ($howManyToCorrection <= 0) {
+                    break;
+                }
+
+                // Obliczenie: korekta może dotyczyć tylko maksymalnie dostępnej ilości na dokumencie
+                $toCorrectNow = min($howManyToCorrection, (float)$invoice->suma_Ilosc);
+
+                if ($toCorrectNow > 0) {
+                    $invoicesToCorrectionWithProduct->push((object)[
+                        'dok_Id' => $invoice->dok_Id,
+                        'tw_Id' => $invoice->tw_Id,
+                        'item_lp' => $invoice->ob_DokMagLp,
+                        'toCorrect' => $toCorrectNow,
+                        'price_net_computed' => $invoice->ob_CenaNetto * 100,
+                        'price_gross_computed' => $invoice->ob_CenaBrutto * 100,
+                        'price_net_original' => $returnedRow["Cena_netto"] * 100,
+                        'price_gross_original' => $returnedRow["Cena_brutto"] * 100,
+                    ]);
+
+                    // Zmniejsz pozostałą ilość do skorygowania
+                    $howManyToCorrection -= $toCorrectNow;
+                }
+
+            }
+
+            if ($howManyToCorrection > 0) {
+                throw new \Exception("Nie udało się znaleźć faktury do korekty dla towaru: (" . $product->id . ") " . $product->symbol . ". Zostało do korekty " . $howManyToCorrection . " sztuk");
+            }
+
+            // Dodajemy dane produktu z fakturami do kolekcji
+            $invoicesToCorrection->push([
+                'product' => $product,
+                'corrections' => $invoicesToCorrectionWithProduct,
+            ]);
+
+
+        }
+//        dd($invoicesToCorrection);
+
+        $groupedInvoicesToCorrections = $invoicesToCorrection->flatMap(function ($item) {
+            return $item['corrections']->map(function ($correction) {
+                return [
+                    'dok_Id' => $correction->dok_Id,
+                    'tw_Id' => $correction->tw_Id,
+                    'item_lp' => $correction->item_lp,
+                    'toCorrect' => $correction->toCorrect,
+                    'price_net_computed' => $correction->price_net_computed,
+                    'price_gross_computed' => $correction->price_gross_computed,
+                    'price_net_original' => $correction->price_net_original,
+                    'price_gross_original' => $correction->price_gross_original,
+                ];
+            });
+        })->groupBy('dok_Id')->map(function ($group) {
+            return $group->map(function ($correction) {
+                return [
+                    'tw_Id' => $correction['tw_Id'],
+                    'item_lp' => $correction['item_lp'],
+                    'toCorrect' => $correction['toCorrect'],
+                    'price_net_computed' => $correction['price_net_computed'],
+                    'price_gross_computed' => $correction['price_gross_computed'],
+                    'price_net_original' => $correction['price_net_original'],
+                    'price_gross_original' => $correction['price_gross_original'],
+                ];
+            })->values();
+        });
+
+
+        dd($groupedInvoicesToCorrections);
+
+
+//        $settlementInvoice = new PartnerSettlementDocument([
+//            "name" => "Faktura",
+//            "type" => 1,
+//            "document_subiekt_id" => null,
+//            "document_name" => null,
+//            "do_document_subiekt_id" => null,
+//            "do_document_name" => null,
+//            "quantity" => $sold->sum("Bilans"),
+//            "price_net_original" => $sold->sum(fn($row) => $row["Cena_netto"] * 100 * $row["Bilans"]),
+//            "price_net_computed" => $priceSummary["total_net"],
+//            "price_gross_original" => $sold->sum(fn($row) => $row["Cena_brutto"] * 100 * $row["Bilans"]),
+//            "price_gross_computed" => $priceSummary["total_gross"],
+//            "status" => 0,
+//        ]);
+//
+//
+//        $settlement->update([
+//            "sold_net" => $settlementInvoice->price_net_computed,
+//            "sold_gross" => $settlementInvoice->price_gross_computed,
+//        ]);
+//        $settlement->documents()->save($settlementInvoice);
+//        $settlementInvoice->items()->saveMany($soldArray->pluck("item"));
     }
 }

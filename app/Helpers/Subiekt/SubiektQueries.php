@@ -128,6 +128,8 @@ class SubiektQueries
                 "tw_Id",
                 "poz.ob_DokMagLp",
                 DB::raw("SUM(q.ob_IloscMag * q.ob_Znak) as sp_Ilosc"),
+                "ob_CenaNetto",
+                "ob_CenaBrutto"
             ])
             ->selectSub($subQuery1, "zw_Ilosc")
             ->where(function (Builder $query) use ($warehouse_id, $product_id, $client_id) {
@@ -162,7 +164,9 @@ class SubiektQueries
                 "dok_Id",
                 "tw_Id",
                 "poz.ob_DokMagLp",
-                "tw_Symbol"
+                "tw_Symbol",
+                "ob_CenaNetto",
+                "ob_CenaBrutto"
             ]);
 //        dd($subQuery2->get());
 

@@ -32,14 +32,14 @@ export default function Partner(props) {
             }
         >
             <Head title={t("Partner") + ": " + props.partner.name}/>
-            <Box sx={{height: 1, width: 1, display: "flex", gap: 1, flexWrap: "wrap"}}>
+            <Box sx={{height: 1, width: 1, display: "flex", gap: 1, flexWrap: "wrap", maxHeight: 1}}>
                 <Box sx={{flex: 1, minWidth: 500}}>
                     <Box sx={{height: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
                         <SettlementsComponent settlements={props.settlements} partner={props.partner}
                                               changeSettlementDocuments={changeSettlementDocuments}/>
                     </Box>
                 </Box>
-                <Box sx={{flex: 1, minWidth: 500}}>
+                <Box sx={{flex: 1, minWidth: 500, maxWidth: 1}}>
                     <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
                         <SettlementDocumentsComponent settlementDocuments={settlementDocuments}
                                                       partner={props.partner}
