@@ -9,7 +9,7 @@ import {
     Stepper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Typography
 } from "@mui/material";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -31,6 +31,7 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
         clearErrors: clrErrors,
         control
     } = usePartnerSettlementAddForm()
+
 
     const {data, setData, transform, post, processing, reset} = useForm({
         date: moment(),
@@ -98,9 +99,12 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
                     handleClose();
                 },
                 onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawaniu rozliczenia", {variant: 'error'})
-                    enqueueSnackbar(errors[0], {variant: 'error'})
                     console.error(errors)
+                    enqueueSnackbar("Błąd przy dodawaniu rozliczenia", {variant: 'error'})
+                    for (const errorsKey in errors) {
+                        enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                    }
+
                 },
             })
     }
@@ -115,6 +119,8 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
             aria-labelledby="draggable-dialog-title"
             scroll="paper"
             fullWidth={true}
+            maxWidth="md"
+
         >
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
@@ -163,143 +169,130 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
 
 function Step1({data, setData, register, errors, control, changeDataFiles}) {
     return (
-        <Box sx={{display: "flex", flexDirection: "column"}}>
-            {/*<TextField*/}
-            {/*    type="text"*/}
-            {/*    id="name"*/}
-            {/*    label="Nazwa"*/}
-            {/*    color={errors.name?.message && "error"}*/}
-            {/*    {...register("name")}*/}
-            {/*    defaultValue={data.name}*/}
-            {/*    sx={{width: "30ch", my: 1}}*/}
-            {/*/>*/}
-            {/*{errors.name?.message && (*/}
-            {/*    <Typography variant="body2" color="error" sx={{ml: 1}}>*/}
-            {/*        {errors.nip?.message.toString()}*/}
-            {/*    </Typography>*/}
-            {/*)}*/}
+        <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-evenly", gap: 2}}>
+            <Box sx={{display: "flex", flexDirection: "column", flex: 2}}>
 
 
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-                <Controller
-                    control={control}
-                    name="date"
-                    defaultValue={data?.date}
-                    render={({field}) => (
-                        <DatePicker
-                            {...field}
-                            label="Data"
-                            value={data?.date}
-                            onChange={(value) => {
-                                const newDate = moment(value);
-                                setData('date', newDate);
-                                field.onChange(value);
-                            }}
-                            sx={{width: "30ch", my: 1}}
-                        />
-                    )}
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Controller
+                        control={control}
+                        name="date"
+                        defaultValue={data?.date}
+                        render={({field}) => (
+                            <DatePicker
+                                {...field}
+                                label="Data"
+                                value={data?.date}
+                                onChange={(value) => {
+                                    const newDate = moment(value);
+                                    setData('date', newDate);
+                                    field.onChange(value);
+                                }}
+                                sx={{width: "30ch", my: 1}}
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
+                {errors.date?.message && (
+                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                        {errors.date?.message.toString()}
+                    </Typography>
+                )}
+
+                <DropzoneArea
+                    acceptedFiles={["text/csv"]}
+                    showPreviews={false}
+                    maxFileSize={10240}
+                    filesLimit={1}
+                    showAlerts={null}
+                    onAlert={(text, type) => {
+                    }}
+                    onChange={changeDataFiles}
+                    clearOnUnmount={false}
+                    previewText={"Podgląd"}
+                    showPreviewsInDropzone={true}
+                    showFileNamesInPreview={true}
+
+                    getFileRemovedMessage={(e) => enqueueSnackbar("Usunięto " + e + "", {variant: "default"})}
+                    getDropRejectMessage={(e) => enqueueSnackbar("Plik " + e.name + " jest niedozwolonego typu", {variant: "warning"})}
+                    getFileAddedMessage={(e) => enqueueSnackbar("Dodano " + e, {variant: "info"})}
+                    getFileLimitExceedMessage={(e) => enqueueSnackbar("Przekroczono ilość dozwolonych plików w pojedyńczym przesłaniu: " + e, {variant: "error"})}
+                    dropzoneText={"Przeciągnij plik lub kliknij tutaj"}
                 />
-            </LocalizationProvider>
-            {errors.date?.message && (
-                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                    {errors.date?.message.toString()}
+                {errors.file?.message && (
+                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                        {errors.file?.message.toString()}
+                    </Typography>
+                )}
+
+
+            </Box>
+            <Box sx={{flex: 3}}>
+                <Typography variant="body1" gutterBottom>
+                    Dozwolone formaty plików: CSV
                 </Typography>
-            )}
-
-            <DropzoneArea
-                acceptedFiles={["text/csv"]}
-                showPreviews={false}
-                maxFileSize={10240}
-                filesLimit={1}
-                showAlerts={null}
-                onAlert={(text, type) => {
-                }}
-                onChange={changeDataFiles}
-                clearOnUnmount={false}
-                previewText={"Podgląd"}
-                showPreviewsInDropzone={true}
-                showFileNamesInPreview={true}
-
-                getFileRemovedMessage={(e) => enqueueSnackbar("Usunięto " + e + "", {variant: "default"})}
-                getDropRejectMessage={(e) => enqueueSnackbar("Plik " + e.name + " jest niedozwolonego typu", {variant: "warning"})}
-                getFileAddedMessage={(e) => enqueueSnackbar("Dodano " + e, {variant: "info"})}
-                getFileLimitExceedMessage={(e) => enqueueSnackbar("Przekroczono ilość dozwolonych plików w pojedyńczym przesłaniu: " + e, {variant: "error"})}
-                dropzoneText={"Przeciągnij plik lub kliknij tutaj"}
-            />
-            {errors.file?.message && (
-                <Typography variant="body2" color="error" sx={{ml: 1}}>
-                    {errors.file?.message.toString()}
+                <Typography variant="body1" gutterBottom>
+                    Maks rozmiar pliku (1): 10MB
                 </Typography>
-            )}
-            <Typography>
-
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                Dozwolone formaty plików: CSV
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                Maks rozmiar pliku (1): 10MB
-            </Typography>
 
 
-            <Typography variant="h5" gutterBottom sx={{my: 1}}>
-                Kolumny:
-            </Typography>
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Kolumna</TableCell>
-                            <TableCell>Znaczenie</TableCell>
-                            <TableCell>Przykład</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Symbol</TableCell>
-                            <TableCell>Symbol towaru z systemu</TableCell>
-                            <TableCell>S-0100-0104-1-L</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Sprzedaz</TableCell>
-                            <TableCell>Liczba całkowita</TableCell>
-                            <TableCell>10</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Zwroty</TableCell>
-                            <TableCell>Liczba całkowita</TableCell>
-                            <TableCell>6</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Bilans</TableCell>
-                            <TableCell>Liczba całkowita</TableCell>
-                            <TableCell>4</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Cena_netto</TableCell>
-                            <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
-                            <TableCell>10.50</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Cena_brutto</TableCell>
-                            <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
-                            <TableCell>12,50</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Wartosc_netto</TableCell>
-                            <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
-                            <TableCell>105.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Wartosc_brutto</TableCell>
-                            <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
-                            <TableCell>125,00</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-
+                <Typography variant="h5" gutterBottom sx={{my: 1}}>
+                    Kolumny:
+                </Typography>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Kolumna</TableCell>
+                                <TableCell>Znaczenie</TableCell>
+                                <TableCell>Przykład</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Symbol</TableCell>
+                                <TableCell>Symbol towaru z systemu</TableCell>
+                                <TableCell>S-0100-0104-1-L</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Sprzedaz</TableCell>
+                                <TableCell>Liczba całkowita</TableCell>
+                                <TableCell>10</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Zwroty</TableCell>
+                                <TableCell>Liczba całkowita</TableCell>
+                                <TableCell>6</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Bilans</TableCell>
+                                <TableCell>Liczba całkowita</TableCell>
+                                <TableCell>4</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Cena_netto</TableCell>
+                                <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
+                                <TableCell>10.50</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Cena_brutto</TableCell>
+                                <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
+                                <TableCell>12,50</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Wartosc_netto</TableCell>
+                                <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
+                                <TableCell>105.00</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Wartosc_brutto</TableCell>
+                                <TableCell>Liczba z przecinkiem z separatorem "." lub ","</TableCell>
+                                <TableCell>125,00</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </Box>
 
 

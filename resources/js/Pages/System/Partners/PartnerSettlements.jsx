@@ -39,13 +39,25 @@ export default function Partner(props) {
                                               changeSettlementDocuments={changeSettlementDocuments}/>
                     </Box>
                 </Box>
-                <Box sx={{flex: 1, minWidth: 500, maxWidth: 1}}>
-                    <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                        <SettlementDocumentsComponent settlementDocuments={settlementDocuments}
-                                                      partner={props.partner}
-                                                      changeSettlementDocumentItems={changeSettlementDocumentItems}/>
-                        <SettlementItemsComponent settlementDocumentItems={settlementDocumentItems}
-                                                  partner={props.partner}/>
+                <Box sx={{flex: 1, minWidth: 500, maxWidth: 1, height: 1}}>
+                    <Box sx={{
+                        flex: 1,
+                        width: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        height: 1,
+                        maxHeight: 1
+                    }}>
+                        <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
+                            <SettlementDocumentsComponent settlementDocuments={settlementDocuments}
+                                                          partner={props.partner}
+                                                          changeSettlementDocumentItems={changeSettlementDocumentItems}/>
+                        </Box>
+                        <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
+                            <SettlementItemsComponent settlementDocumentItems={settlementDocumentItems}
+                                                      partner={props.partner}/>
+                        </Box>
                     </Box>
 
                 </Box>

@@ -12,13 +12,7 @@ import {enqueueSnackbar} from "notistack";
 
 export default function SettlementItemsTable({settlementDocumentItems, partner, readOnly, props}) {
     const theme = useTheme();
-    // const data = settlementDocumentItems;
-
-
     const data = settlementDocumentItems ? settlementDocumentItems?.items : [];
-    useEffect(() => {
-        console.log(settlementDocumentItems);
-    }, [settlementDocumentItems]);
 
     const columns = useMemo(
         //column definitions...
@@ -74,93 +68,6 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
                 size: 10,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
-
-            // {
-            //     accessorKey: 'action',
-            //     header: 'Akcje',
-            //     columnDefType: 'display',
-            //     muiTableBodyCellProps: {
-            //         align: 'center',
-            //     },
-            //     muiTableHeadCellProps: {
-            //         align: 'center',
-            //     },
-            //     Cell: ({cell, row}) => {
-            //         // const [openEditDialog, setOpenEditDialog] = useState(false);
-            //         // const handleDelete = () => {
-            //         //     router.delete(route("system.partners.partner.export.delete", {
-            //         //         partner: partner.id,
-            //         //         export: row.original.id
-            //         //     }), {
-            //         //         preserveScroll: true,
-            //         //         onSuccess: () => {
-            //         //             enqueueSnackbar("Usunięto eksport", {variant: 'success'})
-            //         //             // reloadData();
-            //         //         },
-            //         //         onError: errors => {
-            //         //             enqueueSnackbar("Błąd przy usuwaniu eksportu", {variant: 'error'})
-            //         //             console.error(errors)
-            //         //         },
-            //         //     })
-            //         //
-            //         // }
-            //         // const handleEdit = () => {
-            //         //     setOpenEditDialog(true)
-            //         // }
-            //         //
-            //         // const handleRun = () => {
-            //         //     router.post(route("system.partners.partner.export.runUpdate", {
-            //         //         partner: partner.id,
-            //         //         export: row.original.id
-            //         //     }), {}, {
-            //         //         preserveScroll: true,
-            //         //         onSuccess: () => {
-            //         //             console.log("cos")
-            //         //             enqueueSnackbar("Zlecono aktualizację", {variant: 'success'})
-            //         //         },
-            //         //         onError: errors => {
-            //         //             console.log("cos")
-            //         //             enqueueSnackbar("Błąd przy zlecaniu aktualizacji", {variant: 'error'})
-            //         //             console.error(errors)
-            //         //         },
-            //         //     })
-            //         //
-            //         // }
-            //         //
-            //         // const link = route("system.partner.show", {uuid: row.original.path})
-            //         // const handleCopy = () => {
-            //         //     navigator.clipboard.writeText(link)
-            //         //     enqueueSnackbar("Skopiowano link", {variant: 'success'})
-            //         // }
-            //         //
-            //         // return (
-            //         //     <Box>
-            //         //         <Tooltip title="Kopiuj link do pobrania zestawienia produktów dla klienta" arrow>
-            //         //             <IconButton aria-label="edit" onClick={handleCopy}>
-            //         //                 <ContentCopy color={"warning"}/>
-            //         //             </IconButton>
-            //         //         </Tooltip>
-            //         //         <Tooltip title="Aktualizuj" arrow>
-            //         //             <IconButton aria-label="update" onClick={handleRun}>
-            //         //                 <Upgrade/>
-            //         //             </IconButton>
-            //         //         </Tooltip>
-            //         //         <Tooltip title="Edytuj" arrow>
-            //         //             <IconButton aria-label="edit" onClick={handleEdit}>
-            //         //                 <Edit color={"info"}/>
-            //         //             </IconButton>
-            //         //         </Tooltip>
-            //         //         <Tooltip title="Usuń" arrow>
-            //         //             <IconButton aria-label="delete" onClick={handleDelete}>
-            //         //                 <Delete color={"error"}/>
-            //         //             </IconButton>
-            //         //         </Tooltip>
-            //         //     </Box>
-            //         // )
-            //
-            //     },
-            //     size: 10,
-            // },
         ],
         [],
         //end
@@ -175,6 +82,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
         enableSorting: true,
         localization: MRT_Localization_PL,
         enablePagination: false,
+        enableStickyHeader: true,
         // enableColumnResizing: true,
         enableRowNumbers: true,
         initialState: {

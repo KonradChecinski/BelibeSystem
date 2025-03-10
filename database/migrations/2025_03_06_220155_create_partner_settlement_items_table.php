@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer("price_gross_original");
             $table->integer("price_net_computed");
             $table->integer("price_gross_computed");
+            $table->integer("document_position")->nullable();
             $table->timestamps();
         });
     }

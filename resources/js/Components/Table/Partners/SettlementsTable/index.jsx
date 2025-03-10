@@ -173,16 +173,29 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
         }),
     });
 
+    const hasDocumentWithStatusZero = settlements.some(settlement =>
+        settlement.documents.some(doc => doc.status === 0)
+    );
 
     return (
         <>
             <MaterialReactTable table={table}/>
             <Box sx={{position: "absolute", bottom: 0, right: 0, zIndex: 20}}>
-                <Fab color="primary" aria-label="add" onClick={() => {
-                    setOpenDialogAdd(true)
-                }}>
-                    <Add/>
-                </Fab>
+
+                <Tooltip
+                    title={hasDocumentWithStatusZero ? "Nie możesz dodać następnego rozliczenia dopóki jest inny nie rozliczony" : "Dodaj"}
+                    arrow>
+                    <span>
+                        <Fab color="primary" aria-label="add"
+                             disabled={hasDocumentWithStatusZero}
+                             onClick={() => {
+                                 setOpenDialogAdd(true)
+                             }}>
+                            <Add/>
+                        </Fab>
+                    </span>
+                </Tooltip>
+
             </Box>
             <PartnersSettlementAddDialog open={openDialogAdd} setOpen={setOpenDialogAdd} partner={partner}/>
         </>

@@ -137,12 +137,18 @@ class PartnerSettlementController extends Controller
             "total_net" => 0,
             "total_gross" => 0,
         ]);
+        $settlement = $partner->partnerSettlements()->save($settlement);
 
         //Sprzedane
-//        $this->createInvoice($sold, $settlement, $partner, $client, $request);
+        $this->createInvoice($sold, $settlement, $partner, $client, $request);
 
         //Zwroty
         $this->createInvoicesCorrections($returned, $settlement, $partner, $client, $request);
+
+        $settlement->update([
+            "total_net" => $settlement->sold_net - $settlement->return_net,
+            "total_gross" => $settlement->sold_gross - $settlement->return_gross,
+        ]);
 
     }
 
@@ -231,12 +237,11 @@ class PartnerSettlementController extends Controller
 
 
         $settlementInvoice = new PartnerSettlementDocument([
-            "name" => "Faktura",
             "type" => 1,
             "document_subiekt_id" => null,
             "document_name" => null,
-            "do_document_subiekt_id" => null,
-            "do_document_name" => null,
+            "to_document_subiekt_id" => null,
+            "to_document_name" => null,
             "quantity" => $sold->sum("Bilans"),
             "price_net_original" => $sold->sum(fn($row) => $row["Cena_netto"] * 100 * $row["Bilans"]),
             "price_net_computed" => $priceSummary["total_net"],
@@ -258,7 +263,6 @@ class PartnerSettlementController extends Controller
     {
 
 
-        $returnedArray = collect();
         $invoicesToCorrection = collect();
         foreach ($returned as $returnedRow) {
             $product = Product::query()->where("symbol", $returnedRow["Symbol"])->firstOrFail();
@@ -338,30 +342,79 @@ class PartnerSettlementController extends Controller
         });
 
 
-        dd($groupedInvoicesToCorrections);
+//        dd($groupedInvoicesToCorrections);
+
+        foreach ($groupedInvoicesToCorrections as $invoiceSubiektId => $itemsToCorrection) {
+            $returnedArray = collect();
+
+            $priceSummaryGrouped = $itemsToCorrection->map(function ($row) {
+                return collect([
+                    "quantity" => $row['toCorrect'],
+                    "total_net" => $row['price_net_computed'],
+                    "vat_rate" => Product::findBySubiektId($row['tw_Id'])->model->prices->vat_rate,
+                ]);
+            })->groupBy("vat_rate");
+
+            $priceSummaryGroupByVat = collect();
+            foreach ($priceSummaryGrouped as $vat_rate => $items) {
+                $total_net = $items->reduce(function ($carry, $item) {
+                    $carry += $item["total_net"] * $item["quantity"];
+                    return $carry;
+                }, 0);
+                $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+
+                $priceSummaryGroupByVat[$vat_rate] = [
+                    "total_net" => $total_net,
+                    "total_gross" => $total_gross,
+                    "vat_rate" => $vat_rate,
+                ];
+            }
+            $priceSummary = $priceSummaryGroupByVat->reduce(function ($carry, $item) {
+                $carry["total_net"] += $item["total_net"];
+                $carry["total_gross"] += $item["total_gross"];
+                return $carry;
+            }, ["total_net" => 0, "total_gross" => 0]);
 
 
-//        $settlementInvoice = new PartnerSettlementDocument([
-//            "name" => "Faktura",
-//            "type" => 1,
-//            "document_subiekt_id" => null,
-//            "document_name" => null,
-//            "do_document_subiekt_id" => null,
-//            "do_document_name" => null,
-//            "quantity" => $sold->sum("Bilans"),
-//            "price_net_original" => $sold->sum(fn($row) => $row["Cena_netto"] * 100 * $row["Bilans"]),
-//            "price_net_computed" => $priceSummary["total_net"],
-//            "price_gross_original" => $sold->sum(fn($row) => $row["Cena_brutto"] * 100 * $row["Bilans"]),
-//            "price_gross_computed" => $priceSummary["total_gross"],
-//            "status" => 0,
-//        ]);
-//
-//
-//        $settlement->update([
-//            "sold_net" => $settlementInvoice->price_net_computed,
-//            "sold_gross" => $settlementInvoice->price_gross_computed,
-//        ]);
-//        $settlement->documents()->save($settlementInvoice);
-//        $settlementInvoice->items()->saveMany($soldArray->pluck("item"));
+            $settlementInvoiceCorrection = new PartnerSettlementDocument([
+                "type" => 2,
+                "document_subiekt_id" => null,
+                "document_name" => null,
+                "to_document_subiekt_id" => $invoiceSubiektId,
+                "to_document_name" => SubiektQueries::getDocumentNameById($invoiceSubiektId),
+                "quantity" => $itemsToCorrection->sum("toCorrect"),
+                "price_net_original" => $itemsToCorrection->sum(fn($row) => $row["price_net_original"] * $row["toCorrect"]),
+                "price_net_computed" => $priceSummary["total_net"],
+                "price_gross_original" => $itemsToCorrection->sum(fn($row) => $row["price_gross_original"] * $row["toCorrect"]),
+                "price_gross_computed" => $priceSummary["total_gross"],
+                "status" => 0,
+            ]);
+//            dd($settlementInvoice);
+            foreach ($itemsToCorrection as $itemToCorrection) {
+                $product = Product::findBySubiektId($itemToCorrection['tw_Id']);
+                $returnedItem = new PartnerSettlementItem([
+                    "quantity" => $itemToCorrection['toCorrect'],
+                    "price_net_original" => $itemToCorrection['price_net_original'],
+                    "price_gross_original" => $itemToCorrection['price_gross_original'],
+                    "price_net_computed" => $itemToCorrection['price_net_computed'],
+                    "price_gross_computed" => $itemToCorrection['price_gross_computed'],
+                    "document_position" => $itemToCorrection['item_lp'],
+                ]);
+                $returnedItem->product()->associate($product);
+                $returnedArray->push($returnedItem);
+            }
+
+
+            $settlement->update([
+                "return_net" => $settlement->return_net + $settlementInvoiceCorrection->price_net_computed,
+                "return_gross" => $settlement->return_gross + $settlementInvoiceCorrection->price_gross_computed,
+            ]);
+
+            $settlement->documents()->save($settlementInvoiceCorrection);
+            $settlementInvoiceCorrection->items()->saveMany($returnedArray);
+
+        }
+
+
     }
 }

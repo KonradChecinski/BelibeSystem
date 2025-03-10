@@ -11,12 +11,11 @@ class PartnerSettlementDocument extends Model
 
     protected $fillable = [
         "partner_settlement_id",
-        "name",
         "type",
         "document_subiekt_id",
         "document_name",
-        "do_document_subiekt_id",
-        "do_document_name",
+        "to_document_subiekt_id",
+        "to_document_name",
         "quantity",
         "price_net_original",
         "price_net_computed",

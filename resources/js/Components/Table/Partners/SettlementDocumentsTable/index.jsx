@@ -34,11 +34,6 @@ export default function SettlementDocumentsTable({
                 size: 10,
             },
             {
-                accessorKey: 'name',
-                header: 'Nazwa',
-                size: 10,
-            },
-            {
                 accessorKey: 'type',
                 header: 'Typ',
                 size: 10,
@@ -154,12 +149,10 @@ export default function SettlementDocumentsTable({
         data,
         columns,
         enableTopToolbar: true,
-        enableBottomToolbar: true,
+        enableBottomToolbar: false,
         enableGrouping: false,
-        enableStickyHeader: false,
+        enableStickyHeader: true,
         enableSorting: false,
-        enableStickyFooter: false,
-        enableTableFooter: false,
         renderBottomToolbar: false,
         localization: MRT_Localization_PL,
         initialState: {
@@ -174,11 +167,11 @@ export default function SettlementDocumentsTable({
             ]
         },
         muiTableContainerProps: {
-            // sx: {maxHeight: 350, height: 1, minHeight: 200}
+            sx: {maxHeight: 350, height: 1, minHeight: 200}
         },
-        // muiTableProps: {
-        //     sx: {height: 1}
-        // },
+        muiTableProps: {
+            sx: {height: 1}
+        },
         muiTablePaperProps: ({table}) => ({
             sx: {
                 pl: 1,

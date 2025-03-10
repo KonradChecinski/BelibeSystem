@@ -14,12 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('partner_settlement_id')->references("id")->on("partner_settlements")->restrictOnDelete();
             $table->foreignId("client_invoice_id")->nullable()->references("id")->on("client_invoices")->restrictOnDelete();
-            $table->string("name");
             $table->integer("type");
             $table->integer("document_subiekt_id")->nullable();
             $table->string("document_name")->nullable();
-            $table->integer("do_document_subiekt_id")->nullable();
-            $table->string("do_document_name")->nullable();
+            $table->integer("to_document_subiekt_id")->nullable();
+            $table->string("to_document_name")->nullable();
             $table->integer("quantity");
             $table->integer("price_net_original");
             $table->integer("price_net_computed");

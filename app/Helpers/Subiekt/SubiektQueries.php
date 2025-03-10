@@ -201,4 +201,9 @@ class SubiektQueries
             "kat_Nazwa"
         ]);
     }
+
+    public static function getDocumentNameById(int $id): string
+    {
+        return DB::connection("subiekt")->table("dok__Dokument")->where("dok_Id", $id)->first("dok_NrPelny")->dok_NrPelny;
+    }
 }

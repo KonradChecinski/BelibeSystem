@@ -18,6 +18,7 @@ class PartnerSettlementItem extends Model
         "price_gross_original",
         "price_net_computed",
         "price_gross_computed",
+        "document_position",
     ];
 
     public function settlementDocument()

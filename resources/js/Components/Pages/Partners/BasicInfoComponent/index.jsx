@@ -120,7 +120,7 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
                                 label="Klient"
                                 sx={{width: "80ch", my: 1}}
                                 disabled={true}
-                                value={partner.client.name + " (" + partner.client.nip + ") (id:" + partner.client.id + ")"}
+                                value={partner.client ? (partner?.client?.name + " (" + partner?.client?.nip + ") (id:" + partner?.client?.id + ")") : ""}
                             />
                         </Box>
                     </Box>
