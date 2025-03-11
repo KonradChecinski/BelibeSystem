@@ -215,6 +215,8 @@ class PartnerSettlementController extends Controller
                 "price_gross_original" => $soldRow['Cena_brutto'] * 100,
                 "price_net_computed" => $price['discounted_wholesale_net_price'],
                 "price_gross_computed" => $price['discounted_wholesale_gross_price'],
+                "price_net_final" => $price['discounted_wholesale_net_price'],
+                "price_gross_final" => $price['discounted_wholesale_gross_price'],
             ]);
             $soldItem->product()->associate($product);
             $soldArray->push((object)[
@@ -261,9 +263,11 @@ class PartnerSettlementController extends Controller
             "to_document_name" => null,
             "quantity" => $sold->sum("Bilans"),
             "price_net_original" => $sold->sum(fn($row) => $row["Cena_netto"] * 100 * $row["Bilans"]),
-            "price_net_computed" => $priceSummary["total_net"],
             "price_gross_original" => $sold->sum(fn($row) => $row["Cena_brutto"] * 100 * $row["Bilans"]),
+            "price_net_computed" => $priceSummary["total_net"],
             "price_gross_computed" => $priceSummary["total_gross"],
+            "price_net_final" => $priceSummary["total_net"],
+            "price_gross_final" => $priceSummary["total_gross"],
             "status" => 0,
         ]);
 
@@ -305,10 +309,10 @@ class PartnerSettlementController extends Controller
                         'tw_Id' => $invoice->tw_Id,
                         'item_lp' => $invoice->ob_DokMagLp,
                         'toCorrect' => $toCorrectNow,
-                        'price_net_computed' => $invoice->ob_CenaNetto * 100,
-                        'price_gross_computed' => $invoice->ob_CenaBrutto * 100,
                         'price_net_original' => $returnedRow["Cena_netto"] * 100,
                         'price_gross_original' => $returnedRow["Cena_brutto"] * 100,
+                        'price_net_computed' => $invoice->ob_CenaNetto * 100,
+                        'price_gross_computed' => $invoice->ob_CenaBrutto * 100,
                     ]);
 
                     // Zmniejsz pozostałą ilość do skorygowania
@@ -338,10 +342,10 @@ class PartnerSettlementController extends Controller
                     'tw_Id' => $correction->tw_Id,
                     'item_lp' => $correction->item_lp,
                     'toCorrect' => $correction->toCorrect,
-                    'price_net_computed' => $correction->price_net_computed,
-                    'price_gross_computed' => $correction->price_gross_computed,
                     'price_net_original' => $correction->price_net_original,
                     'price_gross_original' => $correction->price_gross_original,
+                    'price_net_computed' => $correction->price_net_computed,
+                    'price_gross_computed' => $correction->price_gross_computed,
                 ];
             });
         })->groupBy('dok_Id')->map(function ($group) {
@@ -401,9 +405,11 @@ class PartnerSettlementController extends Controller
                 "to_document_name" => SubiektQueries::getDocumentNameById($invoiceSubiektId),
                 "quantity" => $itemsToCorrection->sum("toCorrect"),
                 "price_net_original" => $itemsToCorrection->sum(fn($row) => $row["price_net_original"] * $row["toCorrect"]),
-                "price_net_computed" => $priceSummary["total_net"],
                 "price_gross_original" => $itemsToCorrection->sum(fn($row) => $row["price_gross_original"] * $row["toCorrect"]),
+                "price_net_computed" => $priceSummary["total_net"],
                 "price_gross_computed" => $priceSummary["total_gross"],
+                "price_net_final" => $priceSummary["total_net"],
+                "price_gross_final" => $priceSummary["total_gross"],
                 "status" => 0,
             ]);
 //            dd($settlementInvoice);
@@ -415,6 +421,8 @@ class PartnerSettlementController extends Controller
                     "price_gross_original" => $itemToCorrection['price_gross_original'],
                     "price_net_computed" => $itemToCorrection['price_net_computed'],
                     "price_gross_computed" => $itemToCorrection['price_gross_computed'],
+                    "price_net_final" => $itemToCorrection['price_net_computed'],
+                    "price_gross_final" => $itemToCorrection['price_gross_computed'],
                     "document_position" => $itemToCorrection['item_lp'],
                 ]);
                 $returnedItem->product()->associate($product);

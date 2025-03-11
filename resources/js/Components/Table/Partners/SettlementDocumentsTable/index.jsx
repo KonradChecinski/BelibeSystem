@@ -104,6 +104,12 @@ export default function SettlementDocumentsTable({
                 accessorKey: 'price_net_original',
                 header: 'Kwota podana N',
                 size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
                 Cell: ({row, cell}) => (
                     <Typography variant="body2"
                                 sx={{color: row.original.price_net_computed !== row.original.price_net_original ? 'red' : 'inherit'}}>
@@ -116,6 +122,12 @@ export default function SettlementDocumentsTable({
                 accessorKey: 'price_net_computed',
                 header: 'Kwota wyliczona N',
                 size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
                 Cell: ({row, cell}) => (
                     <Typography variant="body2"
                                 sx={{color: row.original.price_net_computed !== row.original.price_net_original ? 'red' : 'inherit'}}>
@@ -125,15 +137,52 @@ export default function SettlementDocumentsTable({
                 ),
             },
             {
+                accessorKey: 'price_net_final',
+                header: 'Kwota rozliczenia N',
+                size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                    sx: {bgcolor: "primary.second"}
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
+                Cell: ({row, cell}) => toLocaleString(cell.getValue() / 100),
+            },
+            {
                 accessorKey: 'price_gross_original',
                 header: 'Kwota podana B',
                 size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'price_gross_computed',
                 header: 'Kwota wyliczona B',
                 size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
+                Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
+            },
+            {
+                accessorKey: 'price_gross_final',
+                header: 'Kwota rozliczenia B',
+                size: 10,
+                muiTableBodyCellProps: {
+                    align: 'right',
+                },
+                muiTableHeadCellProps: {
+                    align: 'right',
+                },
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
@@ -147,25 +196,6 @@ export default function SettlementDocumentsTable({
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
-
-                    const handleDelete = () => {
-                        // router.delete(route("system.partners.partner.export.delete", {
-                        //     partner: partner.id,
-                        //     export: row.original.id
-                        // }), {
-                        //     preserveScroll: true,
-                        //     onSuccess: () => {
-                        //         enqueueSnackbar("Usunięto eksport", {variant: 'success'})
-                        //         // reloadData();
-                        //     },
-                        //     onError: errors => {
-                        //         enqueueSnackbar("Błąd przy usuwaniu eksportu", {variant: 'error'})
-                        //         console.error(errors)
-                        //     },
-                        // })
-
-                    }
-
                     const handleAccept = () => {
                         router.post(route("system.partners.partner.settlements.document.accept", {
                             partner: partner.id,
@@ -229,7 +259,12 @@ export default function SettlementDocumentsTable({
         renderBottomToolbar: false,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {id: false, price_gross_computed: false, price_gross_original: false},
+            columnVisibility: {
+                id: false,
+                price_gross_computed: false,
+                price_gross_original: false,
+                price_gross_final: false
+            },
             density: 'compact',
             pagination: {pageSize: 50, pageIndex: 0},
             sorting: [

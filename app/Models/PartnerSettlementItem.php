@@ -18,6 +18,8 @@ class PartnerSettlementItem extends Model
         "price_gross_original",
         "price_net_computed",
         "price_gross_computed",
+        "price_net_final",
+        "price_gross_final",
         "document_position",
     ];
 

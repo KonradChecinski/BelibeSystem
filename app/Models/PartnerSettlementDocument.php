@@ -18,9 +18,11 @@ class PartnerSettlementDocument extends Model
         "to_document_name",
         "quantity",
         "price_net_original",
-        "price_net_computed",
         "price_gross_original",
+        "price_net_computed",
         "price_gross_computed",
+        "price_net_final",
+        "price_gross_final",
         "status",
     ];
 

@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->integer("price_net_computed");
             $table->integer("price_gross_original");
             $table->integer("price_gross_computed");
+            $table->integer("price_net_final");
+            $table->integer("price_gross_final");
             $table->integer("status")->default(0);
             $table->timestamps();
         });
