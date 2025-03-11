@@ -218,6 +218,8 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::get("/{partner}/settlements", [PartnerSettlementController::class, 'index'])->name("system.partners.partner.settlements");
         Route::post("/{partner}/settlements", [PartnerSettlementController::class, 'store'])->name("system.partners.partner.settlements.create");
+        Route::post("/{partner}/settlements/{partnerSettlement}/document/{partnerSettlementDocument}/accept", [PartnerSettlementController::class, 'accept'])->name("system.partners.partner.settlements.document.accept");
+        Route::post("/{partner}/settlements/{partnerSettlement}/accept", [PartnerSettlementController::class, 'acceptAll'])->name("system.partners.partner.settlements.document.acceptAll");
 
 
         Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");

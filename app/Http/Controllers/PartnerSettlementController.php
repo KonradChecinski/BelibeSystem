@@ -150,6 +150,7 @@ class PartnerSettlementController extends Controller
             "total_gross" => $settlement->sold_gross - $settlement->return_gross,
         ]);
 
+        return redirect()->back();
     }
 
     /**
@@ -182,6 +183,22 @@ class PartnerSettlementController extends Controller
     public function destroy(PartnerSettlement $partnerSettlement)
     {
         //
+    }
+
+    public function accept(Partner $partner, PartnerSettlement $partnerSettlement, PartnerSettlementDocument $partnerSettlementDocument)
+    {
+        $partnerSettlementDocument->update([
+            "status" => 1,
+        ]);
+        return redirect()->back();
+    }
+
+    public function acceptAll(Partner $partner, PartnerSettlement $partnerSettlement)
+    {
+        $partnerSettlement->documents()->where("status", 0)->update([
+            "status" => 1,
+        ]);
+        return redirect()->back();
     }
 
 
@@ -414,7 +431,5 @@ class PartnerSettlementController extends Controller
             $settlementInvoiceCorrection->items()->saveMany($returnedArray);
 
         }
-
-
     }
 }

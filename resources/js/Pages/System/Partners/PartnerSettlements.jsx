@@ -4,7 +4,7 @@ import {Box} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import SettlementsComponent from "@/Components/Pages/Partners/SettlementsComponent";
 import SettlementItemsComponent from "@/Components/Pages/Partners/SettlementItemsComponent";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import SettlementDocumentsComponent from "@/Components/Pages/Partners/SettlementDocumentsComponent";
 
 export default function Partner(props) {
@@ -14,9 +14,18 @@ export default function Partner(props) {
     const [settlementDocuments, setSettlementDocuments] = useState(null);
     const [settlementDocumentItems, setSettlementDocumentItems] = useState(null);
 
-    const changeSettlementDocuments = (settlementDocument) => {
-        setSettlementDocuments(settlementDocument);
-        // setSettlementDocumentItems(settlementDocument.settlement_document_items);
+    useEffect(() => {
+        if (settlementDocuments) {
+            setSettlementDocuments(props.settlements.find(settlement => settlement.id === settlementDocuments.id));
+        }
+
+        if (settlementDocumentItems) {
+            setSettlementDocumentItems(settlementDocuments.documents.find(document => document.id === settlementDocumentItems.id));
+        }
+    }, [props]);
+
+    const changeSettlementDocuments = (settlementDocuments) => {
+        setSettlementDocuments(settlementDocuments);
     }
 
     const changeSettlementDocumentItems = (settlementDocumentItems) => {

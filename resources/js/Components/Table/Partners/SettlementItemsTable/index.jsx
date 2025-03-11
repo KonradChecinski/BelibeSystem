@@ -25,7 +25,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             {
                 accessorKey: 'product.symbol',
                 header: 'Symbol',
-                size: 10,
+                size: 200,
             },
             {
                 accessorKey: 'quantity',
@@ -96,7 +96,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: 350, height: 1, minHeight: 200}
+            // sx: {maxHeight: 350, height: 1}
         },
         muiTableProps: {
             sx: {height: 1}

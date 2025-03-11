@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from "react";
 import {Box, Button, Fab, IconButton, Tooltip, Typography} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Add, Delete, Edit, ContentCopy, Upgrade, Visibility} from '@mui/icons-material';
+import {Add, Delete, Edit, ContentCopy, Upgrade, Visibility, Close, Done, DoneAll} from '@mui/icons-material';
 import moment from "moment";
 import {
     MaterialReactTable,
@@ -10,6 +10,13 @@ import {
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
 import PartnersSettlementAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementAddDialog";
+import {XML} from "@/Icons/XML";
+import {Excel} from "@/Icons/Excel";
+import {CSV} from "@/Icons/CSV";
+import {Invoice} from "@/Icons/Invoice";
+import {InvoiceCorrection} from "@/Icons/InvoiceCorrection";
+import {router} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 
 export default function SettlementDocumentsTable({
@@ -20,10 +27,6 @@ export default function SettlementDocumentsTable({
                                                  }) {
     const theme = useTheme();
     const data = settlementDocuments ? settlementDocuments?.documents : [];
-    useEffect(() => {
-        console.log(settlementDocuments);
-    }, [settlementDocuments]);
-
 
     const columns = useMemo(
         //column definitions...
@@ -37,11 +40,60 @@ export default function SettlementDocumentsTable({
                 accessorKey: 'type',
                 header: 'Typ',
                 size: 10,
+                Cell: ({cell, row}) => {
+                    return (
+                        <Box>
+                            {cell.getValue() === 1 && (
+                                <Tooltip title="Faktura" arrow>
+                                    <span>
+                                        <Invoice color={"success"}/>
+                                    </span>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 2 && (
+                                <Tooltip title="Korekta faktury">
+                                    <span>
+                                        <InvoiceCorrection color={"info"}/>
+                                    </span>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                }
             },
             {
                 accessorKey: 'status',
                 header: 'Status',
                 size: 10,
+                Cell: ({cell, row}) => {
+                    return (
+                        <Box>
+                            {cell.getValue() === 0 && (
+                                <Tooltip title="Niezaakceptowane" arrow>
+                                    <span>
+                                        <Close color={"error"}/>
+                                    </span>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 1 && (
+                                <Tooltip title="Zaakaceptowane do rozliczenia">
+                                    <span>
+                                        <Done color={"info"}/>
+                                    </span>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 2 && (
+                                <Tooltip title="Rozliczone">
+                                    <span>
+                                        <DoneAll color={"success"}/>
+                                    </span>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                }
             },
             {
                 accessorKey: 'quantity',
@@ -114,6 +166,27 @@ export default function SettlementDocumentsTable({
 
                     }
 
+                    const handleAccept = () => {
+                        router.post(route("system.partners.partner.settlements.document.accept", {
+                            partner: partner.id,
+                            partnerSettlement: settlementDocuments?.id,
+                            partnerSettlementDocument: row.original.id
+                        }), {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                enqueueSnackbar("Akceptowano rozliczenie", {variant: 'success'})
+                                // reloadData();
+                            },
+                            onError: errors => {
+                                console.error(errors)
+                                enqueueSnackbar("Błąd przy akceptacji rozliczenia", {variant: 'error'})
+                                for (const errorsKey in errors) {
+                                    enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                                }
+                            },
+                        })
+                    }
+
                     const handleEdit = () => {
                         changeSettlementDocumentItems(row.original);
                     }
@@ -126,14 +199,14 @@ export default function SettlementDocumentsTable({
                                     <Visibility color={"info"}/>
                                 </IconButton>
                             </Tooltip>
-                            {/*<Tooltip title="Usuń rozliczenie" arrow>*/}
-                            {/*    <span>*/}
-                            {/*             <IconButton aria-label="delete" onClick={handleDelete} disabled={true}>*/}
-                            {/*        <Delete color={!true ? "error" : ""}/>*/}
-                            {/*    </IconButton>*/}
-                            {/*    </span>*/}
-
-                            {/*</Tooltip>*/}
+                            <Tooltip title="Akceptuj rozliczenie" arrow>
+                                <span>
+                                    <IconButton aria-label="accept" onClick={handleAccept}
+                                                disabled={row.original.status !== 0}>
+                                        <Done color={row.original.status === 0 ? "success" : ""}/>
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
                         </Box>
                     )
 
@@ -141,7 +214,7 @@ export default function SettlementDocumentsTable({
                 size: 10,
             },
         ],
-        [],
+        [settlementDocuments],
         //end
     );
 

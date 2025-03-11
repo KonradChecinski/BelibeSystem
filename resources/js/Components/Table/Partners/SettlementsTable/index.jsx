@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {Box, Button, Fab, IconButton, Tooltip} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Add, Delete, Edit, ContentCopy, Upgrade, Visibility} from '@mui/icons-material';
+import {Add, Delete, Edit, ContentCopy, Upgrade, Visibility, DoneAll} from '@mui/icons-material';
 import moment from "moment";
 import {
     MaterialReactTable,
@@ -10,6 +10,8 @@ import {
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
 import PartnersSettlementAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementAddDialog";
+import {router} from "@inertiajs/react";
+import {enqueueSnackbar} from "notistack";
 
 
 export default function SettlementsTable({settlements, partner, readOnly, props, changeSettlementDocuments}) {
@@ -68,12 +70,11 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                 size: 10,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
-
-
             {
                 accessorKey: 'created_at',
                 header: 'Utworzenie',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "Nie wykonano",
+                size: 10
             },
             {
                 accessorKey: 'action',
@@ -86,6 +87,7 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
+
 
                     const handleDelete = () => {
                         // router.delete(route("system.partners.partner.export.delete", {
@@ -104,11 +106,31 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                         // })
 
                     }
-
+                    const handleAcceptAll = () => {
+                        router.post(route("system.partners.partner.settlements.document.acceptAll", {
+                            partner: partner.id,
+                            partnerSettlement: row.original.id
+                        }), {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                enqueueSnackbar("Usunięto eksport", {variant: 'success'})
+                                // reloadData();
+                            },
+                            onError: errors => {
+                                console.error(errors)
+                                enqueueSnackbar("Błąd przy usuwaniu eksportu", {variant: 'error'})
+                                for (const errorsKey in errors) {
+                                    enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                                }
+                            },
+                        })
+                    }
                     const handleEdit = () => {
                         changeSettlementDocuments(row.original)
                     }
 
+                    const hasDocumentWithStatusOtherThanZero = row.original.documents.some(doc => doc.status !== 0)
+                    const hasDocumentWithStatusZero = row.original.documents.some(doc => doc.status === 0)
 
                     return (
                         <Box>
@@ -117,11 +139,21 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                                     <Visibility color={"info"}/>
                                 </IconButton>
                             </Tooltip>
+                            <Tooltip title="Zaakceptuj wszystkie" arrow>
+                                <span>
+                                    <IconButton aria-label="edit" onClick={handleAcceptAll}
+                                                disabled={!hasDocumentWithStatusZero}>
+                                        <DoneAll color={hasDocumentWithStatusZero ? "success" : ""}/>
+                                    </IconButton>
+                                </span>
+
+                            </Tooltip>
                             <Tooltip title="Usuń rozliczenie" arrow>
                                 <span>
-                                         <IconButton aria-label="delete" onClick={handleDelete} disabled={true}>
-                                    <Delete color={!true ? "error" : ""}/>
-                                </IconButton>
+                                    <IconButton aria-label="delete" onClick={handleDelete}
+                                                disabled={hasDocumentWithStatusOtherThanZero}>
+                                        <Delete color={!hasDocumentWithStatusOtherThanZero ? "error" : ""}/>
+                                    </IconButton>
                                 </span>
 
                             </Tooltip>
@@ -129,7 +161,7 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                     )
 
                 },
-                size: 10,
+                size: 80,
             },
         ],
         [],
@@ -183,7 +215,7 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
             <Box sx={{position: "absolute", bottom: 0, right: 0, zIndex: 20}}>
 
                 <Tooltip
-                    title={hasDocumentWithStatusZero ? "Nie możesz dodać następnego rozliczenia dopóki jest inny nie rozliczony" : "Dodaj"}
+                    title={hasDocumentWithStatusZero ? "Nie możesz dodać następnego rozliczenia dopóki jest inny nierozliczony" : "Dodaj"}
                     arrow>
                     <span>
                         <Fab color="primary" aria-label="add"
