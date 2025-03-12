@@ -10,11 +10,9 @@ import {closeSnackbar, SnackbarProvider} from "notistack";
 import {IconButton} from "@mui/material";
 import {Close} from "@mui/icons-material";
 
-const appName =
-    window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
+const appName = "Belibe";
 
-const htmlLang =
-    window.document.getElementsByTagName("html")[0]?.lang || "en";
+const htmlLang = "en";
 
 moment.locale(htmlLang)
 
