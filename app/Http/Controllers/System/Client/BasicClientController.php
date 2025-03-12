@@ -90,7 +90,7 @@ class BasicClientController extends Controller
         }
 
         $client->subiekt_id = $subiektId;
-//        $client->save();
+        $client->save();
 
         if ($client->receivables()->count() > 0 || $client->obligations()->count() > 0) {
             return redirect()->back()->withErrors("Powiązano z Subiektem, jednak klient ma już rozliczenia");
