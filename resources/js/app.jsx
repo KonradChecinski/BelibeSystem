@@ -30,10 +30,6 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*(*.ts|*.tsx|*.js|*.jsx)")
         ),
     setup({el, App, props}) {
-        // const root = createRoot(el);
-        //
-        // root.render(<App {...props} />);
-
         const root = createRoot(el);
 
 
@@ -41,15 +37,6 @@ createInertiaApp({
             <LaravelReactI18nProvider
                 lang={htmlLang}
                 fallbackLang={"en"}
-                // resolve={async (lang) => {
-                //     const langs = import.meta.globEager("../../lang/*.json");
-                //     const fn = langs[`../../lang/${lang}.json`];
-                //
-                //     return await fn;
-                //     // if (typeof fn === 'function') {
-                //     //     return await fn();
-                //     // }
-                // }}
                 files={import.meta.glob("/lang/*.json")}>
                 <SnackbarProvider
                     // dense
@@ -65,15 +52,6 @@ createInertiaApp({
                         </IconButton>
                     )}
                     preventDuplicate={true}
-                    // classes={{
-                    //     containerRoot: {
-                    //         top: 264,
-                    //         backgroundColor: "#4B5563"
-                    //     },
-                    //     root: {
-                    //         top: 264
-                    //     }
-                    // }}
                 >
                     <App {...props} />
                 </SnackbarProvider>
