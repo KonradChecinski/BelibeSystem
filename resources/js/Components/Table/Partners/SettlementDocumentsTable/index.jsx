@@ -203,7 +203,7 @@ export default function SettlementDocumentsTable({
                             partner: partner.id,
                             partnerSettlement: settlementDocuments?.id,
                             partnerSettlementDocument: row.original.id
-                        }), {
+                        }), {}, {
                             preserveScroll: true,
                             onSuccess: () => {
                                 enqueueSnackbar("Akceptowano rozliczenie", {variant: 'success'})
