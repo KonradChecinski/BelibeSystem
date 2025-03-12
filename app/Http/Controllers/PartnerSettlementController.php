@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Subiekt\SubiektQueries;
+use App\Http\Requests\UpdatePartnerSettlementDocumentAcceptAllRequest;
+use App\Http\Requests\UpdatePartnerSettlementDocumentAcceptRequest;
+use App\Http\Requests\UpdatePartnerSettlementItemRequest;
+use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
+use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
 use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Models\PartnerSettlement;
@@ -185,20 +190,102 @@ class PartnerSettlementController extends Controller
         //
     }
 
-    public function accept(Partner $partner, PartnerSettlement $partnerSettlement, PartnerSettlementDocument $partnerSettlementDocument)
+    public function accept(UpdatePartnerSettlementDocumentAcceptRequest $request, Partner $partner, PartnerSettlement $partnerSettlement, PartnerSettlementDocument $partnerSettlementDocument)
     {
         $partnerSettlementDocument->update([
             "status" => 1,
         ]);
+
+        if ($partnerSettlementDocument->type === 1) {
+            CreateInvoiceFromPartnerSettlement::dispatch($partnerSettlementDocument);
+        } else if ($partnerSettlementDocument->type === 2) {
+            CreateInvoiceCorrectionsFromPartnerSettlement::dispatch($partnerSettlementDocument);
+        }
+
         return redirect()->back();
     }
 
-    public function acceptAll(Partner $partner, PartnerSettlement $partnerSettlement)
+    public function acceptAll(UpdatePartnerSettlementDocumentAcceptAllRequest $request, Partner $partner, PartnerSettlement $partnerSettlement)
     {
-        $partnerSettlement->documents()->where("status", 0)->update([
-            "status" => 1,
-        ]);
+        $documentsWithStatus0 = $partnerSettlement->documents()->whereIn("status", [0, 1])->get();
+        foreach ($documentsWithStatus0 as $document) {
+            $document->update([
+                "status" => 1,
+            ]);
+            if ($document->type === 1) {
+                CreateInvoiceFromPartnerSettlement::dispatch($document);
+            } else if ($document->type === 2) {
+                CreateInvoiceCorrectionsFromPartnerSettlement::dispatch($document);
+            }
+        }
+
         return redirect()->back();
+    }
+
+    public function updateItemPrice(UpdatePartnerSettlementItemRequest $request, Partner $partner, PartnerSettlement $partnerSettlement, PartnerSettlementDocument $partnerSettlementDocument, PartnerSettlementItem $partnerSettlementItem)
+    {
+        $price_net = $request->price;
+        $partnerSettlementItem->update([
+            'price_net_final' => $price_net,
+            'price_gross_final' => round($price_net * (1 + $partnerSettlementItem->product->model->prices->vat_rate / 100)),
+        ]);
+
+        $items = $partnerSettlementDocument->items;
+
+
+        $priceSummaryGrouped = $items->map(function ($row) {
+            return collect([
+                "quantity" => $row->quantity,
+                "total_net" => $row->price_net_final,
+                "vat_rate" => $row->product->model->prices->vat_rate,
+            ]);
+        })->groupBy("vat_rate");
+
+        $priceSummaryGroupByVat = collect();
+        foreach ($priceSummaryGrouped as $vat_rate => $items) {
+            $total_net = $items->reduce(function ($carry, $item) {
+                $carry += $item["total_net"] * $item["quantity"];
+                return $carry;
+            }, 0);
+            $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+
+            $priceSummaryGroupByVat[$vat_rate] = [
+                "total_net" => $total_net,
+                "total_gross" => $total_gross,
+                "vat_rate" => $vat_rate,
+            ];
+        }
+        $priceSummary = $priceSummaryGroupByVat->reduce(function ($carry, $item) {
+            $carry["total_net"] += $item["total_net"];
+            $carry["total_gross"] += $item["total_gross"];
+            return $carry;
+        }, ["total_net" => 0, "total_gross" => 0]);
+
+
+        $partnerSettlementDocument->update([
+            'price_net_final' => $priceSummary["total_net"],
+            'price_gross_final' => $priceSummary["total_gross"],
+        ]);
+
+
+        if ($partnerSettlementDocument->type === 1) {
+            $partnerSettlement->update([
+                "sold_net" => $priceSummary["total_net"],
+                "sold_gross" => $priceSummary["total_gross"],
+                "total_net" => $priceSummary["total_net"] - $partnerSettlement->return_net,
+                "total_gross" => $priceSummary["total_gross"] - $partnerSettlement->return_gross,
+            ]);
+        } else if ($partnerSettlementDocument->type === 2) {
+            $returnedDocuments = $partnerSettlement->documents()->where("type", 2)->get(["price_net_final", "price_gross_final"]);
+            $partnerSettlement->update([
+                "return_net" => $returnedDocuments->sum("price_net_final"),
+                "return_gross" => $returnedDocuments->sum("price_gross_final"),
+                "total_net" => $partnerSettlement->sold_net - $returnedDocuments->sum("price_net_final"),
+                "total_gross" => $partnerSettlement->sold_gross - $returnedDocuments->sum("price_gross_final"),
+            ]);
+        }
+
+
     }
 
 

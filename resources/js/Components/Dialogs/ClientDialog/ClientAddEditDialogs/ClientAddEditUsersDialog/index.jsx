@@ -1,8 +1,8 @@
 import {
-    Box, Button,
+    Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
-    DialogTitle, IconButton, InputAdornment, Paper,
+    DialogTitle, FormControlLabel, FormGroup, IconButton, InputAdornment, Paper,
     Step,
     StepLabel,
     Stepper,
@@ -42,6 +42,7 @@ export default function ClientAddEditUsersDialog({
         name: clickedUser ? clickedUser.name : '',
         email: clickedUser ? clickedUser.email : '',
         password: '',
+        email_to_verify: false,
     })
 
     useEffect(() => {
@@ -56,6 +57,7 @@ export default function ClientAddEditUsersDialog({
             name: clickedUser ? clickedUser.name : '',
             email: clickedUser ? clickedUser.email : '',
             password: '',
+            email_to_verify: false,
         })
 
         // console.log("data w useEffect: ", data);
@@ -273,6 +275,26 @@ function Step1({data, setData, clickedUser = null, register, errors}) {
                     </Typography>
                 )}
             </Box>
+
+            <Box sx={{pl: 2}}>
+
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={data.email_to_verify}
+                                size={"large"}
+                                onChange={(value) => {
+                                    setData('email_to_verify', value.target.checked);
+                                }}
+                            />
+                        }
+                        label="Wymagaj potwierdzenia email"
+                    />
+                </FormGroup>
+            </Box>
+
+
         </Box>
     );
 }
@@ -295,7 +317,21 @@ function Step2({data, errors}) {
                        value={data.password}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+            <Box sx={{pl: 2}}>
 
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={data.email_to_verify}
+                                size={"large"}
+                                disabled={true}
+                            />
+                        }
+                        label="Wymagaj potwierdzenia email"
+                    />
+                </FormGroup>
+            </Box>
 
             {Object.keys(errors).map((key, index) => {
                 return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>

@@ -14,6 +14,7 @@ use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
 use App\Models\ClientSettlement;
+use App\Models\Partner;
 use App\Models\SubiektObligation;
 use App\Models\ClientOrder;
 use App\Models\ClientRecipient;
@@ -161,5 +162,9 @@ class Client extends Model
         return $this->hasMany(B2bCart::class);
     }
 
+    public function partner()
+    {
+        return $this->hasOne(Partner::class);
+    }
 
 }

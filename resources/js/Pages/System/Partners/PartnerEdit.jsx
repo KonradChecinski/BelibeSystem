@@ -22,8 +22,12 @@ export default function PartnerEdit(props) {
             <Box sx={{height: 1, width: 1, display: "flex", gap: 1, flexWrap: "wrap"}}>
                 <Box sx={{flex: 1, minWidth: 500}}>
                     <Box sx={{height: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                        <BasicInfoComponent partner={props.partner} subiektCategories={props.subiektCategories}
-                                            subiektWarehouses={props.subiektWarehouses}/>
+                        <BasicInfoComponent
+                            partner={props.partner}
+                            subiektCategories={props.subiektCategories}
+                            subiektWarehouses={props.subiektWarehouses}
+                            b2bPayments={props.b2bPayments}
+                        />
                     </Box>
 
                 </Box>

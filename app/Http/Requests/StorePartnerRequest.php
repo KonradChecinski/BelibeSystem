@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StorePartnerRequest extends FormRequest
 {
@@ -24,5 +25,23 @@ class StorePartnerRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
         ];
+    }
+
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     */
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function (Validator $validator) {
+            $partner = $this->client->partner;
+
+            if ($partner) {
+                $validator->errors()->add('client', 'Klient posiada już partnera');
+            }
+        });
     }
 }

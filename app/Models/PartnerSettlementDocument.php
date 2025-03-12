@@ -28,7 +28,7 @@ class PartnerSettlementDocument extends Model
 
     public function settlement(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(PartnerSettlement::class);
+        return $this->belongsTo(PartnerSettlement::class, 'partner_settlement_id');
     }
 
     public function items(): \Illuminate\Database\Eloquent\Relations\HasMany

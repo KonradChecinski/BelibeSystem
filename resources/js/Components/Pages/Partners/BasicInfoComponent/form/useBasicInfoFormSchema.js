@@ -10,6 +10,9 @@ const schema = yup.object().shape({
     subiekt_category_id: yup
         .number()
         .required("Pole jest wymagane"),
+    b2b_payment_id: yup
+        .number()
+        .required("Pole jest wymagane"),
 })
 
 export default schema

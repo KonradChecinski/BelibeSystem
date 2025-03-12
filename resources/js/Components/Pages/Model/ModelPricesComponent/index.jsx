@@ -1,23 +1,11 @@
-import {
-    Button, Fade,
-    FormControl,
-    FormHelperText, IconButton,
-    InputAdornment, OutlinedInput,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography
-} from "@mui/material";
-import toLocaleString from "@/Functions/toLocaleString";
+import {Button, Fade, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {useForm} from "@inertiajs/react";
 import {useState} from "react";
 import {Save} from "@mui/icons-material";
 import {enqueueSnackbar} from 'notistack';
+import {PriceFiled} from "@/Components/Components/PriceFiled";
+import {VatField} from "@/Components/Components/VatField";
 
 export default function ModelPricesComponent(props) {
 
@@ -169,7 +157,7 @@ function ModelPricesComponentEdit(props) {
                                     }}/>
                             </TableCell>
                             <TableCell>
-                                <VatFiled vat={data.vat_rate} setVat={(vat) => {
+                                <VatField vat={data.vat_rate} setVat={(vat) => {
                                     setData(data => ({...data, vat_rate: vat}))
                                     setData(data => ({
                                         ...data,
@@ -216,7 +204,7 @@ function ModelPricesComponentEdit(props) {
                                     }}/>
                             </TableCell>
                             <TableCell>
-                                <VatFiled vat={data.vat_rate} setVat={(vat) => {
+                                <VatField vat={data.vat_rate} setVat={(vat) => {
                                     setData(data => ({...data, vat_rate: vat}))
                                     setData(data => ({
                                         ...data,
@@ -264,7 +252,7 @@ function ModelPricesComponentEdit(props) {
                                     }}/>
                             </TableCell>
                             <TableCell>
-                                <VatFiled vat={data.vat_rate} setVat={(vat) => {
+                                <VatField vat={data.vat_rate} setVat={(vat) => {
                                     setData(data => ({...data, vat_rate: vat}))
                                     setData(data => ({
                                         ...data,
@@ -301,78 +289,3 @@ function ModelPricesComponentEdit(props) {
     );
 }
 
-function PriceFiled({price, setPrice, currency}) {
-    let newPrice = numberPrice(price)
-
-    const onKeyPress = (event) => {
-        const regex = /^[0-9\b]+$/;
-
-        const key = event.key;
-        const keyCode = event.keyCode;
-
-        let oldValue = event.target.defaultValue.replace(/,/g, "").replace(/\./g, "");
-        let value = "";
-
-        if (regex.test(key)) {
-            value = "" + oldValue + key
-            setPrice(value)
-        } else if (keyCode === 8) {
-            value = oldValue.slice(0, -1)
-            setPrice(value)
-        }
-    }
-
-
-    function numberPrice(number) {
-        return (Number(number / 100).toLocaleString(undefined, {minimumFractionDigits: 2, useGrouping: false}));
-    }
-
-    return (
-        <FormControl sx={{m: 0, width: '25ch'}} variant="outlined">
-            <OutlinedInput
-                id="outlined-adornment-weight"
-                endAdornment={<InputAdornment
-                    position="end">{currency}</InputAdornment>}
-                aria-describedby="outlined-weight-helper-text"
-                onKeyDown={onKeyPress}
-                value={newPrice}
-
-            />
-        </FormControl>
-    );
-}
-
-function VatFiled({vat, setVat}) {
-
-    const onKeyPress = (event) => {
-        const regex = /^[0-9\b]+$/;
-
-        const key = event.key;
-        const keyCode = event.keyCode;
-
-        let oldValue = event.target.defaultValue.replace(/,/g, "").replace(/\./g, "");
-        let value = "";
-
-        if (regex.test(key)) {
-            value = "" + oldValue + key
-            setVat(value)
-        } else if (keyCode === 8) {
-            value = oldValue.slice(0, -1)
-            setVat(value)
-        }
-    }
-
-
-    return (
-        <FormControl sx={{m: 0, width: '25ch'}} variant="outlined">
-            <OutlinedInput
-                id="outlined-adornment-weight"
-                endAdornment={<InputAdornment position="end">%</InputAdornment>}
-                aria-describedby="outlined-weight-helper-text"
-                onKeyDown={onKeyPress}
-                value={vat}
-
-            />
-        </FormControl>
-    );
-}

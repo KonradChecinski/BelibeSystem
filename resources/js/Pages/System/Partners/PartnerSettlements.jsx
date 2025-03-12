@@ -20,7 +20,7 @@ export default function Partner(props) {
         }
 
         if (settlementDocumentItems) {
-            setSettlementDocumentItems(settlementDocuments.documents.find(document => document.id === settlementDocumentItems.id));
+            setSettlementDocumentItems(props.settlements.find(settlement => settlement.id === settlementDocuments.id).documents.find(document => document.id === settlementDocumentItems.id));
         }
     }, [props]);
 
@@ -59,13 +59,18 @@ export default function Partner(props) {
                         maxHeight: 1
                     }}>
                         <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                            <SettlementDocumentsComponent settlementDocuments={settlementDocuments}
-                                                          partner={props.partner}
-                                                          changeSettlementDocumentItems={changeSettlementDocumentItems}/>
+                            <SettlementDocumentsComponent
+                                settlementDocuments={settlementDocuments}
+                                partner={props.partner}
+                                changeSettlementDocumentItems={changeSettlementDocumentItems}
+                            />
                         </Box>
                         <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
-                            <SettlementItemsComponent settlementDocumentItems={settlementDocumentItems}
-                                                      partner={props.partner}/>
+                            <SettlementItemsComponent
+                                settlementDocuments={settlementDocuments}
+                                settlementDocumentItems={settlementDocumentItems}
+                                partner={props.partner}
+                            />
                         </Box>
                     </Box>
 

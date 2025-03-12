@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::table('partners', function (Blueprint $table) {
             $table->foreignId('client_id')->nullable()->default(null)->after("id")->references("id")->on("clients")->restrictOnDelete();
+            $table->foreignId("b2b_payment_id")->nullable()->default(null)->after("name")->references("id")->on("b2b_payments")->restrictOnDelete();
             $table->integer("warehouse_id")->nullable()->default(null)->after("name");
             $table->integer("subiekt_category_id")->nullable()->default(null)->after("name");
         });
@@ -24,6 +25,7 @@ return new class extends Migration {
     {
         Schema::table('partners', function (Blueprint $table) {
             $table->dropConstrainedForeignId("client_id");
+            $table->dropConstrainedForeignId("b2b_payment_id");
             $table->dropColumn("warehouse_id");
             $table->dropColumn("subiekt_category_id");
         });

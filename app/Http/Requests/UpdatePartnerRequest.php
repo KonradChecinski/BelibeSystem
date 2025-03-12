@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Helpers\Subiekt\SubiektQueries;
+use App\Models\B2bPayment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -34,7 +35,12 @@ class UpdatePartnerRequest extends FormRequest
                 "required",
                 "integer",
                 Rule::in(collect(SubiektQueries::getDocumentCategory())->pluck("kat_Id")->toArray()),
-            ]
+            ],
+            "b2b_payment_id" => [
+                "required",
+                "integer",
+                Rule::in(B2bPayment::all()->pluck("id")->toArray()),
+            ],
 
         ];
     }

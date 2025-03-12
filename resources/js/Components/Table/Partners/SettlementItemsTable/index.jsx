@@ -1,16 +1,14 @@
 import {useEffect, useMemo, useState} from "react";
 import {Box, IconButton, Tooltip, Typography} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Delete, Edit, ContentCopy, Upgrade} from '@mui/icons-material';
-import moment from "moment";
+import {Edit} from '@mui/icons-material';
 import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
-import {router} from "@inertiajs/react";
-import {enqueueSnackbar} from "notistack";
+import PartnersSettlementItemEditDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementItemEditDialog";
 
 
-export default function SettlementItemsTable({settlementDocumentItems, partner, readOnly, props}) {
+export default function SettlementItemsTable({settlementDocuments, settlementDocumentItems, partner, readOnly, props}) {
     const theme = useTheme();
     const data = settlementDocumentItems ? settlementDocumentItems?.items : [];
 
@@ -25,17 +23,17 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             {
                 accessorKey: 'product.symbol',
                 header: 'Symbol',
-                size: 200,
+                size: 150,
             },
             {
                 accessorKey: 'quantity',
                 header: 'Ilość',
-                size: 10,
+                size: 100,
             },
             {
                 accessorKey: 'price_net_original',
-                header: 'Kwota podana N',
-                size: 10,
+                header: 'Netto podana',
+                size: 120,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -53,8 +51,8 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             },
             {
                 accessorKey: 'price_net_computed',
-                header: 'Kwota wyliczona N',
-                size: 10,
+                header: 'Netto wyliczona',
+                size: 80,
                 muiTableBodyCellProps: {
                     align: 'right',
                 },
@@ -72,7 +70,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             },
             {
                 accessorKey: 'price_net_final',
-                header: 'Kwota rozliczenia N',
+                header: 'Netto rozliczenia',
                 size: 10,
                 muiTableBodyCellProps: {
                     align: 'right',
@@ -82,11 +80,17 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
                     align: 'right',
                 },
                 enableSorting: false,
-                Cell: ({row, cell}) => toLocaleString(cell.getValue() / 100),
+                Cell: ({row, cell}) => (
+                    <Typography variant="body2"
+                                sx={{color: row.original.price_net_computed !== row.original.price_net_final ? 'success.main' : 'inherit'}}>
+                        {toLocaleString(cell.getValue() / 100)}
+                    </Typography>
+
+                ),
             },
             {
                 accessorKey: 'price_gross_original',
-                header: 'Kwota podana B',
+                header: 'Brutto podana',
                 size: 10,
                 muiTableBodyCellProps: {
                     align: 'right',
@@ -99,7 +103,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             },
             {
                 accessorKey: 'price_gross_computed',
-                header: 'Kwota wyliczona B',
+                header: 'Brutto wyliczona',
                 size: 10,
                 muiTableBodyCellProps: {
                     align: 'right',
@@ -112,7 +116,7 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
             },
             {
                 accessorKey: 'price_gross_final',
-                header: 'Kwota rozliczenia B',
+                header: 'Brutto rozliczenia',
                 size: 10,
                 muiTableBodyCellProps: {
                     align: 'right',
@@ -123,8 +127,55 @@ export default function SettlementItemsTable({settlementDocumentItems, partner, 
                 enableSorting: false,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
+            {
+                accessorKey: 'action',
+                header: 'Akcje',
+                columnDefType: 'display',
+                size: 10,
+                muiTableBodyCellProps: {
+                    align: 'center',
+                },
+                muiTableHeadCellProps: {
+                    align: 'center',
+                },
+                Cell: ({cell, row}) => {
+
+                    const [open, setOpen] = useState(false);
+                    const handleEdit = () => {
+                        setOpen(true);
+                    }
+
+                    return (
+                        <Box>
+                            <Tooltip title="Edytuj cenę" arrow>
+                                <span>
+                                      <IconButton aria-label="edit" onClick={handleEdit}
+                                                  disabled={settlementDocumentItems.type !== 1}>
+                                        <Edit color={settlementDocumentItems.type === 1 ? "info" : ""}/>
+                                      </IconButton>
+                                </span>
+
+                            </Tooltip>
+                            <PartnersSettlementItemEditDialog
+                                key={settlementDocuments.id + settlementDocumentItems.id + row.original.id}
+                                open={open}
+                                setOpen={setOpen}
+                                price_net_original={row.original.price_net_original}
+                                price_net_computed={row.original.price_net_computed}
+                                price_net_final={row.original.price_net_final}
+
+                                partnerId={partner.id}
+                                partnerSettlementId={settlementDocuments.id}
+                                partnerSettlementDocumentId={settlementDocumentItems.id}
+                                partnerSettlementItemId={row.original.id}
+                            />
+                        </Box>
+                    )
+
+                },
+            }
         ],
-        [],
+        [settlementDocuments, settlementDocumentItems],
         //end
     );
 

@@ -211,13 +211,14 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
     Route::group(["prefix" => "/partners"], function () {
         Route::get("/", [PartnerController::class, 'index'])->name("system.partners");
-        Route::post("/", [PartnerController::class, 'store'])->name("system.partners.create");
+        Route::post("/client/{client}", [PartnerController::class, 'store'])->name("system.partners.create");
         Route::get("/{partner}/edit", [PartnerController::class, 'edit'])->name("system.partners.partner.edit");
         Route::patch("/{partner}/edit", [PartnerController::class, 'update'])->name("system.partners.partner.update");
         Route::delete("/{partner}", [PartnerController::class, 'destroy'])->name("system.partners.partner.delete");
 
         Route::get("/{partner}/settlements", [PartnerSettlementController::class, 'index'])->name("system.partners.partner.settlements");
         Route::post("/{partner}/settlements", [PartnerSettlementController::class, 'store'])->name("system.partners.partner.settlements.create");
+        Route::post("/{partner}/settlements/{partnerSettlement}/document/{partnerSettlementDocument}/item/{partnerSettlementItem}", [PartnerSettlementController::class, 'updateItemPrice'])->name("system.partners.partner.settlements.item.update");
         Route::post("/{partner}/settlements/{partnerSettlement}/document/{partnerSettlementDocument}/accept", [PartnerSettlementController::class, 'accept'])->name("system.partners.partner.settlements.document.accept");
         Route::post("/{partner}/settlements/{partnerSettlement}/accept", [PartnerSettlementController::class, 'acceptAll'])->name("system.partners.partner.settlements.document.acceptAll");
 

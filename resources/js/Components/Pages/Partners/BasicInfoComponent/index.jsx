@@ -19,7 +19,7 @@ import {enqueueSnackbar} from "notistack";
 import {Cancel, Save} from "@mui/icons-material";
 import HomeIcon from "@mui/icons-material/Home";
 
-export default function BasicInfoComponent({partner, subiektCategories, subiektWarehouses}) {
+export default function BasicInfoComponent({partner, subiektCategories, subiektWarehouses, b2bPayments}) {
     const [edited, setEdited] = useState(false);
 
     const {
@@ -35,12 +35,14 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
         'name': partner.name,
         'warehouse_id': partner.warehouse_id,
         'subiekt_category_id': partner.subiekt_category_id,
+        'b2b_payment_id': partner.b2b_payment_id,
     })
 
     const initializeFieldValues = () => {
         setValue('name', data.name)
         setValue('warehouse_id', data.warehouse_id)
         setValue('subiekt_category_id', data.subiekt_category_id)
+        setValue('b2b_payment_id', data.b2b_payment_id)
     }
 
     useEffect(() => {
@@ -57,6 +59,7 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
             'name': partner.name,
             'warehouse_id': partner.warehouse_id,
             'subiekt_category_id': partner.subiekt_category_id,
+            'b2b_payment_id': partner.b2b_payment_id,
         });
 
         initializeFieldValues()
@@ -65,6 +68,7 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
         clearErrors('name')
         clearErrors('warehouse_id')
         clearErrors('subiekt_category_id')
+        clearErrors('b2b_payment_id')
     };
     const saveBasic = () => {
         patch(route("system.partners.partner.update", {partner: partner.id}), {
@@ -180,6 +184,35 @@ export default function BasicInfoComponent({partner, subiektCategories, subiektW
                         {errors.warehouse_id?.message && (
                             <Typography variant="body2" color="error" sx={{ml: 1}}>
                                 {errors.warehouse_id?.message.toString()}
+                            </Typography>
+                        )}
+
+                    </Box>
+
+                    <Box>
+                        <FormControl sx={{width: "30ch", my: 1}} variant={"outlined"}>
+                            <InputLabel id="b2b-payment-id-label">Płatność</InputLabel>
+                            <Select
+                                labelId="b2b-payment-id-label"
+                                id="b2b-payment-id"
+                                label="Płatność"
+                                color={errors.b2b_payment_id?.message && "error"}
+                                {...register("b2b_payment_id")}
+                                onChange={(value) => {
+                                    setData("b2b_payment_id", value.target.value)
+                                    setEdited(true)
+                                    setValue("b2b_payment_id", value.target.value, {shouldValidate: true})
+                                }}
+                                value={data.b2b_payment_id}
+                            >
+                                {b2bPayments.map((payment) => (
+                                    <MenuItem key={payment.id} value={payment.id}>{payment.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {errors.b2b_payment_id?.message && (
+                            <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                {errors.b2b_payment_id?.message.toString()}
                             </Typography>
                         )}
 

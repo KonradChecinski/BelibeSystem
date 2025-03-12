@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Partner;
+use App\Models\PartnerSettlement;
+use App\Models\PartnerSettlementDocument;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-class UpdatePartnerSettlementItemRequest extends FormRequest
+class UpdatePartnerSettlementDocumentAcceptRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +26,9 @@ class UpdatePartnerSettlementItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "price" => [
-                "required",
-                "numeric",
-                "min:0"
-            ]
+            //
         ];
     }
-
 
     /**
      * Configure the validator instance.
@@ -41,17 +39,16 @@ class UpdatePartnerSettlementItemRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->after(function (Validator $validator) {
-            $partnerSettlementItem = $this->partnerSettlementItem;
             $partnerSettlementDocument = $this->partnerSettlementDocument;
             $partnerSettlement = $this->partnerSettlement;
             $partner = $this->partner;
 
-            if (!$partnerSettlementItem || !$partnerSettlementDocument || !$partnerSettlement || !$partner) {
+            if (!$partnerSettlementDocument || !$partnerSettlement || !$partner) {
                 return;
             }
 
-            if ($partnerSettlementItem->partner_settlement_document_id !== $partnerSettlementDocument->id) {
-                $validator->errors()->add('partnerSettlementItem', 'Pozycja rozliczenia nie należy do określonego dokumentu rozliczenia.');
+            if ($partnerSettlementDocument->status === 2) {
+                $validator->errors()->add('partnerSettlementDocument', 'Dokument rozliczenia został już rozliczony.');
             }
 
             if ($partnerSettlementDocument->partner_settlement_id !== $partnerSettlement->id) {
@@ -62,10 +59,6 @@ class UpdatePartnerSettlementItemRequest extends FormRequest
             if ($partnerSettlement->partner_id !== $partner->id) {
                 $validator->errors()->add('settlement_id', 'Rozliczenie nie należy do określonego partnera.');
 //                $validator->errors()->add('settlement_id', 'The settlement does not belong to the specified partner.');
-            }
-
-            if ($partnerSettlementDocument->type !== 1) {
-                $validator->errors()->add('type', 'Dokument nie jest typu faktura.');
             }
         });
     }

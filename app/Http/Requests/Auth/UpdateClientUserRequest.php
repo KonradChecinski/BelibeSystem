@@ -30,7 +30,8 @@ class UpdateClientUserRequest extends FormRequest
                 "required", "string", "email", "max:255",
                 Rule::unique(ClientUser::class)->ignore($this->clientUser->id),
             ],
-            "password" => ["required", Password::defaults()],
+            "password" => ["nullable", Password::defaults()],
+            "email_to_verify" => "nullable|boolean",
         ];
     }
 }

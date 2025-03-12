@@ -3,7 +3,7 @@ import {Inventory} from "@mui/icons-material";
 import SettlementItemsTable from "@/Components/Table/Partners/SettlementItemsTable";
 
 
-export default function SettlementItemsComponent({partner, settlementDocumentItems}) {
+export default function SettlementItemsComponent({partner, settlementDocuments, settlementDocumentItems}) {
 
 
     return (
@@ -15,8 +15,12 @@ export default function SettlementItemsComponent({partner, settlementDocumentIte
                     <Inventory fontSize={"large"}/>
                     Produkty dokumentu rozliczeniowego
                 </Typography>
-                <SettlementItemsTable settlementDocumentItems={settlementDocumentItems} readOnly={false}
-                                      partner={partner}/>
+                <SettlementItemsTable
+                    settlementDocuments={settlementDocuments}
+                    settlementDocumentItems={settlementDocumentItems}
+                    readOnly={false}
+                    partner={partner}
+                />
             </Box>
         </Card>
     );

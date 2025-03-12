@@ -11,7 +11,7 @@ class PartnerSettlementItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        "partner_settlement_id",
+        "partner_settlement_document_id",
         "product_id",
         "quantity",
         "price_net_original",

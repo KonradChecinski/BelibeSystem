@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Subiekt\SubiektQueries;
+use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Http\Requests\StorePartnerRequest;
 use App\Http\Requests\UpdatePartnerRequest;
@@ -34,9 +35,11 @@ class PartnerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePartnerRequest $request)
+    public function store(StorePartnerRequest $request, Client $client)
     {
-        Partner::create($request->validated());
+        $partner = new Partner($request->validated());
+        $partner->client()->associate($client);
+        $partner->save();
     }
 
     /**
@@ -66,6 +69,7 @@ class PartnerController extends Controller
                     "name" => $warehouse->mag_Symbol . " - " . $warehouse->mag_Nazwa,
                 ];
             }),
+            "b2bPayments" => DB::table("b2b_payments")->get(),
         ]);
     }
 

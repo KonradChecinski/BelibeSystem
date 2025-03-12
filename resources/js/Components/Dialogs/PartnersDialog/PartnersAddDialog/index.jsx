@@ -15,7 +15,7 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {usePartnerAddForm} from "@/Components/Dialogs/PartnersDialog/PartnersAddDialog/form/usePartnerAddForm";
 
-export default function PartnersAddDialog({open, setOpen, reloadData}) {
+export default function PartnersAddDialog({open, setOpen, client}) {
     const {
         register,
         handleSubmit,
@@ -63,7 +63,7 @@ export default function PartnersAddDialog({open, setOpen, reloadData}) {
     };
 
     const save = () => {
-        post(route("system.partners.create"),
+        post(route("system.partners.create", {client: client.id}),
 
             {
                 preserveScroll: true,
@@ -71,12 +71,14 @@ export default function PartnersAddDialog({open, setOpen, reloadData}) {
                     reset();
                     setActiveStep(0);
                     enqueueSnackbar("Dodano partnera", {variant: 'success'})
-                    reloadData();
                     handleClose();
                 },
                 onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawaniu partnera", {variant: 'error'})
                     console.error(errors)
+                    enqueueSnackbar("Błąd przy dodawaniu partnera", {variant: 'error'})
+                    for (const errorsKey in errors) {
+                        enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                    }
                 },
             })
     }
@@ -94,7 +96,7 @@ export default function PartnersAddDialog({open, setOpen, reloadData}) {
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
                 <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                    Dodawanie Klienta
+                    Dodawanie Partnera
                 </DialogTitle>
                 <DialogContent>
                     <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
@@ -149,7 +151,7 @@ function Step1({data, setData, register, errors}) {
             />
             {errors.name?.message && (
                 <Typography variant="body2" color="error" sx={{ml: 1}}>
-                    {errors.nip?.message.toString()}
+                    {errors.name?.message.toString()}
                 </Typography>
             )}
         </Box>

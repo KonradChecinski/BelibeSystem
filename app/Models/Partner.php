@@ -16,6 +16,7 @@ class Partner extends Model
         'client_id',
         'warehouse_id',
         'subiekt_category_id',
+        'b2b_payment_id',
     ];
 
 
@@ -37,6 +38,11 @@ class Partner extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function b2bPayment()
+    {
+        return $this->belongsTo(B2bPayment::class);
     }
 
 }

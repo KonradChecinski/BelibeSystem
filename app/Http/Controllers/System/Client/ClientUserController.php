@@ -72,19 +72,29 @@ class ClientUserController extends Controller
     {
         if ($clientUser->client != $client) abort(403);
 
+
         $validatedClientUserCredential = [
             "name" => $request->name,
             "email" => $request->email,
         ];
         $clientUser->update($validatedClientUserCredential);
 
-        if (strlen($request->password) > 0) {
+        if ($request->password && strlen($request->password) > 0) {
             $clientUser->forceFill([
                 'password' => Hash::make($request->password),
                 'remember_token' => null,
             ])->save();
             event(new PasswordReset($clientUser));
         }
+
+        if ($request->email_to_verify && $request->email_to_verify == true) {
+            $clientUser->forceFill([
+                'email_verified_at' => null,
+            ])->save();
+            event(new Registered($clientUser));
+        }
+
+
     }
 
     /**

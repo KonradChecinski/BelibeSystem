@@ -292,7 +292,7 @@ class ClientController extends Controller
         $client = Client::with(["country", "status", "sourceOfAcquisition", "accountManager", "payments", "industry",
             "notes.user:id,name", "locations.country:id,name", "discounts.productModel:id,symbol,name", "discounts.productCategory:id,name",
             "discounts.productGroup:id,name", "discounts.productBrand:id,name",
-            "clientUsers", "recipient.country:id,name", "invoices", "invoices.clientOrder", "orders", "orders.invoice", "receivables", "obligations"
+            "clientUsers", "recipient.country:id,name", "invoices", "invoices.clientOrder", "orders", "orders.invoice", "receivables", "obligations", "partner"
         ])->with(["activities" => function ($query) {
             $query->latest()->take(10)->with([
                 "user:id,name",

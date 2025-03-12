@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PartnerSettlementDocument;
 use App\Http\Requests\StorePartnerSettlementDocumentRequest;
-use App\Http\Requests\UpdatePartnerSettlementDocumentRequest;
+use App\Http\Requests\UpdatePartnerSettlementDocumentAcceptRequest;
 
 class PartnerSettlementDocumentController extends Controller
 {
@@ -51,7 +51,7 @@ class PartnerSettlementDocumentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePartnerSettlementDocumentRequest $request, PartnerSettlementDocument $partnerSettlementDocument)
+    public function update(UpdatePartnerSettlementDocumentAcceptRequest $request, PartnerSettlementDocument $partnerSettlementDocument)
     {
         //
     }

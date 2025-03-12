@@ -9,10 +9,6 @@ import {
 } from 'material-react-table';
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
-import PartnersSettlementAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementAddDialog";
-import {XML} from "@/Icons/XML";
-import {Excel} from "@/Icons/Excel";
-import {CSV} from "@/Icons/CSV";
 import {Invoice} from "@/Icons/Invoice";
 import {InvoiceCorrection} from "@/Icons/InvoiceCorrection";
 import {router} from "@inertiajs/react";
@@ -147,7 +143,13 @@ export default function SettlementDocumentsTable({
                 muiTableHeadCellProps: {
                     align: 'right',
                 },
-                Cell: ({row, cell}) => toLocaleString(cell.getValue() / 100),
+                Cell: ({row, cell}) => (
+                    <Typography variant="body2"
+                                sx={{color: row.original.price_net_computed !== row.original.price_net_final ? 'success.main' : 'inherit'}}>
+                        {toLocaleString(cell.getValue() / 100)}
+                    </Typography>
+
+                ),
             },
             {
                 accessorKey: 'price_gross_original',
@@ -232,8 +234,8 @@ export default function SettlementDocumentsTable({
                             <Tooltip title="Akceptuj rozliczenie" arrow>
                                 <span>
                                     <IconButton aria-label="accept" onClick={handleAccept}
-                                                disabled={row.original.status !== 0}>
-                                        <Done color={row.original.status === 0 ? "success" : ""}/>
+                                                disabled={row.original.status === 2}>
+                                        <Done color={row.original.status !== 2 ? "success" : ""}/>
                                     </IconButton>
                                 </span>
                             </Tooltip>

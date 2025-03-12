@@ -4,13 +4,14 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
-use App\Jobs\partners\CreateInvoiceFromPartnerSummaryFile;
-use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSummaryFile;
+use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
+use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
 use App\Models\B2bPayment;
 use App\Models\Client\Client;
 use App\Models\Partner;
+use App\Models\PartnerSettlementDocument;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
 use App\Models\Subiekt\Towar;
@@ -39,8 +40,6 @@ class TestController extends Controller
 //        } catch (Exception $e) {
 //            dd($e->getMessage());
 //        }
-
-        self::bikinarium();
     }
 
 
@@ -243,39 +242,39 @@ class TestController extends Controller
     }
 
 
-    public static function bikinarium()
-    {
-        $partner = Partner::find(1);
-        $client = Client::find(329);
-        $payment = B2bPayment::find(3);
-        $mag_id = 46;
-
-
-//        $subiekt = app(Subiekt::class)->getInstance();
-//        $subiekt = $subiekt->connect();
-
-        $path = storage_path("app/test/bikinarium.csv");
-        $csv = SimpleExcelReader::create($path)
-            ->useHeaders(["Symbol", "Sprzedaz", "Zwroty", "Bilans", "Cena", "Cena_brutto", "Wartosc_netto", "Wartosc_brutto"])
-            ->useDelimiter(";");
-
-        $rowsJson = json_encode($csv->getRows());
-        $rows = collect(json_decode($rowsJson, true));
-        $rows = $rows->map(function ($row) {
-            $row['Cena'] = (float)str_replace(',', '.', $row['Cena']);
-            $row['Cena_brutto'] = (float)str_replace(',', '.', $row['Cena_brutto']);
-            $row['Wartosc_netto'] = (float)str_replace(',', '.', $row['Wartosc_netto']);
-            $row['Wartosc_brutto'] = (float)str_replace(',', '.', $row['Wartosc_brutto']);
-            return $row;
-        });
-
-
-        $sold = $rows->where("Bilans", ">", 0);
-        $returned = $rows->where("Bilans", "<", 0);
-
-        CreateInvoiceFromPartnerSummaryFile::dispatch($partner, $client, $sold, $payment, $mag_id);
-        CreateInvoiceCorrectionsFromPartnerSummaryFile::dispatch($partner, $client, $returned, $payment, $mag_id);
-//        CreateInvoiceCorrectionsFromPartnerSummaryFile::dispatchSync($partner, $client, $returned, $payment, $mag_id);
-//        dd($sold->toArray(), $returned->toArray(), $rows->toArray());
-    }
+//    public static function bikinarium()
+//    {
+//        $partner = Partner::find(1);
+//        $client = Client::find(329);
+//        $payment = B2bPayment::find(3);
+//        $mag_id = 46;
+//
+//
+////        $subiekt = app(Subiekt::class)->getInstance();
+////        $subiekt = $subiekt->connect();
+//
+//        $path = storage_path("app/test/bikinarium.csv");
+//        $csv = SimpleExcelReader::create($path)
+//            ->useHeaders(["Symbol", "Sprzedaz", "Zwroty", "Bilans", "Cena", "Cena_brutto", "Wartosc_netto", "Wartosc_brutto"])
+//            ->useDelimiter(";");
+//
+//        $rowsJson = json_encode($csv->getRows());
+//        $rows = collect(json_decode($rowsJson, true));
+//        $rows = $rows->map(function ($row) {
+//            $row['Cena'] = (float)str_replace(',', '.', $row['Cena']);
+//            $row['Cena_brutto'] = (float)str_replace(',', '.', $row['Cena_brutto']);
+//            $row['Wartosc_netto'] = (float)str_replace(',', '.', $row['Wartosc_netto']);
+//            $row['Wartosc_brutto'] = (float)str_replace(',', '.', $row['Wartosc_brutto']);
+//            return $row;
+//        });
+//
+//
+//        $sold = $rows->where("Bilans", ">", 0);
+//        $returned = $rows->where("Bilans", "<", 0);
+//
+//        CreateInvoiceFromPartnerSettlement::dispatch($partner, $client, $sold, $payment, $mag_id);
+//        CreateInvoiceCorrectionsFromPartnerSettlement::dispatch($partner, $client, $returned, $payment, $mag_id);
+////        CreateInvoiceCorrectionsFromPartnerSummaryFile::dispatchSync($partner, $client, $returned, $payment, $mag_id);
+////        dd($sold->toArray(), $returned->toArray(), $rows->toArray());
+//    }
 }

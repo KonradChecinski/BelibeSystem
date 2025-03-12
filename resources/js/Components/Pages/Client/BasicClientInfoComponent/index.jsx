@@ -8,15 +8,17 @@ import {
     TextField, Tooltip,
     Typography
 } from "@mui/material";
-import {Cancel, CloudDownload, Save, Home, Phone} from "@mui/icons-material";
+import {Cancel, CloudDownload, Save, Home, Phone, Handshake} from "@mui/icons-material";
 import {useBasicClientInfoForm} from "@/Components/Pages/Client/BasicClientInfoComponent/form/useBasicClientInfoForm";
 import ClientFindGusDialog from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog";
 import {enqueueSnackbar} from "notistack";
 import {useTheme} from "@mui/material/styles";
+import PartnersAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersAddDialog";
 
 export default function BasicClientInfoComponent(props) {
     const [edited, setEdited] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogGusOpen, setDialogGusOpen] = useState(false);
+    const [dialogPartnerOpen, setDialogPartnerOpen] = useState(false);
 
     const theme = useTheme();
     // console.log("Propsy: ", props)
@@ -122,8 +124,12 @@ export default function BasicClientInfoComponent(props) {
     return (
         <>
             {props.client.country_id === 1 && (
-                <ClientFindGusDialog open={dialogOpen} setOpen={setDialogOpen} nip={data.nip} props={props}/>)}
-
+                <ClientFindGusDialog open={dialogGusOpen} setOpen={setDialogGusOpen} nip={data.nip} props={props}/>)}
+            <PartnersAddDialog
+                open={dialogPartnerOpen}
+                setOpen={setDialogPartnerOpen}
+                client={props.client}
+            />
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
@@ -190,12 +196,35 @@ export default function BasicClientInfoComponent(props) {
                                             // size={"large"}
                                             disabled={processing}
                                             onClick={() => {
-                                                setDialogOpen(true)
+                                                setDialogGusOpen(true)
                                             }}
                                         >
                                             <CloudDownload fontSize={"large"}/>
                                         </IconButton>
                                     </Tooltip>
+                                )}
+                                {/*TODO: add connectToSubiekt*/}
+
+
+                                {props.editing && (
+                                    <Tooltip
+                                        title={Boolean(props.client.partner) ? "Partner już utworzony" : "Stwórz partnera"}
+                                    >
+                                            <span>
+                                                <IconButton
+                                                    // type="submit"
+                                                    // color="success"
+                                                    // size={"large"}
+                                                    disabled={Boolean(props.client.partner)}
+                                                    onClick={() => {
+                                                        setDialogPartnerOpen(true)
+                                                    }}
+                                                >
+                                                    <Handshake fontSize={"large"}/>
+                                                </IconButton>
+                                            </span>
+                                    </Tooltip>
+
                                 )}
                             </Box>
 
