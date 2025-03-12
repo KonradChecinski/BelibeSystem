@@ -206,4 +206,13 @@ class SubiektQueries
     {
         return DB::connection("subiekt")->table("dok__Dokument")->where("dok_Id", $id)->first("dok_NrPelny")->dok_NrPelny;
     }
+
+    public static function getClientIdByNip(string $nip): int|null
+    {
+        return DB::connection("subiekt")->table("adr__Ewid")
+            ->where("adr_TypAdresu", 1)
+            ->where("adr_Nip", $nip)
+            ->orderBy("adr_Id", "desc")
+            ->first("adr_IdObiektu")?->adr_IdObiektu;
+    }
 }

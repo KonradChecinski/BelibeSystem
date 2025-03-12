@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\System\Client;
 
+use App\Helpers\Subiekt\SubiektQueries;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\UpdateBasicClientRequest;
 use App\Http\Requests\Client\UpdateBasicGUSClientRequest;
+use App\Http\Requests\Client\UpdateBasicSubiektClientRequest;
 use App\Models\Client\Client;
+use App\Models\ClientInvoice;
+use App\Models\ClientSettlement;
+use App\Models\SubiektObligation;
+use App\Models\SubiektReceivable;
 use Illuminate\Http\Request;
 
 class BasicClientController extends Controller
@@ -73,5 +79,66 @@ class BasicClientController extends Controller
     {
         $client->update($request->validated());
         $client->save();
+    }
+
+    public function connectToSubiekt(UpdateBasicSubiektClientRequest $request, Client $client)
+    {
+//        dd("connectToSubiekt", $client->nip);
+        $subiektId = SubiektQueries::getClientIdByNip($client->nip);
+        if (is_null($subiektId)) {
+            return redirect()->back()->withErrors("Nie znaleziono klienta w Subiekcie");
+        }
+
+        $client->subiekt_id = $subiektId;
+//        $client->save();
+
+        if ($client->receivables()->count() > 0 || $client->obligations()->count() > 0) {
+            return redirect()->back()->withErrors("Powiązano z Subiektem, jednak klient ma już rozliczenia");
+        } else {
+            $receivables = SubiektReceivable::query()->where("nzf_IdObiektu", $client->subiekt_id)->orderBy("nzf_Data")->get();
+
+            foreach ($receivables as $receivable) {
+                $invoice = ClientInvoice::query()->where("number", $receivable->nzf_NumerPelny)->first();
+
+                $settlement = ClientSettlement::create([
+                    "client_id" => $client->id,
+                    "document_id" => $invoice->id ?? null,
+                    "subiekt_id" => $receivable->nzf_Id,
+                    "type" => 1,
+                    "number" => $receivable->nzf_NumerPelny,
+                    "settlement" => $receivable->Rozliczenie,
+                    "datetime" => $receivable->nzf_Data,
+                    "date_of_payment" => $receivable->nzf_TerminPlatnosci,
+                    "date_of_last_payment" => $receivable->nzf_DataOstatniejSplaty,
+                    "days_of_delay" => $receivable->DniSpoznienia,
+                    "original_value" => $receivable->WartoscPierwotna * 100,
+                    "value" => $receivable->Wartosc * 100,
+                ]);
+            }
+
+            $obligations = SubiektObligation::query()->where("nzf_IdObiektu", $client->subiekt_id)->orderBy("nzf_Data")->get();
+
+            foreach ($obligations as $obligation) {
+                $invoice = ClientInvoice::query()->where("number", $obligation->nzf_NumerPelny)->first();
+
+                $settlement = ClientSettlement::create([
+                    "client_id" => $client->id,
+                    "document_id" => $invoice->id ?? null,
+                    "subiekt_id" => $obligation->nzf_Id,
+                    "type" => 2,
+                    "number" => $obligation->nzf_NumerPelny,
+                    "settlement" => $obligation->Rozliczenie,
+                    "datetime" => $obligation->nzf_Data,
+                    "date_of_payment" => $obligation->nzf_TerminPlatnosci,
+                    "date_of_last_payment" => $obligation->nzf_DataOstatniejSplaty,
+//                    "days_of_delay" => $obligation->DniSpoznienia,
+                    "original_value" => $obligation->WartoscPierwotna * 100,
+                    "value" => $obligation->Wartosc * 100,
+                ]);
+
+            }
+        }
+
+
     }
 }
