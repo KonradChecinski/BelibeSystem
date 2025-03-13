@@ -5,6 +5,7 @@ namespace App\Jobs\partners;
 use App\Helpers\Partners\PartnerExportFile;
 use App\Helpers\Shoper\Shoper;
 use App\Helpers\Subiekt\SubiektQueries;
+use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
 use App\Models\B2bPayment;
 use App\Models\Client\Client;
 use App\Models\Partner;
@@ -128,5 +129,7 @@ class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, Shou
 
 
         $subiekt->MagazynId = 1;
+
+        GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt::dispatch($this->partnerSettlementDocument);
     }
 }

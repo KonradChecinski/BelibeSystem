@@ -2,12 +2,7 @@
 
 namespace App\Jobs\FromSubiekt;
 
-use App\Models\ClientOrder;
-use App\Models\Order;
-use App\Models\Products\Product;
-use App\Models\ShoperOrder;
-use App\Models\Subiekt\Towar;
-use App\Notifications\b2b\InvoiceGeneratedClient;
+use App\Models\PartnerSettlementDocument;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -18,28 +13,29 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RuntimeException;
 
-class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue, ShouldBeUnique
+class GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    public $tries = 1;//5;
     public $backoff = 20;
 
-    private ClientOrder $clientOrder;
+    private PartnerSettlementDocument $partnerSettlementDocument;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(ClientOrder $clientOrder)
+    public function __construct(PartnerSettlementDocument $partnerSettlementDocument)
     {
-        $this->clientOrder = $clientOrder;
         $this->onQueue('sfera');
+        $this->partnerSettlementDocument = $partnerSettlementDocument;
     }
 
     public function uniqueId()
     {
-        return $this->clientOrder->id;
+        return $this->partnerSettlementDocument->id;
     }
 
     /**
@@ -47,17 +43,27 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue, ShouldBeUn
      */
     public function handle(): void
     {
+        if ($this->partnerSettlementDocument->settlement->partner->client->subiekt_id === null) {
+            throw new RuntimeException("Klient nie ma przypisanego ID w Subiekcie");
+        }
+        if ($this->partnerSettlementDocument->type !== 2) {
+            throw new RuntimeException("Nieprawidłowy typ dokumentu rozliczeniowego");
+        }
+
+
         $subiekt = app(Subiekt::class)->getInstance();
         $subiekt = $subiekt->connect();
 
+        $subiekt->MagazynId = $this->partnerSettlementDocument->settlement->partner->warehouse_id;
 
-        $client = $this->clientOrder->client;
-        $order = $this->clientOrder;
+
+        $client = $this->partnerSettlementDocument->settlement->partner->client;
+        $partnerSettlementDocument = $this->partnerSettlementDocument;
 
         $subiektInvoice = DB::connection("subiekt")
             ->table("dok__Dokument")
-            ->where("dok_DoDokId", $order->subiekt_id)
-            ->whereIn("dok_Typ", [2, 21])
+            ->where("dok_Id", $partnerSettlementDocument->document_subiekt_id)
+            ->whereIn("dok_Typ", [6])
             ->where("dok_Podtyp", 0)
             ->first([
                 "dok_Id",
@@ -65,33 +71,35 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue, ShouldBeUn
                 "dok_Status",
                 "dok_WartNetto",
                 "dok_WartBrutto",
-                "dok_DoDokDataWyst"
+                "dok_DataWyst"
             ]);
         if (!$subiektInvoice) {
-            $this->fail("Nie znaleziono faktury w Subiekcie");
+            throw new RuntimeException("Nie znaleziono faktury w Subiekcie");
         }
 
-        $invoice = $subiekt->SuDokumentyManager->Wczytaj($subiektInvoice->dok_NrPelny);
+        $invoiceCorrection = $subiekt->SuDokumentyManager->Wczytaj($subiektInvoice->dok_NrPelny);
 //        dd($subiektInvoice, $invoice->NumerPelny, $invoice->WartoscBrutto, $invoice->DataWystawienia);
 
         $uuid = Str::uuid();
         $path = storage_path("app/temp/{$uuid}.pdf");
-        $invoice->DrukujDoPlikuWgWzorca(1000041, $path, 0); //Tymczasowo zapisane w temp
+        $invoiceCorrection->DrukujDoPlikuWgWzorca(567, $path, 0); //Tymczasowo zapisane w temp
 
-        $invoicePath = Storage::putFile("invoices", $path);
+        $invoiceCorrectionPath = Storage::putFile("invoices", $path);
 
         unlink($path);  //usuwanie pliku z temp
 
-        if ($order->invoice()->count() > 0) $order->invoice()->delete();
-        $invoice = $order->invoice()->create([
+        if ($this->partnerSettlementDocument->clientInvoice()->count() > 0) $this->partnerSettlementDocument->clientInvoice()->delete();
+        $invoice = $this->partnerSettlementDocument->clientInvoice()->create([
             'client_id' => $client->id,
-            'type' => 1,
+            'type' => 2,
             'number' => $subiektInvoice->dok_NrPelny,
             'net_value' => $subiektInvoice->dok_WartNetto * 100,
             'gross_value' => $subiektInvoice->dok_WartBrutto * 100,
-            'datetime' => $subiektInvoice->dok_DoDokDataWyst,
-            'path' => $invoicePath,
+            'datetime' => $subiektInvoice->dok_DataWyst,
+            'path' => $invoiceCorrectionPath,
         ]);
+
+        $subiekt->MagazynId = 1;
 
 //        $order->client->notify(new InvoiceGeneratedClient($order));
 

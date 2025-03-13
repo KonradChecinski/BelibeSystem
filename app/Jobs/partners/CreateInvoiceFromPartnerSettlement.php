@@ -4,6 +4,7 @@ namespace App\Jobs\partners;
 
 use App\Helpers\Partners\PartnerExportFile;
 use App\Helpers\Shoper\Shoper;
+use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
 use App\Models\B2bPayment;
 use App\Models\Client\Client;
 use App\Models\Partner;
@@ -127,5 +128,7 @@ class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
 
 
         $subiekt->MagazynId = 1;
+
+        GenerateInvoiceFromFromPartnerSettlementInSubiekt::dispatch($this->partnerSettlementDocument);
     }
 }

@@ -11,6 +11,7 @@ class PartnerSettlementDocument extends Model
 
     protected $fillable = [
         "partner_settlement_id",
+        "client_invoice_id",
         "type",
         "document_subiekt_id",
         "document_name",
