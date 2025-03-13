@@ -70,7 +70,9 @@ class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
 
 
         if ($this->partnerSettlementDocument->status !== 1) {
-            GenerateInvoiceFromFromPartnerSettlementInSubiekt::dispatch($this->partnerSettlementDocument);
+            if ($this->partnerSettlementDocument->status === 2) {
+                GenerateInvoiceFromFromPartnerSettlementInSubiekt::dispatch($this->partnerSettlementDocument);
+            }
             throw new RuntimeException("Dokument nie jest w statusie do wystawienia faktury");
         }
 
