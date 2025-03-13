@@ -71,6 +71,7 @@ class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, Shou
 
 
         if ($this->partnerSettlementDocument->status !== 1) {
+            GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt::dispatch($this->partnerSettlementDocument);
             throw new RuntimeException("Dokument nie jest w statusie do wystawienia faktury");
         }
 
