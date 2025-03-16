@@ -49,63 +49,11 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
                     justifyContent="flex-start"
                     alignItems="center"
                 >
-                    {/*<Grid item xs={4} md={2}>*/}
-                    {/*    <FormControl*/}
-                    {/*        sx={{ml: 1, width: "100%"}}*/}
-                    {/*        variant="outlined"*/}
-                    {/*    >*/}
-                    {/*        <InputLabel htmlFor="outlined-adornment-models">*/}
-                    {/*            Model*/}
-                    {/*        </InputLabel>*/}
-                    {/*        <OutlinedInput*/}
-                    {/*            id="outlined-adornment-models"*/}
-                    {/*            type="text"*/}
-                    {/*            endAdornment={*/}
-                    {/*                <InputAdornment position="end">*/}
-                    {/*                    <IconButton*/}
-                    {/*                        // aria-label="toggle password visibility"*/}
-                    {/*                        // onClick={handleClickShowPassword}*/}
-                    {/*                        // onMouseDown={handleMouseDownPassword}*/}
-                    {/*                    >*/}
-                    {/*                        <Search/>*/}
-                    {/*                    </IconButton>*/}
-                    {/*                </InputAdornment>*/}
-                    {/*            }*/}
-                    {/*            label="Model"*/}
-                    {/*        />*/}
-                    {/*    </FormControl>*/}
-                    {/*</Grid>*/}
                     <Grid item xs={6} md={4}>
                         <B2bSearchModelComponent searchRoute={route("b2b.model.search")}
                                                  label={"Model"}/>
 
                     </Grid>
-                    {/*<Grid item xs={4} md={2}>*/}
-                    {/*    <FormControl*/}
-                    {/*        sx={{ml: 1, width: "100%"}}*/}
-                    {/*        variant="outlined"*/}
-                    {/*    >*/}
-                    {/*        <InputLabel htmlFor="outlined-adornment-password">*/}
-                    {/*            Firma*/}
-                    {/*        </InputLabel>*/}
-                    {/*        <OutlinedInput*/}
-                    {/*            id="outlined-adornment-password"*/}
-                    {/*            type="text"*/}
-                    {/*            endAdornment={*/}
-                    {/*                <InputAdornment position="end">*/}
-                    {/*                    <IconButton*/}
-                    {/*                        // aria-label="toggle password visibility"*/}
-                    {/*                        // onClick={handleClickShowPassword}*/}
-                    {/*                        // onMouseDown={handleMouseDownPassword}*/}
-                    {/*                    >*/}
-                    {/*                        <Search/>*/}
-                    {/*                    </IconButton>*/}
-                    {/*                </InputAdornment>*/}
-                    {/*            }*/}
-                    {/*            label="Firma"*/}
-                    {/*        />*/}
-                    {/*    </FormControl>*/}
-                    {/*</Grid>*/}
                     <Grid
                         item
                         xs={6}
@@ -150,15 +98,6 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
                                                );
                                            }
                                            }/>
-
-                                {/*<Tooltip title="Show events in system">*/}
-                                {/*    <IconButton size={"large"}*/}
-                                {/*                onClick={() => {*/}
-                                {/*                    router.visit(route("telescope"));*/}
-                                {/*                }}>*/}
-                                {/*        <Event sx={{fontSize: 25}}/>*/}
-                                {/*    </IconButton>*/}
-                                {/*</Tooltip>*/}
 
                                 <Tooltip title={"Zobacz ulubione"}>
                                     <IconButton size={"large"}
@@ -209,23 +148,7 @@ export default function B2BNavBar({auth, clientId, cart, user, accountManager}) 
 
                                 </Tooltip>
 
-                                {/*<Tooltip title="Delete">*/}
-                                {/*    <IconButton>*/}
-                                {/*        <Badge badgeContent={4} color="primary">*/}
-                                {/*            <Delete sx={{ fontSize: 25 }} />*/}
-                                {/*        </Badge>*/}
-                                {/*    </IconButton>*/}
-                                {/*</Tooltip>*/}
-
-                                {/*<Tooltip title="Delete">*/}
-                                {/*    <IconButton>*/}
-                                {/*        <Badge badgeContent={4} color="primary">*/}
-                                {/*            <Delete sx={{ fontSize: 25 }} />*/}
-                                {/*        </Badge>*/}
-                                {/*    </IconButton>*/}
-                                {/*</Tooltip>*/}
-
-                                <Tooltip title="Account settings">
+                                <Tooltip title="Użytkownik">
                                     <IconButton
                                         onClick={handleClickUserAvatar}
                                         sx={{ml: 2}}

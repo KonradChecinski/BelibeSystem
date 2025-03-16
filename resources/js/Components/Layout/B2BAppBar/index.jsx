@@ -257,7 +257,7 @@ export default function B2BAppBar({position, cart, clientId, accountManager, chi
                     {/*    </IconButton>*/}
                     {/*</Box>  */}
                     <Box sx={{display: {xs: "flex", md: "none"}}}>
-                        <Tooltip title="Account settings">
+                        <Tooltip title="Użytkownik">
                             <IconButton
                                 onClick={handleClickUserAvatar}
                                 sx={{ml: 2}}
