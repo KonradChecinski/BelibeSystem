@@ -114,5 +114,15 @@
     "Your account has been created on our platform. To use it, you need to confirm your email address.": "Twoje konto zostało utworzone na naszej platformie. Aby móc z niego korzystać, musisz potwierdzić swój adres e-mail.",
     "Contact our customer support team to start a partnership": "Skontaktuj się z naszymi opiekunami klienta w celu rozpoczęcia współpracy",
     "Your password has been reset": "Twoje hasło zostało zresetowane",
-    "If you did not request a password reset, please contact your administrator.": "Jeśli nie prosiłeś o zresetowanie hasła, skontaktuj się z twoim opiekunem."
+    "If you did not request a password reset, please contact your administrator.": "Jeśli nie prosiłeś o zresetowanie hasła, skontaktuj się z twoim opiekunem.",
+    "Change email address": "Zmień adres email",
+    "Current email address": "Aktualny adres email",
+    "New email address": "Nowy adres email",
+    "Confirm new email address": "Potwierdź nowy adres email",
+    "After changing the email address, you will need to confirm the new address by clicking the link sent to the new address.": "Po zmianie adresu email, będziesz musiał potwierdzić nowy adres, klikając w link wysłany na nowy adres.",
+    "Change password": "Zmień hasło",
+    "New password": "Nowe hasło",
+    "Confirm new password": "Potwierdź nowe hasło",
+    "After changing the password, you will need to log in again.": "Po zmianie hasła, będziesz musiał się zalogować ponownie.",
+    "Your account manager": "Twój opiekun"
 }

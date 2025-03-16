@@ -4,13 +4,12 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
+use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
+use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
 use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
 use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Models\B2bPayment;
-use App\Models\Client\Client;
-use App\Models\Partner;
 use App\Models\PartnerSettlementDocument;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
@@ -27,19 +26,7 @@ class TestController extends Controller
      */
     public function index()
     {
-//        $subiekt = app(Subiekt::class)->getInstance();
-////        $subiekt = $subiekt->connect();
-//
-//        $path = storage_path("app/test/1.sta");
-////        $path = storage_path("app/test/pko.mt940");
-//
-//        $parser = new Mt940Parser();
-//        try {
-//            $statement = $parser->parse($path);
-//            dd($statement);
-//        } catch (Exception $e) {
-//            dd($e->getMessage());
-//        }
+        GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt::dispatch(PartnerSettlementDocument::find(16));
     }
 
 
