@@ -84,6 +84,12 @@ class HandleInertiaRequests extends Middleware
                         : [],
                 ],
             ]);
+        } else if (Helper::getSystemNameFromDomain($request) === SystemName::B2B) {
+            $array = array_merge($array, [
+                "auth" => [
+                    "user" => $request->user(),
+                ],
+            ]);
         }
 
         // Add the Ziggy route helper to the page (for use in Vue components

@@ -42,8 +42,8 @@ Route::group([], function () {
     Route::get("/settlements", [B2bSettlementsController::class, 'index'])->name("b2b.settlements");
 
     Route::get("/client", [B2bClientController::class, 'index'])->name("b2b.client");
-
-
+    Route::post("/client/password/change", [B2bClientController::class, 'updatePassword'])->name("b2b.client.password.change");
+    Route::post("/client/email/change", [B2bClientController::class, 'updateEmail'])->name("b2b.client.email.change");
 });
 
 

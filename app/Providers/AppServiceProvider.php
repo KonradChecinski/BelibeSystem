@@ -8,6 +8,7 @@ use App\Singleton\SubiektDodatki;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,14 @@ class AppServiceProvider extends ServiceProvider
             $connection = $app['db']->connection($app['config']['session.connection']);
 
             return new CustomDatabaseSessionHandler($connection, $table, $lifetime, $app);
+        });
+
+        Password::defaults(function () {
+            $rule = Password::min(8);
+
+            return $this->app->isProduction()
+                ? $rule->mixedCase()->uncompromised()->letters()->numbers()
+                : $rule;
         });
     }
 }

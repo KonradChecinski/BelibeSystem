@@ -5,7 +5,7 @@ const schema = yup.object().shape({
         .string()
         .required('Adres email jest wymagany')
         .email('Niepoprawny adres email'),
-    confirmEmail: yup
+    email_confirmation: yup
         .string()
         .required('Potwierdzenie adresu email jest wymagane')
         .email('Niepoprawny adres email')
