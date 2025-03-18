@@ -8,6 +8,7 @@ use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
 use App\Models\OrderProduct;
 use App\Models\ProductB2cStat;
+use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocumentProduct;
 use Illuminate\Database\Eloquent\Builder;
@@ -121,6 +122,16 @@ class Product extends Model
 
         return $this->hasOneDeepFromReverse(
             (new ProductModel())->products()
+        );
+    }
+
+    public function prices()
+    {
+        return $this->hasOneDeep(
+            ProductModelPrice::class, // Docelowy model
+            [ProductModelColor::class, ProductModel::class], // Pośrednie tabele
+            ['id', 'id', 'product_model_id'], // Klucze lokalne
+            ['product_model_color_id', 'product_model_id', 'id'] // Klucze obce
         );
     }
 
