@@ -23,6 +23,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
@@ -114,6 +115,17 @@ class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, Shou
 
         $kfs->PlatnoscKredytKwota = $kfs->KwotaDoZaplaty;
         $kfs->PlatnoscKredytId = 17;
+
+        $kfs->Wystawil = iconv("UTF-8", "Windows-1250//IGNORE", $this->partnerSettlementDocument->settlement->user->firstname . " " . $this->partnerSettlementDocument->settlement->user->lastname);
+
+        if (!is_null($this->partnerSettlementDocument->settlement->partner->client->accountManager->subiekt_category_name)) {
+            $categoryName = $this->partnerSettlementDocument->settlement->partner->client->accountManager->subiekt_category_name;
+            $categorySubiekt = DB::connection("subiekt")->table("sl_Kategoria")->where("kat_Nazwa", $categoryName)->first();
+            if ($categorySubiekt) {
+                $kfs->KategoriaId = (int)$categorySubiekt->kat_Id;
+            }
+        }
+
 
         $date = date("Y-m-d H:i:s");
         $kfs->PoleWlasne["Czas"] = $date;
