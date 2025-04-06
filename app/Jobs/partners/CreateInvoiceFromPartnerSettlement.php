@@ -23,6 +23,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
@@ -113,6 +114,17 @@ class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
 
         $faktura->PlatnoscKredytKwota = $faktura->KwotaDoZaplaty;
         $faktura->PlatnoscKredytId = $this->partner->b2bPayment->subiekt_id;
+
+        $faktura->Wystawil = iconv("UTF-8", "Windows-1250//IGNORE", $this->partnerSettlementDocument->settlement->user->firstname . " " . $this->partnerSettlementDocument->settlement->user->lastname);
+
+        if (!is_null($this->partnerSettlementDocument->settlement->partner->client->accountManager->subiekt_category_name)) {
+            $categoryName = $this->partnerSettlementDocument->settlement->partner->client->accountManager->subiekt_category_name;
+            $categorySubiekt = DB::connection("subiekt")->table("sl_Kategoria")->where("kat_Nazwa", $categoryName)->first();
+            if ($categorySubiekt) {
+                $faktura->KategoriaId = (int)$categorySubiekt->kat_Id;
+            }
+        }
+
 
         $date = date("Y-m-d H:i:s");
         $faktura->PoleWlasne["Czas"] = $date;
