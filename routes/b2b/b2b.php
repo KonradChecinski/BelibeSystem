@@ -11,6 +11,7 @@ use App\Http\Controllers\B2bOrderController;
 use App\Http\Controllers\B2bPageController;
 use App\Http\Controllers\B2bSettlementsController;
 use App\Http\Controllers\ExtraMainPageComponentsController;
+use App\Http\Controllers\ImportItemsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -44,6 +45,11 @@ Route::group([], function () {
     Route::get("/client", [B2bClientController::class, 'index'])->name("b2b.client");
     Route::post("/client/password/change", [B2bClientController::class, 'updatePassword'])->name("b2b.client.password.change");
     Route::post("/client/email/change", [B2bClientController::class, 'updateEmail'])->name("b2b.client.email.change");
+
+
+    Route::get("/import", [ImportItemsController::class, 'index'])->name("b2b.import.items");
+    Route::post("/import/header", [ImportItemsController::class, 'getHeaderFromFile'])->name("b2b.import.items.getHeaderFromFile");
+
 });
 
 

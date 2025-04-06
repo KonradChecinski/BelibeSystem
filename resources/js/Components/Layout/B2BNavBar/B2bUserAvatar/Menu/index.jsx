@@ -1,6 +1,16 @@
 import {Avatar, Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import {Link, router} from "@inertiajs/react";
-import {Favorite, History, Logout, Payment, Person, ReceiptLong, Savings, Settings} from "@mui/icons-material";
+import {
+    Favorite,
+    History,
+    ImportExport,
+    Logout,
+    Payment,
+    Person,
+    ReceiptLong,
+    Savings,
+    Settings
+} from "@mui/icons-material";
 import * as PropTypes from "prop-types";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import UserAvatar from "@/Components/Layout/UserAvatar";
@@ -99,7 +109,17 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
 
                 <Divider/>
 
-
+                <Link href={route("b2b.import.items")}>
+                    <MenuItem onClick={onClose}>
+                        <ListItemIcon>
+                            <ImportExport fontSize="small"/>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("Import items")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Divider/>
                 <MenuItem onClick={handleLogoutClick} disabled={accountManager}>
                     <ListItemIcon>
                         <Logout fontSize="small"/>
