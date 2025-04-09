@@ -5,11 +5,11 @@ import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
     Box,
     Button,
-    ButtonGroup, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem,
+    ButtonGroup, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem,
     Paper, Radio, RadioGroup, Select,
     Step,
     StepLabel,
-    Stepper,
+    Stepper, Switch,
     Table, TableBody, TableCell, TableContainer,
     TableHead,
     TableRow,
@@ -31,7 +31,13 @@ export default function ImportItemsPage(props) {
     const {data, setData, post, processing, errors} = useForm({
         file: null,
         headersFromFile: [],
+        selectedHeaders: {
+            symbol: null,
+            ean: null,
+            quantity: null,
+        },
         identification: 1,
+        items: [],
     });
 
     return (
@@ -59,11 +65,11 @@ export default function ImportItemsPage(props) {
                     </Stepper>
 
                     {step === 0 && (
-                        <Step1 data={data} setData={setData} setStep={setStep} errors={errors}/>
+                        <Step1 data={data} setData={setData} setStep={setStep} post={post} errors={errors}/>
                     )}
 
                     {step === 1 && (
-                        <Step2 data={data} setData={setData} setStep={setStep} errors={errors}/>
+                        <Step2 data={data} setData={setData} setStep={setStep} post={post} errors={errors}/>
                     )}
 
                     {step === 2 && (
@@ -79,7 +85,7 @@ export default function ImportItemsPage(props) {
 }
 
 
-function Step1({data, setData, setStep, errors}) {
+function Step1({data, setData, setStep, post, errors}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
 
@@ -98,9 +104,8 @@ function Step1({data, setData, setStep, errors}) {
     }
 
     const onSubmit = () => {
-        router.post(
+        post(
             route('b2b.import.items.getHeaderFromFile'),
-            data,
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
@@ -128,7 +133,7 @@ function Step1({data, setData, setStep, errors}) {
             <DropzoneArea
                 acceptedFiles={["text/csv", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]}
                 showPreviews={false}
-                maxFileSize={10240}
+                maxFileSize={80000000}
                 filesLimit={1}
                 showAlerts={null}
                 onAlert={(text, type) => {
@@ -169,7 +174,7 @@ function Step1({data, setData, setStep, errors}) {
 }
 
 
-function Step2({data, setData, setStep, errors}) {
+function Step2({data, setData, setStep, post, errors}) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useLaravelReactI18n();
 
@@ -182,48 +187,102 @@ function Step2({data, setData, setStep, errors}) {
         control
     } = useImportItemsStep2Form()
 
-    const changeIdentification = (e) => {
-        console.log(e.target.value, data)
-        setData('identification', Number(e.target.value));
-        setValue('identification', Number(e.target.value));
+    const changeIdentification = (e, checked) => {
+        console.log(e.target.value, checked, data)
+        setData('identification', checked === false ? 1 : 2);
+        setValue('identification', checked === false ? 1 : 2);
+    }
+
+    const changeSelectedHeader = (header, value) => {
+        setData('selectedHeaders', {
+            ...data.selectedHeaders,
+            [header]: value
+        })
+        setValue('selectedHeaders', {
+            ...data.selectedHeaders,
+            [header]: value
+        })
+    }
+
+    useEffect(() => {
+        setValue('file', data.file)
+    }, []);
+
+    useEffect(() => {
+        setValue("identification", data.identification)
+    }, [data.identification]);
+
+    const onSubmit = () => {
+        console.log("cos")
+        post(
+            route('b2b.import.items.getItemsFromFile'),
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    setData("items", page.props.itemsFromFile);
+                    setStep(1)
+                },
+                onError: errors => {
+                    console.error(errors)
+                    enqueueSnackbar("Błąd przy odczytywaniu pliku", {variant: 'error'})
+                    for (const errorsKey in errors) {
+                        enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                    }
+
+                },
+            }
+        )
     }
 
     return (
         <Box
             component={"form"}
-            onSubmit={handleSubmit((data) => {
-                setStep(2)
-            })}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{width: 1, display: "flex", flexDirection: "column", gap: 2}}
         >
 
 
             <FormControl component="fieldset">
                 <FormLabel component="legend">{t("Identification")}</FormLabel>
-                <RadioGroup
-                    aria-label="idetification"
-                    defaultValue="1"
-                    name="radio-buttons-group"
-                    onChange={changeIdentification}
-                >
-                    <FormControlLabel
-                        value="1"
-                        control={<Radio/>}
-                        label="Symbol"
-                    />
-                    <FormControlLabel
-                        value="2"
-                        control={<Radio/>}
-                        label="EAN"
-                    />
-                </RadioGroup>
+
+                <Box>
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 2,
+                        width: 50
+                    }}>
+                        <Typography variant="body1" gutterBottom>
+                            Symbol
+                        </Typography>
+                        <Switch
+                            onChange={changeIdentification}
+                            checked={data.identification === 2}
+                        />
+                        <Typography variant="body1" gutterBottom>
+                            EAN
+                        </Typography>
+                    </Box>
+                    {errors.identification?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                            {errors.identification?.message.toString()}
+                        </Typography>
+                    )}
+
+                    {fieldErrors.identification?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                            {fieldErrors.identification?.message.toString()}
+                        </Typography>
+                    )}
+                </Box>
             </FormControl>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>{t("System")}</TableCell>
-                            <TableCell>{t("Import from spreadsheet")}</TableCell>
+                            <TableCell sx={{width: '20%'}}>{t("System")}</TableCell>
+                            <TableCell sx={{width: '80%'}}>{t("Import from spreadsheet")}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -231,51 +290,92 @@ function Step2({data, setData, setStep, errors}) {
                             <TableCell>{t("Symbol")}</TableCell>
                             <TableCell>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Kolumna</InputLabel>
+                                    <InputLabel id="symbol-label">Kolumna</InputLabel>
                                     <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
+                                        labelId="symbol-label"
+                                        id="symbol"
                                         label="Kolumna"
-                                        variant={"outlined"}
+                                        value={data.selectedHeaders.symbol}
+                                        onChange={(e) => changeSelectedHeader("symbol", e.target.value)}
                                     >
                                         {data.headersFromFile.map((header, index) => (
                                             <MenuItem key={index} value={header}>{header}</MenuItem>))}
                                     </Select>
                                 </FormControl>
+                                {console.log(errors, fieldErrors)}
+                                {errors.selectedHeaders?.symbol?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {errors.selectedHeaders?.symbol?.message.toString()}
+                                    </Typography>
+                                )}
+
+                                {fieldErrors.selectedHeaders?.symbol?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {fieldErrors.selectedHeaders?.symbol?.message.toString()}
+                                    </Typography>
+                                )}
                             </TableCell>
                         </TableRow>
                         <TableRow sx={{display: data.identification !== 2 ? 'none' : ''}}>
                             <TableCell>{t("EAN")}</TableCell>
                             <TableCell>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Kolumna</InputLabel>
+                                    <InputLabel id="ean-label">Kolumna</InputLabel>
                                     <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
+                                        labelId="ean-label"
+                                        id="ean"
                                         label="Kolumna"
                                         variant={"outlined"}
+                                        value={data.selectedHeaders.ean}
+                                        onChange={(e) => changeSelectedHeader("ean", e.target.value)}
                                     >
                                         {data.headersFromFile.map((header, index) => (
                                             <MenuItem key={index} value={header}>{header}</MenuItem>))}
                                     </Select>
                                 </FormControl>
+
+                                {errors.selectedHeaders?.ean?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {errors.selectedHeaders.ean?.message.toString()}
+                                    </Typography>
+                                )}
+
+                                {fieldErrors.selectedHeaders?.ean?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {fieldErrors.selectedHeaders?.ean?.message.toString()}
+                                    </Typography>
+                                )}
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t("Quantity")}</TableCell>
                             <TableCell>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Kolumna</InputLabel>
+                                    <InputLabel id="quantity-label">Kolumna</InputLabel>
                                     <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
+                                        labelId="quantity-label"
+                                        id="quantity"
                                         label="Kolumna"
                                         variant={"outlined"}
+                                        value={data.selectedHeaders.quantity}
+                                        onChange={(e) => changeSelectedHeader("quantity", e.target.value)}
                                     >
                                         {data.headersFromFile.map((header, index) => (
                                             <MenuItem key={index} value={header}>{header}</MenuItem>))}
                                     </Select>
                                 </FormControl>
+
+                                {errors.selectedHeaders?.quantity?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {errors.selectedHeaders?.quantity?.message.toString()}
+                                    </Typography>
+                                )}
+
+                                {fieldErrors.selectedHeaders?.quantity?.message && (
+                                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                                        {fieldErrors.selectedHeaders?.quantity?.message.toString()}
+                                    </Typography>
+                                )}
                             </TableCell>
                         </TableRow>
                     </TableBody>

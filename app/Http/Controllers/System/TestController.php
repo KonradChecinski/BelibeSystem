@@ -8,8 +8,11 @@ use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSub
 use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
 use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
 use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
+use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\ToSubiekt\TestFZ;
 use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
+use App\Models\Partner;
+use App\Models\PartnerExport;
 use App\Models\PartnerSettlementDocument;
 use App\Models\Products\Product;
 use App\Models\Products\ProductBarcode;
@@ -26,7 +29,9 @@ class TestController extends Controller
      */
     public function index()
     {
-        GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt::dispatch(PartnerSettlementDocument::find(16));
+//        $product = Product::findBySubiektId(2233);
+//        dd($product, $product->model, $product->prices, $product->model->prices);
+        MakePartnerExportFile::dispatchSync(Partner::find(1), PartnerExport::find(1));
     }
 
 
