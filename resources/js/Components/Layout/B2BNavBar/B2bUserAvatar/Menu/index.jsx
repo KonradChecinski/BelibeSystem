@@ -115,7 +115,7 @@ export default function B2bUserAvatarMenu({anchorEl, open, onClose, accountManag
                             <ImportExport fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText>
-                            {t("Import items")}
+                            {t("Import products")}
                         </ListItemText>
                     </MenuItem>
                 </Link>

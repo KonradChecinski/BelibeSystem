@@ -46,23 +46,23 @@ export default function ImportItemsPage(props) {
         <ClientLayout
             props={props}
             header={
-                t("Import items")
+                t("Import products")
             }
         >
-            <Head title={t("Import items")}/>
+            <Head title={t("Import products")}/>
             <Box sx={{width: 1, minHeight: 400, position: "relative"}}>
                 <Paper elevation={2}
                        sx={{p: 5, display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "space-around"}}>
 
                     <Stepper activeStep={step} alternativeLabel>
                         <Step key={0}>
-                            <StepLabel>Wybierz plik</StepLabel>
+                            <StepLabel>{t("Select file")}</StepLabel>
                         </Step>
                         <Step key={1}>
-                            <StepLabel>Wybierz kolumny</StepLabel>
+                            <StepLabel>{t("Select columns")}</StepLabel>
                         </Step>
                         <Step key={2}>
-                            <StepLabel>Importuj</StepLabel>
+                            <StepLabel>{t("Import")}</StepLabel>
                         </Step>
                     </Stepper>
 
@@ -248,7 +248,7 @@ function Step2({data, setData, setStep, post, processing, errors}) {
 
 
             <FormControl component="fieldset">
-                <FormLabel component="legend">{t("Identification")}</FormLabel>
+                <FormLabel component="legend">{t("Identification by")}</FormLabel>
 
                 <Box>
                     <Box sx={{
@@ -287,7 +287,7 @@ function Step2({data, setData, setStep, post, processing, errors}) {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{width: '20%'}}>{t("System")}</TableCell>
-                            <TableCell sx={{width: '80%'}}>{t("Import from spreadsheet")}</TableCell>
+                            <TableCell sx={{width: '80%'}}>{t("Imported from spreadsheet")}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

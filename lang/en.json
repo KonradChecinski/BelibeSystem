@@ -124,5 +124,19 @@
     "New password": "New password",
     "Confirm new password": "Confirm new password",
     "After changing the password, you will need to log in again.": "After changing the password, you will need to log in again.",
-    "Your account manager": "Your account manager"
+    "Your account manager": "Your account manager",
+    "Import products": "Import products",
+    "Select file": "Select file",
+    "Select columns": "Select columns",
+    "Import": "Import",
+    "Identification by": "Identification by",
+    "System": "System",
+    "Imported from spreadsheet": "Import from spreadsheet",
+    "Symbol": "Symbol",
+    "EAN": "EAN",
+    "Quantity": "Quantity",
+    "Image": "Image",
+    "Model": "Model",
+    "Color": "Color",
+    "Size": "Size"
 }
