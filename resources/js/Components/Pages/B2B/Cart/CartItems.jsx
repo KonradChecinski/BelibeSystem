@@ -31,7 +31,9 @@ export default function CartItems({props, discount}) {
                     overflowX: "auto",
                     width: 1,
                     minHeight: 200,
-                    maxHeight: 800
+                    // maxHeight: 800,
+                    height: "100%", // Dopasowanie do rodzica
+                    maxHeight: "calc(100vh - 300px)", // Opcjonalnie, ograniczenie wysokości
                 }}>
 
 
@@ -179,7 +181,8 @@ export default function CartItems({props, discount}) {
                                                         }
                                                         return (
                                                             <Fragment key={"product" + product.id}>
-                                                                <TableRow hover>
+                                                                <TableRow hover
+                                                                          sx={{bgcolor: item.quantity > product.available_without_order_to_edit ? "errorBg.main" : "inherit"}}>
 
                                                                     <TableCell align={"center"}>
                                                                         <Typography variant="body1">
@@ -345,6 +348,7 @@ const ProductInput = ({product, maxQuantity, accountManager, initialValue}) => {
                 variant="outlined"
                 type={"number"}
                 value={value}
+                error={value > maxQuantity}
                 disabled={maxQuantity === 0}
                 onChange={handleOnChange}
                 InputProps={{
@@ -368,12 +372,13 @@ const ProductInput = ({product, maxQuantity, accountManager, initialValue}) => {
                 display: "flex",
                 justifyContent: "center",
                 // gap: 0.5,
-                // mt: 0.5
+                // mt: 0.5,
+
             }}>
                 {/*<Typography variant="caption">*/}
                 {/*    Dostępność:*/}
                 {/*</Typography>*/}
-                <Typography variant="body2" sx={{color: quantityColor}}>
+                <Typography variant="body2" sx={{color: quantityColor, width: "20ch"}}>
                     {quantityText}
                     {/*({quantity})*/}
                     {accountManager && (" (" + product.available_without_order_to_edit + ")")}
