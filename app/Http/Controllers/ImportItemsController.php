@@ -33,7 +33,7 @@ class ImportItemsController extends Controller
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
         $file = $request->file('file');
-        $headers = Excel::toCollection(null, $file->getPathname());
+        $headers = Excel::toCollection(null, $file);
 //        $collection = Excel::toCollection(null, $file->getPathname());
 //        $rows = $collection->first(); // arkusz nr 1
 //        $firstRow = $rows->skip(1)->first();
