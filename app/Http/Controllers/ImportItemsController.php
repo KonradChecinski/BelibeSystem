@@ -94,7 +94,7 @@ class ImportItemsController extends Controller
 //        dd($selectedHeaders2);
 
 
-        $collection = Excel::toCollection(null, $file->getPathname());
+        $collection = Excel::toCollection(null, $file);
 
         // Pobieramy pierwszą stronę (sheet)
         $sheet = $collection->first();
