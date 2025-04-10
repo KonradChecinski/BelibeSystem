@@ -4,7 +4,15 @@ import react from "@vitejs/plugin-react";
 import i18n from "laravel-react-i18n/vite";
 import removeConsole from "vite-plugin-remove-console";
 
-export default defineConfig({
+export default defineConfig(({mode}) => ({
+    ...(mode === 'development' && {
+        server: {
+            host: 'localhost',
+            cors: {
+                origin: true
+            },
+        },
+    }),
     plugins: [
         laravel({
             input: "resources/js/app.jsx",
@@ -15,4 +23,4 @@ export default defineConfig({
         i18n(),
         removeConsole(),
     ],
-});
+}));
