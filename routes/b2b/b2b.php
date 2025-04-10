@@ -50,6 +50,7 @@ Route::group([], function () {
     Route::get("/import", [ImportItemsController::class, 'index'])->name("b2b.import.items");
     Route::post("/import/header", [ImportItemsController::class, 'getHeaderFromFile'])->name("b2b.import.items.getHeaderFromFile");
     Route::post("/import/items", [ImportItemsController::class, 'getItemsFromFile'])->name("b2b.import.items.getItemsFromFile");
+    Route::post("/import/items/store", [ImportItemsController::class, 'store'])->name("b2b.import.items.store");
 
 });
 

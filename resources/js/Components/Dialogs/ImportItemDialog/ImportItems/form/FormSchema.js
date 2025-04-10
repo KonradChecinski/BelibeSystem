@@ -8,7 +8,6 @@ const step1 = yup.object().shape({
             return value && value.size <= 80000000; // 2MB
         })
         .test('fileType', 'Niepoprawny typ pliku', value => {
-            console.log(value.type)
             return value && (value.type === 'text/csv' || value.type === 'application/vnd.ms-excel' || value.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         }),
 })
@@ -47,7 +46,25 @@ const step2 = yup.object().shape({
 });
 
 const step3 = yup.object().shape({
-    items: yup,
+    items: yup.array().of(
+        yup.object().shape({
+            product: yup.object().shape({
+                id: yup.number().required('ID produktu jest wymagane'),
+            }).required('Produkt jest wymagany'),
+            quantity: yup
+                .number()
+                .required('Ilość jest wymagana')
+                .min(0, 'Ilość musi być większa lub równa 0')
+                .test(
+                    'maxQuantity',
+                    'Ilość nie może być większa niż dostępna ilość',
+                    function (value) {
+                        return value <= this.parent.product.available_without_order_to_edit;
+                    }
+                ),
+        })
+    ).required('Lista produktów jest wymagana'),
 })
+
 
 export {step1, step2, step3}
