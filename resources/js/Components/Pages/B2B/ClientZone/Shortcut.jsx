@@ -1,6 +1,6 @@
 import {ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Typography} from "@mui/material";
 import {Link} from "@inertiajs/react";
-import {History, Payment, ReceiptLong} from "@mui/icons-material";
+import {History, ImportExport, Payment, ReceiptLong} from "@mui/icons-material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {useSnackbar} from "notistack";
 
@@ -43,6 +43,16 @@ export default function Shortcut(props) {
                         </ListItemIcon>
                         <ListItemText>
                             {t("Settlements")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Link href={route("b2b.import.items")}>
+                    <MenuItem sx={{height: 1, m: 1}}>
+                        <ListItemIcon>
+                            <ImportExport fontSize="large"/>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("Import")}
                         </ListItemText>
                     </MenuItem>
                 </Link>
