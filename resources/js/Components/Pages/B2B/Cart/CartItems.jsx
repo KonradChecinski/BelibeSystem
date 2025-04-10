@@ -1,5 +1,5 @@
 import {
-    Box, debounce,
+    Box, Button, debounce,
     IconButton,
     Paper,
     Table,
@@ -254,10 +254,44 @@ export default function CartItems({props, discount}) {
 
                 </TableContainer>
             </Box>
-            <Typography variant="h6" sx={{py: 2, px: 2, color: "warning.main", boxShadow: 15}}>
-                Produkty nie są rezerwowane. Mogą zostać zamówione przez innych użytkowników do momentu złożenia
-                zamówienia.
-            </Typography>
+            <Box sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                boxShadow: 15,
+                py: 1,
+                px: 2
+            }}>
+                <Typography variant="h6" sx={{color: "warning.main"}}>
+                    Produkty nie są rezerwowane. Mogą zostać zamówione przez innych użytkowników do momentu złożenia
+                    zamówienia.
+                </Typography>
+                <Button
+                    variant="outlined"
+                    startIcon={<Delete/>}
+                    onClick={() => {
+                        router.delete(route('b2b.cart.delete'),
+                            {
+                                preserveScroll: true,
+                                onSuccess: (response) => {
+                                    enqueueSnackbar("Wyczyszczono koszyk", {variant: "success"})
+                                },
+                                onError: (errors) => {
+                                    console.error(errors)
+                                    enqueueSnackbar("Błąd przy czyszczeniu koszyka", {variant: 'error'})
+                                    for (const errorsKey in errors) {
+                                        enqueueSnackbar(errors[errorsKey].toString(), {variant: 'error'})
+                                    }
+                                }
+                            });
+                    }
+                    }
+                >
+                    Wyczyść koszyk
+                </Button>
+
+            </Box>
+
         </Paper>
     );
 }
