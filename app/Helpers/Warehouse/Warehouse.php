@@ -56,7 +56,7 @@ class Warehouse
     public static function sortProductsBySizeAndColor(Collection $products): Collection
     {
         $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
-            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL"];
+            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL", "98", "104", "110", "116", "122", "128", "134", "140", "146", "152", "158", "164"];
 
         // Mapujemy rozmiary na indeksy
         $sizeIndex = array_flip(array_map('strtolower', $sizeOrder));
@@ -76,7 +76,7 @@ class Warehouse
     public static function sortItemsBySizeAndColor(Collection $items): Collection
     {
         $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
-            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL"];
+            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL", "98", "104", "110", "116", "122", "128", "134", "140", "146", "152", "158", "164"];
 
         // Mapujemy rozmiary na indeksy
         $sizeIndex = array_flip(array_map('strtolower', $sizeOrder));
