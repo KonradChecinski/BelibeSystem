@@ -1,7 +1,7 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Grid} from "@mui/material";
-import {Palette} from "@mui/icons-material";
+import {Palette, Warehouse} from "@mui/icons-material";
 import IconGrid from "@/Components/Layout/IconGrid";
 import {useState} from "react";
 import ModelColorComponent from "@/Components/Pages/Model/ModelColorComponent";
@@ -20,6 +20,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import TextEditorAllegro from "@/Components/TextEditor/Allegro";
+import ModelWarehouseComponent from "@/Components/Pages/Model/ModelWarehouseComponent";
 
 export default function Model(props) {
     console.log(props);
@@ -47,10 +48,13 @@ export default function Model(props) {
                 <IconGrid xs={12} md={12} title={"GS1"} icon={<QrCodeIcon/>} iconColor={"darkcyan"}>
                     <ModelGS1Component  {...props}/>
                 </IconGrid>
+                <IconGrid xs={12} md={12} title={"Magazyn"} icon={<Warehouse/>} iconColor={"Maroon"}>
+                    <ModelWarehouseComponent {...props}/>
+                </IconGrid>
                 <IconGrid xs={12} md={12} title={"B2C"} icon={<PeopleAltIcon/>} iconColor={"indigo"}>
                     <ModelB2CComponent {...props}/>
                 </IconGrid>
-                <IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"indigo"}>
+                <IconGrid xs={12} md={12} title={"B2B"} icon={<WorkIcon/>} iconColor={"green"}>
                     <ModelB2BComponent {...props}/>
                 </IconGrid>
                 {/*<IconGrid xs={12} md={12} title={"Allegro"} icon={<Palette/>} iconColor={"green"}>*/}

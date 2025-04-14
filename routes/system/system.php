@@ -66,6 +66,7 @@ use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
 use App\Http\Controllers\System\XmlGeneratorController;
 use App\Http\Controllers\WarehouseDocumentController;
+use App\Http\Controllers\WarehouseProductModelController;
 use App\Install\ClearDBController;
 use App\Install\Install10Controller;
 use App\Install\Install1Controller;
@@ -101,6 +102,8 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::post("/models/model/{productModel}/update/b2b", [B2BProductModelController::class, 'update'])->name("system.products.model.update.b2b");
         Route::post("/models/model/{productModel}/update/subiekt", [SubiektProductModelController::class, 'update'])->name("system.products.model.update.subiekt");
         Route::post("/models/model/{productModel}/update/gs1", [GS1ProductModelController::class, 'update'])->name("system.products.model.update.gs1");
+
+        Route::get("/models/model/{productModel}/warehouse/print", [WarehouseProductModelController::class, 'print'])->name("system.products.model.warehouse.print");
 
         Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");
         Route::post("/product/{modelColor}", [ProductController::class, 'store'])->name("system.products");
