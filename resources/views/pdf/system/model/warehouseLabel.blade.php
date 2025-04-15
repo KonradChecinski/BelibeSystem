@@ -11,6 +11,7 @@
     <style>
         @page {
             margin: 15px;
+            margin-bottom: 0px;
         }
 
         body {
@@ -50,7 +51,7 @@
         }
 
         .font-big {
-            font-size: 30px;
+            font-size: 4em;
         }
 
         .text-vertical {
@@ -59,31 +60,83 @@
             /*text-orientation: upright;*/
         }
 
-        .flex {
-            display: flex;
+        .margin-0 {
+            margin: 0;
         }
 
-        .flex-justify-center {
-            justify-content: center;
-        }
 
-        .flex-align-center {
-            align-items: center;
-        }
     </style>
 
 </head>
 <body>
 <div class="w-full">
-    <p class="w-full center font-bold font-big">{{$productModel->symbol}}</p>
-
+    <p class="w-full center font-bold font-big margin-0">{{$productModel->symbol}}</p>
 </div>
 <div class="w-full">
-    <p class="w-full center font-bold">Rozmiary</p>
-    <div class=" center flex flex-justify-center flex-align-center">
+    <p class="w-full center font-bold" style="margin: 2px 0;">Rozmiary</p>
+    <div class="center" style="white-space: nowrap; font-size: 3em; overflow: hidden; text-overflow: ellipsis;">
         @foreach($sizes as $size)
-            <p class="w-half center font-bold">{{$size->name}}</p>
+            <span class="font-bold" style="display: inline-block; margin: 0 5px;">{{$size->name}}</span>
         @endforeach
     </div>
+</div>
+
+<div class="w-full">
+    <p class="w-full center font-bold" style="margin: 2px 0;">Kolory</p>
+    <div style="text-align: center; white-space: nowrap; overflow: hidden;">
+        @foreach($colors as $color)
+            <div
+                style="height: 250px; display: inline-block; text-align: center; vertical-align: bottom; margin: 0 5px; max-width: {{ 100 / count($colors) }}%;"
+            >
+                @if(isset($color->images[0]))
+                    <img
+                        src="{{ route('images', ['slug' =>$color->images[0]->slug]) }}"
+                        width="{{550/count($colors)}}"
+                        height="{{$color->images[0]->height / ($color->images[0]->width / (550 / count($colors)))}}"
+                        style="
+                        width: {{550/count($colors)}}px;
+                        height: {{$color->images[0]->height / ($color->images[0]->width / (550 / count($colors)))}}px;
+                        display: block;
+                    "
+                        alt="Image"
+                    >
+                @else
+                    <img
+                        src="{{ route('images', ['slug' => 'brak.jpg']) }}"
+                        width="{{550/count($colors)}}"
+                        height="{{960 / (640 / (550/count($colors)))}}"
+                        style="
+                        width: {{550/count($colors)}}px;
+                        height: {{960 / (640 / (550/count($colors)))}}px;
+                        display: block;
+                    "
+                        alt="Image"
+                    >
+                @endif
+                <div style="margin: 2px auto; width: 1.6rem">
+                    <div style="width: 1.6rem; height: 1.6rem; border-radius: 100%; border: 1px solid black;">
+                        @if(isset($color->colorIcon))
+                            @if($color->colorIcon->type==1)
+                                <img
+                                    src="{{ route('colorIcons', ['path' => $color->colorIcon->path]) }}"
+                                    style="width: 1.6rem; height: 1.6rem; border-radius: 100%;"
+                                    alt="colorIcon"
+                                >
+                            @else
+                                <div
+                                    style="width: 1.6rem; height: 1.6rem; border-radius: 100%; background-color: {{$color->colorIcon->hex}};">
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+
+
+                <span
+                    style="display: block; margin-top: 5px; font-weight: bold; font-size: 20px">{{ $color->shortcut }}</span>
+            </div>
+        @endforeach
+    </div>
+</div>
 </body>
 </html>

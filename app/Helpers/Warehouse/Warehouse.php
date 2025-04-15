@@ -93,4 +93,20 @@ class Warehouse
         });
     }
 
+
+    public static function sortSizes(Collection $sizes): Collection
+    {
+        $sizeOrder = ["one size", "xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl",
+            "5xl", "6xl", "7xl", "8xl", "9xl", "10xl", "1", "2", "3", "J", "U", "XXL", "98", "104", "110", "116", "122", "128", "134", "140", "146", "152", "158", "164"];
+
+        // Mapowanie rozmiarów na indeksy
+        $sizeIndex = array_flip($sizeOrder);
+
+        // Sortowanie kolekcji
+        return $sizes->sortBy(function ($size) use ($sizeIndex) {
+            $sizeName = strtolower($size["name"]);
+            return $sizeIndex[$sizeName] ?? PHP_INT_MAX;
+        })->values(); // Resetuje klucze w kolekcji
+    }
+
 }

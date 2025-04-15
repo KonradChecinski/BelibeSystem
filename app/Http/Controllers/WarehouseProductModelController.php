@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Warehouse\Warehouse;
 use App\Models\Products\ProductModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -68,15 +69,29 @@ class WarehouseProductModelController extends Controller
     public function print(ProductModel $productModel)
     {
 //        dd($productModel);
+        $sizes = $productModel->sizes->unique('id');
+        $sizes = Warehouse::sortSizes($sizes);
+
+        $colors = $productModel->colors->unique('id')->sortBy('shortcut');
+        $colors->load([
+            "images" => function ($query) {
+                $query->where('type', 1);
+                $query->where('order', 0);
+            },
+            "colorIcon"
+        ]);
         $result = [
             'productModel' => $productModel,
-            'sizes' => $productModel->sizes->unique('id'),
-            'colors' => $productModel->colorsWithImages,
+            'sizes' => $sizes,
+            'colors' => $colors,
         ];
-//        dd($result);
-        return view('pdf.system.model.warehouseLabel', $result);
+//        dd($sizes->toArray());
+//        return view('pdf.system.model.warehouseLabel', $result);
         $pdf = Pdf::loadView('pdf.system.model.warehouseLabel', $result);
         $pdf->setPaper('A5', 'landscape');
+        $pdf->setOption('isHtml5ParserEnabled', true);
+        $pdf->setOption('isRemoteEnabled', true);
+        $pdf->setOption('defaultFont', 'DejaVu Sans');
         return $pdf->stream("Label - " . $productModel->symbol . '.pdf');
     }
 }
