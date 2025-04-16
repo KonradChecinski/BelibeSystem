@@ -86,7 +86,7 @@
     <div style="text-align: center; white-space: nowrap; overflow: hidden;">
         @foreach($colors as $color)
             <div
-                style="height: 250px; display: inline-block; text-align: center; vertical-align: bottom; margin: 0 5px; max-width: {{ 100 / count($colors) }}%;"
+                style="height: 290px; display: inline-block; text-align: center; vertical-align: bottom; margin: 0 5px; max-width: {{ 100 / count($colors) }}%;"
             >
                 @if(isset($color->images[0]))
                     <img
@@ -96,6 +96,8 @@
                         style="
                         width: {{550/count($colors)}}px;
                         height: {{$color->images[0]->height / ($color->images[0]->width / (550 / count($colors)))}}px;
+                        max-height: 180px;
+                        max-width: {{ 180 * $color->images[0]->width / $color->images[0]->height }}px;
                         display: block;
                     "
                         alt="Image"
