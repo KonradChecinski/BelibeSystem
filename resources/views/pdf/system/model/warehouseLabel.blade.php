@@ -70,7 +70,7 @@
 </head>
 <body>
 <div class="w-full">
-    <p class="w-full center font-bold font-big margin-0">{{$productModel->symbol}}</p>
+    <p class="w-full center font-bold font-big margin-0" style="margin-top: 15px">{{$productModel->symbol}}</p>
 </div>
 <div class="w-full">
     <p class="w-full center font-bold" style="margin: 2px 0;">Rozmiary</p>
@@ -115,18 +115,18 @@
                         alt="Image"
                     >
                 @endif
-                <div style="margin: 2px auto; width: 1.6rem">
-                    <div style="width: 1.6rem; height: 1.6rem; border-radius: 100%; border: 1px solid black;">
+                <div style="margin: 2px auto; width: 2rem">
+                    <div style="width: 2rem; height: 2rem; border-radius: 100%; border: 1px solid black;">
                         @if(isset($color->colorIcon))
                             @if($color->colorIcon->type==1)
                                 <img
                                     src="{{ route('colorIcons', ['path' => $color->colorIcon->path]) }}"
-                                    style="width: 1.6rem; height: 1.6rem; border-radius: 100%;"
+                                    style="width: 2rem; height: 2rem; border-radius: 100%;"
                                     alt="colorIcon"
                                 >
                             @else
                                 <div
-                                    style="width: 1.6rem; height: 1.6rem; border-radius: 100%; background-color: {{$color->colorIcon->hex}};">
+                                    style="width: 2rem; height: 2rem; border-radius: 100%; background-color: {{$color->colorIcon->hex}};">
                                 </div>
                             @endif
                         @endif
