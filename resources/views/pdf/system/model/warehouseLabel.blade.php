@@ -110,6 +110,8 @@
                         style="
                         width: {{550/count($colors)}}px;
                         height: {{960 / (640 / (550/count($colors)))}}px;
+                        max-height: 180px;
+                        max-width: 120px;
                         display: block;
                     "
                         alt="Image"
