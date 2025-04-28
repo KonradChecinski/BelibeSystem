@@ -31,7 +31,7 @@ class TestController extends Controller
     {
 //        $product = Product::findBySubiektId(2233);
 //        dd($product, $product->model, $product->prices, $product->model->prices);
-        MakePartnerExportFile::dispatchSync(Partner::find(1), PartnerExport::find(1));
+//        MakePartnerExportFile::dispatchSync(Partner::find(1), PartnerExport::find(1));
     }
 
 

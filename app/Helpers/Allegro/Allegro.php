@@ -268,13 +268,13 @@ class Allegro
         return true;
     }
 
-    public static function sendMessInMessThread(string $threadId, string $threadId, $message): bool
+    public static function sendMessInMessThread(string $threadId, $message): bool
     {
         $response = Http::withoutVerifying()
             ->withToken(self::getToken())
             ->accept("application/vnd.allegro.public.v1+json")
             ->contentType("application/vnd.allegro.public.v1+json")
-            ->post(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/read", [
+            ->post(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/messages", [
                 "text" => $message,
                 "attachments" => []
             ]);
