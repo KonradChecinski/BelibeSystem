@@ -154,7 +154,7 @@ class Allegro
             $lastNumber = (int)substr($lastNumber, -5);
             $lastNumber++;
             $number = "ALL " . str_pad($lastNumber, 5, "0", STR_PAD_LEFT);
-            
+
 
             $allegroOrderModel = Order::create([
                 "number" => $number,
@@ -268,16 +268,13 @@ class Allegro
         return true;
     }
 
-    public static function sendMessInMessThread(string $threadId, string $loginAllegro, $message): bool
+    public static function sendMessInMessThread(string $threadId, string $threadId, $message): bool
     {
         $response = Http::withoutVerifying()
             ->withToken(self::getToken())
             ->accept("application/vnd.allegro.public.v1+json")
             ->contentType("application/vnd.allegro.public.v1+json")
-            ->post(config("services.allegro.api_uri") . "/messaging/messages", [
-                "recipient" => [
-                    "login" => $loginAllegro
-                ],
+            ->post(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/read", [
                 "text" => $message,
                 "attachments" => []
             ]);

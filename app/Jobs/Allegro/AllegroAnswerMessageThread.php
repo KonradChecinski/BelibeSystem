@@ -44,7 +44,7 @@ Pracujemy od pon. do pt. od 8:00 do 16:00.";
         if (!$result) {
             $this->fail('changing thread status failed');
         }
-        $result = Allegro::sendMessInMessThread($this->thread->id, $this->thread->interlocutor->login, $message);
+        $result = Allegro::sendMessInMessThread($this->thread->id, $this->thread->id, $message);
         if (!$result) {
             $this->fail('sending message failed');
         }
