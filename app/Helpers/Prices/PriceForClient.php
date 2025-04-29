@@ -41,7 +41,7 @@ class PriceForClient
             $discountsForCategories = $discounts->where("type", 2)->whereIn('product_category_id', $categories->map(fn($category) => $category->id));
 
             if ($discountsForCategories->isNotEmpty()) {
-                $discountModel = $discountsForCategories->orderBy("value", "desc")->first();
+                $discountModel = $discountsForCategories->sortByDesc("value")->first();
                 return self::calculatePrices($priceNet, $discountModel->value + $extraDiscountPercent, $vat, $discountModel->show_discount_on_invoice);
             }
         }
