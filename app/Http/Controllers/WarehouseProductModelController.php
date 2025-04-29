@@ -80,10 +80,26 @@ class WarehouseProductModelController extends Controller
             },
             "colorIcon"
         ]);
+
+        $fontSizeSize = 0;
+        switch (true) {
+            case count($sizes) < 7:
+                $fontSizeSize = 46;
+                break;
+            case count($sizes) >= 7 && count($sizes) < 10:
+                $fontSizeSize = 40;
+                break;
+            default:
+                $fontSizeSize = 25;
+                break;
+        }
+
+
         $result = [
             'productModel' => $productModel,
             'sizes' => $sizes,
             'colors' => $colors,
+            'fontSizeSize' => $fontSizeSize,
         ];
 //        dd($sizes->toArray());
 //        return view('pdf.system.model.warehouseLabel', $result);
