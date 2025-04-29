@@ -74,7 +74,7 @@
 </div>
 <div class="w-full">
     <p class="w-full center font-bold" style="margin: 2px 0;">Rozmiary</p>
-    <div class="center" style="white-space: nowrap; font-size: 2.9em; overflow: hidden; text-overflow: ellipsis;">
+    <div class="center" style="white-space: nowrap; font-size: 2.4em; overflow: hidden; text-overflow: ellipsis;">
         @foreach($sizes as $size)
             <span class="font-bold" style="display: inline-block; margin: 0 5px;">{{$size->name}}</span>
         @endforeach
