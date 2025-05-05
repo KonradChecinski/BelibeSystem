@@ -225,6 +225,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::post("/{partner}/settlements/{partnerSettlement}/document/{partnerSettlementDocument}/item/{partnerSettlementItem}", [PartnerSettlementController::class, 'updateItemPrice'])->name("system.partners.partner.settlements.item.update");
         Route::post("/{partner}/settlements/{partnerSettlement}/document/{partnerSettlementDocument}/accept", [PartnerSettlementController::class, 'accept'])->name("system.partners.partner.settlements.document.accept");
         Route::post("/{partner}/settlements/{partnerSettlement}/accept", [PartnerSettlementController::class, 'acceptAll'])->name("system.partners.partner.settlements.document.acceptAll");
+        Route::delete("/{partner}/settlements/{partnerSettlement}/delete", [PartnerSettlementController::class, 'destroy'])->name("system.partners.partner.settlements.document.delete");
 
 
         Route::post("/{partner}/products/{product}", [PartnerExportProductController::class, 'store'])->name("system.partners.partner.products.create");

@@ -10,7 +10,7 @@ import {
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
 import PartnersSettlementAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementAddDialog";
-import {router} from "@inertiajs/react";
+import {router, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
 
@@ -87,23 +87,23 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
-
+                    const {delete: destroy, processing} = useForm()
 
                     const handleDelete = () => {
-                        // router.delete(route("system.partners.partner.export.delete", {
-                        //     partner: partner.id,
-                        //     export: row.original.id
-                        // }), {
-                        //     preserveScroll: true,
-                        //     onSuccess: () => {
-                        //         enqueueSnackbar("Usunięto eksport", {variant: 'success'})
-                        //         // reloadData();
-                        //     },
-                        //     onError: errors => {
-                        //         enqueueSnackbar("Błąd przy usuwaniu eksportu", {variant: 'error'})
-                        //         console.error(errors)
-                        //     },
-                        // })
+                        destroy(route("system.partners.partner.settlements.document.delete", {
+                            partner: partner.id,
+                            partnerSettlement: row.original.id
+                        }), {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                enqueueSnackbar("Usunięto rozliczenie", {variant: 'success'})
+                                // reloadData();
+                            },
+                            onError: errors => {
+                                enqueueSnackbar("Błąd przy usuwaniu rozliczenia", {variant: 'error'})
+                                console.error(errors)
+                            },
+                        })
 
                     }
                     const handleAcceptAll = () => {
@@ -113,12 +113,12 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                         }), {
                             preserveScroll: true,
                             onSuccess: () => {
-                                enqueueSnackbar("Usunięto eksport", {variant: 'success'})
+                                enqueueSnackbar("Zaakceptowano wszystkie dokumenty", {variant: 'success'})
                                 // reloadData();
                             },
                             onError: errors => {
                                 console.error(errors)
-                                enqueueSnackbar("Błąd przy usuwaniu eksportu", {variant: 'error'})
+                                enqueueSnackbar("Błąd przy akceptacji wszystkich dokumentów", {variant: 'error'})
                                 for (const errorsKey in errors) {
                                     enqueueSnackbar(errors[errorsKey], {variant: 'error'})
                                 }
@@ -151,7 +151,7 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                             <Tooltip title="Usuń rozliczenie" arrow>
                                 <span>
                                     <IconButton aria-label="delete" onClick={handleDelete}
-                                                disabled={hasDocumentWithStatusOtherThanZero}>
+                                                disabled={hasDocumentWithStatusOtherThanZero || processing}>
                                         <Delete color={!hasDocumentWithStatusOtherThanZero ? "error" : ""}/>
                                     </IconButton>
                                 </span>

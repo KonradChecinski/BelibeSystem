@@ -185,9 +185,16 @@ class PartnerSettlementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PartnerSettlement $partnerSettlement)
+    public function destroy(Partner $partner, PartnerSettlement $partnerSettlement)
     {
-        //
+//        dd($partner, $partnerSettlement);
+        foreach ($partnerSettlement->documents as $document) {
+            foreach ($document->items as $item) {
+                $item->delete();
+            }
+            $document->delete();
+        }
+        $partnerSettlement->delete();
     }
 
     public function accept(UpdatePartnerSettlementDocumentAcceptRequest $request, Partner $partner, PartnerSettlement $partnerSettlement, PartnerSettlementDocument $partnerSettlementDocument)
