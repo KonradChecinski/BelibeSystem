@@ -313,6 +313,12 @@ export default function Menu({showContent, auth}) {
                                         active={route().current("system.settings.roles")}
                                         text={"Role systemowe"}
                                     />
+
+                                    <SubMenuLink
+                                        href={route("system.settings.tokens")}
+                                        active={route().current("system.settings.tokens")}
+                                        text={t("Tokens")}
+                                    />
                                 </>
                                 : ""}
                         </SubMenuLink>

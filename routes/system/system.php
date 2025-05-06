@@ -65,6 +65,7 @@ use App\Http\Controllers\System\Settings\SettingsUsersActiveController;
 use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
 use App\Http\Controllers\System\XmlGeneratorController;
+use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WarehouseDocumentController;
 use App\Http\Controllers\WarehouseProductModelController;
 use App\Install\ClearDBController;
@@ -304,6 +305,9 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::post("/roles/{settingsRole}/edit", [SettingsRolesController::class, 'update']);
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
+
+        Route::get("/tokens", [TokenController::class, 'index'])->name("system.settings.tokens");
+
 
         Route::group(['prefix' => '/dictionaries'], function () {
 
