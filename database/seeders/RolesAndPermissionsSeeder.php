@@ -56,6 +56,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('canImpersonate', "user", 'Może się wcielać w innych użytkowników', 'Admin');
         Permission::findOrCreate('canBeImpersonate', "user", 'Można się wcielić w tego użytkownika', 'Admin');
 
+        Permission::findOrCreate('createEditToken', "user", 'Token - tworzenie i edycja', 'Admin');
+
         Permission::findOrCreate('showClientOrder', "user", 'Zamówienia B2B - wyświetlanie', 'Admin');
         Permission::findOrCreate('editClientOrder', "user", 'Zamówienia B2B - edycja', 'Admin');
 

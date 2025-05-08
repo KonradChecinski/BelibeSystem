@@ -1,13 +1,13 @@
 import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {Card} from "@mui/material";
-import RolesTable from "@/Components/Table/Settings/RolesTable";
 import {useLaravelReactI18n} from "laravel-react-i18n";
+import TokenTable from "@/Components/Table/Settings/TokenTable";
 
 export default function Roles(props) {
     const {t} = useLaravelReactI18n();
 
-    // console.log(props)
+    console.log(props)
     return (
         <UserLayout
             auth={props.auth}
@@ -18,7 +18,7 @@ export default function Roles(props) {
         >
             <Head title={t("Tokens")}/>
             <Card sx={{height: "100%", width: 1}}>
-                {/*<RolesTable {...props} />*/}
+                <TokenTable {...props} />
             </Card>
         </UserLayout>
     );

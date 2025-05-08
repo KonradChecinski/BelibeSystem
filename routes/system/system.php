@@ -65,6 +65,7 @@ use App\Http\Controllers\System\Settings\SettingsUsersActiveController;
 use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
 use App\Http\Controllers\System\XmlGeneratorController;
+use App\Http\Controllers\SystemTokenController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WarehouseDocumentController;
 use App\Http\Controllers\WarehouseProductModelController;
@@ -306,7 +307,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::delete("/roles/{settingsRoles}", [SettingsRolesController::class, 'destroy']);
         Route::get("/roles/data", [SettingsRolesController::class, 'data']);
 
-        Route::get("/tokens", [TokenController::class, 'index'])->name("system.settings.tokens");
+        Route::get("/tokens", [SystemTokenController::class, 'index'])->name("system.settings.tokens");
+        Route::post("/tokens", [SystemTokenController::class, 'store'])->name("system.settings.tokens.create");
+        Route::patch("/tokens/{systemToken}", [SystemTokenController::class, 'update'])->name("system.settings.tokens.update");
+        Route::delete("/tokens/{systemToken}", [SystemTokenController::class, 'destroy'])->name("system.settings.tokens.delete");
 
 
         Route::group(['prefix' => '/dictionaries'], function () {

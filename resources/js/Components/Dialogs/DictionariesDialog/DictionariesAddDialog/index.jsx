@@ -45,6 +45,7 @@ export default function DictionariesAddDialog({
         clickedRowName: clickedRow ? clickedRow.name : null,
         clickedRowValue: clickedRow ? clickedRow.value : null
     })
+    console.log("data", clickedRow)
 
     useEffect(() => {
         // inicjacja wartości pól
@@ -84,6 +85,7 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "acquisition") return "źródło pozyskania"
         else if (dictionaryType === "country") return "kraj"
         else if (dictionaryType === "activity") return "typ aktywności"
+        else if (dictionaryType === "tokens") return "token"
     }
     const currentDictionaryString2 = () => {
         if (dictionaryType === "sizes") return "rozmiaru"
@@ -96,6 +98,7 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "acquisition") return "źródła pozyskania"
         else if (dictionaryType === "country") return "kraju"
         else if (dictionaryType === "activity") return "typu aktywności"
+        else if (dictionaryType === "tokens") return "token"
     }
 
     const save = () => {
