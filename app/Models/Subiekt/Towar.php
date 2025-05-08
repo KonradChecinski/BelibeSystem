@@ -3,6 +3,7 @@
 namespace App\Models\Subiekt;
 
 use App\Models\Products\Product;
+use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,7 +58,12 @@ class Towar extends Model
 
     public function stany(): HasMany
     {
-        return $this->hasMany(Stany::class, "st_TowId", "tw_Id")->whereIn("st_MagId", DaneDodatkowe::magazynyStanow());
+        return $this->hasMany(Stany::class, "st_TowId", "tw_Id")->whereIn("st_MagId", Warehouse::query()->where("type", 1)->pluck("subiekt_id"));
+    }
+
+    public function stanySklepy(): HasMany
+    {
+        return $this->hasMany(Stany::class, "st_TowId", "tw_Id")->whereIn("st_MagId", Warehouse::query()->where("type", 2)->pluck("subiekt_id"));
     }
 
     public function stanyWszystkie(): HasMany

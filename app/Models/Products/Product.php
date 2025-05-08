@@ -90,6 +90,16 @@ class Product extends Model
         return $sum;
     }
 
+    public function getShopQuantityAttribute()
+    {
+        $sum = $this->getShopQuantityFromSubiekt();
+
+        if ($sum < 0) {
+            return 0;
+        }
+        return $sum;
+    }
+
     public function color(): BelongsTo
     {
         return $this->belongsTo(ProductModelColor::class, "product_model_color_id", "id");
@@ -234,10 +244,23 @@ class Product extends Model
         return $sum;
     }
 
+    private function getShopQuantityFromSubiekt(): int
+    {
+        if ($this->subiekt_id == null) {
+            return 0;
+        }
+        
+        $sum = $this->towar->stanySklepy()->sum("st_Stan");
+
+
+        return $sum;
+    }
 
     //Subiekt
     public function towar(): HasOne
     {
         return $this->hasOne(Towar::class, "tw_Id", "subiekt_id");
     }
+
+
 }
