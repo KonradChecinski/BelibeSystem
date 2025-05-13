@@ -46,21 +46,23 @@ if (in_array(request()->getHttpHost(), [
     'localhost'
 ])) {
     Route::pattern('systemDomain', '(www\.)?system');
-    Route::domain("{systemDomain}." . config("app.domain"))->group(function () {
-        require __DIR__ . "/system/system.php";
+    Route::domain("{systemDomain}." . config("app.domain"))
+        ->name('system.') // Dodajemy stały prefix dla nazw tras
+        ->group(function () {
+            require __DIR__ . "/system/system.php";
 
-        if (request()->getHttpHost() !== 'localhost') {
-            Route::group(["prefix" => "/b2b"], function () {
-                Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
-                    require __DIR__ . "/b2b/b2b.php";
-                });
+            if (request()->getHttpHost() !== 'localhost') {
+                Route::group(["prefix" => "/b2b"], function () {
+                    Route::middleware(["auth:user", "verified", "userSessionHaveClientModel"])->group(function () {
+                        require __DIR__ . "/b2b/b2b.php";
+                    });
 
-                Route::middleware(["auth:user", "verified"])->group(function () {
-                    require __DIR__ . "/b2b/extra.php";
+                    Route::middleware(["auth:user", "verified"])->group(function () {
+                        require __DIR__ . "/b2b/extra.php";
+                    });
                 });
-            });
-        }
-    });
+            }
+        });
 }
 
 
@@ -75,15 +77,17 @@ if (in_array(request()->getHttpHost(), [
     'localhost'
 ])) {
     Route::pattern('b2bDomain', '(www\.)?b2b');
-    Route::domain("{b2bDomain}." . config("app.domain"))->group(function () {
-        Route::middleware(["auth:client", "verified"])->group(function () {
-            require __DIR__ . "/b2b/b2b.php";
-            require __DIR__ . "/b2b/extra.php";
+    Route::domain("{b2bDomain}." . config("app.domain"))
+        ->name('b2b.') // Dodajemy stały prefix dla nazw tras
+        ->group(function () {
+            Route::middleware(["auth:client", "verified"])->group(function () {
+                require __DIR__ . "/b2b/b2b.php";
+                require __DIR__ . "/b2b/extra.php";
+            });
+
+
+            require __DIR__ . "/b2b/auth.php";
         });
-
-
-        require __DIR__ . "/b2b/auth.php";
-    });
 }
 
 Route::get('assets/{path}', function ($path) {
