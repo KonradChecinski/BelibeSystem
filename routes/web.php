@@ -40,11 +40,13 @@ use Illuminate\Support\Facades\Route;
 | System Routes
 |--------------------------------------------------------------------------
 */
-if (
-    request()->getHttpHost() === "system." . config("app.domain")
-    || request()->getHttpHost() === "www.system." . config("app.domain")
-    || request()->getHttpHost() === 'localhost') {
-    Route::domain("system." . config("app.domain"))->group(function () {
+if (in_array(request()->getHttpHost(), [
+    "system." . config("app.domain"),
+    "www.system." . config("app.domain"),
+    'localhost'
+])) {
+    Route::pattern('systemDomain', '(www\.)?system');
+    Route::domain("{systemDomain}." . config("app.domain"))->group(function () {
         require __DIR__ . "/system/system.php";
 
         if (request()->getHttpHost() !== 'localhost') {
@@ -67,12 +69,13 @@ if (
 | B2b Routes
 |--------------------------------------------------------------------------
 */
-if (
-    request()->getHttpHost() === "b2b." . config("app.domain")
-    || request()->getHttpHost() === "www.b2b." . config("app.domain")
-    || request()->getHttpHost() === 'localhost') {
-
-    Route::domain("b2b." . config("app.domain"))->group(function () {
+if (in_array(request()->getHttpHost(), [
+    "b2b." . config("app.domain"),
+    "www.b2b." . config("app.domain"),
+    'localhost'
+])) {
+    Route::pattern('b2bDomain', '(www\.)?b2b');
+    Route::domain("{b2bDomain}." . config("app.domain"))->group(function () {
         Route::middleware(["auth:client", "verified"])->group(function () {
             require __DIR__ . "/b2b/b2b.php";
             require __DIR__ . "/b2b/extra.php";
