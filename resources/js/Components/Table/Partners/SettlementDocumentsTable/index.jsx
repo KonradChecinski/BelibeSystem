@@ -277,7 +277,7 @@ export default function SettlementDocumentsTable({
             ]
         },
         muiTableContainerProps: {
-            sx: {maxHeight: 350, height: 1, minHeight: 200}
+            sx: {maxHeight: 350, minHeight: 200}
         },
         muiTableProps: {
             sx: {height: 1}
