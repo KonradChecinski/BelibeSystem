@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Validator;
 
 class WarehouseAppBarcodeSearchingRequest extends FormRequest
 {
-    public function __construct($request)
+    public function __construct()
     {
-        parent::__construct($request);
+        parent::__construct();
 
         Validator::extend('ean13', function ($attribute, $value, $parameters, $validator) {
             return $this->isValidEan13($value);

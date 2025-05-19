@@ -102,6 +102,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
         }
 
         $towarIdFromBarcode = DB::connection("subiekt")->table("tw_KodKreskowy")->where("kk_Kod", $barcode)->first();
+        // If the barcode exists in the database, return the product information
         if ($towarIdFromBarcode) {
             $towar = Towar::query()->where('tw_Id', $towarIdFromBarcode->kk_IdTowar)->first();
             if ($towar) {
