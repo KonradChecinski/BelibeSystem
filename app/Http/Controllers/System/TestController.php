@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\WarehouseAppBarcodeSearchingRequest;
 use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
 use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
 use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
@@ -32,6 +33,13 @@ class TestController extends Controller
 //        $product = Product::findBySubiektId(2233);
 //        dd($product, $product->model, $product->prices, $product->model->prices);
 //        MakePartnerExportFile::dispatchSync(Partner::find(1), PartnerExport::find(1));
+//        $warehouseController = new \App\Http\Controllers\WarehouseController();
+//        $warehouseController->reload();
+
+        $warehouseAppBarcodeSearchingController = new \App\Http\Controllers\WarehouseAppBarcodeSearchingController();
+        dd($warehouseAppBarcodeSearchingController->barcodeSearching(new WarehouseAppBarcodeSearchingRequest([
+            'barcode' => '5056219019918'
+        ])));
     }
 
 

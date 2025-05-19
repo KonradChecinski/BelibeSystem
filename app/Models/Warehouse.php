@@ -19,8 +19,13 @@ class Warehouse extends Model
     ];
 
 
-    public function getQuantityFromSubiektWarehouse(Towar $towar)
+    public function getQuantityFromSubiektWarehouse(Towar|int $towar)
     {
+        if (is_int($towar)) {
+            // jeśli $towar jest int, prawdopodobnie trzeba będzie pobrać obiekt Towar
+            $towar = Towar::find($towar);
+        }
+
         $quantity = $towar->stanyWszystkie()->where('st_MagId', $this->subiekt_id)->get()->sum("st_Stan");
 
         return $quantity;

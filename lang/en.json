@@ -138,5 +138,6 @@
     "Image": "Image",
     "Model": "Model",
     "Color": "Color",
-    "Size": "Size"
+    "Size": "Size",
+    "Barcode not found": "Barcode not found"
 }

@@ -138,5 +138,6 @@
     "Image": "Zdjęcie",
     "Model": "Model",
     "Color": "Kolor",
-    "Size": "Rozmiar"
+    "Size": "Rozmiar",
+    "Barcode not found": "Kod kreskowy nie znaleziony"
 }

@@ -7,7 +7,7 @@ use App\Models\Subiekt\Towar;
 class WarehouseApp
 {
 
-    public static function getTowarQuantityInSubiektWarehouses(Towar $towar)
+    public static function getTowarQuantityInSubiektWarehouses(Towar|int $towar)
     {
         $suppliers = \App\Models\Warehouse::query()
             ->where('type', 1)
