@@ -41,6 +41,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
                     'available' => $product->available,
                     'size' => $product->size?->name,
                     'unit' => $product->unit?->name,
+                    'barcodes' => $product->barcodes()->get(['barcode', 'main']),
                 ],
                 "images" => $product->images()->where('type', 1)->get(['slug', 'order', 'main']),
                 "prices" => $product->prices()->first([
@@ -61,7 +62,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
             $result->put('product', $productInfo);
             $result->put('stock', $stock);
 
-
+            dd($result);
             return response()->json($result);
         }
 
@@ -69,6 +70,25 @@ class WarehouseAppBarcodeSearchingController extends Controller
         // If the barcode exists in the database, return the product information
         if ($towar) {
             $towarCena = $towar->cena;
+            $TowarKody = collect();
+
+            if ($towar->tw_PodstKodKresk) {
+                $TowarKody->push([
+                    'barcode' => $towar->tw_PodstKodKresk,
+                    'main' => true
+                ]);
+            }
+            $dodatkoweKody = DB::connection("subiekt")->table("tw_KodKreskowy")->where("kk_IdTowar", $towar->tw_Id)->get();
+            if ($dodatkoweKody) {
+                foreach ($dodatkoweKody as $kod) {
+                    $TowarKody->push([
+                        'barcode' => $kod->kk_Kod,
+                        'main' => false
+                    ]);
+                }
+            }
+
+
             $productInfo = [
                 "model" => null,
                 "color" => null,
@@ -79,6 +99,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
                     'available' => null,
                     'size' => null,
                     'unit' => $towar->tw_JednStanMin,
+                    'barcodes' => $TowarKody
                 ],
                 "images" => [],
                 "prices" => [
@@ -98,6 +119,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
             $result->put('product', $productInfo);
             $result->put('stock', $stock);
             // Return the product information as a JSON response
+            dd($result);
             return response()->json($result);
         }
 
@@ -107,6 +129,26 @@ class WarehouseAppBarcodeSearchingController extends Controller
             $towar = Towar::query()->where('tw_Id', $towarIdFromBarcode->kk_IdTowar)->first();
             if ($towar) {
                 $towarCena = $towar->cena;
+
+                $towarKody = collect();
+
+                if ($towar->tw_PodstKodKresk) {
+                    $towarKody->push([
+                        'barcode' => $towar->tw_PodstKodKresk,
+                        'main' => true
+                    ]);
+                }
+                $dodatkoweKody = DB::connection("subiekt")->table("tw_KodKreskowy")->where("kk_IdTowar", $towar->tw_Id)->get();
+                if ($dodatkoweKody) {
+                    foreach ($dodatkoweKody as $kod) {
+                        $towarKody->push([
+                            'barcode' => $kod->kk_Kod,
+                            'main' => false
+                        ]);
+                    }
+                }
+
+
                 $productInfo = [
                     "model" => null,
                     "color" => null,
@@ -117,6 +159,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
                         'available' => null,
                         'size' => null,
                         'unit' => $towar->tw_JednStanMin,
+                        'barcodes' => $towarKody
                     ],
                     "images" => [],
                     "prices" => [
@@ -136,6 +179,7 @@ class WarehouseAppBarcodeSearchingController extends Controller
                 $result->put('product', $productInfo);
                 $result->put('stock', $stock);
                 // Return the product information as a JSON response
+                dd($result);
                 return response()->json($result);
             }
         }
