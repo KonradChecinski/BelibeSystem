@@ -62,7 +62,6 @@ class WarehouseAppBarcodeSearchingController extends Controller
             $result->put('product', $productInfo);
             $result->put('stock', $stock);
 
-            dd($result);
             return response()->json($result);
         }
 
@@ -119,7 +118,6 @@ class WarehouseAppBarcodeSearchingController extends Controller
             $result->put('product', $productInfo);
             $result->put('stock', $stock);
             // Return the product information as a JSON response
-            dd($result);
             return response()->json($result);
         }
 
@@ -179,7 +177,6 @@ class WarehouseAppBarcodeSearchingController extends Controller
                 $result->put('product', $productInfo);
                 $result->put('stock', $stock);
                 // Return the product information as a JSON response
-                dd($result);
                 return response()->json($result);
             }
         }
