@@ -30,5 +30,8 @@ Route::middleware('auth.system')->group(function () {
 
         Route::get('/barcode-searching', [WarehouseAppBarcodeSearchingController::class, 'barcodeSearching'])
             ->name('api.warehouse.barcode-searching.barcodeSearching');
+
+        Route::get('/symbol-searching', [WarehouseAppBarcodeSearchingController::class, 'symbolSearching'])
+            ->name('api.warehouse.symbol-searching.symbolSearching');
     });
 });

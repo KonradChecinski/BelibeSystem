@@ -139,5 +139,6 @@
     "Model": "Model",
     "Color": "Kolor",
     "Size": "Rozmiar",
-    "Barcode not found": "Kod kreskowy nie znaleziony"
+    "Barcode not found": "Kod kreskowy nie znaleziony",
+    "Symbol not found": "Symbol nie znaleziony"
 }

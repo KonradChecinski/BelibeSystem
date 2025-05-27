@@ -4,7 +4,9 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WarehouseAppBarcodeSearchingRequest;
+use App\Http\Requests\WarehouseAppBarcodeFindSymbolRequest;
+use App\Http\Requests\WarehouseAppBarcodeSearchingByBarcodeRequest;
+use App\Http\Requests\WarehouseAppBarcodeSearchingBySymbolRequest;
 use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
 use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
 use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
@@ -37,8 +39,20 @@ class TestController extends Controller
 //        $warehouseController->reload();
 
         $warehouseAppBarcodeSearchingController = new \App\Http\Controllers\WarehouseAppBarcodeSearchingController();
-        dd($warehouseAppBarcodeSearchingController->barcodeSearching(new WarehouseAppBarcodeSearchingRequest([
-            'barcode' => '5056219019918'
+//        dd($warehouseAppBarcodeSearchingController->barcodeSearching(new WarehouseAppBarcodeSearchingByBarcodeRequest([
+////            'barcode' => '5056219019918',
+////            'barcode' => '5903205314468',
+////            'barcode' => '1000000003321',
+////            'barcode' => '5056219095950',
+//            'barcode' => '5056219095943',
+//        ])));
+
+//        dd($warehouseAppBarcodeSearchingController->symbolSearching(new WarehouseAppBarcodeSearchingBySymbolRequest([
+//            "symbol" => 'S-0100-0104-1-L',
+//        ])));
+
+        dd($warehouseAppBarcodeSearchingController->findSymbol(new WarehouseAppBarcodeFindSymbolRequest([
+            "symbol" => '0104',
         ])));
     }
 
