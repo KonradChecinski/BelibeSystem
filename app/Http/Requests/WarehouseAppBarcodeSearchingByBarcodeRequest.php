@@ -5,11 +5,11 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
-class WarehouseAppBarcodeSearchingRequest extends FormRequest
+class WarehouseAppBarcodeSearchingByBarcodeRequest extends FormRequest
 {
-    public function __construct()
+    public function __construct($query)
     {
-        parent::__construct();
+        parent::__construct($query);
 
         Validator::extend('ean13', function ($attribute, $value, $parameters, $validator) {
             return $this->isValidEan13($value);
