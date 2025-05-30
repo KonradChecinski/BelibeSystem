@@ -212,20 +212,17 @@ class ClientDiscountController extends Controller
             }
             $clientDiscount->productBrand()->associate($request->product_brand["id"]);
         } else if ($request->type["id"] === 5) {
+
             $count = ClientDiscount::query()
                 ->where("type", 5)
                 ->where("client_id", $client->id)
                 ->whereNot("id", $clientDiscount->id)
                 ->count();
-            if ($count === 0) {
-                return redirect()->back()->withErrors([
-                    'name' => 'Wybrany produkt nie ma rabatu'
-                ]);
-            }
+//            dd($request->all(), $clientDiscount, $count);
 
             if ($count > 1) {
                 return redirect()->back()->withErrors([
-                    'name' => 'Więcej niż jeden produkt ma już rabat'
+                    'name' => 'Klient ma juz rabat na wszystkie produkty'
                 ]);
             }
 
