@@ -140,5 +140,7 @@
     "Color": "Kolor",
     "Size": "Rozmiar",
     "Barcode not found": "Kod kreskowy nie znaleziony",
-    "Symbol not found": "Symbol nie znaleziony"
+    "Symbol not found": "Symbol nie znaleziony",
+    "Locations": "Lokalizacje",
+    "Tokens": "Tokeny"
 }

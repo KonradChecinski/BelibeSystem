@@ -450,6 +450,17 @@ export default function Menu({showContent, auth}) {
                                 text={"Połączenie z Allegro"}
                             />
                         </SubMenuLink>
+
+                        <SubMenuLink
+                            active={false}
+                            text={t("Warehouse")}
+                        >
+                            <SubMenuLink
+                                href={route("system.settings.warehouseLocation")}
+                                active={route().current("system.settings.warehouseLocation")}
+                                text={t("Locations")}
+                            />
+                        </SubMenuLink>
                     </MainMenuLink>
                     : ""}
             </Box>

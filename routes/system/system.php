@@ -68,6 +68,7 @@ use App\Http\Controllers\System\XmlGeneratorController;
 use App\Http\Controllers\SystemTokenController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WarehouseDocumentController;
+use App\Http\Controllers\WarehouseLocationController;
 use App\Http\Controllers\WarehouseProductModelController;
 use App\Install\ClearDBController;
 use App\Install\Install10Controller;
@@ -431,6 +432,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::get("/token", [AllegroTokenController::class, 'token'])->name("system.settings.allegro.token");
             Route::post("/refresh-token", [AllegroTokenController::class, 'refresh'])->name("system.settings.allegro.refreshToken");
 
+        });
+
+        Route::group(['prefix' => '/warehouse-location'], function () {
+            Route::get("/", [WarehouseLocationController::class, 'index'])->name("system.settings.warehouseLocation");
         });
     });
 });

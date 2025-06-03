@@ -140,5 +140,7 @@
     "Color": "Color",
     "Size": "Size",
     "Barcode not found": "Barcode not found",
-    "Symbol not found": "Symbol not found"
+    "Symbol not found": "Symbol not found",
+    "Locations": "Locations",
+    "Tokens": "Tokens"
 }
