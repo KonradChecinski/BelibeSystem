@@ -2,23 +2,7 @@
 
 namespace App\Http\Controllers\System;
 
-use App\Helpers\Mt940\Mt940Parser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WarehouseAppBarcodeFindSymbolRequest;
-use App\Http\Requests\WarehouseAppBarcodeSearchingByBarcodeRequest;
-use App\Http\Requests\WarehouseAppBarcodeSearchingBySymbolRequest;
-use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
-use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
-use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
-use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
-use App\Jobs\partners\MakePartnerExportFile;
-use App\Jobs\ToSubiekt\TestFZ;
-use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Models\Partner;
-use App\Models\PartnerExport;
-use App\Models\PartnerSettlementDocument;
-use App\Models\Products\Product;
-use App\Models\Products\ProductBarcode;
 use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
 use Exception;
@@ -38,22 +22,7 @@ class TestController extends Controller
 //        $warehouseController = new \App\Http\Controllers\WarehouseController();
 //        $warehouseController->reload();
 
-        $warehouseAppBarcodeSearchingController = new \App\Http\Controllers\WarehouseAppBarcodeSearchingController();
-//        dd($warehouseAppBarcodeSearchingController->barcodeSearching(new WarehouseAppBarcodeSearchingByBarcodeRequest([
-////            'barcode' => '5056219019918',
-////            'barcode' => '5903205314468',
-////            'barcode' => '1000000003321',
-////            'barcode' => '5056219095950',
-//            'barcode' => '5056219095943',
-//        ])));
 
-//        dd($warehouseAppBarcodeSearchingController->symbolSearching(new WarehouseAppBarcodeSearchingBySymbolRequest([
-//            "symbol" => 'S-0100-0104-1-L',
-//        ])));
-
-        dd($warehouseAppBarcodeSearchingController->findSymbol(new WarehouseAppBarcodeFindSymbolRequest([
-            "symbol" => '0104',
-        ])));
     }
 
 
@@ -70,120 +39,9 @@ class TestController extends Controller
      */
     public function store(Request $request)
     {
-//        Zapisz kody znikające
-//        $product = Product::find(3132); //A-32050
-//        $barcodes = [
-//            "6942138949667",
-//            "5908217626509",
-//            "6941607320310"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3067); //A-91038
-//        $barcodes = [
-//            "6942138917567",
-//            "5908217656643",
-//            "6941607331958"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3166); //A-91041
-//        $barcodes = [
-//            "6942138919530",
-//            "5908217621429",
-//            "6942138976458",
-//            "6941607329238"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3188); //A-98001
-//        $barcodes = [
-//            "6942138919561",
-//            "5908217621382",
-//            "6941607306260"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3068); //A-98003
-//        $barcodes = [
-//            "6942138919585",
-//            "5908217621368",
-//            "6941607306246"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-////
-//        $product = Product::find(3133); //A-36113-1
-//        $barcodes = [
-//            "5903205314291",
-//            "5908220472681",
-//            "5908217656612"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3066); //A-36113-2
-//        $barcodes = [
-//            "5903205314307",
-//            "5908220473077",
-//            "5908217656629"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3134); //A-36113-3
-//        $barcodes = [
-//            "5903205314314",
-//            "5908220472926",
-//            "5908217656636"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-
-//        $product = Product::find(3257); //A-1100-1127-M-29
-//        $barcodes = [
-//            "5904705941093",
-//            "5904705940973",
-//            "5904705941338"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3261); //A-1100-1127-M-33
-//        $barcodes = [
-//            "5904705940898",
-//            "5904705940652",
-//            "5904705940775",
-//            "5904705941017",
-//            "5904705941130",
-//            "5904705941253",
-//            "5904705941376"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-//
-//        $product = Product::find(3263); //A-1100-1127-M-35
-//        $barcodes = [
-//            "5904705941031",
-//            "5904705940676",
-//            "5904705940799",
-//            "5904705940911",
-//            "5904705941154",
-//            "5904705941277"
-//        ];
-//        $this->addBarcodes($product, $barcodes);
-    }
-
-    private function addBarcodes(Product $product, array $barcodes)
-    {
-        $barcodesArray = [];
-
-        foreach ($barcodes as $id => $barcodeValue) {
-            $barcode = new ProductBarcode(["barcode" => $barcodeValue]);
-            $barcode->main = $id == 0;
-            $barcode->type = 3;
-            array_push($barcodesArray, $barcode);
-        }
-
-        $product->barcodes()->delete();
-        $product->barcodes()->saveMany($barcodesArray);
-        ChangeProductInSubiekt::dispatch($product->id);
 
     }
+
 
     /**
      * Display the specified resource.
@@ -217,10 +75,6 @@ class TestController extends Controller
         //
     }
 
-    public function invoiceStart()
-    {
-        TestFZ::dispatch();
-    }
 
     public static function invoice()
     {

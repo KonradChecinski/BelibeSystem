@@ -15,6 +15,7 @@ use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
 use App\Models\ProductEmpikCategory;
 use App\Models\Products\Price\ProductModelPrice;
+use App\Models\WarehouseLocation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,8 @@ class ProductModel extends Model
         'description_allegro',
         'name_11_char',
         'name_6_char',
-        'b2c_variant'
+        'b2c_variant',
+
     ];
 
     protected $hidden = [
@@ -260,5 +262,24 @@ class ProductModel extends Model
         return $this->hasManyDeepFromReverse(
             (new B2bCart())->productModel()
         )->where("client_id", $client->id);
+    }
+
+    // Lokalizacja magazynowa
+    public function warehouseLocations(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            WarehouseLocation::class,
+            'product_model_warehouse_location'
+        )->withPivot('is_main')->withTimestamps();
+    }
+
+    public function mainWarehouseLocation(): BelongsToMany
+    {
+        return $this->warehouseLocations()->wherePivot('is_main', true)->first();
+    }
+
+    public function additionalWarehouseLocations(): BelongsToMany
+    {
+        return $this->warehouseLocations()->wherePivot('is_main', false);
     }
 }
