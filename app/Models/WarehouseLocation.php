@@ -14,7 +14,7 @@ class WarehouseLocation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'warehouse_location_aisles_id',
+        'warehouse_location_aisle_id',
         'name', // np. Shelf 1
         'order',
     ];

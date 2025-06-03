@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('warehouse_location_rooms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedInteger('order')->default(0);
+            $table->unsignedInteger('order')->default(9999);
             $table->timestamps();
         });
     }

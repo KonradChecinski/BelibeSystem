@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('warehouse_locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('warehouse_location_aisles_id')->references('id')->on('warehouse_location_aisles')->restrictOnDelete();
+            $table->foreignId('warehouse_location_aisle_id')->references('id')->on('warehouse_location_aisles')->restrictOnDelete();
             $table->string('name'); // np. Shelf 1
-            $table->unsignedInteger('order')->default(0);
+            $table->unsignedInteger('order')->default(9999);
             $table->timestamps();
         });
     }
