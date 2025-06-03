@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\WarehouseLocation;
 use App\Http\Requests\StoreWarehouseLocationRequest;
 use App\Http\Requests\UpdateWarehouseLocationRequest;
+use App\Models\WarehouseLocationRoom;
+use Inertia\Inertia;
 
 class WarehouseLocationController extends Controller
 {
@@ -13,8 +15,38 @@ class WarehouseLocationController extends Controller
      */
     public function index()
     {
-        //
+        $locations = WarehouseLocationRoom::with(['aisles.locations'])
+            ->orderBy('order')
+            ->get()
+            ->map(function ($room) {
+                return [
+                    'id' => 'room-' . $room->id,
+                    'name' => $room->name,
+                    'type' => 'room',
+                    'children' => $room->aisles->sortBy('order')->map(function ($aisle) {
+                        return [
+                            'id' => 'aisle-' . $aisle->id,
+                            'name' => $aisle->name,
+                            'type' => 'aisle',
+                            'parent' => 'room-' . $aisle->warehouse_location_room_id,
+                            'children' => $aisle->locations->sortBy('order')->map(function ($shelf) {
+                                return [
+                                    'id' => 'shelf-' . $shelf->id,
+                                    'name' => $shelf->name,
+                                    'type' => 'shelf',
+                                    'parent' => 'aisle-' . $shelf->warehouse_location_aisle_id,
+                                ];
+                            })->values()->toArray()
+                        ];
+                    })->values()->toArray()
+                ];
+            })->values()->toArray();
+
+        return Inertia::render('System/Settings/Warehouse/Locations', [
+            'locations' => $locations,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
