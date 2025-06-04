@@ -1,6 +1,6 @@
 import {
     Autocomplete,
-    Box, Button, Dialog, DialogActions,
+    Box, Button, Checkbox, Dialog, DialogActions,
     DialogContent,
     DialogTitle, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper,
     Step,
@@ -13,7 +13,7 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import validbarcode from "barcode-validator";
 import ReactDraggable from "react-draggable";
-import {Delete, DragIndicator} from "@mui/icons-material";
+import {Delete, DragIndicator, Edit, EditOutlined, Favorite, FavoriteBorder} from "@mui/icons-material";
 import {useProductsAddForm} from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog/form/useProductsAddForm";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 
@@ -207,6 +207,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
 }
 
 function Step1({data, setData, props, register, errors}) {
+    const [allowEditSymbol, setAllowEditSymbol] = useState(false);
     const addColumnEmpty = () => {
         setData("barcodes", [...data.barcodes, {id: Math.floor(Math.random() * 100000000), barcode: "", type: 3}])
         handleClose()
@@ -365,12 +366,23 @@ function Step1({data, setData, props, register, errors}) {
                 </Typography>
             )}
 
-            <TextField id="shortcut" label="Symbol" variant="outlined"
-                       value={data.symbol}
-                       inputProps={{readOnly: true}}
-                       disabled={true}
-                       sx={{width: "30ch", my: 1}}
-            />
+            <Box sx={{
+                display: "flex",
+                alignItems: "center",
+            }}>
+                <TextField id="shortcut" label="Symbol" variant="outlined"
+                           value={data.symbol}
+                           inputProps={{readOnly: !allowEditSymbol}}
+                           disabled={!allowEditSymbol}
+                           sx={{width: "25ch", my: 1}}
+                />
+                <Checkbox
+                    icon={<EditOutlined/>}
+                    checkedIcon={<Edit/>}
+                    onChange={() => setAllowEditSymbol(!allowEditSymbol)}
+                />
+            </Box>
+
 
             <TextField
                 id="name"
