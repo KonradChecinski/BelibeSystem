@@ -18,14 +18,14 @@ class SystemTokenMiddleware
     {
         $authHeader = $request->header('Authorization');
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return response(['Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $token = substr($authHeader, 7);
         $hashed = hash('sha256', $token);
 
         if (!SystemToken::where('token', $hashed)->exists()) {
-            return response(['Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         return $next($request);
