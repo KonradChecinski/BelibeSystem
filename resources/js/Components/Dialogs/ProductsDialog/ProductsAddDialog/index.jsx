@@ -374,6 +374,9 @@ function Step1({data, setData, props, register, errors}) {
                            value={data.symbol}
                            inputProps={{readOnly: !allowEditSymbol}}
                            disabled={!allowEditSymbol}
+                           onChange={(value) => {
+                               setData("symbol", value.target.value);
+                           }}
                            sx={{width: "25ch", my: 1}}
                 />
                 <Checkbox
