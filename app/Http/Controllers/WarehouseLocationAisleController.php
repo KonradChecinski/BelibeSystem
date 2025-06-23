@@ -51,9 +51,10 @@ class WarehouseLocationAisleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWarehouseLocationAisleRequest $request, WarehouseLocationAisle $warehouseLocationAisle)
+    public function update(UpdateWarehouseLocationAisleRequest $request, WarehouseLocationAisle $warehouseLocation)
     {
-        //
+        // Update logic here
+        $warehouseLocation->update($request->validated());
     }
 
     /**

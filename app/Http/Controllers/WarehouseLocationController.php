@@ -85,7 +85,8 @@ class WarehouseLocationController extends Controller
      */
     public function update(UpdateWarehouseLocationRequest $request, WarehouseLocation $warehouseLocation)
     {
-        //
+        // Update logic here
+        $warehouseLocation->update($request->validated());
     }
 
     /**

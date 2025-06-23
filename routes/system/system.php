@@ -68,7 +68,9 @@ use App\Http\Controllers\System\XmlGeneratorController;
 use App\Http\Controllers\SystemTokenController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WarehouseDocumentController;
+use App\Http\Controllers\WarehouseLocationAisleController;
 use App\Http\Controllers\WarehouseLocationController;
+use App\Http\Controllers\WarehouseLocationRoomController;
 use App\Http\Controllers\WarehouseProductModelController;
 use App\Install\ClearDBController;
 use App\Install\Install10Controller;
@@ -436,6 +438,12 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::group(['prefix' => '/warehouse-location'], function () {
             Route::get("/", [WarehouseLocationController::class, 'index'])->name("system.settings.warehouseLocation");
+
+            Route::patch("/room/{warehouseLocation}", [WarehouseLocationRoomController::class, 'update'])->name("system.settings.warehouseLocation.room.update");
+            Route::patch("/aisle/{warehouseLocation}", [WarehouseLocationAisleController::class, 'update'])->name("system.settings.warehouseLocation.aisle.update");
+            Route::patch("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'update'])->name("system.settings.warehouseLocation.shelf.update");
+
+            
         });
     });
 });

@@ -11,7 +11,7 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {
     DndContext,
     KeyboardSensor,
@@ -28,12 +28,12 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {Add, Delete, DragIndicator, Edit, ExpandMore, ChevronRight} from "@mui/icons-material";
+import EditLocalizationDialog from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog";
 
 
 export default function LocationsComponent(props) {
     const {t} = useLaravelReactI18n();
     const [locations, setLocations] = useState(props.locations);
-    const [activeId, setActiveId] = useState(null);
     const [expandedRooms, setExpandedRooms] = useState({});
 
     const sensors = useSensors(
@@ -47,9 +47,51 @@ export default function LocationsComponent(props) {
         })
     );
 
+    // function updateNames(existingData, newData) {
+    //     const updateItem = (existingItem, newItem) => {
+    //         existingItem.name = newItem.name;
+    //
+    //         // Aktualizacja rodzica, jeśli się zmienił
+    //         if (newItem.parent && existingItem.parent !== newItem.parent) {
+    //             existingItem.parent = newItem.parent;
+    //         }
+    //
+    //         if (existingItem.children && newItem.children) {
+    //             for (let child of existingItem.children) {
+    //                 const newChild = newItem.children.find(c => c.id === child.id);
+    //                 if (newChild) {
+    //                     updateItem(child, newChild);
+    //                 }
+    //             }
+    //
+    //             // Dodanie nowych dzieci, które nie istnieją w existingItem
+    //             const newChildren = newItem.children.filter(
+    //                 newChild => !existingItem.children.some(child => child.id === newChild.id)
+    //             );
+    //             existingItem.children.push(...newChildren);
+    //         }
+    //     };
+    //
+    //     for (let existingRoom of existingData) {
+    //         const newRoom = newData.find(room => room.id === existingRoom.id);
+    //         if (newRoom) {
+    //             updateItem(existingRoom, newRoom);
+    //         }
+    //     }
+    //
+    //     return existingData;
+    // }
+    //
+    // useEffect(() => {
+    //     console.log(locations);
+    //     console.log(props.locations);
+    //     const updatedData = updateNames(locations, props.locations);
+    //     console.log(updatedData);
+    //     setLocations(JSON.parse(JSON.stringify(updatedData)));
+    // }, [props.locations]);
+
 
     const handleDragEnd = (event) => {
-        setActiveId(null);
         const {active, over} = event;
         if (!over || active.id === over.id) return;
 
@@ -159,7 +201,6 @@ export default function LocationsComponent(props) {
 
     const handleDragStart = (event) => {
         const {active} = event;
-        setActiveId(active.id);
 
         // Znajdź aktywny element
         const activeItem = findItemById(active.id, locations);
@@ -313,6 +354,8 @@ function RoomItem({room, isExpanded, onToggle}) {
         transition,
     };
 
+    const [openEditDialog, setOpenEditDialog] = useState(false);
+
 
     return (
         <Box sx={{mb: 2}}>
@@ -352,10 +395,19 @@ function RoomItem({room, isExpanded, onToggle}) {
 
                     <Box>
                         <Tooltip title="Edytuj">
-                            <IconButton>
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpenEditDialog(true)}
+                            >
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
+                        <EditLocalizationDialog
+                            open={openEditDialog}
+                            setOpen={setOpenEditDialog}
+                            type={"room"}
+                            clickedLocalization={room}
+                        />
                         <Tooltip title="Usuń">
                             <IconButton>
                                 <Delete/>
@@ -412,6 +464,9 @@ function AisleItem({aisle, parentRoom}) {
         transition,
     };
 
+    const [openEditDialog, setOpenEditDialog] = useState(false);
+
+
     return (
         <Box sx={{mb: 1}}>
             <Paper
@@ -438,10 +493,19 @@ function AisleItem({aisle, parentRoom}) {
 
                     <Box>
                         <Tooltip title="Edytuj">
-                            <IconButton size="small">
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpenEditDialog(true)}
+                            >
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
+                        <EditLocalizationDialog
+                            open={openEditDialog}
+                            setOpen={setOpenEditDialog}
+                            type={"aisle"}
+                            clickedLocalization={aisle}
+                        />
                         <Tooltip title="Usuń">
                             <IconButton size="small">
                                 <Delete/>
@@ -494,6 +558,8 @@ function ShelfItem({shelf, parentAisle}) {
         transition,
     };
 
+    const [openEditDialog, setOpenEditDialog] = useState(false);
+
     return (
         <Box sx={{mb: 1, display: 'flex', alignItems: 'center', width: 1}}>
 
@@ -520,12 +586,24 @@ function ShelfItem({shelf, parentAisle}) {
 
                     <Box>
                         <Tooltip title="Edytuj">
-                            <IconButton size="small">
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpenEditDialog(true)}
+                            >
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
+                        <EditLocalizationDialog
+                            open={openEditDialog}
+                            setOpen={setOpenEditDialog}
+                            type={"shelf"}
+                            clickedLocalization={shelf}
+                        />
                         <Tooltip title="Usuń">
-                            <IconButton size="small">
+                            <IconButton
+                                size="small"
+                                onClick={() => console.log('Delete shelf', shelf.id)}
+                            >
                                 <Delete/>
                             </IconButton>
                         </Tooltip>

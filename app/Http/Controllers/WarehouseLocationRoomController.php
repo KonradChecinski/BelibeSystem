@@ -51,9 +51,9 @@ class WarehouseLocationRoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWarehouseLocationRoomRequest $request, WarehouseLocationRoom $warehouseLocationRoom)
+    public function update(UpdateWarehouseLocationRoomRequest $request, WarehouseLocationRoom $warehouseLocation)
     {
-        //
+        $warehouseLocation->update($request->validated());
     }
 
     /**

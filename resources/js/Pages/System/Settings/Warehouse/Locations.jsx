@@ -1,37 +1,8 @@
-import {Head, Link} from "@inertiajs/react";
+import {Head} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Fab,
-    Grid,
-    IconButton,
-    Paper,
-    Tooltip,
-    Typography
-} from "@mui/material";
-import {useState} from "react";
-import {
-    DndContext,
-    closestCenter,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-    closestCorners
-} from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates, useSortable,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {Add, Delete, DragIndicator, Edit} from "@mui/icons-material";
+import {Grid, Paper,} from "@mui/material";
 import LocationsComponent from "@/Components/Pages/Settings/Warehouse/LocationsComponent";
 
 
