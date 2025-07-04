@@ -17,7 +17,7 @@ const schema = yup.object().shape({
             if (!value) {
                 return true
             }
-            return value.type === "text/csv"
+            return value.type === "text/csv" || value.type === "text/plain"
         })
 })
 
