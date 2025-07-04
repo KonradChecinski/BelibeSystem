@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShopsApiController;
 use App\Http\Controllers\SystemTokenController;
 use App\Http\Controllers\WarehouseAppBarcodeSearchingController;
 use Illuminate\Http\Request;
@@ -33,5 +34,16 @@ Route::middleware('auth.system')->group(function () {
 
         Route::get('/symbol-searching', [WarehouseAppBarcodeSearchingController::class, 'symbolSearching'])
             ->name('api.warehouse.symbol-searching.symbolSearching');
+    });
+
+    Route::group(['prefix' => "shops"], function () {
+        Route::get('/', function () {
+            return response()->json([
+                'message' => 'Welcome to the shops API!'
+            ]);
+        })->name('api.shops.welcome');
+
+        Route::post("document/execute", [ShopsApiController::class, 'executeDocument'])
+            ->name('api.shops.document.execute');
     });
 });
