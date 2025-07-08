@@ -142,5 +142,11 @@
     "Barcode not found": "Barcode not found",
     "Symbol not found": "Symbol not found",
     "Locations": "Locations",
-    "Tokens": "Tokens"
+    "Tokens": "Tokens",
+    "Room does not exist": "Room does not exist",
+    "Aisle does not exist": "Aisle does not exist",
+    "Shelf does not exist": "Shelf does not exist",
+    "Room cannot have a parent": "Room cannot have a parent",
+    "Aisle's parent room does not exist": "Aisle's parent room does not exist",
+    "Shelf's parent aisle does not exist": "Shelf's parent aisle does not exist"
 }

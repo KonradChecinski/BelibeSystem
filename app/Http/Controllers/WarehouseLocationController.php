@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateWarehouseLocationOrderRequest;
 use App\Models\WarehouseLocation;
 use App\Http\Requests\StoreWarehouseLocationRequest;
 use App\Http\Requests\UpdateWarehouseLocationRequest;
+use App\Models\WarehouseLocationAisle;
 use App\Models\WarehouseLocationRoom;
 use Inertia\Inertia;
 
@@ -61,7 +63,19 @@ class WarehouseLocationController extends Controller
      */
     public function store(StoreWarehouseLocationRequest $request)
     {
-        //
+//        dd($request->validated());
+        $warehouseLocationAisle = WarehouseLocationAisle::findorFail($request->destination_id);
+
+        $countShelfInAisle = $warehouseLocationAisle->locations()->count();
+
+        $warehouseLocation = new WarehouseLocation([
+            'name' => $request->name,
+            'order' => $countShelfInAisle,
+        ]);
+
+        $warehouseLocationAisle
+            ->locations()
+            ->save($warehouseLocation);
     }
 
     /**
@@ -94,6 +108,41 @@ class WarehouseLocationController extends Controller
      */
     public function destroy(WarehouseLocation $warehouseLocation)
     {
-        //
+        if ($warehouseLocation->productModels()->count() > 0) {
+            return redirect()->back()->withErrors(['error' => 'Nie można usunąć lokalizacji magazynowej, ponieważ przypisane są do niej produkty.']);
+        }
+        $warehouseLocation->delete();
+    }
+
+
+    /**
+     * Update order
+     */
+    public function updateOrder(UpdateWarehouseLocationOrderRequest $request)
+    {
+        $locations = $request->validated();
+        foreach ($locations as $location) {
+            $location = (object)$location;
+            $locationObject = null;
+            switch ($location->type) {
+                case 'room':
+                    $locationObject = WarehouseLocationRoom::findOrFail($location->id);
+                    $locationObject->order = $location->order;
+                    $locationObject->save();
+                    break;
+                case 'aisle':
+                    $locationObject = WarehouseLocationAisle::findOrFail($location->id);
+                    $locationObject->order = $location->order;
+                    $locationObject->warehouse_location_room_id = $location->parent;
+                    $locationObject->save();
+                    break;
+                case 'shelf':
+                    $locationObject = WarehouseLocation::findOrFail($location->id);
+                    $locationObject->order = $location->order;
+                    $locationObject->warehouse_location_aisle_id = $location->parent;
+                    $locationObject->save();
+                    break;
+            }
+        }
     }
 }

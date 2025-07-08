@@ -11,7 +11,7 @@ class StoreWarehouseLocationRoomRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreWarehouseLocationRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string'],
+            'type' => ['required', 'string', 'in:room'],
         ];
     }
 }

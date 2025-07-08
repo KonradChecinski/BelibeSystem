@@ -142,5 +142,11 @@
     "Barcode not found": "Kod kreskowy nie znaleziony",
     "Symbol not found": "Symbol nie znaleziony",
     "Locations": "Lokalizacje",
-    "Tokens": "Tokeny"
+    "Tokens": "Tokeny",
+    "Room does not exist": "Pokój nie istnieje",
+    "Aisle does not exist": "Alejka nie istnieje",
+    "Shelf does not exist": "Półka nie istnieje",
+    "Room cannot have a parent": "Pokój nie może mieć rodzica",
+    "Aisle's parent room does not exist": "Nadrzędny pokój alejki nie istnieje",
+    "Shelf's parent aisle does not exist": "Nadrzędna alejka półki nie istnieje"
 }

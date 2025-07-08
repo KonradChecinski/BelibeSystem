@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WarehouseLocationAisle;
 use App\Models\WarehouseLocationRoom;
 use App\Http\Requests\StoreWarehouseLocationRoomRequest;
 use App\Http\Requests\UpdateWarehouseLocationRoomRequest;
@@ -29,7 +30,15 @@ class WarehouseLocationRoomController extends Controller
      */
     public function store(StoreWarehouseLocationRoomRequest $request)
     {
-        //
+        $countRooms = WarehouseLocationRoom::query()->count();
+
+        $warehouseLocationRoom = new WarehouseLocationRoom([
+            'name' => $request->name,
+            'order' => $countRooms,
+        ]);
+
+        $warehouseLocationRoom
+            ->save();
     }
 
     /**
@@ -59,8 +68,11 @@ class WarehouseLocationRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(WarehouseLocationRoom $warehouseLocationRoom)
+    public function destroy(WarehouseLocationRoom $warehouseLocation)
     {
-        //
+        if ($warehouseLocation->aisles()->count() > 0) {
+            return redirect()->back()->withErrors(['error' => 'Nie można usunąć pokoju magazynowej, ponieważ zawiera ona aleje.']);
+        }
+        $warehouseLocation->delete();
     }
 }

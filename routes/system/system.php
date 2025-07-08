@@ -438,12 +438,21 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::group(['prefix' => '/warehouse-location'], function () {
             Route::get("/", [WarehouseLocationController::class, 'index'])->name("system.settings.warehouseLocation");
+            Route::put("/", [WarehouseLocationController::class, 'updateOrder'])->name("system.settings.warehouseLocation.update");
 
+            Route::post("/room/", [WarehouseLocationRoomController::class, 'store'])->name("system.settings.warehouseLocation.room.create");
             Route::patch("/room/{warehouseLocation}", [WarehouseLocationRoomController::class, 'update'])->name("system.settings.warehouseLocation.room.update");
-            Route::patch("/aisle/{warehouseLocation}", [WarehouseLocationAisleController::class, 'update'])->name("system.settings.warehouseLocation.aisle.update");
-            Route::patch("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'update'])->name("system.settings.warehouseLocation.shelf.update");
+            Route::delete("/room/{warehouseLocation}", [WarehouseLocationRoomController::class, 'destroy'])->name("system.settings.warehouseLocation.room.delete");
 
-            
+            Route::post("/aisle/", [WarehouseLocationAisleController::class, 'store'])->name("system.settings.warehouseLocation.aisle.create");
+            Route::patch("/aisle/{warehouseLocation}", [WarehouseLocationAisleController::class, 'update'])->name("system.settings.warehouseLocation.aisle.update");
+            Route::delete("/aisle/{warehouseLocation}", [WarehouseLocationAisleController::class, 'destroy'])->name("system.settings.warehouseLocation.aisle.delete");
+
+            Route::post("/shelf/", [WarehouseLocationController::class, 'store'])->name("system.settings.warehouseLocation.shelf.create");
+            Route::patch("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'update'])->name("system.settings.warehouseLocation.shelf.update");
+            Route::delete("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'destroy'])->name("system.settings.warehouseLocation.shelf.delete");
+
+
         });
     });
 });

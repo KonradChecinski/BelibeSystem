@@ -11,7 +11,7 @@ class StoreWarehouseLocationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo("editDictionary", "user");
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreWarehouseLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string'],
+            'type' => ['required', 'string', 'in:shelf'],
+            'destination_id' => ['required', 'string', 'exists:warehouse_location_aisles,id'],
         ];
     }
 }

@@ -1,17 +1,17 @@
-import {Head} from "@inertiajs/react";
+import {Head, useForm} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {useSnackbar} from "notistack";
+import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
-    Box,
-    Fab,
+    Box, Divider,
+    Fab, Fade,
     Grid,
     IconButton,
     Paper,
     Tooltip,
     Typography,
 } from "@mui/material";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     DndContext,
     KeyboardSensor,
@@ -27,14 +27,78 @@ import {
     useSortable,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {Add, Delete, DragIndicator, Edit, ExpandMore, ChevronRight} from "@mui/icons-material";
+import {Add, Delete, DragIndicator, Edit, ExpandMore, ChevronRight, Cancel, Save} from "@mui/icons-material";
 import EditLocalizationDialog from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog";
+import DeleteLocalizationDialog
+    from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationDeleteDialog";
+import AddLocalizationDialog from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationAddDialog";
 
 
 export default function LocationsComponent(props) {
     const {t} = useLaravelReactI18n();
-    const [locations, setLocations] = useState(props.locations);
+    // const [locations, setLocations] = useState(props.locations);
     const [expandedRooms, setExpandedRooms] = useState({});
+    const [showAddDialog, setShowAddDialog] = useState(false);
+
+    const [edited, setEdited] = useState(false);
+
+    const {data, setData, processing, put, transform} = useForm(props.locations)
+
+
+    const resetForm = () => {
+        setData(props.locations)
+        setEdited(false)
+    }
+
+    transform((data) => {
+        const transformIds = (item, order = 0) => {
+            const newItem = {
+                ...item,
+                id: item.id.split('-')[1],
+                parent: item.parent ? item.parent.split('-')[1] : null,
+                order,
+            };
+
+            if (item.children && item.children.length > 0) {
+                newItem.children = item.children.map((child, index) => transformIds(child, index));
+            }
+
+            return newItem;
+        };
+
+        const flatten = (items) => {
+            return items.reduce((acc, item) => {
+                const {children, ...rest} = item;
+                acc.push(rest);
+                if (children && children.length > 0) {
+                    acc = acc.concat(flatten(children));
+                }
+                return acc;
+            }, []);
+        };
+
+        return flatten(data.map((item, index) => transformIds(item, index)));
+    });
+
+    const handleSave = () => {
+        console.log(data)
+        put(route("system.settings.warehouseLocation.update"), {
+            onSuccess: params => {
+                setEdited(false);
+                enqueueSnackbar("Zapisano kolejność lokalizacji", {variant: 'success'})
+            },
+            onError: errors => {
+                console.error(errors)
+                enqueueSnackbar("Błąd przy zapisywaniu kolejności lokalizacji", {variant: 'error'})
+                if (errors) {
+                    Object.keys(errors).forEach(key => {
+                        enqueueSnackbar(errors[key], {variant: 'error'})
+                    });
+                }
+            },
+            preserveScroll: true
+        })
+    }
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -47,48 +111,9 @@ export default function LocationsComponent(props) {
         })
     );
 
-    // function updateNames(existingData, newData) {
-    //     const updateItem = (existingItem, newItem) => {
-    //         existingItem.name = newItem.name;
-    //
-    //         // Aktualizacja rodzica, jeśli się zmienił
-    //         if (newItem.parent && existingItem.parent !== newItem.parent) {
-    //             existingItem.parent = newItem.parent;
-    //         }
-    //
-    //         if (existingItem.children && newItem.children) {
-    //             for (let child of existingItem.children) {
-    //                 const newChild = newItem.children.find(c => c.id === child.id);
-    //                 if (newChild) {
-    //                     updateItem(child, newChild);
-    //                 }
-    //             }
-    //
-    //             // Dodanie nowych dzieci, które nie istnieją w existingItem
-    //             const newChildren = newItem.children.filter(
-    //                 newChild => !existingItem.children.some(child => child.id === newChild.id)
-    //             );
-    //             existingItem.children.push(...newChildren);
-    //         }
-    //     };
-    //
-    //     for (let existingRoom of existingData) {
-    //         const newRoom = newData.find(room => room.id === existingRoom.id);
-    //         if (newRoom) {
-    //             updateItem(existingRoom, newRoom);
-    //         }
-    //     }
-    //
-    //     return existingData;
-    // }
-    //
-    // useEffect(() => {
-    //     console.log(locations);
-    //     console.log(props.locations);
-    //     const updatedData = updateNames(locations, props.locations);
-    //     console.log(updatedData);
-    //     setLocations(JSON.parse(JSON.stringify(updatedData)));
-    // }, [props.locations]);
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
 
 
     const handleDragEnd = (event) => {
@@ -98,7 +123,7 @@ export default function LocationsComponent(props) {
         const activeType = active.id.split('-')[0];
         const overType = over.id.split('-')[0];
 
-        setLocations(prevLocations => {
+        setData(prevLocations => {
             const newLocations = JSON.parse(JSON.stringify(prevLocations));
 
             // Dla pokoi
@@ -194,6 +219,9 @@ export default function LocationsComponent(props) {
 
             return newLocations;
         });
+
+
+        setEdited(true)
     };
 
 
@@ -203,7 +231,7 @@ export default function LocationsComponent(props) {
         const {active} = event;
 
         // Znajdź aktywny element
-        const activeItem = findItemById(active.id, locations);
+        const activeItem = findItemById(active.id, data);
         setActiveItem(activeItem);
     };
 
@@ -292,9 +320,42 @@ export default function LocationsComponent(props) {
         }
     };
 
-
     return (
-        <Box sx={{height: 'calc(100vh - 250px)', overflow: 'auto'}}>
+        <Box sx={{height: 'calc(100vh - 180px)', overflow: 'auto'}}>
+            <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <Typography variant={"h6"}>Kolejność kompletacji</Typography>
+                <Box>
+                    <Fade in={edited}>
+                        <Tooltip title={"Cofnij zmiany"}>
+                            <IconButton
+                                color="error"
+                                size={"small"}
+                                disabled={processing}
+                                onClick={resetForm}
+                            >
+                                <Cancel fontSize={"large"}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Fade>
+                    <Fade in={edited}>
+                        <Tooltip title={"Zapisz"}>
+                            <IconButton
+                                type="submit"
+                                color="success"
+                                size={"small"}
+                                disabled={processing}
+                                onClick={handleSave}
+                            >
+                                <Save fontSize={"large"}/>
+                            </IconButton>
+                        </Tooltip>
+
+                    </Fade>
+
+                </Box>
+            </Box>
+
+            <Divider sx={{mb: 1}}/>
             <DndContext
                 sensors={sensors}
                 collisionDetection={collisionDetectionStrategy}
@@ -303,10 +364,10 @@ export default function LocationsComponent(props) {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={locations.map(room => room.id)}
+                    items={data.map(room => room.id)}
                     strategy={verticalListSortingStrategy}
                 >
-                    {locations.map((room) => (
+                    {data.map((room) => (
                         <RoomItem
                             key={room.id}
                             room={room}
@@ -317,6 +378,7 @@ export default function LocationsComponent(props) {
                                     [room.id]: !prev[room.id]
                                 }));
                             }}
+                            locations={data}
                         />
                     ))}
                 </SortableContext>
@@ -326,12 +388,23 @@ export default function LocationsComponent(props) {
                     )}
                 </DragOverlay>
             </DndContext>
+            <Box sx={{position: 'fixed', bottom: 16, right: 16}}>
+                <Tooltip title={t("Add new location")}>
+                    <Fab
+                        color="primary"
+                        onClick={() => setShowAddDialog(true)}
+                    >
+                        <Add/>
+                    </Fab>
+                </Tooltip>
+            </Box>
+            <AddLocalizationDialog open={showAddDialog} setOpen={setShowAddDialog} locations={data}/>
         </Box>
     );
 }
 
 
-function RoomItem({room, isExpanded, onToggle}) {
+function RoomItem({room, isExpanded, onToggle, locations}) {
     const {
         attributes,
         listeners,
@@ -355,6 +428,7 @@ function RoomItem({room, isExpanded, onToggle}) {
     };
 
     const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
 
     return (
@@ -407,12 +481,23 @@ function RoomItem({room, isExpanded, onToggle}) {
                             setOpen={setOpenEditDialog}
                             type={"room"}
                             clickedLocalization={room}
+                            locations={locations}
                         />
                         <Tooltip title="Usuń">
-                            <IconButton>
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpenDeleteDialog(true)}
+                            >
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
+                        <DeleteLocalizationDialog
+                            open={openDeleteDialog}
+                            setOpen={setOpenDeleteDialog}
+                            type={"room"}
+                            clickedLocalization={room}
+                            locations={locations}
+                        />
                     </Box>
                 </Box>
 
@@ -428,6 +513,7 @@ function RoomItem({room, isExpanded, onToggle}) {
                                     key={aisle.id}
                                     aisle={aisle}
                                     parentRoom={room.id}
+                                    locations={locations}
                                 />
                             ))}
                         </SortableContext>
@@ -440,7 +526,7 @@ function RoomItem({room, isExpanded, onToggle}) {
     );
 }
 
-function AisleItem({aisle, parentRoom}) {
+function AisleItem({aisle, parentRoom, locations}) {
     const {
         attributes,
         listeners,
@@ -465,7 +551,7 @@ function AisleItem({aisle, parentRoom}) {
     };
 
     const [openEditDialog, setOpenEditDialog] = useState(false);
-
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     return (
         <Box sx={{mb: 1}}>
@@ -506,11 +592,22 @@ function AisleItem({aisle, parentRoom}) {
                             type={"aisle"}
                             clickedLocalization={aisle}
                         />
+
                         <Tooltip title="Usuń">
-                            <IconButton size="small">
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpenDeleteDialog(true)}
+                            >
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
+                        <DeleteLocalizationDialog
+                            open={openDeleteDialog}
+                            setOpen={setOpenDeleteDialog}
+                            type={"aisle"}
+                            clickedLocalization={aisle}
+                            locations={locations}
+                        />
                     </Box>
                 </Box>
 
@@ -525,6 +622,7 @@ function AisleItem({aisle, parentRoom}) {
                                     key={shelf.id}
                                     shelf={shelf}
                                     parentAisle={aisle.id}
+                                    locations={locations}
                                 />
                             ))}
                         </SortableContext>
@@ -537,7 +635,7 @@ function AisleItem({aisle, parentRoom}) {
     );
 }
 
-function ShelfItem({shelf, parentAisle}) {
+function ShelfItem({shelf, parentAisle, locations}) {
     const {
         attributes,
         listeners,
@@ -559,6 +657,7 @@ function ShelfItem({shelf, parentAisle}) {
     };
 
     const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     return (
         <Box sx={{mb: 1, display: 'flex', alignItems: 'center', width: 1}}>
@@ -602,18 +701,24 @@ function ShelfItem({shelf, parentAisle}) {
                         <Tooltip title="Usuń">
                             <IconButton
                                 size="small"
-                                onClick={() => console.log('Delete shelf', shelf.id)}
+                                onClick={() => setOpenDeleteDialog(true)}
                             >
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
+                        <DeleteLocalizationDialog
+                            open={openDeleteDialog}
+                            setOpen={setOpenDeleteDialog}
+                            type={"shelf"}
+                            clickedLocalization={shelf}
+                            locations={locations}
+                        />
                     </Box>
                 </Box>
             </Paper>
         </Box>
     );
 }
-
 
 function DraggingItem({item}) {
     const type = item.id.split('-')[0];

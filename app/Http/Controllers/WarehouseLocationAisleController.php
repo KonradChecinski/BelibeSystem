@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WarehouseLocationAisle;
 use App\Http\Requests\StoreWarehouseLocationAisleRequest;
 use App\Http\Requests\UpdateWarehouseLocationAisleRequest;
+use App\Models\WarehouseLocationRoom;
 
 class WarehouseLocationAisleController extends Controller
 {
@@ -29,7 +30,18 @@ class WarehouseLocationAisleController extends Controller
      */
     public function store(StoreWarehouseLocationAisleRequest $request)
     {
-        //
+        $warehouseLocationRoom = WarehouseLocationRoom::findorFail($request->destination_id);
+
+        $countAislesInRoom = $warehouseLocationRoom->aisles()->count();
+
+        $warehouseLocationAisle = new WarehouseLocationAisle([
+            'name' => $request->name,
+            'order' => $countAislesInRoom,
+        ]);
+
+        $warehouseLocationRoom
+            ->aisles()
+            ->save($warehouseLocationAisle);
     }
 
     /**
@@ -60,8 +72,11 @@ class WarehouseLocationAisleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(WarehouseLocationAisle $warehouseLocationAisle)
+    public function destroy(WarehouseLocationAisle $warehouseLocation)
     {
-        //
+        if ($warehouseLocation->locations()->count() > 0) {
+            return redirect()->back()->withErrors(['error' => 'Nie można usunąć aleji magazynowej, ponieważ zawiera ona półki.']);
+        }
+        $warehouseLocation->delete();
     }
 }

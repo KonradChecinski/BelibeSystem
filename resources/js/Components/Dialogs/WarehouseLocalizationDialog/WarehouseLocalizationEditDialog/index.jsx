@@ -13,8 +13,8 @@ import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {
-    useDictionaryEditForm
-} from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog/form/useDictionaryEditForm";
+    useLocationEditForm
+} from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog/form/useLocationEditForm";
 
 export default function EditLocalizationDialog({open, setOpen, type, clickedLocalization}) {
     const {
@@ -23,7 +23,7 @@ export default function EditLocalizationDialog({open, setOpen, type, clickedLoca
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
-    } = useDictionaryEditForm()
+    } = useLocationEditForm()
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
         name: clickedLocalization.name
@@ -91,6 +91,11 @@ export default function EditLocalizationDialog({open, setOpen, type, clickedLoca
                 onError: errors => {
                     enqueueSnackbar('Błąd przy aktualizacji lokalizacji', {variant: 'error'})
                     console.error(errors)
+                    if (errors) {
+                        Object.keys(errors).forEach(key => {
+                            enqueueSnackbar(errors[key], {variant: 'error'})
+                        });
+                    }
                 },
             })
 
