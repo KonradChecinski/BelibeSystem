@@ -21,7 +21,7 @@ class UpdateB2bCartRequest extends FormRequest
      */
     public function rules(): array
     {
-        $availableQuantity = $this->product->available;
+        $availableQuantity = $this->product->available_without_order_to_edit;
         return [
             'quantity' => ['required', 'integer', 'min:0', "max:$availableQuantity"]
         ];
