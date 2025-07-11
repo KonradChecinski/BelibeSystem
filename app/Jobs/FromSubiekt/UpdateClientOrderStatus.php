@@ -46,8 +46,10 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
                 ->where("dok_Podtyp", 0)
                 ->first([
                     "dok_Id",
+                    "dok_Typ",
                     "dok_NrPelny",
                     "dok_Status",
+                    "dok_StatusFiskal"
                 ]);
 
 //            dd($order, $subiektFV);
@@ -69,7 +71,15 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
 //            dd($subiektFV,$subiektFVPrinted, $subiektFV->dok_Status,
 //                (int)$subiektFV->dok_Status === 1, !is_null($subiektFVPrinted));
 
-            if ((int)$subiektFV->dok_Status == 1 && !is_null($subiektFVPrinted)) { //skutek 0-cofnięty, 1-wywołany, 3-odłożony
+            if (
+                (int)$subiektFV->dok_Status == 1 //skutek 0-cofnięty, 1-wywołany, 3-odłożony
+                &&
+                (
+                    ((int)$subiektFV->dok_Typ === 2 && (int)$subiektFV->dok_StatusFiskal === 1)
+                    ||
+                    ((int)$subiektFV->dok_Typ === 21 && !is_null($subiektFVPrinted))
+                )
+            ) {
                 $order->update([
                     "status" => 100
                 ]);
