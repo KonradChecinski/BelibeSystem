@@ -102,7 +102,7 @@ export default function ModelWarehouseComponent(props) {
                     href={route("system.products.model.warehouse.print", {productModel: props.productModel.id})}
                     target={"_blank"}
                 >
-                    <Button variant="outlined" startIcon={<Print/>}>
+                    <Button variant="outlined" startIcon={<Print/>} sx={{width: "40ch", height: 50}}>
                         Generuj etykietę na kosz
                     </Button>
                 </a>
