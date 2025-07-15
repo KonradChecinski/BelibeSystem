@@ -52,6 +52,7 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
                     "dok_StatusFiskal"
                 ]);
 
+
 //            dd($order, $subiektFV);
             if ($subiektFV == null) {
                 if (Carbon::now()->diffInDays($order->created_at) > 7) {
@@ -62,11 +63,11 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
                     continue;
                 }
             }
-
             $subiektFVPrinted = DB::connection("subiekt")
                 ->table("dok_StatusWydruku")
                 ->where("dsw_IdDokumentu", $subiektFV->dok_Id)
                 ->first();
+
 
 //            dd($subiektFV,$subiektFVPrinted, $subiektFV->dok_Status,
 //                (int)$subiektFV->dok_Status === 1, !is_null($subiektFVPrinted));
@@ -75,9 +76,9 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
                 (int)$subiektFV->dok_Status == 1 //skutek 0-cofnięty, 1-wywołany, 3-odłożony
                 &&
                 (
-                    ((int)$subiektFV->dok_Typ === 2 && (int)$subiektFV->dok_StatusFiskal === 1)
+                    ((int)$subiektFV->dok_Typ === 2 && !is_null($subiektFVPrinted))
                     ||
-                    ((int)$subiektFV->dok_Typ === 21 && !is_null($subiektFVPrinted))
+                    ((int)$subiektFV->dok_Typ === 21 && (int)$subiektFV->dok_StatusFiskal === 1)
                 )
             ) {
                 $order->update([
