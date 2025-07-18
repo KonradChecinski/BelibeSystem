@@ -25,7 +25,7 @@ class StorePartnerSettlementRequest extends FormRequest
     {
         return [
             "date" => ["required", "date"],
-            "file" => ["required", "file", "max:10240"]
+            "file" => ["required", "file", "max:10485760"]
         ];
     }
 

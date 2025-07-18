@@ -200,9 +200,9 @@ function Step1({data, setData, register, errors, control, changeDataFiles}) {
                 )}
 
                 <DropzoneArea
-                    acceptedFiles={["text/csv"]}
+                    acceptedFiles={["text/csv", "text/plain"]}
                     showPreviews={false}
-                    maxFileSize={10240}
+                    maxFileSize={10485760}
                     filesLimit={1}
                     showAlerts={null}
                     onAlert={(text, type) => {

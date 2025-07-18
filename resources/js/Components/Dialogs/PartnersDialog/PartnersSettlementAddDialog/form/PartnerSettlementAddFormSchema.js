@@ -11,7 +11,7 @@ const schema = yup.object().shape({
             if (!value) {
                 return true
             }
-            return value.size <= 10240
+            return value.size <= 10485760
         })
         .test("fileType", "Nieprawidłowy format pliku", (value) => {
             if (!value) {
