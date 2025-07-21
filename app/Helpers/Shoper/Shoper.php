@@ -461,6 +461,7 @@ class Shoper
                 "product_id" => $shoperProductId,
                 "price_type" => 0,
                 "active" => true,
+                "default" => true,
                 "code" => $productSymbol,
                 "ean" => $product->barcodes()->where("main", true)->first()->barcode,
                 "stock" => $product->quantity,
