@@ -711,6 +711,25 @@ class Shoper
         return true;
     }
 
+    public static function changeStockDefault(int $productStockId, bool $default): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/product-stocks/' . $productStockId, [
+                "default" => $default
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeStockDefault($productStockId, $default);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+        sleep(1);
+        return true;
+    }
+
     public static function changeProductActive(int $productId, bool $active): bool
     {
         $response = Http::withoutVerifying()
