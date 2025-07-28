@@ -337,8 +337,8 @@ class Empik
 
                 $orderProduct = new OrderProduct([
                     'quantity' => $item->quantity,
-                    'price' => $item->price,
-                    'discounted_price' => $item->price,
+                    'price' => $item->price / $item->quantity,
+                    'discounted_price' => $item->price / $item->quantity,
                 ]);
 
                 if (is_null($product)) {
