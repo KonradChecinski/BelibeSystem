@@ -46,7 +46,7 @@ class ShoperChangeShow implements ShouldQueue, ShouldBeUnique
         $shoperStock = Shoper::getProductStockBySymbol($this->product);
         $shoperProduct = Shoper::getProductBySymbol($this->product->color);
 
-        if (count($shoperStock) > 0) {
+        if (!is_null($shoperStock) && count($shoperStock) > 0) {
             //istnieje wariant
             $shoperStockId = $shoperStock[0]["stock_id"];
 
@@ -64,7 +64,7 @@ class ShoperChangeShow implements ShouldQueue, ShouldBeUnique
         } else {
             //nieistnieje wariant
 
-            if (count($shoperProduct) > 0) {
+            if (!is_null($shoperProduct) && count($shoperProduct) > 0) {
                 //Istnieje product
                 $shoperProductId = $shoperProduct[0]["product_id"];
                 $shoperStockId = Shoper::AddProductVariant($this->product, $shoperProductId);

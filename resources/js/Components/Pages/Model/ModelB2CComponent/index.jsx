@@ -24,7 +24,7 @@ export default function ModelB2CComponent(props) {
         'id': props.productModel.id,
         "description_b2c": props.productModel.description_b2c,
 
-        "b2c_variant": props.productModel.b2c_variant,
+        // "b2c_variant": props.productModel.b2c_variant,
 
         'product_b2c_category_id': props.productModel.product_b2c_category_id,
         'b2c_category': props.productModel.b2c_category,
@@ -52,7 +52,7 @@ export default function ModelB2CComponent(props) {
             'id': props.productModel.id,
             "description_b2c": props.productModel.description_b2c,
 
-            "b2c_variant": props.productModel.b2c_variant,
+            // "b2c_variant": props.productModel.b2c_variant,
 
             'product_b2c_category_id': props.productModel.product_b2c_category_id,
             'b2c_category': props.productModel.b2c_category,
@@ -86,6 +86,10 @@ export default function ModelB2CComponent(props) {
         {
             id: 2,
             label: "Zestaw kolor"
+        },
+        {
+            id: 3,
+            label: "Zestaw rozmiar - nowy"
         }
     ]
 
@@ -95,7 +99,8 @@ export default function ModelB2CComponent(props) {
                 <Typography
                     sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>
                     <Category fontSize={"large"}/>
-                    Kategorie i Wariantowanie
+                    {/*Kategorie i Wariantowanie*/}
+                    Kategoria
                 </Typography>
                 <Autocomplete
                     disablePortal
@@ -127,33 +132,33 @@ export default function ModelB2CComponent(props) {
                             // color={fieldErrors.gs1_gpc?.message && "error"}
                         />}
                 />
-                <Autocomplete
-                    disablePortal
-                    id="b2c_variant"
-                    options={variants}
-                    sx={{width: "30ch"}}
-                    value={variants.find(o => o.id === data.b2c_variant)}
-                    getOptionLabel={(option) => option.label}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    onChange={(e, value) => {
-                        setData("b2c_variant", value?.id)
-                        setEdited(true)
-                    }}
-                    renderInput={(params) =>
-                        <TextField
-                            {...params}
-                            label="Wariant"
-                            sx={{my: 1}}
-                            value={variants.find(o => o.id === data.b2c_variant)}
-                            //{...register("gs1_gpc")}
-                            // color={fieldErrors.gs1_gpc?.message && "error"}
-                        />}
-                />
-                {/*{fieldErrors.gs1_gpc?.message && (*/}
-                {/*    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>*/}
-                {/*        {fieldErrors.gs1_gpc?.message.toString()}*/}
-                {/*    </Typography>*/}
-                {/*)}*/}
+                {/*<Autocomplete*/}
+                {/*    disablePortal*/}
+                {/*    id="b2c_variant"*/}
+                {/*    options={variants}*/}
+                {/*    sx={{width: "30ch"}}*/}
+                {/*    value={variants.find(o => o.id === data.b2c_variant)}*/}
+                {/*    getOptionLabel={(option) => option.label}*/}
+                {/*    isOptionEqualToValue={(option, value) => option.id === value.id}*/}
+                {/*    onChange={(e, value) => {*/}
+                {/*        setData("b2c_variant", value?.id)*/}
+                {/*        setEdited(true)*/}
+                {/*    }}*/}
+                {/*    renderInput={(params) =>*/}
+                {/*        <TextField*/}
+                {/*            {...params}*/}
+                {/*            label="Wariant"*/}
+                {/*            sx={{my: 1}}*/}
+                {/*            value={variants.find(o => o.id === data.b2c_variant)}*/}
+                {/*            //{...register("gs1_gpc")}*/}
+                {/*            // color={fieldErrors.gs1_gpc?.message && "error"}*/}
+                {/*        />}*/}
+                {/*/>*/}
+                {/*/!*{fieldErrors.gs1_gpc?.message && (*!/*/}
+                {/*/!*    <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>*!/*/}
+                {/*/!*        {fieldErrors.gs1_gpc?.message.toString()}*!/*/}
+                {/*/!*    </Typography>*!/*/}
+                {/*/!*)}*!/*/}
 
                 <Typography
                     sx={{mb: 3, display: "flex", gap: 1, alignItems: "center"}}>

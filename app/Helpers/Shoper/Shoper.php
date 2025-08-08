@@ -461,7 +461,6 @@ class Shoper
                 "product_id" => $shoperProductId,
                 "price_type" => 0,
                 "active" => true,
-                "default" => true,
                 "code" => $productSymbol,
                 "ean" => $product->barcodes()->where("main", true)->first()->barcode,
                 "stock" => $product->quantity,
@@ -471,6 +470,10 @@ class Shoper
 
             if ($product->model->b2c_variant == 2) {
                 $requestData["default"] = true;
+            }
+
+            if ($product->model->b2c_variant == 3) {
+                $requestData["default"] = $product->color->products()->count() === 1;
             }
 
             $response = Http::withoutVerifying()
@@ -521,6 +524,14 @@ class Shoper
                 "8" => $shoperColor,//Kolor
             ];
 
+        } else if ($product->model->b2c_variant == 3) {
+            //dla 13 - zestaw rozmiar - nowy
+            $shoperSize = self::getOptionsValue(27, $product->size->name); //Rozmiar
+            if (is_null($shoperSize)) $shoperSize = self::addOptionsValue(27, $product->size->name);
+
+            $options = [
+                "27" => $shoperSize,//Rozmiar
+            ];
         } else {
             return null;
         }
@@ -601,6 +612,7 @@ class Shoper
         return $response->json()["list"];
     }
 
+
     public static function getProductStockAll(int $page): array|null
     {
         $response = Http::withoutVerifying()
@@ -631,6 +643,30 @@ class Shoper
             ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
                 "page" => $page,
                 "limit" => 50,
+            ]);
+
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::getProductAll($page);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return null;
+        }
+//        dd($response->json(), $response->status());
+        return $response->json()["list"];
+    }
+
+    public static function getProductByGroupId(int $page, int $group_id): array|null
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->get(env('SHOPER_URL') . '/webapi/rest/products/', [
+                "page" => $page,
+                "limit" => 50,
+                "filters" => json_encode([
+                    "group_id" => $group_id,
+                ])
             ]);
 
         if ($response->status() === 429) {
@@ -744,6 +780,25 @@ class Shoper
         if ($response->status() === 429) {
             sleep(1);
             return self::changeStockActive($productId, $active);
+        }
+        if ($response->status() === 401) {
+            self::login();
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function changeProductGroup(int $productId, bool $groupId): bool
+    {
+        $response = Http::withoutVerifying()
+            ->withToken(self::getAccessToken())
+            ->put(env('SHOPER_URL') . '/webapi/rest/products/' . $productId, [
+                "category_id" => $groupId
+            ]);
+        if ($response->status() === 429) {
+            sleep(1);
+            return self::changeProductGroup($productId, $groupId);
         }
         if ($response->status() === 401) {
             self::login();
