@@ -54,9 +54,9 @@ class RunAddProductStockInShoper extends Command
             $this->info("");
 
             if ($i % 5 === 0) {
-                $this->info("Waiting 5 seconds...");
+                $this->info("Waiting 20 seconds...");
                 $this->info("");
-                sleep(10);
+                sleep(20);
             }
         }
 
