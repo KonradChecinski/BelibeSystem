@@ -39,8 +39,24 @@ class RunAddOnlyNotExistProductStockInShoper extends Command
         $i = 0;
         foreach ($products as $product) {
             $i++;
+
+            if ($i % 5 === 0) {
+                $this->info("Waiting 5 seconds...");
+                $this->info("");
+                sleep(5);
+            }
+
             $this->info($i . '.(/' . $count . ') Checking product stock: ' . $product->symbol);
-            $shoperStock = Shoper::getProductStockBySymbol($product);
+            try {
+                $shoperStock = Shoper::getProductStockBySymbol($product);
+            } catch
+            (\Exception $e) {
+                $this->error($e->getMessage());
+                $this->info("Waiting 3 seconds...");
+                sleep(3);
+                $shoperStock = Shoper::getProductStockBySymbol($product);
+            }
+
 
             if (!is_null($shoperStock) && count($shoperStock) > 0) {
                 $this->info("Product stock already exists in Shoper, skipping...");
@@ -49,23 +65,13 @@ class RunAddOnlyNotExistProductStockInShoper extends Command
 
             $this->info($i . '.(/' . $count . ') Adding product stock: ' . $product->symbol);
 
-            try {
-                ShoperChangeShow::dispatch($product->id);
-            } catch
-            (\Exception $e) {
-                $this->error($e->getMessage());
-                $this->info("Waiting 3 seconds...");
-                sleep(3);
-            }
+
+            ShoperChangeShow::dispatch($product->id);
 
 
             $this->info("");
 
-            if ($i % 5 === 0) {
-                $this->info("Waiting 5 seconds...");
-                $this->info("");
-                sleep(5);
-            }
+
         }
 
         return self::SUCCESS;
