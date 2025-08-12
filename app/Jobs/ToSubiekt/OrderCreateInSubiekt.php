@@ -71,6 +71,7 @@ class OrderCreateInSubiekt implements ShouldQueue
                     $zamowienie->KategoriaId = 35;
                     if ($order->payment_name == "P24") $zamowienie->PlatnoscKartaId = 16;
                     if ($order->payment_name == "PAYU") $zamowienie->PlatnoscKartaId = 19;
+                    if ($order->payment_name == "AF") $zamowienie->PlatnoscKartaId = 28;
                     break;
 
                 case 3: //EMPIK
