@@ -40,11 +40,11 @@ class AllegroAnswerMessageThread implements ShouldQueue, ShouldBeUnique
 Postaramy się odpisać jak najszybciej.
 Pracujemy od pon. do pt. od 8:00 do 16:00.";
 
-        $result = Allegro::changeMessThreadStatus($this->thread->id);
-        if (!$result) {
-            $this->fail('changing thread status failed');
-        }
-        
+//        $result = Allegro::changeMessThreadStatus($this->thread->id);
+//        if (!$result) {
+//            $this->fail('changing thread status failed');
+//        }
+
         $result = Allegro::sendMessInMessThread($this->thread->id, $message);
         if (!$result) {
             $this->fail('sending message failed');
