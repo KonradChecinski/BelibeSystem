@@ -31,6 +31,7 @@ class ExtraMainPageComponentsController extends Controller
             ->select('product_model_colors.product_model_id', DB::raw('SUM(client_order_products.quantity) as total_quantity'))
             ->join('products', 'client_order_products.product_id', '=', 'products.id')
             ->join('product_model_colors', 'products.product_model_color_id', '=', 'product_model_colors.id')
+            ->where('products.show_in_b2b', true)
             ->groupBy('product_model_colors.product_model_id')
             ->orderByDesc('total_quantity')
             ->limit($request->quantity)
