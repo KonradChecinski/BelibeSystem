@@ -16,7 +16,7 @@ class RunAddOnlyNotExistProductStockInShoper extends Command
      *
      * @var string
      */
-    protected $signature = 'app:run-add-only-exist-product-stock-in-shoper';
+    protected $signature = 'app:run-add-only-not-exist-product-stock-in-shoper';
 
     /**
      * The console command description.
