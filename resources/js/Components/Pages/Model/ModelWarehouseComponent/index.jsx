@@ -40,6 +40,7 @@ export default function ModelWarehouseComponent(props) {
         // console.log("GS1 data: ", data)
         // saveGS1()
     }
+    console.log(props.productModel.warehouse_locations)
 
     // const saveGS1 = () => {
     //     post(route("system.products.model.update.gs1", {productModel: props.productModel.id}), {

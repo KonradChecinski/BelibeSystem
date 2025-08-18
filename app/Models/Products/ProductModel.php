@@ -275,7 +275,7 @@ class ProductModel extends Model
 
     public function mainWarehouseLocation(): BelongsToMany
     {
-        return $this->warehouseLocations()->wherePivot('is_main', true)->first();
+        return $this->warehouseLocations()->wherePivot('is_main', true);
     }
 
     public function additionalWarehouseLocations(): BelongsToMany

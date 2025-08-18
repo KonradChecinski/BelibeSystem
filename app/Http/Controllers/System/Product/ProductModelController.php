@@ -247,7 +247,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocations"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
