@@ -75,7 +75,7 @@ class ExtraMainPageComponentsController extends Controller
                 'total_quantity' => $product->total_quantity
             ];
         });
-//        dd($bestsellerModels);
+        dd($bestsellerModels);
         return response()->json($bestsellerModels);
     }
 }
