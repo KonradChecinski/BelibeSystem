@@ -28,10 +28,10 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {Add, Delete, DragIndicator, Edit, ExpandMore, ChevronRight, Cancel, Save} from "@mui/icons-material";
-import EditLocalizationDialog from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog";
-import DeleteLocalizationDialog
-    from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationDeleteDialog";
-import AddLocalizationDialog from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationAddDialog";
+import EditLocationDialog from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationEditDialog";
+import DeleteLocationDialog
+    from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationDeleteDialog";
+import AddLocationDialog from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationAddDialog";
 
 
 export default function LocationsComponent(props) {
@@ -398,7 +398,7 @@ export default function LocationsComponent(props) {
                     </Fab>
                 </Tooltip>
             </Box>
-            <AddLocalizationDialog open={showAddDialog} setOpen={setShowAddDialog} locations={data}/>
+            <AddLocationDialog open={showAddDialog} setOpen={setShowAddDialog} locations={data}/>
         </Box>
     );
 }
@@ -476,11 +476,11 @@ function RoomItem({room, isExpanded, onToggle, locations}) {
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
-                        <EditLocalizationDialog
+                        <EditLocationDialog
                             open={openEditDialog}
                             setOpen={setOpenEditDialog}
                             type={"room"}
-                            clickedLocalization={room}
+                            clickedLocation={room}
                             locations={locations}
                         />
                         <Tooltip title="Usuń">
@@ -491,11 +491,11 @@ function RoomItem({room, isExpanded, onToggle, locations}) {
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
-                        <DeleteLocalizationDialog
+                        <DeleteLocationDialog
                             open={openDeleteDialog}
                             setOpen={setOpenDeleteDialog}
                             type={"room"}
-                            clickedLocalization={room}
+                            clickedLocation={room}
                             locations={locations}
                         />
                     </Box>
@@ -586,11 +586,11 @@ function AisleItem({aisle, parentRoom, locations}) {
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
-                        <EditLocalizationDialog
+                        <EditLocationDialog
                             open={openEditDialog}
                             setOpen={setOpenEditDialog}
                             type={"aisle"}
-                            clickedLocalization={aisle}
+                            clickedLocation={aisle}
                         />
 
                         <Tooltip title="Usuń">
@@ -601,11 +601,11 @@ function AisleItem({aisle, parentRoom, locations}) {
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
-                        <DeleteLocalizationDialog
+                        <DeleteLocationDialog
                             open={openDeleteDialog}
                             setOpen={setOpenDeleteDialog}
                             type={"aisle"}
-                            clickedLocalization={aisle}
+                            clickedLocation={aisle}
                             locations={locations}
                         />
                     </Box>
@@ -692,11 +692,11 @@ function ShelfItem({shelf, parentAisle, locations}) {
                                 <Edit/>
                             </IconButton>
                         </Tooltip>
-                        <EditLocalizationDialog
+                        <EditLocationDialog
                             open={openEditDialog}
                             setOpen={setOpenEditDialog}
                             type={"shelf"}
-                            clickedLocalization={shelf}
+                            clickedLocation={shelf}
                         />
                         <Tooltip title="Usuń">
                             <IconButton
@@ -706,11 +706,11 @@ function ShelfItem({shelf, parentAisle, locations}) {
                                 <Delete/>
                             </IconButton>
                         </Tooltip>
-                        <DeleteLocalizationDialog
+                        <DeleteLocationDialog
                             open={openDeleteDialog}
                             setOpen={setOpenDeleteDialog}
                             type={"shelf"}
-                            clickedLocalization={shelf}
+                            clickedLocation={shelf}
                             locations={locations}
                         />
                     </Box>

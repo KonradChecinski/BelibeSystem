@@ -9,10 +9,10 @@ import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
-export default function DeleteLocalizationDialog({open, setOpen, type, clickedLocalization, locations}) {
+export default function DeleteLocationDialog({open, setOpen, type, clickedLocation, locations}) {
 
     const {data, setData, delete: destroy, patch, processing, errors, clearErrors, reset} = useForm({
-        name: clickedLocalization.name
+        name: clickedLocation.name
     })
     const handleClose = () => {
         setOpen(false);
@@ -64,13 +64,13 @@ export default function DeleteLocalizationDialog({open, setOpen, type, clickedLo
 
 
     const save = () => {
-        destroy(route(path(), {warehouseLocation: clickedLocalization.id.split('-')[1]}),
+        destroy(route(path(), {warehouseLocation: clickedLocation.id.split('-')[1]}),
             {
                 preserveScroll: true,
                 onSuccess: () => {
                     enqueueSnackbar('Usunięto lokalizacje', {variant: 'success'})
                     handleClose();
-                    deleteLocation(locations, clickedLocalization.id)
+                    deleteLocation(locations, clickedLocation.id)
                 },
                 onError: errors => {
                     enqueueSnackbar('Błąd przy usuwaniu lokalizacji', {variant: 'error'})
@@ -102,7 +102,7 @@ export default function DeleteLocalizationDialog({open, setOpen, type, clickedLo
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>Chcesz usunąć
-                    id:{clickedLocalization.id} "{clickedLocalization.name}"</DialogContentText>
+                    id:{clickedLocation.id} "{clickedLocation.name}"</DialogContentText>
 
             </DialogContent>
             <DialogActions>

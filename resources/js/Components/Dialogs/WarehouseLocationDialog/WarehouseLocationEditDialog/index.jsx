@@ -14,9 +14,9 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {
     useLocationEditForm
-} from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationEditDialog/form/useLocationEditForm";
+} from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationEditDialog/form/useLocationEditForm";
 
-export default function EditLocalizationDialog({open, setOpen, type, clickedLocalization}) {
+export default function EditLocationDialog({open, setOpen, type, clickedLocation}) {
     const {
         register,
         handleSubmit,
@@ -26,7 +26,7 @@ export default function EditLocalizationDialog({open, setOpen, type, clickedLoca
     } = useLocationEditForm()
 
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm({
-        name: clickedLocalization.name
+        name: clickedLocation.name
     })
     // console.log("data", data)
 
@@ -77,7 +77,7 @@ export default function EditLocalizationDialog({open, setOpen, type, clickedLoca
 
 
     const save = () => {
-        patch(route(path(), {warehouseLocation: clickedLocalization.id.split('-')[1]}),
+        patch(route(path(), {warehouseLocation: clickedLocation.id.split('-')[1]}),
 
             {
                 preserveScroll: true,
@@ -86,7 +86,7 @@ export default function EditLocalizationDialog({open, setOpen, type, clickedLoca
                     setActiveStep(0);
                     enqueueSnackbar('Zaktualizowano lokalizacje', {variant: 'success'})
                     handleClose();
-                    clickedLocalization.name = data.name;
+                    clickedLocation.name = data.name;
                 },
                 onError: errors => {
                     enqueueSnackbar('Błąd przy aktualizacji lokalizacji', {variant: 'error'})

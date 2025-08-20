@@ -14,9 +14,9 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {
     useLocationAddForm
-} from "@/Components/Dialogs/WarehouseLocalizationDialog/WarehouseLocalizationAddDialog/form/useLocationAddForm";
+} from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationAddDialog/form/useLocationAddForm";
 
-export default function AddLocalizationDialog({open, setOpen, locations}) {
+export default function AddLocationDialog({open, setOpen, locations}) {
     const {
         register,
         handleSubmit,
