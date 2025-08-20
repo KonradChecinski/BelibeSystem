@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Warehouse\Warehouse;
+use App\Http\Requests\UpdateWarehouseLocationMainRequest;
 use App\Models\Products\ProductModel;
+use App\Models\WarehouseLocation;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -109,5 +111,23 @@ class WarehouseProductModelController extends Controller
         $pdf->setOption('isRemoteEnabled', true);
         $pdf->setOption('defaultFont', 'DejaVu Sans');
         return $pdf->stream("Label - " . $productModel->symbol . '.pdf');
+    }
+
+
+    public function printLabelForShelf(int $start = 1)
+    {
+
+
+        $result = [
+            "start" => $start,
+            "pointPerInch" => 72,// point
+            "cmPerInch" => 2.54,// cm
+        ];
+
+//        return view('pdf.system.model.warehouseLabelShelf', $result);
+        $pdf = Pdf::loadView('pdf.system.model.warehouseLabelShelf', $result);
+        $pdf->setOption('isHtml5ParserEnabled', true);
+        $pdf->setOption('isRemoteEnabled', true);
+        return $pdf->stream("Label - .pdf");
     }
 }
