@@ -114,12 +114,13 @@ class WarehouseProductModelController extends Controller
     }
 
 
-    public function printLabelForShelf(int $start = 1)
+    public function printLabelForShelf(int $start = 1, int $count = 50)
     {
 
 
         $result = [
             "start" => $start,
+            "count" => $count,
             "pointPerInch" => 72,// point
             "cmPerInch" => 2.54,// cm
         ];

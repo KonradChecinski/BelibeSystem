@@ -91,7 +91,7 @@
 <body>
 
 {{--<div class="w-full">--}}
-@for( $i=0; $i < 6; $i++)
+@for( $i=0; $i < $count; $i++)
 
     @php
         $qr = null;
