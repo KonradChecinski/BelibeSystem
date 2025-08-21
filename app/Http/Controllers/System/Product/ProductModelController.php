@@ -23,6 +23,9 @@ use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductSize;
 use App\Models\Products\ProductUnit;
+use App\Models\WarehouseLocation;
+use App\Models\WarehouseLocationAisle;
+use App\Models\WarehouseLocationRoom;
 use Inertia\Inertia;
 
 class ProductModelController extends Controller
@@ -206,7 +209,7 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -219,7 +222,11 @@ class ProductModelController extends Controller
         $productColorIcons = ProductColorIcon::all();
         $productClasps = ProductClasp::all();
         $productEmpikCategories = ProductEmpikCategory::all();
-
+        $locations = [
+            "rooms" => WarehouseLocationRoom::all(),
+            "aisles" => WarehouseLocationAisle::all(),
+            "locations" => WarehouseLocation::all(),
+        ];
 
         return Inertia::render("System/Products/Model", [
             "productModel" => $productModel,
@@ -239,6 +246,7 @@ class ProductModelController extends Controller
             "clasps" => $productClasps,
             "empikCategories" => $productEmpikCategories,
             "productColorIcons" => $productColorIcons,
+            "locations" => $locations
         ]);
     }
 
@@ -247,7 +255,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocations"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -260,6 +268,11 @@ class ProductModelController extends Controller
         $productColorIcons = ProductColorIcon::all();
         $productClasps = ProductClasp::all();
         $productEmpikCategories = ProductEmpikCategory::all();
+        $locations = [
+            "rooms" => WarehouseLocationRoom::all(),
+            "aisles" => WarehouseLocationAisle::all(),
+            "locations" => WarehouseLocation::all(),
+        ];
 
         return Inertia::render("System/Products/Model", [
             "editing" => true,
@@ -280,6 +293,7 @@ class ProductModelController extends Controller
             "clasps" => $productClasps,
             "empikCategories" => $productEmpikCategories,
             "productColorIcons" => $productColorIcons,
+            "locations" => $locations,
         ]);
     }
 

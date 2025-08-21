@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateWarehouseLocationMainRequest;
 use App\Http\Requests\UpdateWarehouseLocationOrderRequest;
+use App\Models\Products\ProductModel;
 use App\Models\WarehouseLocation;
 use App\Http\Requests\StoreWarehouseLocationRequest;
 use App\Http\Requests\UpdateWarehouseLocationRequest;
@@ -145,4 +147,6 @@ class WarehouseLocationController extends Controller
             }
         }
     }
+
+
 }

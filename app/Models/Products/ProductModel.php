@@ -270,7 +270,15 @@ class ProductModel extends Model
         return $this->belongsToMany(
             WarehouseLocation::class,
             'product_model_warehouse_location'
-        )->withPivot('is_main')->withTimestamps();
+        )->withPivot('is_main')->withTimestamps()->with(["aisle"]);
+    }
+
+    public function warehouseLocationsWithRoomAndAisle(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            WarehouseLocation::class,
+            'product_model_warehouse_location'
+        )->withPivot('is_main')->withTimestamps()->with(["room", "aisle"]);
     }
 
     public function mainWarehouseLocation(): BelongsToMany

@@ -108,6 +108,9 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::post("/models/model/{productModel}/update/subiekt", [SubiektProductModelController::class, 'update'])->name("system.products.model.update.subiekt");
         Route::post("/models/model/{productModel}/update/gs1", [GS1ProductModelController::class, 'update'])->name("system.products.model.update.gs1");
 
+        Route::post("/models/model/{productModel}/warehouse/", [WarehouseProductModelController::class, 'store'])->name("system.products.model.warehouse.create");
+        Route::patch("/models/model/{productModel}/warehouse/{warehouseLocation}/main", [WarehouseProductModelController::class, 'update'])->name("system.products.model.warehouse.main");
+        Route::delete("/models/model/{productModel}/warehouse/{warehouseLocation}", [WarehouseProductModelController::class, 'destroy'])->name("system.products.model.warehouse.delete");
         Route::get("/models/model/{productModel}/warehouse/print", [WarehouseProductModelController::class, 'print'])->name("system.products.model.warehouse.print");
 
         Route::post("/product/{product}/update/show", [ShowProductController::class, 'update'])->name("system.products.show.update");

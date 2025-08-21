@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Warehouse\Warehouse;
+use App\Http\Requests\StoreWarehouseProductModelRequest;
 use App\Http\Requests\UpdateWarehouseLocationMainRequest;
 use App\Models\Products\ProductModel;
 use App\Models\WarehouseLocation;
@@ -30,9 +31,15 @@ class WarehouseProductModelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWarehouseProductModelRequest $request, ProductModel $productModel)
     {
-        //
+        $warehouseLocationsExist = $productModel->warehouseLocations()->exists();
+
+        $warehouseLocation = WarehouseLocation::find($request->shelf_id);
+
+        $productModel->warehouseLocations()->attach($warehouseLocation, [
+            'is_main' => !$warehouseLocationsExist
+        ]);
     }
 
     /**
@@ -54,17 +61,44 @@ class WarehouseProductModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateWarehouseLocationMainRequest $request, ProductModel $productModel, WarehouseLocation $warehouseLocation)
     {
-        //
+        $warehouseLocations = $productModel->warehouseLocations;
+
+        if (!$warehouseLocations->contains($warehouseLocation)) {
+            return redirect()->back()->withErrors([
+                'warehouseLocation' => 'Wybrana lokalizacja magazynowa nie jest przypisana do tego modelu produktu.'
+            ]);
+        }
+
+        if ($warehouseLocations->count() > 0) {
+            $warehouseLocations->each(function ($location) use ($productModel) {
+                $location->pivot->is_main = false;
+                $location->pivot->save();
+            });
+        }
+        $productModel->warehouseLocations()->syncWithoutDetaching([
+            $warehouseLocation->id => ['is_main' => true]
+        ]);
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ProductModel $productModel, WarehouseLocation $warehouseLocation)
     {
-        //
+        $warehouseLocations = $productModel->warehouseLocations;
+
+        if (!$warehouseLocations->contains($warehouseLocation)) {
+            return redirect()->back()->withErrors([
+                'warehouseLocation' => 'Wybrana lokalizacja magazynowa nie jest przypisana do tego modelu produktu.'
+            ]);
+        }
+
+        $productModel->warehouseLocations()->detach($warehouseLocation);
+
     }
 
 

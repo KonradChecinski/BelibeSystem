@@ -9,6 +9,7 @@ import {Print, Save} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {Link, useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
+import LocationsComponent from "@/Components/Pages/Model/ModelWarehouseComponent/LocationsComponent";
 
 
 export default function ModelWarehouseComponent(props) {
@@ -40,7 +41,7 @@ export default function ModelWarehouseComponent(props) {
         // console.log("GS1 data: ", data)
         // saveGS1()
     }
-    console.log(props.productModel.warehouse_locations)
+    console.log(props.productModel.warehouse_locations_with_room_and_aisle)
 
     // const saveGS1 = () => {
     //     post(route("system.products.model.update.gs1", {productModel: props.productModel.id}), {
@@ -59,45 +60,10 @@ export default function ModelWarehouseComponent(props) {
     return (
         // <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 
-        <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2}}>
-
-            {/*<Box sx={{display: "flex", flexDirection: "column"}}>*/}
-            {/*    <Autocomplete*/}
-            {/*        disablePortal*/}
-            {/*        id="gs1_gpc"*/}
-            {/*        options={props.gs1.gpc.map(e => ({*/}
-            {/*            id: e.id,*/}
-            {/*            name: e.name,*/}
-            {/*            label: e.name*/}
-            {/*        }))}*/}
-            {/*        sx={{width: "30ch"}}*/}
-            {/*        value={data.gs1_gpc}*/}
-            {/*        getOptionLabel={(option) => option.name}*/}
-            {/*        isOptionEqualToValue={(option, value) => option.id === value.id}*/}
-            {/*        onChange={(e, value) => {*/}
-            {/*            setData({*/}
-            {/*                ...data,*/}
-            {/*                gs1_gpc: value,*/}
-            {/*                product_gs1_gpc_id: value?.id,*/}
-            {/*            })*/}
-            {/*            setEdited(true)*/}
-            {/*        }}*/}
-            {/*        renderInput={(params) =>*/}
-            {/*            <TextField*/}
-            {/*                {...params}*/}
-            {/*                label="Klasyfikacja GPC"*/}
-            {/*                sx={{my: 1}}*/}
-            {/*                value={data.gs1_gpc}*/}
-            {/*                {...register("gs1_gpc")}*/}
-            {/*                color={fieldErrors.gs1_gpc?.message && "error"}*/}
-            {/*            />}*/}
-            {/*    />*/}
-            {/*    {fieldErrors.gs1_gpc?.message && (*/}
-            {/*        <Typography variant="body2" color="error" sx={{ml: 1, mt: -0.5, mb: 1.5}}>*/}
-            {/*            {fieldErrors.gs1_gpc?.message.toString()}*/}
-            {/*        </Typography>*/}
-            {/*    )}*/}
-            {/*</Box>*/}
+        <Box sx={{display: "flex", flexDirection: "column", flexWrap: "wrap", gap: 5, mt: 2}}>
+            <Box>
+                <LocationsComponent {...props}/>
+            </Box>
             <Box>
                 <a
                     href={route("system.products.model.warehouse.print", {productModel: props.productModel.id})}

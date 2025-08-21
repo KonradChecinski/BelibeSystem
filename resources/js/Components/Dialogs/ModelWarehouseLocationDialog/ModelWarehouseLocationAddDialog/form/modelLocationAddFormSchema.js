@@ -1,23 +1,24 @@
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
-    name: yup
-        .string()
-        .required("Pole jest wymagane"),
-
-    type: yup
-        .string()
-        .required("Pole jest wymagane")
-        .oneOf(['room', 'aisle', 'shelf'], "Nieprawidłowy typ lokalizacji"),
-
-    destination_id: yup
-        .string()
-        .nullable()
-        .when('type', (type) =>
-            type[0] !== 'room'
-                ? yup.string().required("Pole jest wymagane dla tego typu")
-                : yup.string().nullable()
-        )
+    room_id: yup
+        .number()
+        .typeError('Wybierz pokój')
+        .integer('ID pokoju musi być liczbą całkowitą')
+        .positive('ID pokoju musi być dodatnie')
+        .required('Wybierz pokój'),
+    aisle_id: yup
+        .number()
+        .typeError('Wybierz aleję')
+        .integer('ID alei musi być liczbą całkowitą')
+        .positive('ID alei musi być dodatnie')
+        .required('Wybierz aleję'),
+    shelf_id: yup
+        .number()
+        .typeError('Wybierz regał')
+        .integer('ID regału musi być liczbą całkowitą')
+        .positive('ID regału musi być dodatnie')
+        .required('Wybierz regał'),
 })
 
 
