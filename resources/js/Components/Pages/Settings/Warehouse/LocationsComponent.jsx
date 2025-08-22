@@ -1,4 +1,4 @@
-import {Head, useForm} from "@inertiajs/react";
+import {Head, router, useForm} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
 import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
@@ -398,7 +398,7 @@ export default function LocationsComponent(props) {
                     </Fab>
                 </Tooltip>
             </Box>
-            <AddLocationDialog open={showAddDialog} setOpen={setShowAddDialog} locations={data}/>
+            <AddLocationDialog open={showAddDialog} setOpen={setShowAddDialog} locations={data} setLocations={setData}/>
         </Box>
     );
 }

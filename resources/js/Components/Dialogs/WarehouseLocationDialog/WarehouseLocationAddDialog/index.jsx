@@ -16,13 +16,14 @@ import {
     useLocationAddForm
 } from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationAddDialog/form/useLocationAddForm";
 
-export default function AddLocationDialog({open, setOpen, locations}) {
+export default function AddLocationDialog({open, setOpen, locations, setLocations}) {
     const {
         register,
         handleSubmit,
         errors: fieldErrors,
         setValue,
         clearErrors: clrErrors,
+        reset: resetForm,
     } = useLocationAddForm()
 
     const {data, setData, post, processing, errors, clearErrors, reset, transform} = useForm({
@@ -93,10 +94,12 @@ export default function AddLocationDialog({open, setOpen, locations}) {
         post(route(path()),
             {
                 preserveScroll: true,
-                onSuccess: () => {
+                onSuccess: (page) => {
                     reset();
+                    resetForm();
                     setActiveStep(0);
                     enqueueSnackbar('Dodano lokalizację', {variant: 'success'});
+                    setLocations(page.props.locations);
                     handleClose();
                 },
                 onError: errors => {
