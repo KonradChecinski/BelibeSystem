@@ -244,7 +244,7 @@ class WarehouseDocumentController extends Controller
      */
     public function update(UpdateWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
-        if ($warehouseDocument->status === 100) return response()->json(["message" => "Dokument jest zrealizowany"], 400);
+        if ($warehouseDocument->status === 100) return redirect()->back()->withErrors(["message" => "Dokument jest zrealizowany"]);
         $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts;
         $warehouseDocumentProductsIds = $warehouseDocumentProducts->pluck("id");
 
@@ -290,6 +290,8 @@ class WarehouseDocumentController extends Controller
                 $item->delete();
             }
         }
+
+        $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts()->get();
 
         $calculateTotalFromCartItems = Price::calculateTotalFromCartItems($warehouseDocumentProducts, (bool)$warehouseDocument->discount, $warehouseDocument->discount);
 
