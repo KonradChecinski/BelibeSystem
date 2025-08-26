@@ -281,9 +281,14 @@ class ProductModel extends Model
         )->withPivot('is_main')->withTimestamps()->with(["room", "aisle"]);
     }
 
-    public function mainWarehouseLocation(): BelongsToMany
+    public function mainWarehouseLocation()
     {
-        return $this->warehouseLocations()->wherePivot('is_main', true);
+        return $this->hasOneDeep(
+            WarehouseLocation::class,
+            ['product_model_warehouse_location'], // pivot
+            ['product_model_id', 'id'],           // FK on pivot, FK on self
+            ['id', 'warehouse_location_id']       // local key, FK on pivot
+        )->where('product_model_warehouse_location.is_main', true);
     }
 
     public function additionalWarehouseLocations(): BelongsToMany

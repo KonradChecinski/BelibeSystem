@@ -8,8 +8,9 @@ export const useLocationAddForm = () => {
         handleSubmit,
         formState: {errors},
         setValue,
-        clearErrors
+        clearErrors,
+        reset,
     } = useForm({resolver: yupResolver(schema)})
 
-    return {register, handleSubmit, errors, setValue, clearErrors}
+    return {register, handleSubmit, errors, setValue, clearErrors, reset}
 }

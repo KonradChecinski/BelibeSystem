@@ -22,3 +22,4 @@ lang/php_*.json
 /.env.belibe
 .env.belibetest
 .env
+.rnd

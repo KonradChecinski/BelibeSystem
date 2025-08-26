@@ -117,17 +117,45 @@ class WarehouseDocumentController extends Controller
 ////                    $query->select("product_model_color_id", "path");
 ////                });
 //            },
+            "productModels.mainWarehouseLocation:warehouse_locations.id,warehouse_locations.warehouse_location_aisle_id,warehouse_locations.name,warehouse_locations.order",
+            "productModels.mainWarehouseLocation.aisle:warehouse_location_aisles.id,warehouse_location_aisles.warehouse_location_room_id,warehouse_location_aisles.name,warehouse_location_aisles.order",
+            "productModels.mainWarehouseLocation.room:warehouse_location_rooms.id,warehouse_location_rooms.name,warehouse_location_rooms.order",
+
         ]);
         // Wyłączenie appendów dla każdego produktu
         $warehouseDocument->products->each->setAppends([]);
 
         $warehouseDocumentModel = collect([$warehouseDocument]);
+//        dd($warehouseDocument->productModels[0],$warehouseDocument->productModels[0]->mainWarehouseLocation);
+
+        $sortedProductModels = $warehouseDocumentModel
+            ->pluck("productModels")
+            ->flatten()
+            ->unique("id")
+            ->sortBy(function ($pm) {
+                // Używamy akcesora main_warehouse_location (pojedynczy obiekt)
+                $loc = $pm->mainWarehouseLocation;         // shelf
+                $aisle = optional($loc)->aisle;              // aisle
+                $room = optional($loc)->room;              // room
+
+                $roomOrder  = optional($room)->order  ?? PHP_INT_MAX;
+                $aisleOrder = optional($aisle)->order ?? PHP_INT_MAX;
+                $shelfOrder = optional($loc)->order   ?? PHP_INT_MAX;
+
+                // ewentualny tie-breaker po symbolu
+                return [$roomOrder, $aisleOrder, $shelfOrder, $pm->symbol];
+            })
+            ->values();
+
+//dd($sortedProductModels->toArray());
+
 
         $result = [
             "warehouseDocument" => $warehouseDocument,
             "warehouseDocumentProducts" => $warehouseDocument->warehouseDocumentProducts,
             "products" => $warehouseDocumentModel->pluck("products")->flatten(),
-            "productModels" => $warehouseDocumentModel->pluck("productModels")->flatten()->unique("id")->sortBy("symbol")->values(),
+//            "productModels" => $warehouseDocumentModel->pluck("productModels")->flatten()->unique("id")->sortBy("symbol")->values(),
+            "productModels" => $sortedProductModels,
 //            "productColors" => $warehouseDocumentModel->pluck("productModelColors")->flatten()->unique("id")->values(),
             "clientOrder" => $warehouseDocument->clientOrder,
             "client" => $warehouseDocument->clientOrder->client,
@@ -135,6 +163,7 @@ class WarehouseDocumentController extends Controller
             "delivery" => $warehouseDocument->clientOrder->delivery,
             "location" => $warehouseDocument->clientOrder->location,
         ];
+//        dd($result["productModels"]->toArray()[0]);
 
         if ($warehouseDocument->status === 10) {
             $warehouseDocument->status = 50;
@@ -215,7 +244,7 @@ class WarehouseDocumentController extends Controller
      */
     public function update(UpdateWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
-        if ($warehouseDocument->status === 100) return response()->json(["message" => "Dokument jest zrealizowany"], 400);
+        if ($warehouseDocument->status === 100) return redirect()->back()->withErrors(["message" => "Dokument jest zrealizowany"]);
         $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts;
         $warehouseDocumentProductsIds = $warehouseDocumentProducts->pluck("id");
 
@@ -261,6 +290,8 @@ class WarehouseDocumentController extends Controller
                 $item->delete();
             }
         }
+
+        $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts()->get();
 
         $calculateTotalFromCartItems = Price::calculateTotalFromCartItems($warehouseDocumentProducts, (bool)$warehouseDocument->discount, $warehouseDocument->discount);
 

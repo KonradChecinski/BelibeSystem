@@ -116,9 +116,7 @@
 
     @endfor
     @php $start++; @endphp
-    @if( $i != 6 )
-        <div class="page_break"></div>
-    @endif
+    <div class="page_break"></div>
 @endfor
 
 {{--</div>--}}
