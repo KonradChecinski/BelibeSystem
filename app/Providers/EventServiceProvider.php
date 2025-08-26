@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogSentEmail;
 use App\Listeners\SendPasswordResetNotification;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PasswordReset::class => [
             SendPasswordResetNotification::class,
+        ],
+        MessageSent::class => [
+            LogSentEmail::class,
         ]
     ];
 
