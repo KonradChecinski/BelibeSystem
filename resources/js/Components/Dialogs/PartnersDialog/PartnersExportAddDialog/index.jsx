@@ -1,9 +1,9 @@
 import {
     Autocomplete,
-    Box, Button,
+    Box, Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
-    DialogTitle, MenuItem, Paper, Select,
+    DialogTitle, FormControlLabel, MenuItem, Paper, Select,
     Step,
     StepLabel,
     Stepper,
@@ -21,11 +21,34 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
     const {data, setData, post, patch, processing, reset} = useForm({
         type: exportElement ? exportElement.type : 1,
         cron: exportElement ? exportElement.cron : '0 2 * * 3',
+        availability: exportElement ? exportElement.availability : false,
+        wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
+        retail_gross_price: exportElement ? !!exportElement.retail_gross_price : false,
+        description: exportElement ? !!exportElement.description : false,
+        image_basic: exportElement ? !!exportElement.image_basic : false,
+        image_square: exportElement ? !!exportElement.image_square : false,
+        image_webp: exportElement ? !!exportElement.image_webp : false,
+
     })
+
+    useEffect(() => {
+        setData({
+            type: exportElement ? exportElement.type : 1,
+            cron: exportElement ? exportElement.cron : '0 2 * * 3',
+            availability: exportElement ? exportElement.availability : false,
+            wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
+            retail_gross_price: exportElement ? !!exportElement.retail_gross_price : false,
+            description: exportElement ? !!exportElement.description : false,
+            image_basic: exportElement ? !!exportElement.image_basic : false,
+            image_square: exportElement ? !!exportElement.image_square : false,
+            image_webp: exportElement ? !!exportElement.image_webp : false,
+        })
+    }, [exportElement]);
+
     const nextStep = () => {
         setActiveStep(activeStep + 1)
 
-        console.log("Client data: ", data)
+        // console.log("Client data: ", data)
     }
 
     const [activeStep, setActiveStep] = useState(0);
@@ -54,8 +77,12 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
                         handleClose();
                     },
                     onError: errors => {
-                        enqueueSnackbar("Błąd przy edycji partnera", {variant: 'error'})
                         console.error(errors)
+                        enqueueSnackbar("Błąd przy edycji partnera", {variant: 'error'})
+                        for (const errorsKey in errors) {
+                            enqueueSnackbar(errors[errorsKey], {variant: 'error'})
+                        }
+
                     },
                 })
         } else {
@@ -147,6 +174,19 @@ function Step1({data, setData, getLabel}) {
     const [error, onError] = useState()
 
 
+    useEffect(() => {
+        if (data.type !== 1) {
+            if (data.image_basic || data.image_square || data.image_webp) {
+                setData(current => ({
+                    ...current,
+                    image_basic: false,
+                    image_square: false,
+                    image_webp: false,
+                }));
+            }
+        }
+    }, [data.type])
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <Autocomplete
@@ -168,20 +208,110 @@ function Step1({data, setData, getLabel}) {
                         value={data.type}
                     />}
             />
-            <Box sx={{mt: 2}}>
 
-                <Typography variant="h6" gutterBottom>
-                    Częstotliwość aktualizacji pliku
-                </Typography>
-                <TextField
-                    type="text"
-                    id="cron"
-                    label="Częstotliwość"
-                    value={data.cron}
-                    disabled={true}
-                    sx={{width: "30ch", my: 1}}
-                />
+
+            <Box sx={{mt: 2}}>
                 <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Zawartość pliku
+                    </Typography>
+
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.availability}
+                                    onChange={(e) => setData("availability", e.target.checked)}
+                                />
+                            }
+                            label="Dostępność"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.wholesale_net_price}
+                                    onChange={(e) => setData("wholesale_net_price", e.target.checked)}
+                                />
+                            }
+                            label="Cena hurtowa netto (wyliczana dla klienta z uwzględnieniem jego rabatów)"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.retail_gross_price}
+                                    onChange={(e) => setData("retail_gross_price", e.target.checked)}
+                                />
+                            }
+                            label="Cena detaliczna brutto"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.description}
+                                    onChange={(e) => setData("description", e.target.checked)}
+                                />
+                            }
+                            label="Opis"
+                        />
+
+                        <Typography variant="subtitle1" sx={{mt: 1}}>
+                            Obrazy (dostępne tylko dla typu XML)
+                        </Typography>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_basic}
+                                    disabled={data.type !== 1}
+                                    onChange={(e) => setData("image_basic", e.target.checked)}
+                                />
+                            }
+                            label="Zdjęcie podstawowy"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_square}
+                                    disabled={data.type !== 1}
+                                    onChange={(e) => setData("image_square", e.target.checked)}
+                                />
+                            }
+                            label="Zdjęcie kwadratowy"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_webp}
+                                    disabled={data.type !== 1}
+                                    onChange={(e) => setData("image_webp", e.target.checked)}
+                                />
+                            }
+                            label="Zdjęcie WEBP"
+                        />
+                    </Box>
+                </Paper>
+            </Box>
+
+            {/* Gdy typ ≠ 1, odznacz obrazy i zostaw wyłączone */}
+            {/*
+              Użycie funkcjonalnej wersji setData, aby bezpiecznie zaktualizować wiele pól naraz,
+              zgodnie z API Inertia useForm.
+            */}
+
+
+
+            <Box sx={{mt: 2}}>
+                <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Częstotliwość aktualizacji pliku
+                    </Typography>
+                    <TextField
+                        type="text"
+                        id="cron"
+                        label="Częstotliwość"
+                        value={data.cron}
+                        disabled={true}
+                        sx={{width: "30ch", my: 1}}
+                    />
                     <Cron
                         value={data.cron}
                         setValue={(value, e) => setData("cron", value)}
@@ -206,16 +336,113 @@ function Step2({data, getLabel}) {
                        value={getLabel(data.type)}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+            <Box sx={{mt: 2}}>
+                <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Zawartość pliku
+                    </Typography>
 
-            <TextField
-                type="text"
-                id="cron"
-                label="Częstotliwość"
-                variant={"outlined"}
-                value={data.cron}
-                disabled={true}
-                sx={{width: "30ch", my: 1}}
-            />
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.availability}
+                                    disabled={true}
+                                />
+                            }
+                            label="Dostępność"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.wholesale_net_price}
+                                    disabled={true}
+                                />
+                            }
+                            label="Cena hurtowa netto (wyliczana dla klienta z uwzględnieniem jego rabatów)"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.retail_gross_price}
+                                    disabled={true}
+                                />
+                            }
+                            label="Cena detaliczna brutto"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.description}
+                                    disabled={true}
+                                />
+                            }
+                            label="Opis"
+                        />
+
+                        <Typography variant="subtitle1" sx={{mt: 1}}>
+                            Obrazy (dostępne tylko dla typu XML)
+                        </Typography>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_basic}
+                                    disabled={true}
+                                    />
+                            }
+                            label="Zdjęcie podstawowy"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_square}
+                                    disabled={true}
+                                />
+                            }
+                            label="Zdjęcie kwadratowy"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.image_webp}
+                                    disabled={true}
+                                />
+                            }
+                            label="Zdjęcie WEBP"
+                        />
+                    </Box>
+                </Paper>
+            </Box>
+
+
+            <Box sx={{mt: 2}}>
+                <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Częstotliwość aktualizacji pliku
+                    </Typography>
+                    <TextField
+                        type="text"
+                        id="cron"
+                        label="Częstotliwość"
+                        variant={"outlined"}
+                        value={data.cron}
+                        disabled={true}
+                        sx={{width: "30ch", my: 1}}
+                    />
+                    <Cron
+                        value={data.cron}
+                        setValue={()=>{}}
+                        clearButton={false}
+                        leadingZero={true}
+                        shortcuts={false}
+                        locale={POLISH_LOCALE}
+                        className={"my-project-cron"}
+                        disabled={true}
+                    />
+                </Paper>
+
+            </Box>
+
         </Box>
     );
 }

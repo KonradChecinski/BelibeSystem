@@ -12,6 +12,13 @@ class PartnerExport extends Model
     protected $fillable = [
         'partner_id',
         'type',
+        'availability',
+        'wholesale_net_price',
+        'retail_gross_price',
+        'description',
+        'image_basic',
+        'image_square',
+        'image_webp',
         'path',
         'cron',
         'completed_at',
@@ -22,5 +29,5 @@ class PartnerExport extends Model
         return $this->belongsTo(Partner::class);
     }
 
-    
+
 }

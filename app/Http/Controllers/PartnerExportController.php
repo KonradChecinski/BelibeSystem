@@ -39,6 +39,13 @@ class PartnerExportController extends Controller
             'type' => $request->type,
             'path' => Str::uuid(),
             'cron' => $request->cron,
+            'availability' => $request->availability,
+            'wholesale_net_price' => $request->wholesale_net_price,
+            'retail_gross_price' => $request->retail_gross_price,
+            'description' => $request->description,
+            'image_basic' => $request->image_basic,
+            'image_square' => $request->image_square,
+            'image_webp' => $request->image_webp,
 //            'completed_at',
         ]);
     }
@@ -96,10 +103,7 @@ class PartnerExportController extends Controller
     {
         $exists = $partner->partnerExports()->where('id', $export->id)->exists();
         if ($exists) {
-            $export->update([
-                'type' => $request->type,
-                'cron' => $request->cron,
-            ]);
+            $export->update($request->validated());
         }
     }
 
