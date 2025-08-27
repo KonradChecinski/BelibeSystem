@@ -8,12 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class EmailLog extends Model
 {
     protected $fillable = [
-        'mailable_type', 'mailable_id',
-        'notifiable_type', 'notifiable_id',
-        'origin_type', 'origin_class',
-        'from', 'to', 'cc', 'bcc', 'to_emails',
-        'subject', 'body', 'headers', 'attachments',
-        'size', 'message_id', 'sent_at',
+        'from',
+        'to',
+        'cc',
+        'bcc',
+        'subject',
+        'body',
+        'attachments',
+        'notifiable_id',
+        'notifiable_type',
+        'type',
+        'class',
+        'sent_at',
     ];
 
     protected $casts = [
@@ -21,16 +27,11 @@ class EmailLog extends Model
         'to' => 'array',
         'cc' => 'array',
         'bcc' => 'array',
-        'headers' => 'array',
         'attachments' => 'array',
         'sent_at' => 'datetime',
     ];
 
-    public function mailable()
-    {
-        return $this->morphTo();
-    }
-
+    // relacja do modelu, który otrzymał maila (User/Client/itp.)
     public function notifiable()
     {
         return $this->morphTo();
