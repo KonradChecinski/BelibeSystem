@@ -19,7 +19,7 @@ class PartnerExportFile
 
         $client = $partner->client;
 
-        $products = $products->take(20)->map(function ($product) use ($client, $partnerExport) {
+        $products = $products->map(function ($product) use ($client, $partnerExport) {
             $array=[
                 'symbol' => $product->symbol,
             ];
