@@ -23,6 +23,7 @@ use App\Models\ClientTask;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
 use App\Models\User;
+use App\Traits\HasEmailHistory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,7 +34,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Client extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasEmailHistory;
 
     protected $fillable = [
         'subiekt_id',
