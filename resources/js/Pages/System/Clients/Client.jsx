@@ -12,7 +12,7 @@ import {
     EventAvailable,
     NoteAdd,
     AddBox,
-    History, Description, ReceiptLong, PeopleAlt
+    History, Description, ReceiptLong, PeopleAlt, AdsClick
 } from "@mui/icons-material";
 
 import IconGrid from "@/Components/Layout/IconGrid";
@@ -28,6 +28,7 @@ import ClientOrderHistoryComponent from "@/Components/Pages/Client/ClientOrderHi
 import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesComponent";
 import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import ClientActionComponent from "@/Components/Pages/Client/ClientActionComponent";
 
 
 export default function Client(props) {
@@ -60,6 +61,10 @@ export default function Client(props) {
                 </Grid>
                 <Grid item xs={12} lg={4}>
                     <Grid container spacing={3}>
+                        <IconGrid xs={12} md={12} title={"Akcje"} icon={<AdsClick/>} iconColor={"maroon"}>
+
+                            <ClientActionComponent {...props} />
+                        </IconGrid>
                         <IconGrid xs={12} md={12} title={"Notatki"} icon={<NoteAdd/>} iconColor={"magenta"}>
                             <NotesClientComponent {...props} />
                         </IconGrid>
@@ -126,18 +131,6 @@ export default function Client(props) {
 
 
             </Grid>
-
-            <Button
-                variant="contained"
-                sx={{
-                    position: "absolute",
-                    top: 100,
-                    right: 15
-                }}
-                onClick={() => router.post(route("system.b2b.order.start", {client: props.client.id}))}
-            >
-                Przejdź do B2B
-            </Button>
 
 
         </UserLayout>

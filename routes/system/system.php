@@ -7,6 +7,7 @@ use App\Http\Controllers\DynamicFooterController;
 use App\Http\Controllers\DynamicHeaderController;
 use App\Http\Controllers\DynamicMainPageController;
 use App\Http\Controllers\DynamicPageController;
+use App\Http\Controllers\EmailLogController;
 use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
 use App\Http\Controllers\OrderController;
@@ -179,6 +180,9 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::post("/order/b2b/edit/{clientOrder}", [ClientOrderController::class, 'edit'])->name("system.b2b.order.edit");
 
             Route::get("/gus/{nip}", [ClientController::class, 'getDataFromGUS'])->name("system.clients.findGus");
+
+            Route::get("/client/{client}/mails", [EmailLogController::class, 'showClintEmails'])->name("system.clients.client.emails");
+
         });
 
 
@@ -288,6 +292,11 @@ Route::middleware(["auth:user", "verified"])->group(function () {
         Route::get("/", [ProfileController::class, "edit"])->name("profile.edit");
         Route::patch("/", [ProfileController::class, "update"])->name("profile.update");
         Route::delete("/", [ProfileController::class, "destroy"])->name("profile.destroy");
+    });
+
+    Route::group(['prefix' => '/email-logs'], function () {
+        Route::get("/{emailLog}", [EmailLogController::class, 'show'])->name("system.emailLogs.show");
+
     });
 
     Route::group(['prefix' => '/settings'], function () {
