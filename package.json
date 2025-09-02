@@ -59,6 +59,7 @@
         "puck-mui": "^0.0.3",
         "react-beautiful-dnd": "^13.1.1",
         "react-countdown": "^2.3.5",
+        "react-day-picker": "^9.9.0",
         "react-dnd": "^16.0.1",
         "react-draggable": "^4.4.5",
         "react-hook-form": "^7.46.1",

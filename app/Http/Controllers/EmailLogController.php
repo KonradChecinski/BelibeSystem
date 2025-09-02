@@ -76,7 +76,18 @@ class EmailLogController extends Controller
     {
         return Inertia::render("System/Clients/EmailLog", [
             "client" => $client,
-            "emails" => $client->emailLogs()->orderBy("sent_at", "desc")->get(),
+            "emails" => $client->emailLogs()->orderBy("sent_at", "desc")->get([
+                'id',
+                'from',
+                'to',
+                'cc',
+                'bcc',
+                'subject',
+                'attachments',
+                'type',
+                'class',
+                'sent_at',
+            ])->makeHidden(["body"]),
         ]);
     }
 }
