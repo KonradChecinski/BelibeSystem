@@ -375,6 +375,7 @@ class B2bOrderController extends Controller
             $discountedPrices = $orderProduct->productModel->priceForClientB2b($client);
             $cartProduct = new B2bCart([
                 "quantity" => $orderProduct->quantity,
+                'original_price_net'=> $orderProduct->productModel->prices->wholesale_net_price,
                 'price_net' => $discountedPrices['discounted_wholesale_net_price'],
                 'vat_rate' => $discountedPrices['vat_rate'],
                 'currency' => $orderProduct->currency,
