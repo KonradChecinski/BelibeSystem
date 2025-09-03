@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\Mime\Email;
 
 class ExtendedVerifyEmail extends VerifyEmail
 {
@@ -53,4 +54,25 @@ class ExtendedVerifyEmail extends VerifyEmail
         return $url;
 //        return str_replace("https://system.belibe.pl", 'https://b2b.belibe.pl', $url);
     }
+
+
+
+    /**
+     * Ensure notifiable context is embedded into the Symfony Email so it can be logged later.
+     *
+     * @param mixed $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        $mail = parent::toMail($notifiable);
+
+        return $mail->withSymfonyMessage(function (Email $message) use ($notifiable) {
+            $headers = $message->getHeaders();
+            $headers->addTextHeader('X-Notifiable-Id', (string) $notifiable->getKey());
+            $headers->addTextHeader('X-Notifiable-Type', get_class($notifiable));
+            $headers->addTextHeader('X-Laravel-Notification', static::class);
+        });
+    }
+
 }

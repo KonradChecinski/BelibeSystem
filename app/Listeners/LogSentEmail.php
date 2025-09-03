@@ -60,8 +60,10 @@ class LogSentEmail
         $notifiableType = null;
         $type = null;
         $class = null;
+//        dd($event->data);
 
-        if (isset($event->data['notifiable'])) { //Notification
+        if (isset($event->data['notifiable'])) //Notification
+        {
 //            $notification = $event->data['notifiable'];
 
             $notifiable = $event->data['notifiable'] ?? null;
@@ -73,10 +75,31 @@ class LogSentEmail
             $type = 'notification';
             $class = $event->data['__laravel_notification'] ?? null;
         }
-        else{//mailable
+        else if(isset($event->data['__laravel_notification']))
+        {
+            // Fallback: czytamy z nagłówków ustawionych przez withSymfonyMessage
+            $headers = $message->getHeaders();
+            if ($headers->has('X-Notifiable-Id')) {
+                $notifiableId = $headers->get('X-Notifiable-Id')->getBodyAsString();
+            }
+            if ($headers->has('X-Notifiable-Type')) {
+                $notifiableType = $headers->get('X-Notifiable-Type')->getBodyAsString();
+            }
+//            if ($headers->has('X-Laravel-Notification')) {
+//                $type = 'notification';
+//                $class = $headers->get('X-Laravel-Notification')->getBodyAsString();
 
+            $type = 'notification';
+            $class = $event->data['__laravel_notification'];
+        }
+        else if (isset($event->data['__telescope_mailable']))//mailable
+        {
             $type = 'mailable';
             $class = $event->data["__telescope_mailable"];
+        }
+        else{
+            $type = 'other';
+            $class = null;
         }
 
 
