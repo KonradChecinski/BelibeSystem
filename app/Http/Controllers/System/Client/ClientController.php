@@ -202,6 +202,10 @@ class ClientController extends Controller
         $country = B2bCountry::query()->where("name", $request->country)->first();
         if (is_null($country)) return abort(500);
 
+        if (Client::where("nip", $request->nip)->exists()) {
+            return redirect()->back()->withErrors('Klient o podanym NIP już istnieje.');
+        }
+
         $client = new Client($request->all());
 
         $client->country()->associate($country);

@@ -1,15 +1,19 @@
 import {
     Autocomplete,
-    Box, Button,
-    Dialog, DialogActions,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
     DialogContent,
-    DialogTitle, Paper,
+    DialogTitle,
+    Paper,
     Step,
     StepLabel,
     Stepper,
-    TextField, Typography
+    TextField,
+    Typography
 } from "@mui/material";
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -79,8 +83,13 @@ export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
                     handleClose();
                 },
                 onError: errors => {
-                    enqueueSnackbar("Błąd przy dodawaniu klienta", {variant: 'error'})
                     console.error(errors)
+                    enqueueSnackbar("Błąd przy dodawaniu klienta", {variant: 'error'})
+                    if (errors) {
+                        Object.keys(errors).forEach(key => {
+                            enqueueSnackbar(errors[key], {variant: 'error'})
+                        });
+                    }
                 },
             })
     }
