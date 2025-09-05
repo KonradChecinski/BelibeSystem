@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\Prices\Price;
 use App\Helpers\Warehouse\Warehouse;
 use App\Http\Requests\SearchProductRequest;
+use App\Http\Requests\StoreWarehouseDocumentRequest;
+use App\Http\Requests\UpdateWarehouseDocumentRequest;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Models\Products\Product;
 use App\Models\WarehouseDocument;
-use App\Http\Requests\StoreWarehouseDocumentRequest;
-use App\Http\Requests\UpdateWarehouseDocumentRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
@@ -138,9 +138,9 @@ class WarehouseDocumentController extends Controller
                 $aisle = optional($loc)->aisle;              // aisle
                 $room = optional($loc)->room;              // room
 
-                $roomOrder  = optional($room)->order  ?? PHP_INT_MAX;
+                $roomOrder = optional($room)->order ?? PHP_INT_MAX;
                 $aisleOrder = optional($aisle)->order ?? PHP_INT_MAX;
-                $shelfOrder = optional($loc)->order   ?? PHP_INT_MAX;
+                $shelfOrder = optional($loc)->order ?? PHP_INT_MAX;
 
                 // ewentualny tie-breaker po symbolu
                 return [$roomOrder, $aisleOrder, $shelfOrder, $pm->symbol];
@@ -292,6 +292,7 @@ class WarehouseDocumentController extends Controller
         }
 
         $warehouseDocumentProducts = $warehouseDocument->warehouseDocumentProducts()->get();
+//        dd($warehouseDocument->warehouseDocumentProducts->sum("quantity"), $warehouseDocumentProducts, $warehouseDocumentProducts->sum("quantity"));
 
         $calculateTotalFromCartItems = Price::calculateTotalFromCartItems($warehouseDocumentProducts, (bool)$warehouseDocument->discount, $warehouseDocument->discount);
 
@@ -299,7 +300,7 @@ class WarehouseDocumentController extends Controller
         $discountedPriceSummary = $calculateTotalFromCartItems->discountedPriceSummary;
 //        dd($priceSummary, $discountedPriceSummary);
         $warehouseDocument->update([
-            "total_quantity" => $warehouseDocument->warehouseDocumentProducts->sum("quantity"),
+            "total_quantity" => $warehouseDocumentProducts->sum("quantity"),
             "total_net" => $priceSummary["total_net"],
             "total_gross" => $priceSummary["total_gross"],
             "discounted_total_net" => $discountedPriceSummary["total_net"],
