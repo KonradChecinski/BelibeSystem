@@ -38,7 +38,7 @@ class WarehouseApp
         $result->put('suppliers', $suppliers->map(fn($supplier) => $supplier->only(['symbol', 'name', 'quantity'])));
         $result->put('shops', $shops->map(fn($shop) => $shop->only(['symbol', 'name', 'quantity'])));
         $result->put('other', $otherWarehouses->map(fn($otherWarehouse) => $otherWarehouse->only(['symbol', 'name', 'quantity'])));
-        dd($result);
+
         return $result;
     }
 
