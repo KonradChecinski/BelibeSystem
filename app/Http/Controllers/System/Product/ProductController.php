@@ -103,10 +103,15 @@ class ProductController extends Controller
         if ($request->unit['id'] !== $product->unit->id) $product->unit()->associate($request->unit['id']);
         if ($request->color['id'] !== $product->color->id) {
             $deleteColorModel = $product->color->products()->count() == 1 ? true : false;
+            $productColor = $product->color;
             $product->color()->associate($request->color['id']);
+            $product->save();
 
             if ($deleteColorModel) {
-                $product->color->delete();
+                $productColor->colorIcon()->dissociate();
+                $productColor->save();
+                $productColor->images()->delete();
+                $productColor->delete();
             }
         }
 
@@ -190,7 +195,11 @@ class ProductController extends Controller
         $product->delete();
 
         if ($deleteColorModel) {
-            $product->color->delete();
+            $productColor = $product->color;
+            $productColor->colorIcon()->dissociate();
+            $productColor->save();
+            $productColor->images()->delete();
+            $productColor->delete();
             if ($deleteModel) {
                 $product->model->prices()->delete();
                 $product->model->delete();
