@@ -60,10 +60,8 @@ export default function ProductColorTable({model, lightbox, imageArray}) {
                                             <Box component={"img"}
                                                  src={route("images.webp", {slug: "brak.jpg"})}
                                                  width={50}
-                                                 onClick={() => lightbox.loadAndOpen(1)}
                                                  sx={{
                                                      m: "auto",
-                                                     cursor: "pointer",
                                                      minWidth: 50
                                                  }}
                                             />

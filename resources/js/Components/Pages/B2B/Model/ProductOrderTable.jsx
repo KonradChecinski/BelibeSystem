@@ -1,6 +1,8 @@
 import {
-    Box, debounce,
+    Box,
+    debounce,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -15,7 +17,6 @@ import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import {enqueueSnackbar} from "notistack";
 import {useTheme} from "@mui/material/styles";
 import {useCallback, useMemo, useRef, useState} from "react";
-import {router} from "@inertiajs/react";
 import {keyframes} from "@emotion/css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -82,8 +83,12 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
 
                 <TableBody>
                     {model.colors.sort(sortByColorShortcut).map(color => {
+                        console.log(color)
                         const image = color.images?.find(i => i.order === 0);
                         const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
+
+                        const colorIcon = color?.color_icon;
+
                         return (
                             <TableRow hover key={color.id} sx={{height: 105}}>
                                 <HoveringCell column={1}>
@@ -95,32 +100,71 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                     </Typography>
                                 </HoveringCell>
                                 <HoveringCell column={2}>
-                                    {image ?
-                                        (
-                                            <Box component={"img"}
-                                                 src={route("images.webp", {slug: image.slug})}
-                                                 width={50}
-                                                 onClick={() => lightbox.loadAndOpen(imageIndex)}
-                                                 sx={{
-                                                     m: "auto",
-                                                     cursor: "pointer",
-                                                 }}
-                                            />
-                                        )
-                                        :
 
-                                        (
-                                            <Box component={"img"}
-                                                 src={route("images.webp", {slug: "brak.jpg"})}
-                                                 width={50}
-                                                 onClick={() => lightbox.loadAndOpen(1)}
-                                                 sx={{
-                                                     m: "auto",
-                                                     cursor: "pointer",
-                                                 }}
-                                            />
-                                        )
-                                    }
+                                    <Stack
+                                        my={1}
+                                        direction="row"
+                                        // divider={<Divider orientation="vertical" flexItem/>}
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        spacing={2}
+                                    >
+                                        {image ?
+                                            (
+                                                <Box component={"img"}
+                                                     src={route("images.webp", {slug: image.slug})}
+                                                     width={50}
+                                                     onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                     sx={{
+                                                         m: "auto",
+                                                         cursor: "pointer",
+                                                     }}
+                                                />
+                                            )
+                                            :
+
+                                            (
+                                                <Box component={"img"}
+                                                     src={route("images.webp", {slug: "brak.jpg"})}
+                                                     width={50}
+                                                     sx={{
+                                                         m: "auto",
+                                                     }}
+                                                />
+                                            )
+                                        }
+
+                                        {colorIcon ?
+                                            (
+                                                <Box>
+                                                    {colorIcon.type === 1 ?
+                                                        <Box
+                                                            component={"img"}
+                                                            src={route("colorIcons", {path: colorIcon.path})}
+                                                            sx={{
+                                                                width: "1.9rem",
+                                                                height: "1.9rem",
+                                                                borderRadius: "100%",
+                                                                border: 1
+                                                            }}/>
+                                                        :
+                                                        <Box
+                                                            sx={{
+                                                                width: "1.9rem",
+                                                                height: "1.9rem",
+                                                                borderRadius: "100%",
+                                                                bgcolor: colorIcon.hex,
+                                                                border: 1
+                                                            }}/>
+                                                    }
+                                                </Box>
+                                            )
+                                            :
+                                            (
+                                                <></>
+                                            )
+                                        }
+                                    </Stack>
 
 
                                 </HoveringCell>
