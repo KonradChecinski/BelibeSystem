@@ -1,13 +1,14 @@
 import {
-    Autocomplete, Box,
+    Autocomplete,
+    Box,
     CircularProgress,
-    createFilterOptions, debounce,
+    createFilterOptions,
+    debounce,
     IconButton,
-    InputAdornment,
-    TextField, Typography
+    TextField,
+    Typography
 } from "@mui/material";
 import {useEffect, useState} from "react";
-import {router} from "@inertiajs/react";
 import {Search} from "@mui/icons-material";
 import toLocaleString from "@/Functions/toLocaleString";
 
@@ -94,7 +95,7 @@ export default function SearchProductComponent({products, data, setData, props})
                         component="li"
                         {...props}
                         sx={{
-                            height: 80
+                            height: 90
                         }}
                     >
                         <Box
@@ -116,6 +117,9 @@ export default function SearchProductComponent({products, data, setData, props})
                             </Typography>
                             <Typography variant="subtitle2" gutterBottom component="div" sx={{fontSize: 8}}>
                                 {toLocaleString(option.prices.price_net / 100)} ({toLocaleString(option.prices.price_gross / 100)})
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom component="div" sx={{fontSize: 9}}>
+                                Dostępna ilość: {option.availableWithoutThisDocument}
                             </Typography>
                         </Box>
 
