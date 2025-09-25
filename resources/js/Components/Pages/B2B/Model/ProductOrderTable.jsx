@@ -145,6 +145,7 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                                                 width: "1.9rem",
                                                                 height: "1.9rem",
                                                                 borderRadius: "100%",
+                                                                maxWidth: "none",
                                                                 border: 1
                                                             }}/>
                                                         :
@@ -153,6 +154,7 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                                                 width: "1.9rem",
                                                                 height: "1.9rem",
                                                                 borderRadius: "100%",
+                                                                maxWidth: "none",
                                                                 bgcolor: colorIcon.hex,
                                                                 border: 1
                                                             }}/>
