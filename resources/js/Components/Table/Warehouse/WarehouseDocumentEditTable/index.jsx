@@ -1,26 +1,22 @@
-import {createRef, useCallback, useMemo, useRef, useState} from "react";
+import {useMemo, useState} from "react";
 import {
-    Box, Button, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    IconButton, TextField,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    TextField,
     Tooltip,
     Typography,
 } from "@mui/material";
-import {
-    ArrowBack,
-    Delete,
-    Info, Save
-} from '@mui/icons-material';
-import moment from "moment";
-import {
-    MaterialReactTable,
-    useMaterialReactTable,
-} from 'material-react-table';
+import {Delete} from '@mui/icons-material';
+import {MaterialReactTable, useMaterialReactTable,} from 'material-react-table';
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import 'cronstrue/locales/pl';
-import {enqueueSnackbar} from "notistack";
 import toLocaleString from "@/Functions/toLocaleString";
-import {Link, router, useForm} from "@inertiajs/react";
-import {keyframes} from "@emotion/css";
 import SearchProductComponent from "@/Components/Table/Warehouse/WarehouseDocumentEditTable/SearchProductComponent";
 
 
@@ -476,7 +472,9 @@ export default function WarehouseDocumentEditTable({
         initialState: {
             columnVisibility: {
                 id: false,
-
+                original_price_gross: false,
+                price_gross: false,
+                total_gross: false,
             },
             density: 'comfortable',
             // sorting: [
