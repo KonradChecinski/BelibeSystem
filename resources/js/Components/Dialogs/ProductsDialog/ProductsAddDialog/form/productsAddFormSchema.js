@@ -16,10 +16,17 @@ const schema = yup.object().shape({
         .string()
         .required("Pole jest wymagane")
         .min(5, "Minimalna długość nazwy to 5"),
+    // name_b2c: yup
+    //     .string()
+    //     // .required("Pole jest wymagane")
+    //     .min(5, "Minimalna długość nazwy to 5"),
     name_b2c: yup
         .string()
-        // .required("Pole jest wymagane")
-        .min(5, "Minimalna długość nazwy to 5"),
+        .test('min-if-not-empty', 'Minimalna długość nazwy to 5', value => {
+            if (value === undefined || value === null) return true
+            if (typeof value === 'string' && value.trim() === '') return true
+            return typeof value === 'string' && value.trim().length >= 5
+        }),
     unit: yup
         .mixed()
         .test('is-empty', 'Pole jest wymagane', function (value) {
