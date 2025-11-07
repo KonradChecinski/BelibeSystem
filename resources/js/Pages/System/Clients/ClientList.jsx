@@ -12,7 +12,7 @@ export default function ClientList(props) {
         <UserLayout auth={props.auth} errors={props.errors} header={t("Clients")}>
             <Head title={t("Clients")}/>
 
-            <Card sx={{height: "100%", width: 1}}>
+            <Card sx={{height: "100%", width: 1, display: "flex"}}>
                 <ClientsTable {...props} />
             </Card>
         </UserLayout>

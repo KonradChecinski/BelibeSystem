@@ -19,7 +19,7 @@ import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import {useClientsAddForm} from "@/Components/Dialogs/ClientsDialog/ClientsAddDialog/form/useClientsAddForm";
 
-export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
+export default function ClientsAddDialog({open, setOpen, country}) {
     const {
         register,
         handleSubmit,
@@ -79,7 +79,6 @@ export default function ClientsAddDialog({open, setOpen, reloadData, country}) {
                     reset();
                     setActiveStep(0);
                     enqueueSnackbar("Dodano klienta", {variant: 'success'})
-                    reloadData();
                     handleClose();
                 },
                 onError: errors => {

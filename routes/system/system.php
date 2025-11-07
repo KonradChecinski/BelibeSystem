@@ -10,7 +10,6 @@ use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\EmailLogController;
 use App\Http\Controllers\InvoiceB2bController;
 use App\Http\Controllers\OrderB2bController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderOtherController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PartnerExportController;
@@ -65,7 +64,6 @@ use App\Http\Controllers\System\Settings\SettingsUsersAccountManagerController;
 use App\Http\Controllers\System\Settings\SettingsUsersActiveController;
 use App\Http\Controllers\System\Settings\SettingsUsersController;
 use App\Http\Controllers\System\TestController;
-use App\Http\Controllers\System\XmlGeneratorController;
 use App\Http\Controllers\SystemTokenController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WarehouseDocumentController;
@@ -131,7 +129,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::group(["prefix" => "/clients"], function () {
             Route::get("/", [ClientController::class, 'index'])->name("system.clients");
-            Route::get("/data", [ClientController::class, 'data']);
+//            Route::get("/data", [ClientController::class, 'data']);
             Route::get("/search", [ClientController::class, 'search'])->name("system.clients.search");
 
             Route::post("/", [ClientController::class, 'store'])->name("system.clients.create");
