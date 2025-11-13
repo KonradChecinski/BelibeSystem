@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers\B2B;
 
-use App\Events\CartProductUpdated;
-use App\Events\CartSummaryUpdated;
-use App\Events\CartUpdated;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreB2bCartRequest;
 use App\Http\Requests\Cart\UpdateB2bCartRequest;
-use App\Models\B2bCart;
 use App\Models\B2bDelivery;
-use App\Models\ClientOrderProductEdit;
 use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
 use App\Services\CartService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class B2bCartController extends Controller
@@ -85,6 +78,7 @@ class B2bCartController extends Controller
             return collect([
                 "quantity" => $item->quantity,
                 "total_net" => $item->price_net,
+                "total_original_net" => $item->original_price_net,
 //                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
                 "vat_rate" => $item->vat_rate,
             ]);
@@ -97,19 +91,29 @@ class B2bCartController extends Controller
                 $carry += $item["total_net"] * $item["quantity"];
                 return $carry;
             }, 0);
+            $total_original_net = $items->reduce(function ($carry, $item) {
+                $carry += $item["total_original_net"] * $item["quantity"];
+                return $carry;
+            }, 0);
+
             $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+            $total_original_gross = round($total_original_net * (1 + $vat_rate / 100));
 
             $priceSummaryGroupByVat[$vat_rate] = [
                 "total_net" => $total_net,
+                "total_original_net" => $total_original_net,
                 "total_gross" => $total_gross,
+                "total_original_gross" => $total_original_gross,
                 "vat_rate" => $vat_rate,
             ];
         }
         $priceSummary = $priceSummaryGroupByVat->reduce(function ($carry, $item) {
             $carry["total_net"] += $item["total_net"];
+            $carry["total_original_net"] += $item["total_original_net"];
             $carry["total_gross"] += $item["total_gross"];
+            $carry["total_original_gross"] += $item["total_original_gross"];
             return $carry;
-        }, ["total_net" => 0, "total_gross" => 0]);
+        }, ["total_net" => 0, "total_gross" => 0, "total_original_net" => 0, "total_original_gross" => 0]);
 
 //        dd($priceSummary);
 //        dd([

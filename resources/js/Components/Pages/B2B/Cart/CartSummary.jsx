@@ -9,36 +9,11 @@ export default function CartSummary({props, data, paymentDiscount}) {
     const ProductsNet = props.cartPriceSummary.total_net;
     const ProductsGross = props.cartPriceSummary.total_gross;
 
+    const ProductsOriginalNet = props.cartPriceSummary.total_original_net;
+    const ProductsOriginalGross = props.cartPriceSummary.total_original_gross;
+
     const deliveryNet = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_net : 0;
     const deliveryGross = data.delivery ? ProductsNet > data.delivery.free_from ? 0 : data.delivery.price_gross : 0;
-
-    // const paymentNet = paymentDiscount === 0 ? 0 : -1 * (
-    //     props.cart.reduce((acc, item) => {
-    //         // console.log(
-    //         //     item.price_net,
-    //         //     item.quantity,
-    //         //     Math.round(item.price_net * (100 - paymentDiscount) / 100),
-    //         //     Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
-    //         //     item.price_net * item.quantity,
-    //         //     item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity,
-    //         //     Math.round(item.price_net * (paymentDiscount) / 100),
-    //         //     Math.round(item.price_net * (paymentDiscount) / 100) * item.quantity
-    //         // )
-    //         return Number(acc) + (item.price_net * item.quantity - Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity);
-    //     }, 0)
-    // );
-    // const paymentGross = paymentDiscount === 0 ? 0 : -1 * (
-    //     props.cart.reduce((acc, item) => {
-    //         // console.log(
-    //         //     Math.round(item.price_net * (1 + item.vat_rate / 100)),
-    //         //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)),
-    //         //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * (1 + item.vat_rate / 100)),
-    //         //     Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)),
-    //         //     Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100))
-    //         // )
-    //         return Number(acc) + (Math.round(item.price_net * item.quantity * (1 + item.vat_rate / 100)) - Math.round(Math.round(item.price_net * (100 - paymentDiscount) / 100) * item.quantity * (1 + item.vat_rate / 100)));
-    //     }, 0)
-    // );
 
     const cartGroupedByVat = Object.groupBy(props.cart, (entries, index) => {
         return entries.vat_rate;
@@ -113,16 +88,43 @@ export default function CartSummary({props, data, paymentDiscount}) {
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>
+                            {ProductsNet !== ProductsOriginalNet &&
+                                (<Typography variant="body1"
+                                             sx={{
+                                                 textDecoration: "line-through",
+                                                 opacity: 0.8,
+                                             }}
+                                >
+                                    {toLocaleString(ProductsOriginalNet / 100)}
+                                </Typography>)}
                             <Typography variant="body1">
                                 {toLocaleString(ProductsNet / 100)}
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>
+                            {ProductsNet !== ProductsOriginalNet &&
+                                (<Typography variant="body1"
+                                             sx={{
+                                                 textDecoration: "line-through",
+                                                 opacity: 0.8,
+                                             }}
+                                >
+                                    {toLocaleString((ProductsOriginalGross - ProductsOriginalNet) / 100)}
+                                </Typography>)}
                             <Typography variant="body1">
                                 {toLocaleString((ProductsGross - ProductsNet) / 100)}
                             </Typography>
                         </TableCell>
                         <TableCell align={"center"}>
+                            {ProductsNet !== ProductsOriginalNet &&
+                                (<Typography variant="body1"
+                                             sx={{
+                                                 textDecoration: "line-through",
+                                                 opacity: 0.8,
+                                             }}
+                                >
+                                    {toLocaleString(ProductsOriginalGross / 100)}
+                                </Typography>)}
                             <Typography variant="body1">
                                 {toLocaleString(ProductsGross / 100)}
                             </Typography>

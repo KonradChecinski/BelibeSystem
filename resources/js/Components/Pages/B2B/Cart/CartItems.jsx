@@ -1,5 +1,7 @@
 import {
-    Box, Button, debounce,
+    Box,
+    Button,
+    debounce,
     IconButton,
     Paper,
     Table,
@@ -7,7 +9,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TextField,
+    TableRow,
+    TextField,
     Typography
 } from "@mui/material";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
@@ -196,11 +199,35 @@ export default function CartItems({props, discount}) {
                                                                     </TableCell>
 
                                                                     <TableCell align={"center"}>
+                                                                        {item.price_net !== item.original_price_net &&
+                                                                            (
+                                                                                <Typography variant="body1"
+                                                                                            sx={{
+                                                                                                textDecoration: "line-through",
+                                                                                                opacity: 0.8,
+                                                                                            }}
+                                                                                >
+                                                                                    {toLocaleString(item.original_price_net / 100)}
+                                                                                </Typography>
+                                                                            )
+                                                                        }
                                                                         <Typography variant="body1">
                                                                             {toLocaleString(item.price_net / 100)}
                                                                         </Typography>
                                                                     </TableCell>
                                                                     <TableCell align={"center"}>
+                                                                        {item.price_net !== item.original_price_net &&
+                                                                            (
+                                                                                <Typography variant="body1"
+                                                                                            sx={{
+                                                                                                textDecoration: "line-through",
+                                                                                                opacity: 0.8,
+                                                                                            }}
+                                                                                >
+                                                                                    {toLocaleString(item.original_price_net * (1 + item.vat_rate / 100) / 100)}
+                                                                                </Typography>
+                                                                            )
+                                                                        }
                                                                         <Typography variant="body1">
                                                                             {toLocaleString(item.price_net * (1 + item.vat_rate / 100) / 100)}
                                                                         </Typography>
@@ -214,12 +241,36 @@ export default function CartItems({props, discount}) {
                                                                         />
                                                                     </TableCell>
                                                                     <TableCell align={"center"}>
+                                                                        {item.price_net !== item.original_price_net &&
+                                                                            (
+                                                                                <Typography variant="body1"
+                                                                                            sx={{
+                                                                                                textDecoration: "line-through",
+                                                                                                opacity: 0.8,
+                                                                                            }}
+                                                                                >
+                                                                                    {toLocaleString(item.original_price_net / 100 * item.quantity)}
+                                                                                </Typography>
+                                                                            )
+                                                                        }
                                                                         <Typography variant="body1">
                                                                             {toLocaleString(item.price_net / 100 * item.quantity)}
                                                                         </Typography>
 
                                                                     </TableCell>
                                                                     <TableCell align={"center"}>
+                                                                        {item.price_net !== item.original_price_net &&
+                                                                            (
+                                                                                <Typography variant="body1"
+                                                                                            sx={{
+                                                                                                textDecoration: "line-through",
+                                                                                                opacity: 0.8,
+                                                                                            }}
+                                                                                >
+                                                                                    {toLocaleString(item.original_price_net * (1 + item.vat_rate / 100) / 100 * item.quantity)}
+                                                                                </Typography>
+                                                                            )
+                                                                        }
                                                                         <Typography variant="body1">
                                                                             {toLocaleString(item.price_net * (1 + item.vat_rate / 100) / 100 * item.quantity)}
                                                                         </Typography>
