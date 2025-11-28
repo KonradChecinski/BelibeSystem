@@ -148,5 +148,6 @@
     "Shelf does not exist": "Shelf does not exist",
     "Room cannot have a parent": "Room cannot have a parent",
     "Aisle's parent room does not exist": "Aisle's parent room does not exist",
-    "Shelf's parent aisle does not exist": "Shelf's parent aisle does not exist"
+    "Shelf's parent aisle does not exist": "Shelf's parent aisle does not exist",
+    "Client's email history": "Client's email history"
 }

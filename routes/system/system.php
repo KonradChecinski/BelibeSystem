@@ -179,7 +179,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
             Route::get("/gus/{nip}", [ClientController::class, 'getDataFromGUS'])->name("system.clients.findGus");
 
-            Route::get("/client/{client}/mails", [EmailLogController::class, 'showClintEmails'])->name("system.clients.client.emails");
+            Route::get("/client/{client}/emails", [EmailLogController::class, 'showClintEmails'])->name("system.clients.client.emails");
 
         });
 

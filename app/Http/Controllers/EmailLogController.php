@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client\Client;
-use App\Models\EmailLog;
 use App\Http\Requests\StoreEmailLogRequest;
 use App\Http\Requests\UpdateEmailLogRequest;
+use App\Models\Client\Client;
+use App\Models\EmailLog;
 use Inertia\Inertia;
 
 class EmailLogController extends Controller
@@ -74,20 +74,29 @@ class EmailLogController extends Controller
 
     public function showClintEmails(Client $client)
     {
+//        dd($client->emailLogs, $client->clientUsers()->first()->emailLogs);
         return Inertia::render("System/Clients/EmailLog", [
             "client" => $client,
-            "emails" => $client->emailLogs()->orderBy("sent_at", "desc")->get([
-                'id',
-                'from',
-                'to',
-                'cc',
-                'bcc',
-                'subject',
-                'attachments',
-                'type',
-                'class',
-                'sent_at',
-            ])->makeHidden(["body"]),
+            "emails" => $client->emailLogs
+                ->merge(
+                    $client->clientUsers()->with('emailLogs')->get()->pluck('emailLogs')->flatten()
+                )
+                ->sortByDesc('sent_at')
+                ->values() // Reset keys after sort
+                ->map(function ($log) {
+                    return $log->only([
+                        'id',
+                        'from',
+                        'to',
+                        'cc',
+                        'bcc',
+                        'subject',
+                        'attachments',
+                        'type',
+                        'class',
+                        'sent_at',
+                    ]);
+                }),
         ]);
     }
 }
