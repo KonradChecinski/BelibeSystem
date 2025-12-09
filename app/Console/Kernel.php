@@ -19,6 +19,7 @@ use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
 use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\FromSubiekt\UpdateOrderStatus;
 use App\Jobs\FromSubiekt\UpdateSubiektIdWhereNull;
+use App\Jobs\Mail\SendB2bClientsSettlementsMail;
 use App\Jobs\Mail\SendClientTaskMail;
 use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Quantity\UpdateAllQuantities;
@@ -126,6 +127,9 @@ class Kernel extends ConsoleKernel
                 return $now->diffInDays($exactTime) > 0 && $now->isSameHour($exactTime) && $now->isSameMinute($exactTime);
             });
         }
+
+        //Zestawienia rozrachunków B2B
+        $schedule->job(new SendB2bClientsSettlementsMail())->monthlyOn(10, '08:00');
     }
 
     /**

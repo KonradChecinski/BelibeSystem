@@ -2,13 +2,13 @@
 
 namespace App\Notifications\b2b;
 
-use App\Models\ClientOrder;
+use App\Models\Client\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderCompleatedUser extends Notification implements ShouldQueue
+class SettlementsClient extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,15 +16,14 @@ class OrderCompleatedUser extends Notification implements ShouldQueue
     public $backoff = 20;
     public $timeout = 60;
 
-    private ClientOrder $clientOrder;
+    private Client $client;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(ClientOrder $clientOrder)
+    public function __construct()
     {
         $this->onQueue('linux');
-        $this->clientOrder = $clientOrder;
     }
 
     /**
@@ -40,13 +39,15 @@ class OrderCompleatedUser extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(Client $notifiable): MailMessage
     {
+
+        $this->client = $notifiable;
         return (new MailMessage)
-            ->subject("Zamówienie zostało zrealizowane")
-            ->markdown("mail.b2b.orderCompleated.user.orderCompleated", [
-                'clientOrder' => $this->clientOrder,
-                'client' => $this->clientOrder->client,
+            ->subject("Zestawienie Twoich rozrachunków")
+            ->markdown("mail.b2b.settlements.client.settlements", [
+                'client' => $this->client,
+                'settlements' => $this->client->receivables()->whereNot("settlement", 2)->get(),
                 'notifiable' => $notifiable,
             ]);
     }

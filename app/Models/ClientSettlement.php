@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Client\Client;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +29,12 @@ class ClientSettlement extends Model
     ];
 
     protected $appends = ["days_of_delay"];
+
+    protected $casts = [
+        'datetime' => 'datetime:Y-m-d H:i:s',
+        'date_of_payment' => 'date:Y-m-d',
+        'date_of_last_payment' => 'date:Y-m-d',
+    ];
 
 
     public function getDaysOfDelayAttribute()
