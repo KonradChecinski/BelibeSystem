@@ -34,7 +34,7 @@ class SendB2bClientsSettlementsMail implements ShouldQueue
     {
         $clients = Client::whereHas('receivables', function ($query) {
             $query->whereNot('settlement', 2);
-        })->get();
+        })->where("settlements_mail", 1)->get();
 
         foreach ($clients as $client) {
             $client->notify(new SettlementsClient());

@@ -13,14 +13,11 @@ use App\Models\ClientDiscount;
 use App\Models\ClientInvoice;
 use App\Models\ClientLocation;
 use App\Models\ClientNote;
-use App\Models\ClientSettlement;
-use App\Models\Partner;
-use App\Models\SubiektObligation;
 use App\Models\ClientOrder;
 use App\Models\ClientRecipient;
-use App\Models\SubiektReceivable;
+use App\Models\ClientSettlement;
 use App\Models\ClientTask;
-use App\Models\Products\Product;
+use App\Models\Partner;
 use App\Models\Products\ProductModel;
 use App\Models\User;
 use App\Traits\HasEmailHistory;
@@ -55,6 +52,7 @@ class Client extends Model
         'industry_id',
         'blacklist',
         'newsletter',
+        'settlements_mail' // whether to send settlements mail
     ];
 
     public function country(): BelongsTo

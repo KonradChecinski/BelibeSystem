@@ -3,14 +3,20 @@ import {useForm} from "@inertiajs/react";
 import {
     Autocomplete,
     Box,
-    Button,
-    Fade, FormControl, InputLabel, MenuItem, Select,
+    Checkbox,
+    Divider,
+    Fade,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
     TextField,
-    Typography,
-    Checkbox, FormControlLabel, Divider, Tooltip, IconButton
+    Tooltip,
+    Typography
 } from "@mui/material";
-import {Cancel, Save} from "@mui/icons-material";
-import {AddBox, CheckBox, CheckBoxOutlineBlank, Handshake} from '@mui/icons-material';
+import {Cancel, CheckBox, CheckBoxOutlineBlank, Handshake, Mail, Save} from "@mui/icons-material";
 import {
     useAdditionalClientInfoForm
 } from "@/Components/Pages/Client/AdditionalClientInfoComponent/form/useAdditionalClientInfoForm";
@@ -50,10 +56,12 @@ export default function AdditionalClientInfoComponent(props) {
         'account_manager': props.client.account_manager,
         'blacklist': props.client.blacklist,
         'newsletter': props.client.newsletter,
+        'settlements_mail': props.client.settlements_mail,
     })
 
     const [checkedBlacklist, setCheckedBlacklist] = useState(props.client.blacklist !== 0);
     const [checkedNewsletter, setCheckedNewsletter] = useState(props.client.newsletter !== 0);
+    const [checkedSettlementsMail, setCheckedSettlementsMail] = useState(props.client.settlements_mail !== 0);
 
     const initializeFieldValues = () => {
         setValue('id', data.id)
@@ -85,6 +93,7 @@ export default function AdditionalClientInfoComponent(props) {
             'account_manager': props.client.account_manager,
             'blacklist': props.client.blacklist,
             'newsletter': props.client.newsletter,
+            'settlements_mail': props.client.settlements_mail,
         });
 
         initializeFieldValues()
@@ -100,6 +109,7 @@ export default function AdditionalClientInfoComponent(props) {
         clearErrors('account_manager')
         clearErrors('blacklist')
         clearErrors('newsletter')
+        clearErrors('settlements_mail')
     };
     const saveBasic = () => {
         post(route("system.clients.client.update.additional", {client: data.id}), {
@@ -536,6 +546,52 @@ export default function AdditionalClientInfoComponent(props) {
                             {fieldErrors.newsletter?.message && (
                                 <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
                                     {fieldErrors.newsletter?.message.toString()}
+                                </Typography>
+                            )}
+                        </FormControl>
+
+                        <Divider/>
+
+                        <Typography
+                            sx={{mb: 1, display: "flex", gap: 1, alignItems: "center"}}>
+                            <Mail fontSize={"large"}/>
+
+                            Mailing
+                        </Typography>
+
+                        <FormControl
+                            sx={{
+                                ml: 2,
+                                width: "25ch",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: 'flex-start'
+                            }}
+                        >
+                            <FormControlLabel
+                                label={<Typography>Rozliczenia</Typography>}
+                                control={
+                                    <Checkbox
+                                        id="settlements_mail-checkbox"
+                                        label="Rozliczenia"
+                                        size={"large"}
+                                        disabled={!props.editing}
+                                        checked={checkedSettlementsMail}
+                                        onChange={(value) => {
+                                            // setProductModel({...productModel, product_group_id: value.target.value});
+                                            setCheckedSettlementsMail(value.target.checked)
+                                            setData({
+                                                ...data,
+                                                settlements_mail: value.target.checked ? 1 : 0,
+                                            })
+                                            setEdited(true)
+                                        }}
+                                    />
+                                }
+                            />
+                            {fieldErrors.settlements_mail?.message && (
+                                <Typography variant="body2" color="error" sx={{ml: 1, mt: 1}}>
+                                    {fieldErrors.settlements_mail?.message.toString()}
                                 </Typography>
                             )}
                         </FormControl>

@@ -58,6 +58,7 @@ class AdditionalClientController extends Controller
             "priority" => $request->priority,
             "blacklist" => $request->blacklist,
             "newsletter" => $request->newsletter,
+            "settlements_mail" => $request->settlements_mail,
         ]);
         $client->status()->associate($request->status["id"]);
         $client->sourceOfAcquisition()->associate($request->source_of_acquisition["id"]);

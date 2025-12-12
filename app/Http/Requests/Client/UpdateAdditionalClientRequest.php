@@ -24,6 +24,7 @@ class UpdateAdditionalClientRequest extends FormRequest
         return [
             'blacklist' => 'required|boolean',
             'newsletter' => 'required|boolean',
+            'settlements_mail' => 'required|boolean',
             'priority' => 'required|numeric',
             'payments' => 'required|array',
             'payments.*.id' => 'required|numeric',
