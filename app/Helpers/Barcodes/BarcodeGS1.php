@@ -3,9 +3,7 @@
 namespace App\Helpers\Barcodes;
 
 use App\Models\Products\ProductBarcode;
-use DragonCode\Support\Helpers\Boolean;
 use Illuminate\Support\Facades\Http;
-use JetBrains\PhpStorm\NoReturn;
 
 class BarcodeGS1 implements IBarcode
 {
@@ -20,7 +18,7 @@ class BarcodeGS1 implements IBarcode
             ]);
 
 
-        $barcode = substr(substr($response->json()["data"][0]["id"], 1), 0, -1);
+        $barcode = substr($response->json()["data"][0]["id"], 0, -1);
         $barcode += 1;
         $barcode = (string)$barcode;
 
