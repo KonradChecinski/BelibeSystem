@@ -3,6 +3,7 @@
 namespace App\Helpers\Barcodes;
 
 use App\Models\Products\ProductBarcode;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class BarcodeGS1 implements IBarcode
@@ -10,7 +11,7 @@ class BarcodeGS1 implements IBarcode
 
     public static function generate(): ?ProductBarcode
     {
-        $response = Http::withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
+        $response = Http::withoutVerifying()->withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
             ->get('https://mojegs1.pl/api/v2/products', [
                 "sort" => "-gtin",
                 "page[limit]" => 1,
@@ -28,10 +29,10 @@ class BarcodeGS1 implements IBarcode
         return $barcode;
     }
 
-    public static function save($barcode, $model, $product): bool
+    public static function save($barcode, $model, $product): Response
     {
 
-        $response = Http::withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
+        $response = Http::withoutVerifying()->withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
             ->contentType("application/vnd.api+json")
             ->put('https://mojegs1.pl/api/v2/products/' . $barcode->barcode, [
                 "data" => [
@@ -59,8 +60,7 @@ class BarcodeGS1 implements IBarcode
             ]);
 
 
-        if ($response->status() == 200) return true;
-        return false;
+        return $response;
 
     }
 

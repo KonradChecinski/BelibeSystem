@@ -150,7 +150,8 @@ class ProductController extends Controller
 
         if ($isGS1BarcodeGenerated) {
             $barcodeResult = BarcodeGS1::save($gs1BarcodeGenerated, $product->model, $product);
-            if ($barcodeResult == false) {
+
+            if (!$barcodeResult->successful()) {
                 $tmpBarcodes = collect($barcodes);
                 $tmpBarcodes = $tmpBarcodes->filter(function ($barcode) {
                     return $barcode->type !== 1;
@@ -166,8 +167,12 @@ class ProductController extends Controller
                 $product->barcodes()->delete();
                 $product->barcodes()->saveMany($tmpBarcodes);
 
+                $error = (object)$barcodeResult->json();
+                $error = (object)$error->error;
+                $error = $error->errors[0]["detail"];
+
                 return redirect()->back()->withErrors([
-                    'barcodes' => 'Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu'
+                    'barcodes' => 'Nie można zapisać kodu kreskowego w systemie GS1. Zgłoś to Opiekunowi systemu. Kod błędu: ' . $barcodeResult->status() . ' ' . $error
                 ]);
             }
         }
