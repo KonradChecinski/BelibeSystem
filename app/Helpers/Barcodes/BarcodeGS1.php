@@ -49,7 +49,7 @@ class BarcodeGS1 implements IBarcode
 //                        "productImage" => null,
 //                        "productWebsite" => null,
                         "status" => "ACT",
-                        "subBrandName" => "",
+                        "subBrandName" => null,
                         "targetMarket" => [
                             "PL"
                         ],
