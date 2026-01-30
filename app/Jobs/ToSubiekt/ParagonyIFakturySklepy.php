@@ -4,7 +4,6 @@ namespace App\Jobs\ToSubiekt;
 
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +11,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
 {
@@ -90,8 +88,9 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
             ->where("dok_MagId", $warehouseId)
             ->where("dok_Typ", 21)
             ->where(function ($query) use ($categoryId) {
-                $query->whereNot("dok_KatId", $categoryId)
-                    ->orWhereNull("dok_KatId");
+//                $query->whereNot("dok_KatId", $categoryId)
+//                    ->orWhereNull("dok_KatId");
+                $query->WhereNull("dok_KatId");
             })
             ->where("dok_DataWyst", ">=", $date)
             ->orderBy("dok_Id")
