@@ -1,6 +1,6 @@
 import {Head, router} from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout";
-import {Button, Grid, Paper, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Typography} from "@mui/material";
 import {
     PointOfSale,
     Savings,
@@ -12,7 +12,7 @@ import {
     EventAvailable,
     NoteAdd,
     AddBox,
-    History, Description, ReceiptLong, PeopleAlt, AdsClick
+    History, Description, ReceiptLong, PeopleAlt, AdsClick, Euro
 } from "@mui/icons-material";
 
 import IconGrid from "@/Components/Layout/IconGrid";
@@ -29,6 +29,7 @@ import ClientInvoicesComponent from "@/Components/Pages/Client/ClientInvoicesCom
 import ClientUsersComponent from "@/Components/Pages/Client/ClientUsersComponent";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import ClientActionComponent from "@/Components/Pages/Client/ClientActionComponent";
+import ClientBuyerComponent from "@/Components/Pages/Client/ClientBuyerComponent";
 
 
 export default function Client(props) {
@@ -42,10 +43,17 @@ export default function Client(props) {
             <Grid container spacing={3} sx={{pb: 1}}>
                 <Grid item xs={12} md={12} lg={8}>
                     <Grid container spacing={3}>
-                        <IconGrid xs={12} md={12} lg={12} xl={8} title={"Informacje podstawowe"} icon={<Info/>}
-                                  iconColor={"darkblue"}>
-                            <BasicClientInfoComponent {...props}/>
-                        </IconGrid>
+                        <Grid item xs={12} md={12} lg={12} xl={8}>
+                            <Grid container spacing={3} direction={"column"}>
+                                <IconGrid title={"Informacje podstawowe"} icon={<Info/>} iconColor={"darkblue"}>
+                                    <BasicClientInfoComponent {...props}/>
+                                </IconGrid>
+                                <IconGrid title={"Nabywca"} icon={<Euro/>} iconColor={"DeepSkyBlue"}>
+                                    <ClientBuyerComponent {...props}/>
+                                </IconGrid>
+                            </Grid>
+                        </Grid>
+
 
                         <IconGrid xs={12} md={12} lg={12} xl={4} title={"Dodatkowe"} icon={<AddBox/>}
                                   iconColor={"green"}>

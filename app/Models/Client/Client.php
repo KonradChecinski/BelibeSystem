@@ -35,6 +35,7 @@ class Client extends Model
 
     protected $fillable = [
         'subiekt_id',
+        'buyer_subiekt_id',
         'name',
         'nip',
         'country_id',

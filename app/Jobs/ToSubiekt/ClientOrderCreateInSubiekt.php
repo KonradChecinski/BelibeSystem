@@ -57,7 +57,12 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
 //            dd($order, $client, $orderProducts, $payment, $location, $delivery, $warehouseDocument);
 
             $zamowienie = $subiekt->SuDokumentyManager->DodajZK();
-            $zamowienie->KontrahentId = $client->subiekt_id;
+            if (!is_null($client->buyer_subiekt_id)) {
+                $zamowienie->KontrahentId = $client->buyer_subiekt_id;
+                $zamowienie->OdbiorcaId = $client->subiekt_id;
+            } else {
+                $zamowienie->KontrahentId = $client->subiekt_id;
+            }
             $zamowienie->NumerOryginalny = mb_substr(Str::ascii($order->number), 0, 30);
             $zamowienie->LiczonyOdCenBrutto = false;
             $zamowienie->PoziomCenyId = 2;
