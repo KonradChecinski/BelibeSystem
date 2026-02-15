@@ -44,4 +44,10 @@ class SubiektReceivable extends Model
         $this->connection = "mysql";
         return $this->belongsTo(Client::class, "nzf_IdObiektu", "subiekt_id");
     }
+
+    public function clientByBuyer(): BelongsTo
+    {
+        $this->connection = "mysql";
+        return $this->belongsTo(Client::class, "nzf_IdObiektu", "buyer_subiekt_id");
+    }
 }
