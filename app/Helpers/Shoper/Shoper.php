@@ -3,11 +3,9 @@
 namespace App\Helpers\Shoper;
 
 use App\Jobs\Quantity\ChangeQuantity;
-use App\Jobs\Shoper\ShoperChangeQuantity;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 use App\Models\ShoperOrder;
 use App\Models\ShoperToken;
@@ -15,7 +13,6 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Shoper
@@ -1013,6 +1010,10 @@ class Shoper
 
             }
 
+            $paymentMethod = 0;
+            if ($paymentName === "Pobranie") {
+                $paymentMethod = 1;
+            }
 
             $responseShipping = Http::withoutVerifying()
                 ->withToken(self::getAccessToken())
@@ -1039,6 +1040,7 @@ class Shoper
                 "ordered_at" => $shoperOrder["date"],
                 "total_quantity" => count($shoperOrderProducts),
                 "total_gross" => $shoperOrder["sum"] - $shoperOrder["shipping_cost"],
+                "payment_method" => $paymentMethod,
                 "payment_name" => $paymentName,
                 "delivery_name" => $shippingName,
                 "delivery_gross" => $shoperOrder["shipping_cost"],

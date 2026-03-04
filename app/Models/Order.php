@@ -21,6 +21,7 @@ class Order extends Model
         "ordered_at",
         "total_quantity",
         "total_gross",
+        "payment_method",
         "payment_name",
         "delivery_name",
         "delivery_gross",
@@ -64,6 +65,9 @@ class Order extends Model
 //    90 - przesłane do subiekta
 //    100 - zrealizowane
 
+//payment_method
+//0-płątnośc z góry/przedpłata/online
+//1-płatność przy odbiorze/pobranie/cod
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);

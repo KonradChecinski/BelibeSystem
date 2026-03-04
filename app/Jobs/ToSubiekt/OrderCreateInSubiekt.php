@@ -64,7 +64,19 @@ class OrderCreateInSubiekt implements ShouldQueue
             switch ($order->type) {
                 case 1: //SHOPER
                     $zamowienie->KategoriaId = 115;
-                    $zamowienie->PlatnoscKartaId = 15;
+                    if ($order->payment_method === 0) { //Płatność Online
+                        $zamowienie->PlatnoscKartaId = 15;
+                    } elseif ($order->payment_method === 1) { //Pobranie
+                        //23-Inpost; 25-GLS; 29-Poczta Polska;
+                        if (Str::contains($order->payment_name, "inpost", ignoreCase: true)) $zamowienie->PlatnoscRatyId = 23;
+                        elseif (Str::contains($order->payment_name, "gls", ignoreCase: true)) $zamowienie->PlatnoscRatyId = 25;
+                        elseif (Str::contains($order->payment_name, "poczta", ignoreCase: true)) $zamowienie->PlatnoscRatyId = 29;
+                        else {
+                            $zamowienie->PlatnoscKartaId = 15;
+                            $order->payment_method = 0;
+                        }
+
+                    }
                     break;
 
                 case 2: //ALLEGRO
@@ -119,23 +131,26 @@ class OrderCreateInSubiekt implements ShouldQueue
                 $pozycja->RabatProcent = (float)0;
             }
 
-
-            $zamowienie->PlatnoscKartaKwota = $zamowienie->KwotaDoZaplaty;
+            if ($order->payment_method === 0) { //Płatność Online
+                $zamowienie->PlatnoscKartaKwota = $zamowienie->KwotaDoZaplaty;
+            } elseif ($order->payment_method === 1) { //Pobranie
+                $zamowienie->PlatnoscRatyKwota = $zamowienie->KwotaDoZaplaty;
+            }
 
 
             switch ($order->type) {
                 case 1: //SHOPER
-                    $zamowienie->KontrahentId = 1439;
+                    $zamowienie->KontrahentId = 1417; //1439- SHOPER SA; 1417 - Paragon Shoper
                     $zamowienie->Wystawil = "Shoper";
                     break;
 
                 case 2: //ALLEGRO
-                    $zamowienie->KontrahentId = 1089;
+                    $zamowienie->KontrahentId = 2480; //1089- Allegro sp zoo; 2480 - Paragon Allegro
                     $zamowienie->Wystawil = "Allegro";
                     break;
 
                 case 3: //EMPIK
-                    $zamowienie->KontrahentId = 880;
+                    $zamowienie->KontrahentId = 2065; //880- Empik SA; 2065 - Paragon Empik
                     $zamowienie->Wystawil = "Empik";
                     break;
             }
