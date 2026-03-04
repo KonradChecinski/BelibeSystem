@@ -74,8 +74,17 @@ class ZestawienieSprzedazySklep implements ShouldQueue, ShouldBeUnique
         $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
 
         foreach ($result as $item) {
-            $pozycja = $zamowienie->Pozycje->Dodaj((int)$item->tw_Id);
-            $pozycja->IloscJm = (int)$item->tw_Ilosc;
+            if ($item->tw_Zablokowany === 1) {
+                $pozycja = $zamowienie->Pozycje->DodajUslugeJednorazowa();
+                $pozycja->UslJednNazwa = substr((int)$item->tw_Id . ": " . $item->tw_Symbol . " - " . $item->tw_Nazwa, 0, 50);
+                $pozycja->Opis = Str::ascii($item->tw_Nazwa);
+                $pozycja->IloscJm = (int)$item->tw_Ilosc;
+                $pozycja->CenaBruttoPrzedRabatem = 0;
+            } else {
+                $pozycja = $zamowienie->Pozycje->Dodaj((int)$item->tw_Id);
+                $pozycja->IloscJm = (int)$item->tw_Ilosc;
+            }
+
         }
 
         $zamowienie->Zapisz();

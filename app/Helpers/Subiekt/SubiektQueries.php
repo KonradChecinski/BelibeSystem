@@ -60,9 +60,10 @@ class SubiektQueries
 
         $twSale = Towar::query()
             ->rightJoinSub($unionMerge, "union_Merge", "tw__Towar.tw_Id", "=", "tow_Id")
-            ->where("tw_Ilosc", ">", 0)
+            ->where("tw_Ilosc", ">", 0)->whereNotNull("tw_Id")
             ->get([
                 "tw_Id",
+                "tw_Zablokowany",
                 "tw_Symbol",
                 "tw_Nazwa",
                 "tw_Ilosc"

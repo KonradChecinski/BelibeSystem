@@ -53,6 +53,9 @@ class CreateSettlementsFromSubiekt implements ShouldQueue, ShouldBeUnique
             if (is_null($subiektSettlement)) continue;
 
             $client = $subiektSettlement->client;
+            if (is_null($client)) {
+                $client = $subiektSettlement->clientByBuyer;
+            }
 
             if (is_null($client)) {
                 DB::connection("subiekt")->table("Belibe_System_Finanse_Created")->where("id", $updatedSettlement->id)->delete();

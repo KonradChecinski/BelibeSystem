@@ -22,6 +22,7 @@ use App\Models\Products\ProductModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ClientController extends Controller
@@ -257,6 +258,21 @@ class ClientController extends Controller
             },
         ])->findOrFail($id);
 
+        if ($client->buyer_subiekt_id !== null) {
+            // Wykonujemy zapytanie do innej bazy danych (np. 'subiekt')
+            $client->buyer_subiekt_name = DB::connection('subiekt')
+                    ->table('kh__Kontrahent') // przykładowa tabela w Subiekcie
+                    ->where('kh_Id', $client->buyer_subiekt_id)
+                    ->first()->kh_Symbol . " - " .
+                DB::connection('subiekt')
+                    ->table('adr__Ewid') // przykładowa tabela w Subiekcie
+                    ->where('adr_IdObiektu', $client->buyer_subiekt_id)
+                    ->where("adr_TypAdresu", 1) // typ adresu - główny
+                    ->first()->adr_NazwaPelna;
+        } else {
+            $client->buyer_subiekt_name = null;
+        }
+
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
         $b2bPayment = B2bPayment::all();
@@ -313,6 +329,22 @@ class ClientController extends Controller
                 ]);
             },
         ])->findOrFail($id);
+
+
+        if ($client->buyer_subiekt_id !== null) {
+            // Wykonujemy zapytanie do innej bazy danych (np. 'subiekt')
+            $client->buyer_subiekt_name = DB::connection('subiekt')
+                    ->table('kh__Kontrahent') // przykładowa tabela w Subiekcie
+                    ->where('kh_Id', $client->buyer_subiekt_id)
+                    ->first()->kh_Symbol . " - " .
+                DB::connection('subiekt')
+                    ->table('adr__Ewid') // przykładowa tabela w Subiekcie
+                    ->where('adr_IdObiektu', $client->buyer_subiekt_id)
+                    ->where("adr_TypAdresu", 1) // typ adresu - główny
+                    ->first()->adr_NazwaPelna;
+        } else {
+            $client->buyer_subiekt_name = null;
+        }
 
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
