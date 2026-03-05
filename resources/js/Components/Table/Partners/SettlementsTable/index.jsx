@@ -28,50 +28,56 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
             {
                 accessorKey: 'settlement_date',
                 header: 'Rozliczenie na dzień',
-                size: 10,
+                size: 100,
+                Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "Nie wykonano",
+            },
+            {
+                accessorKey: 'invoice_date',
+                header: 'Faktura na dzień',
+                size: 100,
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY") : "Nie wykonano",
             },
             {
                 accessorKey: 'sold_net',
                 header: 'Sprzedaż N',
-                size: 10,
+                size: 110,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'sold_gross',
                 header: 'Sprzedaż B',
-                size: 10,
+                size: 110,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'return_net',
                 header: 'Zwroty N',
-                size: 10,
+                size: 110,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'return_gross',
                 header: 'Zwroty B',
-                size: 10,
+                size: 110,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'total_net',
                 header: 'Suma N',
-                size: 10,
+                size: 100,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'total_gross',
                 header: 'Suma B',
-                size: 10,
+                size: 100,
                 Cell: ({cell}) => toLocaleString(cell.getValue() / 100)
             },
             {
                 accessorKey: 'created_at',
                 header: 'Utworzenie',
                 Cell: ({cell}) => cell.getValue() ? moment(cell.getValue()).format("DD-MM-YYYY HH:mm") : "Nie wykonano",
-                size: 10
+                size: 110
             },
             {
                 accessorKey: 'action',
@@ -158,7 +164,7 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
                     )
 
                 },
-                size: 80,
+                size: 120,
             },
         ],
         [],
@@ -172,10 +178,20 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
         enableBottomToolbar: true,
         enableGrouping: false,
         enableStickyHeader: false,
+        // enableColumnResizing: true,
+        enableFilters: false,
+        // enableSorting: false,
+        enableColumnActions: false,
         // enableStickyFooter: true,
         localization: MRT_Localization_PL,
         initialState: {
-            columnVisibility: {id: false, sold_gross: false, return_gross: false, total_gross: false},
+            columnVisibility: {
+                id: false,
+                invoice_date: false,
+                sold_gross: false,
+                return_gross: false,
+                total_gross: false
+            },
             density: 'compact',
             pagination: {pageSize: 50, pageIndex: 0},
             sorting: [
