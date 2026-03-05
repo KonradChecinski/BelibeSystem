@@ -1,12 +1,9 @@
 import {useMemo, useState} from "react";
-import {Box, Button, Fab, IconButton, Tooltip} from "@mui/material";
+import {Box, Fab, IconButton, Tooltip} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Add, Delete, Edit, ContentCopy, Upgrade, Visibility, DoneAll} from '@mui/icons-material';
+import {Add, Delete, DoneAll, Visibility} from '@mui/icons-material';
 import moment from "moment";
-import {
-    MaterialReactTable,
-    useMaterialReactTable,
-} from 'material-react-table';
+import {MaterialReactTable, useMaterialReactTable,} from 'material-react-table';
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import toLocaleString from "@/Functions/toLocaleString";
 import PartnersSettlementAddDialog from "@/Components/Dialogs/PartnersDialog/PartnersSettlementAddDialog";
@@ -189,20 +186,31 @@ export default function SettlementsTable({settlements, partner, readOnly, props,
             ]
         },
         muiTableContainerProps: {
-            // sx: {maxHeight: 350, height: 1, minHeight: 200}
+            sx: {
+                flex: 1,
+            }
         },
-        // muiTableProps: {
-        //     sx: {height: 1}
-        // },
+        // muiTable mui Table ustawienie poprawne
         muiTablePaperProps: ({table}) => ({
             sx: {
                 pl: 1,
-                height: 1
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
             },
+            elevation: 1,
             style: {
                 zIndex: table.getState().isFullScreen ? 2000 : undefined,
             },
         }),
+        muiTableBodyRowProps: ({row}) => {
+            // console.log(row.original, row.original.Rozliczenie, row.original.Wartosc, row.original.DniSpoznienia)
+            return ({
+                sx: {
+                    // bgcolor: row.original.Rozliczenie != 2 ? row.original.DniSpoznienia != null ? Number(row.original.Wartosc) > 0 ? "errorBg.main" : "" : "" : ""
+                },
+            })
+        },
     });
 
     const hasDocumentWithStatusZero = settlements.some(settlement =>

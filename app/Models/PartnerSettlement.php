@@ -13,12 +13,18 @@ class PartnerSettlement extends Model
         "partner_id",
         "user_id",
         "settlement_date",
+        "invoice_date",
         "sold_net",
         "sold_gross",
         "return_net",
         "return_gross",
         "total_net",
         "total_gross",
+    ];
+
+    protected $casts = [
+        "settlement_date" => "date",
+        "invoice_date" => "date",
     ];
 
     public function partner()

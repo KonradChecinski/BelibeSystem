@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Subiekt\SubiektQueries;
+use App\Http\Requests\StorePartnerSettlementRequest;
 use App\Http\Requests\UpdatePartnerSettlementDocumentAcceptAllRequest;
 use App\Http\Requests\UpdatePartnerSettlementDocumentAcceptRequest;
 use App\Http\Requests\UpdatePartnerSettlementItemRequest;
+use App\Http\Requests\UpdatePartnerSettlementRequest;
 use App\Jobs\partners\CreateInvoiceCorrectionsFromPartnerSettlement;
 use App\Jobs\partners\CreateInvoiceFromPartnerSettlement;
 use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Models\PartnerSettlement;
-use App\Http\Requests\StorePartnerSettlementRequest;
-use App\Http\Requests\UpdatePartnerSettlementRequest;
 use App\Models\PartnerSettlementDocument;
 use App\Models\PartnerSettlementItem;
 use App\Models\Products\Product;
@@ -135,6 +135,7 @@ class PartnerSettlementController extends Controller
         $settlement = new PartnerSettlement([
             "user_id" => auth()->user()->id,
             "settlement_date" => $request->date,
+            "invoice_date" => $request->invoice_date,
             "sold_net" => 0,
             "sold_gross" => 0,
             "return_net" => 0,

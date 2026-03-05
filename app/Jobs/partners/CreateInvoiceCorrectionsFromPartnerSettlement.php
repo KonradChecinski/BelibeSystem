@@ -2,19 +2,9 @@
 
 namespace App\Jobs\partners;
 
-use App\Helpers\Partners\PartnerExportFile;
-use App\Helpers\Shoper\Shoper;
-use App\Helpers\Subiekt\SubiektQueries;
 use App\Jobs\FromSubiekt\GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt;
-use App\Models\B2bPayment;
-use App\Models\Client\Client;
 use App\Models\Partner;
-use App\Models\PartnerExport;
 use App\Models\PartnerSettlementDocument;
-use App\Models\Products\Price\ProductModelPrice;
-use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -22,7 +12,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -95,7 +84,7 @@ class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, Shou
 
         $kfs = $subiekt->SuDokumentyManager->DodajKFS();
         $kfs->NaPodstawie($this->partnerSettlementDocument->to_document_subiekt_id);
-        $kfs->DataWystawienia = $this->partnerSettlementDocument->settlement->settlement_date;
+        $kfs->DataWystawienia = $this->partnerSettlementDocument->settlement->invoice_date;
 
         foreach ($this->partnerSettlementDocument->items as $item) {
             $pozycja = $kfs->Pozycje->Element($item->document_position);

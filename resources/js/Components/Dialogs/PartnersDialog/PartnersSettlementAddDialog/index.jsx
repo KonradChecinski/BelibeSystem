@@ -1,15 +1,25 @@
 import {
-    Autocomplete,
-    Box, Button,
-    Dialog, DialogActions,
+    Box,
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
     DialogContent,
-    DialogTitle, Paper,
+    DialogTitle,
+    Paper,
     Step,
     StepLabel,
-    Stepper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField, Typography
+    Stepper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography
 } from "@mui/material";
-import {useState, useEffect, useRef} from "react";
+import {useState} from "react";
 import Draggable from "react-draggable";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -21,6 +31,7 @@ import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {Controller} from "react-hook-form";
 import moment from "moment/moment";
 import {DropzoneArea} from "mui-file-dropzone";
+import {WarningAmberRounded, WarningRounded} from "@mui/icons-material";
 
 export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
     const {
@@ -32,9 +43,23 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
         control
     } = usePartnerSettlementAddForm()
 
+    const countDate = () => {
+        const today = moment(); // dzisiejsza data
+        const dayOfMonth = today.date(); // dzień miesiąca (1–31)
 
-    const {data, setData, transform, post, processing, reset} = useForm({
-        date: moment(),
+        if (dayOfMonth < 15) {
+            // przed 15 → ostatni dzień poprzedniego miesiąca
+            return today.clone().subtract(1, 'month').endOf('month');
+        } else {
+            // 15 lub po 15 → 15 dzień aktualnego miesiąca
+            return today.clone().date(15);
+        }
+    };
+
+    const {data, setData, transform, post, processing, reset, errors: InertiaErrors} = useForm({
+        date: countDate(),
+        invoice_date: moment(),
+        can_change_invoice_date: false,
         file: null,
     })
 
@@ -42,20 +67,22 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
         return {
             ...data,
             date: data.date.format("YYYY-MM-DD"),
+            invoice_date: data.invoice_date.format("YYYY-MM-DD"),
         }
     })
 
-    useEffect(() => {
-        // inicjacja wartości pól
-        setValue("name", data.name)
-        setValue("date", data.date)
-
-    }, [setValue]);
+    // useEffect(() => {
+    //     // inicjacja wartości pól
+    //     setValue("name", data.name)
+    //     setValue("date", data.date)
+    //     setValue("invoice_date", data.invoice_date)
+    //     setValue("can_change_invoice_date", data.can_change_invoice_date)
+    //
+    // }, [setValue]);
 
 
     const onSubmit = (data) => {
-        console.log(data)
-        setData(data)
+        // setData(data)
         setActiveStep(activeStep + 1)
     }
 
@@ -72,9 +99,14 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
 
     const handleClose = () => {
         setValue("file", null);
-        setValue("date", moment());
+        setValue("date", countDate());
+        setValue("invoice_date", moment());
+        setValue("can_change_invoice_date", false);
+
         clrErrors("file");
         clrErrors("date");
+        clrErrors("data_invoice");
+        clrErrors("can_change_invoice_date")
 
         setActiveStep(0);
 
@@ -139,7 +171,7 @@ export default function PartnersSettlementAddDialog({open, setOpen, partner}) {
                     {activeStep === 0 ?
                         <Step1 data={data} setData={setData} register={register} errors={fieldErrors}
                                control={control} changeDataFiles={changeDataFiles}/> : null}
-                    {activeStep === 1 ? <Step2 data={data} setData={setData}/> : null}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData} InertiaErrors={InertiaErrors}/> : null}
 
                 </DialogContent>
                 <DialogActions>
@@ -181,14 +213,14 @@ function Step1({data, setData, register, errors, control, changeDataFiles}) {
                         render={({field}) => (
                             <DatePicker
                                 {...field}
-                                label="Data"
+                                label="Data rozliczenia (zakończenia okresu rozliczeniowego)"
                                 value={data?.date}
                                 onChange={(value) => {
                                     const newDate = moment(value);
                                     setData('date', newDate);
                                     field.onChange(value);
                                 }}
-                                sx={{width: "30ch", my: 1}}
+                                sx={{width: 1, my: 1, minWidth: "40ch"}}
                             />
                         )}
                     />
@@ -196,6 +228,53 @@ function Step1({data, setData, register, errors, control, changeDataFiles}) {
                 {errors.date?.message && (
                     <Typography variant="body2" color="error" sx={{ml: 1}}>
                         {errors.date?.message.toString()}
+                    </Typography>
+                )}
+                <Box sx={{display: "flex", alignItems: "center", mt: 1}}>
+                    <Checkbox icon={<WarningRounded/>} checkedIcon={<WarningAmberRounded/>}
+                              value={data.can_change_invoice_date} onChange={(e, v) => {
+                        setData("can_change_invoice_date", v)
+                    }}/>
+                    <Typography variant="body2" color="warning.main" sx={{ml: 1}}>
+                        Podaj inną datę wystawienia
+                    </Typography>
+                </Box>
+                <Box>
+                    <Typography variant="body2" color="warning.main" sx={{ml: 1}}>
+                        Pamiętaj, że data wystawienia faktury musi być taka sama jak data rozliczenia lub późniejsza.
+                    </Typography>
+                    <Typography variant="body2" color="error.main" sx={{ml: 1, mb: 2}}>
+                        Pamiętaj, że e-faktura przesyłana do KSEF musi trafić do systemu z dniem wystawienia, więc data
+                        wystawienia faktury nie powinna być inna niż dzisiejsza data.
+                    </Typography>
+                </Box>
+
+
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Controller
+                        control={control}
+                        name="invoice_date"
+                        defaultValue={data?.invoice_date}
+                        disabled={!data.can_change_invoice_date}
+                        render={({field}) => (
+                            <DatePicker
+                                {...field}
+                                label="Data wystawienia faktury"
+                                value={data?.invoice_date}
+                                minDate={data.date}
+                                onChange={(value) => {
+                                    const newDate = moment(value);
+                                    setData('invoice_date', newDate);
+                                    field.onChange(value);
+                                }}
+                                sx={{width: 1, my: 1, minWidth: "40ch"}}
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
+                {errors.invoice_date?.message && (
+                    <Typography variant="body2" color="error" sx={{ml: 1}}>
+                        {errors.invoice_date?.message.toString()}
                     </Typography>
                 )}
 
@@ -299,20 +378,32 @@ function Step1({data, setData, register, errors, control, changeDataFiles}) {
     );
 }
 
-function Step2({data}) {
+function Step2({data, InertiaErrors}) {
     const formattedDateTime = moment(data.date).format("DD-MM-YYYY")
+    const formattedDateInvoice = moment(data.invoice_date).format("DD-MM-YYYY")
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-            <TextField id="date" label="Data" variant="outlined"
+            <TextField id="date" label="Data rozliczenia (zakończenia okresu rozliczeniowego)" variant="outlined"
                        value={formattedDateTime}
                        disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
+                       sx={{width: "40ch", my: 1}}/>
+
+            <TextField id="invoice_date" label="Data wystawienia faktury" variant="outlined"
+                       value={formattedDateInvoice}
+                       disabled={true}
+                       sx={{width: "40ch", my: 1}}/>
 
             <TextField id="file" label="Plik" variant="outlined"
                        value={data.file?.name}
                        disabled={true}
-                       sx={{width: "30ch", my: 1}}/>
+                       sx={{width: "40ch", my: 1}}/>
+
+            {Object.keys(InertiaErrors).map((key, index) => {
+                return (<Typography variant="body1" color={"error"} align={"center"} gutterBottom key={index}>
+                    {InertiaErrors[key]}
+                </Typography>)
+            })}
 
         </Box>
     );

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\PartnerSettlement;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -25,6 +24,7 @@ class StorePartnerSettlementRequest extends FormRequest
     {
         return [
             "date" => ["required", "date"],
+            "invoice_date" => ["required", "date", "after_or_equal:date"],
             "file" => ["required", "file", "max:10485760"]
         ];
     }

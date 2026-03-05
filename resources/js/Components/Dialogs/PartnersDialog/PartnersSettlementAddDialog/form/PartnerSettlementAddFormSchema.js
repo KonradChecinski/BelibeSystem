@@ -4,6 +4,11 @@ const schema = yup.object().shape({
     date: yup
         .mixed()
         .required("Pole jest wymagane"),
+
+    invoice_date: yup
+        .mixed()
+        .required("Pole jest wymagane"),
+
     file: yup
         .mixed()
         .required("Pole jest wymagane")

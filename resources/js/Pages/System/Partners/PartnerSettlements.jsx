@@ -41,8 +41,16 @@ export default function Partner(props) {
             }
         >
             <Head title={t("Partner") + ": " + props.partner.name}/>
-            <Box sx={{height: 1, width: 1, display: "flex", gap: 1, flexWrap: "wrap", maxHeight: 1}}>
-                <Box sx={{flex: 1, minWidth: 500}}>
+            <Box sx={{
+                height: 1,
+                width: 1,
+                flex: 1,
+                display: "flex",
+                gap: 1,
+                flexWrap: "wrap",
+                maxHeight: "calc(100% - 48px)"
+            }}>
+                <Box sx={{height: 1, width: 1, flex: 1, minWidth: 500, display: "flex"}}>
                     <Box sx={{height: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
                         <SettlementsComponent settlements={props.settlements} partner={props.partner}
                                               changeSettlementDocuments={changeSettlementDocuments}/>
@@ -58,14 +66,14 @@ export default function Partner(props) {
                         height: 1,
                         maxHeight: 1
                     }}>
-                        <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
+                        <Box sx={{flex: 1, width: 1, height: 1, display: "flex", flexDirection: "column", gap: 1}}>
                             <SettlementDocumentsComponent
                                 settlementDocuments={settlementDocuments}
                                 partner={props.partner}
                                 changeSettlementDocumentItems={changeSettlementDocumentItems}
                             />
                         </Box>
-                        <Box sx={{flex: 1, width: 1, display: "flex", flexDirection: "column", gap: 1}}>
+                        <Box sx={{flex: 1, width: 1, height: 1, display: "flex", flexDirection: "column", gap: 1}}>
                             <SettlementItemsComponent
                                 settlementDocuments={settlementDocuments}
                                 settlementDocumentItems={settlementDocumentItems}

@@ -2,18 +2,9 @@
 
 namespace App\Jobs\partners;
 
-use App\Helpers\Partners\PartnerExportFile;
-use App\Helpers\Shoper\Shoper;
 use App\Jobs\FromSubiekt\GenerateInvoiceFromFromPartnerSettlementInSubiekt;
-use App\Models\B2bPayment;
-use App\Models\Client\Client;
 use App\Models\Partner;
-use App\Models\PartnerExport;
 use App\Models\PartnerSettlementDocument;
-use App\Models\Products\Price\ProductModelPrice;
-use App\Models\Products\Product;
-use App\Models\Products\ProductModel;
-use App\Models\Products\ProductModelColor;
 use App\Singleton\Subiekt;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -22,7 +13,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -96,7 +86,7 @@ class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
         $faktura->PoziomCenyId = 2;
         $faktura->Pozycje->PrzeliczWedlugPoziomuCen();
 
-        $faktura->DataWystawienia = $this->partnerSettlementDocument->settlement->settlement_date;
+        $faktura->DataWystawienia = $this->partnerSettlementDocument->settlement->invoice_date;
         $faktura->DataZakonczeniaDostawy = $this->partnerSettlementDocument->settlement->settlement_date;
 
         $faktura->StatusDokumentu = 3;
