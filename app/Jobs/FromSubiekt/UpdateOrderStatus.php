@@ -37,8 +37,19 @@ class UpdateOrderStatus implements ShouldQueue, ShouldBeUnique
             $subiektFV = DB::connection("subiekt")
                 ->table("dok__Dokument")
                 ->where("dok_DoDokId", $order->subiekt_id)
-                ->whereIn("dok_Typ", [2, 21])
-                ->where("dok_Podtyp", 0)
+                ->where(function ($query) {
+                    $query
+                        ->where(function ($q) {
+                            // Typ 2 -> podtyp 0 lub 2
+                            $q->where("dok_Typ", 2)
+                                ->whereIn("dok_Podtyp", [0, 2]);
+                        })
+                        ->orWhere(function ($q) {
+                            // Typ 21 -> tylko podtyp 0
+                            $q->where("dok_Typ", 21)
+                                ->where("dok_Podtyp", 0);
+                        });
+                })
                 ->first([
                     "dok_Id",
                     "dok_NrPelny",
