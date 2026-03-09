@@ -1011,7 +1011,7 @@ class Shoper
             }
 
             $paymentMethod = 0;
-            if ($paymentName === "Pobranie") {
+            if ($shoperOrder["payment_id"] == 1 || $shoperOrder["payment_id"] == 2) {
                 $paymentMethod = 1;
             }
 
