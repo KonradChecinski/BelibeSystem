@@ -40,13 +40,13 @@ class UpdateOrderStatus implements ShouldQueue, ShouldBeUnique
                 ->where(function ($query) {
                     $query
                         ->where(function ($q) {
-                            // Typ 2 -> podtyp 0 lub 2
-                            $q->where("dok_Typ", 2)
+                            // Typ 21 -> podtyp 0 lub 2
+                            $q->where("dok_Typ", 21)
                                 ->whereIn("dok_Podtyp", [0, 2]);
                         })
                         ->orWhere(function ($q) {
-                            // Typ 21 -> tylko podtyp 0
-                            $q->where("dok_Typ", 21)
+                            // Typ 2 -> tylko podtyp 0
+                            $q->where("dok_Typ", 2)
                                 ->where("dok_Podtyp", 0);
                         });
                 })
