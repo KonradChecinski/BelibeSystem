@@ -41,7 +41,7 @@ class BarcodeGS1 implements IBarcode
                     "attributes" => [
                         "brandName" => $model->gs1Brand->name,
                         "commonName" => $product->name,
-                        "description" => mb_substr(strip_tags($product->model->description_b2b), 0, 4000),
+//                        "description" => mb_substr(strip_tags($product->model->description_b2b), 0, 4000),
                         "internalSymbol" => $product->symbol,
                         "descriptionLanguage" => "pl",
                         "gpcCode" => $model->gs1Gpc->value,
