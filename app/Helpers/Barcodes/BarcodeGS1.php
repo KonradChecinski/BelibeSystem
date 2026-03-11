@@ -31,6 +31,19 @@ class BarcodeGS1 implements IBarcode
 
     public static function save($barcode, $model, $product): Response
     {
+        $description_b2b = $product->model->description_b2b;
+
+        // zamiana tagów HTML na spację
+        $description_b2b = preg_replace('/<[^>]*>/', ' ', $description_b2b);
+
+        // zamiana twardych spacji i dziwnych whitespace na zwykłą spację
+        $description_b2b = preg_replace('/\x{00A0}|\s+/u', ' ', $description_b2b);
+
+        // usunięcie znaków specjalnych (np. emotki, ± itp.) – zostają litery, cyfry i podstawowa interpunkcja
+        $description_b2b = preg_replace('/[^\p{L}\p{N}\s.,\-]/u', '', $description_b2b);
+
+        // przycięcie długości
+        $description_b2b = mb_substr(trim($description_b2b), 0, 4000);
 
         $response = Http::withoutVerifying()->withBasicAuth(env('GS1_LOGIN'), env('GS1_PASSWORD'))
             ->contentType("application/vnd.api+json")
@@ -41,7 +54,7 @@ class BarcodeGS1 implements IBarcode
                     "attributes" => [
                         "brandName" => $model->gs1Brand->name,
                         "commonName" => $product->name,
-//                        "description" => mb_substr(strip_tags($product->model->description_b2b), 0, 4000),
+                        "description" => $description_b2b,
                         "internalSymbol" => $product->symbol,
                         "descriptionLanguage" => "pl",
                         "gpcCode" => $model->gs1Gpc->value,
