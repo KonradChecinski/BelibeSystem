@@ -19,6 +19,7 @@ use App\Models\ClientSettlement;
 use App\Models\ClientTask;
 use App\Models\Partner;
 use App\Models\Products\ProductModel;
+use App\Models\Subiekt\Kontrahent;
 use App\Models\User;
 use App\Traits\HasEmailHistory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -165,6 +166,11 @@ class Client extends Model
     public function partner()
     {
         return $this->hasOne(Partner::class);
+    }
+
+    public function contractor(): BelongsTo
+    {
+        return $this->belongsTo(Kontrahent::class, 'subiekt_id', 'kh_Id');
     }
 
 }

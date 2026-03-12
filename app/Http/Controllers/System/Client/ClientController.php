@@ -19,6 +19,7 @@ use App\Models\ProductBrand;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
+use App\Models\Subiekt\Kontrahent;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -401,5 +402,51 @@ class ClientController extends Controller
     public function getDataFromGUS(Request $request, string $nip)
     {
         return response()->json(Gus::search($nip));
+    }
+
+    public function getBuyersList(Request $request)
+    {
+        $usedIds = Client::query()
+            ->select('subiekt_id')
+            ->whereNotNull('subiekt_id')
+            ->pluck('subiekt_id')
+            ->merge(
+                Client::query()
+                    ->select('buyer_subiekt_id')
+                    ->whereNotNull('buyer_subiekt_id')
+                    ->pluck('buyer_subiekt_id')
+            )
+            ->unique()
+            ->values();
+
+        $contractors = Kontrahent::with('adresGlowny')
+            ->whereNotIn('kh_Id', $usedIds)
+            ->get()
+            ->map(function (Kontrahent $contractor) {
+                return [
+                    'buyer_subiekt_id' => $contractor->kh_Id,
+                    'buyer_subiekt_name' => $contractor->kh_Symbol . " - " . $contractor->adresGlowny->adr_Nazwa,
+                ];
+            })
+            ->values();
+
+
+        return response()->json($contractors);
+    }
+
+    public function setBuyer(Request $request, Client $client)
+    {
+        $request->validate([
+            "buyer_subiekt_id" => "required|exists:App\Models\Subiekt\Kontrahent,kh_Id"
+        ]);
+
+        $client->buyer_subiekt_id = $request->buyer_subiekt_id;
+        $client->save();
+    }
+
+    public function deleteBuyer(Request $request, Client $client)
+    {
+        $client->buyer_subiekt_id = null;
+        $client->save();
     }
 }

@@ -1,26 +1,31 @@
 import {useEffect, useState} from "react";
 import {router, useForm} from "@inertiajs/react";
 import {
-    Autocomplete,
     Box,
-    Button, Checkbox, Divider,
-    Fade, FormControl, FormControlLabel, IconButton,
-    TextField, Tooltip,
+    Button,
+    Checkbox,
+    Fade,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    TextField,
+    Tooltip,
     Typography
 } from "@mui/material";
-import {Cancel, CloudDownload, Save, Home, Phone, Handshake, Mail, Euro} from "@mui/icons-material";
-import {enqueueSnackbar} from "notistack";
+import {Cancel, Euro, Save} from "@mui/icons-material";
 import {useTheme} from "@mui/material/styles";
-import {IdentityCard} from "@/Icons/IdentityCard";
+import ClientFindBuyerDialog from "@/Components/Dialogs/ClientDialog/ClientFindBuyerDialog";
+import {enqueueSnackbar} from "notistack";
 
 export default function ClientBuyerComponent(props) {
     const [edited, setEdited] = useState(false);
+    const [buyerDialogOpen, setBuyerDialogOpen] = useState(false);
 
     const theme = useTheme();
     // console.log("Propsy: ", props)
 
 
-    const {data, setData, processing, post} = useForm({
+    const {data, setData, processing, delete: destroy} = useForm({
         'id': props.client.id,
         'is_client_buyer': !props.client.buyer_subiekt_id,
 
@@ -28,10 +33,19 @@ export default function ClientBuyerComponent(props) {
         'buyer_subiekt_name': props.client.buyer_subiekt_name,
     })
 
+    useEffect(() => {
+        setData({
+            'id': props.client.id,
+            'is_client_buyer': !props.client.buyer_subiekt_id,
 
-    const onSubmit = (formData, e) => {
-        e.preventDefault()
-        saveClientBuyer()
+            'buyer_subiekt_id': props.client.buyer_subiekt_id,
+            'buyer_subiekt_name': props.client.buyer_subiekt_name,
+        })
+    }, [props]);
+
+
+    const onSubmit = () => {
+        deleteClientBuyer()
     }
 
     const resetForm = () => {
@@ -43,18 +57,23 @@ export default function ClientBuyerComponent(props) {
         });
         setEdited(false);
     };
-    const saveClientBuyer = () => {
-        // post(route("system.clients.client.update.basic", {client: data.id}), {
-        //     onSuccess: params => {
-        //         setEdited(false);
-        //         enqueueSnackbar("Zapisano Podstawowe informację", {variant: 'success'})
-        //     },
-        //     onError: params => {
-        //         console.error(params)
-        //         enqueueSnackbar("Błąd przy zapisywaniu podstawowych informacji", {variant: 'error'})
-        //     },
-        //     preserveScroll: true
-        // })
+    const deleteClientBuyer = () => {
+        // console.log(data)
+        if (!!data.is_client_buyer) {
+            destroy(route("system.clients.buyer.delete", {client: data.id}), {
+                onSuccess: params => {
+                    setEdited(false);
+                    enqueueSnackbar("Usunięto nabywce", {variant: 'success'})
+                    router.reload()
+                    setEdited(false)
+                },
+                onError: params => {
+                    console.error(params)
+                    enqueueSnackbar("Błąd przy usuwaniu nabywcy", {variant: 'error'})
+                },
+                preserveScroll: true
+            })
+        }
     }
 
     return (
@@ -68,60 +87,6 @@ export default function ClientBuyerComponent(props) {
 
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 5, mt: 2, flexDirection: "column"}}>
                         <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                            <Box>
-                                {/*<TextField id="id_subiekt" label="Id w Subiekt" variant="outlined"*/}
-                                {/*           value={props.client.subiekt_id ? props.client.subiekt_id : "Brak"}*/}
-                                {/*           color={props.client.subiekt_id === null ? "error" : null}*/}
-                                {/*           error={props.client.subiekt_id === null}*/}
-                                {/*           disabled={true}*/}
-                                {/*           InputProps={{*/}
-                                {/*               readOnly: true,*/}
-                                {/*               endAdornment: (*/}
-                                {/*                   <>*/}
-                                {/*                       {props.editing && (*/}
-                                {/*                           <Tooltip*/}
-                                {/*                               title={Boolean(props.client.subiekt_id) ? "Client jest połączony z Subiektem" : "Połącz do Subiekta"}*/}
-                                {/*                           >*/}
-                                {/*                                    <span>*/}
-                                {/*                                        <IconButton*/}
-                                {/*                                            disabled={Boolean(props.client.subiekt_id)}*/}
-                                {/*                                            onClick={() => {*/}
-                                {/*                                                router.post(route("system.clients.client.update.basic.subiekt", {client: props.client.id}),*/}
-                                {/*                                                    {}, {*/}
-                                {/*                                                        preserveScroll: true,*/}
-                                {/*                                                        onSuccess: () => {*/}
-                                {/*                                                            enqueueSnackbar("Powiązano klienta z Subiektem", {variant: 'success'})*/}
-                                {/*                                                            // router.reload()*/}
-                                {/*                                                        },*/}
-                                {/*                                                        onError: errors => {*/}
-                                {/*                                                            console.error(errors)*/}
-                                {/*                                                            enqueueSnackbar("Błąd przy powiązaniu klienta z Subiektem", {variant: 'error'})*/}
-                                {/*                                                            for (const errorsKey in errors) {*/}
-                                {/*                                                                enqueueSnackbar(errors[errorsKey], {variant: 'error'})*/}
-                                {/*                                                            }*/}
-                                {/*                                                        },*/}
-                                {/*                                                    }*/}
-                                {/*                                                )*/}
-                                {/*                                            }}*/}
-                                {/*                                        >*/}
-                                {/*                                            <IdentityCard fontSize={"large"}/>*/}
-                                {/*                                        </IconButton>*/}
-                                {/*                                    </span>*/}
-                                {/*                           </Tooltip>*/}
-
-                                {/*                       )}*/}
-                                {/*                   </>*/}
-                                {/*               )*/}
-                                {/*           }}*/}
-                                {/*           sx={{*/}
-                                {/*               width: "16ch",*/}
-                                {/*               '& .MuiOutlinedInput-notchedOutline': {*/}
-                                {/*                   borderColor: props.client.subiekt_id === null ? `${theme.palette.error.main} !important` : '',*/}
-                                {/*               },*/}
-                                {/*           }}/>*/}
-                            </Box>
-
-
                             <Box>
                                 <FormControl
                                     sx={{
@@ -174,7 +139,7 @@ export default function ClientBuyerComponent(props) {
                                                                    variant="outlined"
                                                                    startIcon={<Euro/>}
                                                                    sx={{width: "40ch"}}
-                                                                   // onClick={() => router.visit(route("system.clients.client.emails", {client: props.client.id}))}
+                                                                   onClick={() => setBuyerDialogOpen(true)}
                                                                >
                                                                    Ustaw nabywcę
                                                                </Button>
@@ -187,6 +152,8 @@ export default function ClientBuyerComponent(props) {
                                                    width: "60ch",
                                                }}/>
                                 </Box>
+                                <ClientFindBuyerDialog open={buyerDialogOpen} setOpen={setBuyerDialogOpen}
+                                                       props={props} setEdited={setEdited}/>
                             </Box>
                         )}
 
@@ -201,6 +168,7 @@ export default function ClientBuyerComponent(props) {
                             color="success"
                             size={"small"}
                             disabled={processing}
+                            onClick={onSubmit}
                             sx={{
                                 position: "absolute",
                                 top: 7,

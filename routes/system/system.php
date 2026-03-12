@@ -179,6 +179,12 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
             Route::get("/gus/{nip}", [ClientController::class, 'getDataFromGUS'])->name("system.clients.findGus");
 
+
+            Route::get("/buyers/", [ClientController::class, 'getBuyersList'])->name("system.clients.findBuyers");
+            Route::patch("/buyer/{client}", [ClientController::class, 'setBuyer'])->name("system.clients.buyer.update");
+            Route::delete("/buyer/{client}", [ClientController::class, 'deleteBuyer'])->name("system.clients.buyer.delete");
+
+
             Route::get("/client/{client}/emails", [EmailLogController::class, 'showClintEmails'])->name("system.clients.client.emails");
 
         });
