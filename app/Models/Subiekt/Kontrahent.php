@@ -39,7 +39,8 @@ class Kontrahent extends Model
             $builder
                 ->where('kh_Zablokowany', 0)
                 ->whereIn('kh_Rodzaj', [0, 2]) //(0 - dost/odb; 1-dostawca; 2-odbiorca; 3-ani dostawca ani odbiorca)
-                ->where('kh_Osoba', 0);
+                ->where('kh_Osoba', 0)
+                ->where('kh_Jednorazowy', 0);
         });
     }
 
