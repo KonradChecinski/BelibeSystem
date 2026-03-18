@@ -3,11 +3,7 @@
 namespace App\Jobs\FromSubiekt;
 
 use App\Models\ClientOrder;
-use App\Models\Order;
-use App\Models\Products\Product;
 use App\Models\ShoperOrder;
-use App\Models\Subiekt\Towar;
-use App\Notifications\b2b\InvoiceGeneratedClient;
 use App\Singleton\Subiekt;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -76,7 +72,7 @@ class GenerateInvoiceFromClientOrderInSubiekt implements ShouldQueue, ShouldBeUn
 
         $uuid = Str::uuid();
         $path = storage_path("app/temp/{$uuid}.pdf");
-        $invoice->DrukujDoPlikuWgWzorca(1000041, $path, 0); //Tymczasowo zapisane w temp
+        $invoice->DrukujDoPlikuWgWzorca(1000105, $path, 0); //Tymczasowo zapisane w temp
 
         $invoicePath = Storage::putFile("invoices", $path);
 
