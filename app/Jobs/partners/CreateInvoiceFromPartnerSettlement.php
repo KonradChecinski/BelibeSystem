@@ -86,6 +86,8 @@ class CreateInvoiceFromPartnerSettlement implements ShouldQueue, ShouldBeUnique
         $faktura->PoziomCenyId = 2;
         $faktura->Pozycje->PrzeliczWedlugPoziomuCen();
 
+        $faktura->FormaDokumentu = 1;
+
         $faktura->DataWystawienia = $this->partnerSettlementDocument->settlement->invoice_date->toDateString();
         $faktura->DataZakonczeniaDostawy = $this->partnerSettlementDocument->settlement->settlement_date->toDateString();
 

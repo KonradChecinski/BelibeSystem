@@ -2,21 +2,15 @@
 
 namespace App\Jobs\ToSubiekt;
 
-use App\Helpers\Helper;
-use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
-use App\Models\Products\Product;
-use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class CreateFvFromClientOrderInSubiekt implements ShouldQueue
 {
@@ -63,6 +57,7 @@ class CreateFvFromClientOrderInSubiekt implements ShouldQueue
 
         $faktura = $subiekt->SuDokumentyManager->DodajFS();
         $faktura->NaPodstawie($this->subiektOrderId);
+        $faktura->FormaDokumentu = 1;
         $faktura->StatusDokumentu = 3;
 //        dd($this->warehouseDocument->user->name);
         $faktura->Wystawil = iconv("UTF-8", "Windows-1250//IGNORE", $this->warehouseDocument->user->firstname . " " . $this->warehouseDocument->user->lastname);

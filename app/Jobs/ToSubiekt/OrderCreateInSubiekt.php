@@ -60,6 +60,8 @@ class OrderCreateInSubiekt implements ShouldQueue
             $zamowienie->PoziomCenyId = 3;
             $zamowienie->Pozycje->PrzeliczWedlugPoziomuCen();
 
+            $zamowienie->FormaDokumentu = 1;
+
 
             switch ($order->type) {
                 case 1: //SHOPER
