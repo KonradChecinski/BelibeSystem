@@ -82,7 +82,7 @@ class GenerateInvoiceCorrectionFromFromPartnerSettlementInSubiekt implements Sho
 
         $uuid = Str::uuid();
         $path = storage_path("app/temp/{$uuid}.pdf");
-        $invoiceCorrection->DrukujDoPlikuWgWzorca(567, $path, 0); //Tymczasowo zapisane w temp
+        $invoiceCorrection->DrukujDoPlikuWgWzorca(1000104, $path, 0); //Tymczasowo zapisane w temp
 
         $invoiceCorrectionPath = Storage::putFile("invoices", $path);
 

@@ -82,7 +82,7 @@ class GenerateInvoiceFromFromPartnerSettlementInSubiekt implements ShouldQueue, 
 
         $uuid = Str::uuid();
         $path = storage_path("app/temp/{$uuid}.pdf");
-        $invoice->DrukujDoPlikuWgWzorca(1000078, $path, 0); //Tymczasowo zapisane w temp
+        $invoice->DrukujDoPlikuWgWzorca(1000105, $path, 0); //Tymczasowo zapisane w temp
 
         $invoicePath = Storage::putFile("invoices", $path);
 
