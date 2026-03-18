@@ -955,7 +955,7 @@ class Shoper
             ]);
         if ($response->status() === 429) {
             sleep(1);
-            return self::getOrder();
+            return self::getOrders();
         }
         if ($response->status() === 401) {
             self::login();

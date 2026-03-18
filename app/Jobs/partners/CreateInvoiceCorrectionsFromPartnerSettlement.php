@@ -84,7 +84,7 @@ class CreateInvoiceCorrectionsFromPartnerSettlement implements ShouldQueue, Shou
 
         $kfs = $subiekt->SuDokumentyManager->DodajKFS();
         $kfs->NaPodstawie($this->partnerSettlementDocument->to_document_subiekt_id);
-        $kfs->DataWystawienia = $this->partnerSettlementDocument->settlement->invoice_date;
+        $kfs->DataWystawienia = $this->partnerSettlementDocument->settlement->invoice_date->toDateString();
 
         foreach ($this->partnerSettlementDocument->items as $item) {
             $pozycja = $kfs->Pozycje->Element($item->document_position);

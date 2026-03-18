@@ -27,6 +27,7 @@ class PartnerSettlementDocument extends Model
         "status",
     ];
 
+
     public function settlement(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PartnerSettlement::class, 'partner_settlement_id');
