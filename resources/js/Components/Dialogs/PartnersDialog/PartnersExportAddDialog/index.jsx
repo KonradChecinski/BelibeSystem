@@ -22,6 +22,7 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
         type: exportElement ? exportElement.type : 1,
         cron: exportElement ? exportElement.cron : '0 2 * * 3',
         availability: exportElement ? exportElement.availability : false,
+        ean: exportElement ? exportElement.ean : false,
         wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
         retail_gross_price: exportElement ? !!exportElement.retail_gross_price : false,
         description: exportElement ? !!exportElement.description : false,
@@ -36,6 +37,7 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
             type: exportElement ? exportElement.type : 1,
             cron: exportElement ? exportElement.cron : '0 2 * * 3',
             availability: exportElement ? exportElement.availability : false,
+            ean: exportElement ? exportElement.ean : false,
             wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
             retail_gross_price: exportElement ? !!exportElement.retail_gross_price : false,
             description: exportElement ? !!exportElement.description : false,
@@ -128,7 +130,7 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
 
 
             <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                Dodawanie Produktu
+                {exportElement ? "Edycja" : "Dodawanie"} eksportu partnera
             </DialogTitle>
             <DialogContent>
                 <Stepper activeStep={activeStep} alternativeLabel sx={{mt: 1, mb: 3}}>
@@ -226,6 +228,17 @@ function Step1({data, setData, getLabel}) {
                             }
                             label="Dostępność"
                         />
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.ean}
+                                    onChange={(e) => setData("ean", e.target.checked)}
+                                />
+                            }
+                            label="EAN (kod kreskowy)"
+                        />
+
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -298,7 +311,6 @@ function Step1({data, setData, getLabel}) {
             */}
 
 
-
             <Box sx={{mt: 2}}>
                 <Paper sx={{p: 2}}>
                     <Typography variant="h6" gutterBottom>
@@ -352,6 +364,17 @@ function Step2({data, getLabel}) {
                             }
                             label="Dostępność"
                         />
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.ean}
+                                    disabled={true}
+                                />
+                            }
+                            label="EAN (kod kreskowy)"
+                        />
+
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -388,7 +411,7 @@ function Step2({data, getLabel}) {
                                 <Checkbox
                                     checked={!!data.image_basic}
                                     disabled={true}
-                                    />
+                                />
                             }
                             label="Zdjęcie podstawowy"
                         />
@@ -431,7 +454,8 @@ function Step2({data, getLabel}) {
                     />
                     <Cron
                         value={data.cron}
-                        setValue={()=>{}}
+                        setValue={() => {
+                        }}
                         clearButton={false}
                         leadingZero={true}
                         shortcuts={false}

@@ -13,6 +13,7 @@ class PartnerExport extends Model
         'partner_id',
         'type',
         'availability',
+        'ean',
         'wholesale_net_price',
         'retail_gross_price',
         'description',
