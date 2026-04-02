@@ -24,11 +24,11 @@ class PartnerExportFile
                 'symbol' => $product->symbol,
             ];
 
-            if ($partnerExport->availability) {
-                $array['availability'] = $product->available;
-            }
             if ($partnerExport->ean) {
                 $array['ean'] = $product->mainBarcode->barcode ?? null;
+            }
+            if ($partnerExport->availability) {
+                $array['availability'] = $product->available;
             }
             if ($partnerExport->wholesale_net_price) {
                 $array['wholesale_net_price'] = $product->model->priceForClientB2b($client)["discounted_wholesale_net_price"] / 100;
