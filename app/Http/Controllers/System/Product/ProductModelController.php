@@ -311,6 +311,8 @@ class ProductModelController extends Controller
      */
     public function destroy(DeleteProductModelRequest $request, ProductModel $productModel)
     {
+        $productModel->categories()->detach();
+        $productModel->prices()->delete();
         $productModel->delete();
     }
 }
