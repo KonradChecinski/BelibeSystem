@@ -40,6 +40,7 @@ class PartnerExportController extends Controller
             'path' => Str::uuid(),
             'cron' => $request->cron,
             'availability' => $request->availability,
+            'ean' => $request->ean,
             'wholesale_net_price' => $request->wholesale_net_price,
             'retail_gross_price' => $request->retail_gross_price,
             'description' => $request->description,

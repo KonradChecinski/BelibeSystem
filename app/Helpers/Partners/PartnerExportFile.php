@@ -20,28 +20,31 @@ class PartnerExportFile
         $client = $partner->client;
 
         $products = $products->map(function ($product) use ($client, $partnerExport) {
-            $array=[
+            $array = [
                 'symbol' => $product->symbol,
             ];
 
-            if($partnerExport->availability){
+            if ($partnerExport->ean) {
+                $array['ean'] = $product->mainBarcode->barcode ?? null;
+            }
+            if ($partnerExport->availability) {
                 $array['availability'] = $product->available;
             }
-            if($partnerExport->wholesale_net_price){
+            if ($partnerExport->wholesale_net_price) {
                 $array['wholesale_net_price'] = $product->model->priceForClientB2b($client)["discounted_wholesale_net_price"] / 100;
             }
-            if($partnerExport->retail_gross_price){
+            if ($partnerExport->retail_gross_price) {
                 $array['retail_gross_price'] = $product->prices->retail_gross_price / 100;
             }
-            if($partnerExport->description){
+            if ($partnerExport->description) {
                 $array['description'] = json_encode($product->model->description_b2c);
             }
-            if($partnerExport->type==1 && ($partnerExport->image_basic || $partnerExport->image_square || $partnerExport->image_webp)){
-                $images=[];
-                if($partnerExport->image_basic){
+            if ($partnerExport->type == 1 && ($partnerExport->image_basic || $partnerExport->image_square || $partnerExport->image_webp)) {
+                $images = [];
+                if ($partnerExport->image_basic) {
                     $imagesBasic = collect();
 
-                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image){
+                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image) {
                         $imagesBasic->push(route("images", ['slug' => $image->slug]));
                     }
 
@@ -51,10 +54,10 @@ class PartnerExportFile
 
                 }
 
-                if($partnerExport->image_square){
+                if ($partnerExport->image_square) {
                     $imagesSquare = collect();
 
-                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image){
+                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image) {
                         $imagesSquare->push(route("images.1x1", ['slug' => $image->slug]));
                     }
 
@@ -65,10 +68,10 @@ class PartnerExportFile
 
                 }
 
-                if($partnerExport->image_webp){
+                if ($partnerExport->image_webp) {
                     $imagesWebp = collect();
 
-                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image){
+                    foreach ($product->images->where("type", 1)->sortBy("order")->values() as $image) {
                         $imagesWebp->push(route("images.webp", ['slug' => $image->slug]));
                     }
 

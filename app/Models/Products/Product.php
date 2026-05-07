@@ -121,6 +121,11 @@ class Product extends Model
         return $this->hasMany(ProductBarcode::class);
     }
 
+    public function mainBarcode(): HasOne
+    {
+        return $this->hasOne(ProductBarcode::class)->where('main', true);
+    }
+
     public function unit(): BelongsTo
     {
         return $this->belongsTo(ProductUnit::class, "product_unit_id", "id");
@@ -249,7 +254,7 @@ class Product extends Model
         if ($this->subiekt_id == null) {
             return 0;
         }
-        
+
         $sum = $this->towar->stanySklepy()->sum("st_Stan");
 
 
