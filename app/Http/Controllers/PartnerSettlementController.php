@@ -146,10 +146,14 @@ class PartnerSettlementController extends Controller
         $settlement = $partner->partnerSettlements()->save($settlement);
 
         //Sprzedane
-        $this->createInvoice($sold, $settlement, $partner, $client, $request);
+        if ($sold->count() > 0) {
+            $this->createInvoice($sold, $settlement, $partner, $client, $request);
+        }
 
         //Zwroty
-        $this->createInvoicesCorrections($returned, $settlement, $partner, $client, $request);
+        if ($returned->count() > 0) {
+            $this->createInvoicesCorrections($returned, $settlement, $partner, $client, $request);
+        }
 
         $settlement->update([
             "total_net" => $settlement->sold_net - $settlement->return_net,
