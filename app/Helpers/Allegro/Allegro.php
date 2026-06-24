@@ -27,14 +27,15 @@ class Allegro
             ->withToken(self::getToken())
             ->accept("application/vnd.allegro.public.v1+json")
             ->contentType("application/vnd.allegro.public.v1+json")
-            ->beforeSending(function (\Illuminate\Http\Client\Request $request) {
-                dd([
-                    'method' => $request->method(),
-                    'url' => $request->url(),
-                    'headers' => $request->headers(),
-                    'body' => $request->data(),
-                ]);
-            });
+//            ->beforeSending(function (\Illuminate\Http\Client\Request $request) {
+//                dd([
+//                    'method' => $request->method(),
+//                    'url' => $request->url(),
+//                    'headers' => $request->headers(),
+//                    'body' => $request->data(),
+//                ]);
+//            })
+            ;
     }
 
     public static function listOffers(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response

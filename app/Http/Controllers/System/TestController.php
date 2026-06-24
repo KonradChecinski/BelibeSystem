@@ -31,7 +31,7 @@ class TestController extends Controller
      */
     public function index()
     {
-        dd(Allegro::searchOffer(Product::find(135))->json());
+        dd();
     }
 
 
