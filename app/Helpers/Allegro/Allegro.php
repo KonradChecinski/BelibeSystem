@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Products\Product;
 use Carbon\Carbon;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -18,12 +20,27 @@ class Allegro
         return AllegroToken::query()->latest()->first()?->access_token;
     }
 
+    private static function getHttpClient(): PendingRequest
+    {
+        return Http::withoutVerifying()
+            ->withUserAgent(config("services.allegro.application_name") . "/" . config("services.allegro.application_version") . " (+" . route("system.allegro.info") . ")")
+            ->withToken(self::getToken())
+            ->accept("application/vnd.allegro.public.v1+json")
+            ->contentType("application/vnd.allegro.public.v1+json")
+            ->beforeSending(function (\Illuminate\Http\Client\Request $request) {
+                dd([
+                    'method' => $request->method(),
+                    'url' => $request->url(),
+                    'headers' => $request->headers(),
+                    'body' => $request->data(),
+                ]);
+            });
+    }
+
     public static function listOffers(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
 
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->get(config("services.allegro.api_uri") . "/sale/offers");
         if (!$response->successful()) {
             throw new \RuntimeException("Allegro list order error " . $response->status() . " " . json_encode($response->json()));
@@ -35,9 +52,7 @@ class Allegro
     public static function searchOffer(Product $product): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
 
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->get(config("services.allegro.api_uri") . "/sale/offers", [
                     "external.id" => $product->symbol,
                 ]
@@ -53,10 +68,7 @@ class Allegro
     {
         $commandId = Str::uuid();
 
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
-            ->contentType("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->put(config("services.allegro.api_uri") . "/sale/offer-quantity-change-commands/{$commandId}", [
                     "modification" => array(
                         "changeType" => "FIXED",
@@ -83,10 +95,7 @@ class Allegro
 
     public static function changeStatusInOffer(int $allegroId, bool $active = true): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
-            ->contentType("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->patch(config("services.allegro.api_uri") . "/sale/product-offers/{$allegroId}", [
                 "publication" => [
                     "status" => $active ? "ACTIVE" : "ENDED"
@@ -101,9 +110,7 @@ class Allegro
 
     public static function listOrders(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->get(config("services.allegro.api_uri") . "/order/checkout-forms", [
                 "status" => "READY_FOR_PROCESSING",
                 "fulfillment.status" => "NEW",
@@ -119,10 +126,7 @@ class Allegro
 
     public static function changeOrderStatus($orderId): bool
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
-            ->contentType("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->put(config("services.allegro.api_uri") . "/order/checkout-forms/{$orderId}/fulfillment", [
                 "status" => "PROCESSING",
             ]);
@@ -226,9 +230,7 @@ class Allegro
     //MESSAGES
     public static function getMessThreads(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->get(config("services.allegro.api_uri") . "/messaging/threads");
         if (!$response->successful()) {
             throw new \RuntimeException("Allegro message threads list error " . $response->status() . " " . json_encode($response->json()));
@@ -239,9 +241,7 @@ class Allegro
 
     public static function getMessThreadMessList(string $threadId): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->get(config("services.allegro.api_uri") . "/messaging/threads/$threadId/messages");
         if (!$response->successful()) {
             throw new \RuntimeException("Allegro messages list of message thread error " . $response->status() . " " . json_encode($response->json()));
@@ -252,10 +252,7 @@ class Allegro
 
     public static function changeMessThreadStatus(string $threadId): bool
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
-            ->contentType("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->put(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/read", [
                 "read" => "true",
             ]);
@@ -270,10 +267,7 @@ class Allegro
 
     public static function sendMessInMessThread(string $threadId, $message): bool
     {
-        $response = Http::withoutVerifying()
-            ->withToken(self::getToken())
-            ->accept("application/vnd.allegro.public.v1+json")
-            ->contentType("application/vnd.allegro.public.v1+json")
+        $response = self::getHttpClient()
             ->post(config("services.allegro.api_uri") . "/messaging/threads/{$threadId}/messages", [
                 "text" => $message,
                 "attachments" => []

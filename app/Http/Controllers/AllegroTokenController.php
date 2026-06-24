@@ -54,4 +54,10 @@ class AllegroTokenController extends Controller
         AllegroRefreshToken::dispatch();
     }
 
+
+    public function info(Request $request)
+    {
+        return View("allegro.info");
+
+    }
 }

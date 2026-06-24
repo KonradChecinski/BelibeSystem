@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\System;
 
+use App\Helpers\Allegro\Allegro;
 use App\Helpers\Partners\PartnerExportFile;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PartnerExportController;
 use App\Http\Controllers\WarehouseLocationController;
 use App\Http\Controllers\WarehouseProductModelController;
+use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
+use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
 use App\Mail\WarehouseDocumentCreated;
 use App\Models\Client\Client;
 use App\Models\Partner;
 use App\Models\PartnerExport;
+use App\Models\Products\Product;
 use App\Models\Subiekt\Towar;
 use App\Models\WarehouseDocument;
 use App\Singleton\Subiekt;
@@ -26,18 +31,7 @@ class TestController extends Controller
      */
     public function index()
     {
-//        $product = Product::findBySubiektId(2233);
-//        dd($product, $product->model, $product->prices, $product->model->prices);
-//        MakePartnerExportFile::dispatchSync(Partner::find(1), PartnerExport::find(1));
-//        $warehouseController = new \App\Http\Controllers\WarehouseController();
-//        $warehouseController->reload();
-//
-//        $warehousecontroler = new WarehouseProductModelController();
-//        return $warehousecontroler->printLabelForShelf(68,1);
-//        return PartnerExportFile::makeFile(Partner::find(1), PartnerExport::find(1));
-//        Mail::to("it@belibe.pl")->send(new WarehouseDocumentCreated(WarehouseDocument::find(1)));
-        $client = Client::find(1);
-        dd($client->emailLogs);
+        dd(Allegro::searchOffer(Product::find(135))->json());
     }
 
 

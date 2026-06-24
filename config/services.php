@@ -33,6 +33,8 @@ return [
 
 //    Wew usługi
     'allegro' => [
+        'application_name' => env('ALLEGRO_APLLICATION_NAME'),
+        'application_version' => env('ALLEGRO_APLLICATION_VERSION'),
         'client_id' => env('ALLEGRO_CLIENT_ID'),
         'client_secret' => env('ALLEGRO_CLIENT_SECRET'),
         'uri' => env('ALLEGRO_URI'),
