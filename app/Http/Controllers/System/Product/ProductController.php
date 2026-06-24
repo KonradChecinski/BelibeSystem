@@ -206,6 +206,7 @@ class ProductController extends Controller
             $productColor->images()->delete();
             $productColor->delete();
             if ($deleteModel) {
+                $product->model->categories()->detach();
                 $product->model->prices()->delete();
                 $product->model->delete();
                 return redirect()->route('system.products.models');
