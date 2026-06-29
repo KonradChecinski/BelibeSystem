@@ -512,5 +512,8 @@ Route::group(["prefix" => "/partner"], function () {
     Route::get("/{uuid}", [PartnerExportController::class, 'show'])->name("system.partner.show");
 });
 
+Route::group(["prefix" => "/allegro"], function () {
+    Route::get("/info", [AllegroTokenController::class, 'info'])->name("system.allegro.info");
+});
 
 require __DIR__ . "/auth.php";
