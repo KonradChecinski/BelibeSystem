@@ -28,6 +28,7 @@ class AllegroLogin
                 "code" => $code,
                 "redirect_uri" => route("system.settings.allegro.token"),
                 "code_verifier" => session()->pull("code_verifier"),
+                "client_id" => config("services.allegro.client_id"),
             ]);
 //        dd($response->status(), $response->json());
 

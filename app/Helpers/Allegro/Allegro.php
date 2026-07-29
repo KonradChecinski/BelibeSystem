@@ -25,6 +25,9 @@ class Allegro
         return Http::withoutVerifying()
             ->withUserAgent(config("services.allegro.application_name") . "/" . config("services.allegro.application_version") . " (+" . route("system.allegro.info") . ")")
             ->withToken(self::getToken())
+            ->withHeaders([
+                'Accept-Language' => 'pl-PL',
+            ])
             ->accept("application/vnd.allegro.public.v1+json")
             ->contentType("application/vnd.allegro.public.v1+json")
 //            ->beforeSending(function (\Illuminate\Http\Client\Request $request) {

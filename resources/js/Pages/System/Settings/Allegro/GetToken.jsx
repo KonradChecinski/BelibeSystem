@@ -34,7 +34,7 @@ export default function Status(props) {
                     <br/>
                     <a
                         href={"https://allegro.pl/auth/oauth/authorize?" +
-                            `response_type=code&client_id=${props.client_id}` +
+                            `response_type=code&prompt=confirm&client_id=${props.client_id}` +
                             `&redirect_uri=${route("system.settings.allegro.token")}` +
                             "&code_challenge_method=S256" +
                             `&code_challenge=${props.code_challenge}`}
@@ -43,7 +43,6 @@ export default function Status(props) {
                             Połącz z Allegro
                         </Button>
                     </a>
-
                 </CardContent>
 
             </Card>
