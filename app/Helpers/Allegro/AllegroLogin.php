@@ -44,12 +44,14 @@ class AllegroLogin
     {
         $response = Http::withoutVerifying()
             ->asForm()
-            ->withHeader("Authorization", "Basic " . base64_encode(config("services.allegro.client_id") . ":" . config("services.allegro.client_secret")))
-            ->withHeader("Content-Type", "application/x-www-form-urlencoded")
+            ->withBasicAuth(
+                config('services.allegro.client_id'),
+                config('services.allegro.client_secret')
+            )
+//            ->withUserAgent(config("services.allegro.application_name") . "/" . config("services.allegro.application_version") . " (+" . route("system.allegro.info") . ")")
             ->post(config("services.allegro.uri") . "/auth/oauth/token", [
                 "grant_type" => "refresh_token",
                 "refresh_token" => $allegroToken->refresh_token,
-                "redirect_uri" => route("system.settings.allegro.token"),
             ]);
 //        dd($response->status(), $response->json());
 
