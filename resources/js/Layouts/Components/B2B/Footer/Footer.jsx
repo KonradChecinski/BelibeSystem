@@ -1,10 +1,10 @@
 import {useState} from "react";
-import {Render} from "@measured/puck";
-import {PColumns, PContainer, PDivider, PHeading, PParagraph, PTypography} from "puck-mui";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {Box} from "@mui/material";
 import {VerticalSpace} from "@/Pages/System/Pages/blocks/VerticalSpace";
+import {Columns, Container, Divider, Heading, Paragraph, Typography} from "@/Pages/System/Pages/blocks/MuiBlock";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {Render} from "@puckeditor/core";
 
 export default function B2BFooter({props, footer}) {
     const initialFooterData = {
@@ -14,14 +14,14 @@ export default function B2BFooter({props, footer}) {
 
     const [configFooter, setConfigFooter] = useState({
         components: {
-            divider: PDivider,
+            divider: Divider,
             verticalSpace: VerticalSpace,
-            heading: PHeading,
-            paragraph: PParagraph,
-            typography: PTypography,
-            column: PColumns,
+            heading: Heading,
+            paragraph: Paragraph,
+            typography: Typography,
+            column: Columns,
             columnResponsive: ColumnResponsive,
-            container: PContainer,
+            container: Container,
             link: PuckLink
         },
     });

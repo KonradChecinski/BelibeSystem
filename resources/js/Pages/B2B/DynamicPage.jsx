@@ -2,10 +2,9 @@ import {Head, Link} from "@inertiajs/react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Render} from "@measured/puck";
+import {Render} from "@puckeditor/core";
 import {useState} from "react";
 import {
-    config as PuckMuiConfig,
     PAccordion,
     PButton,
     PButtonGroup,
@@ -13,7 +12,7 @@ import {
     PColumns,
     PContainer,
     PDivider, PHeading, PPaper, PParagraph, PTypography
-} from 'puck-mui';
+} from '@/Pages/System/Pages/blocks/MuiBlock';
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 

@@ -32,7 +32,9 @@
         "spatie/simple-excel": "^3.6",
         "staudenmeir/eloquent-has-many-deep": "1.18",
         "stevebauman/purify": "^6.2",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "ext-soap": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

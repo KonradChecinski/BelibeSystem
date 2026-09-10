@@ -35,7 +35,6 @@
         "@emotion/styled": "^11.11.0",
         "@fontsource/roboto": "^5.0.3",
         "@hookform/resolvers": "^3.3.1",
-        "@measured/puck": "^0.16.1",
         "@minoru/react-dnd-treeview": "^3.4.4",
         "@mui/base": "^5.0.0-beta.5",
         "@mui/icons-material": "^5.15.10",
@@ -43,6 +42,7 @@
         "@mui/x-charts": "^7.5.0",
         "@mui/x-data-grid": "^6.9.0",
         "@mui/x-date-pickers": "^6.19.4",
+        "@puckeditor/core": "^0.23.0",
         "barcode-validator": "^1.0.2",
         "copy-image-clipboard": "^2.1.2",
         "cronstrue": "^2.50.0",
@@ -59,7 +59,6 @@
         "notistack": "^3.0.1",
         "photoswipe": "^5.3.7",
         "prop-types": "^15.8.1",
-        "puck-mui": "^0.0.3",
         "react-beautiful-dnd": "^13.1.1",
         "react-countdown": "^2.3.5",
         "react-day-picker": "^9.9.0",
@@ -68,11 +67,11 @@
         "react-hook-form": "^7.46.1",
         "react-image-size": "^2.3.2",
         "react-infinite-scroll-component": "^6.1.0",
-        "react-quill": "^2.0.0",
+        "react-quill-new": "^3.7.0",
         "react-transition-group": "^4.4.5",
         "slate-history": "^0.93.0",
         "slate-react": "^0.97.2",
-        "swiper": "^11.1.1",
+        "swiper": "^14.2.0",
         "yup": "^1.2.0"
     }
 }
