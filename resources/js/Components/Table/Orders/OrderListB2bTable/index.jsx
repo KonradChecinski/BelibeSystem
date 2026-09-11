@@ -12,7 +12,7 @@ import {
     Edit,
     ContentCopy,
     Upgrade,
-    Sell, ShoppingCart, Info, ReceiptLong, PersonSearch
+    Sell, ShoppingCart, Info, ReceiptLong, PersonSearch, Person, People
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -52,6 +52,33 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             {cell.getValue() === 0 && (
                                 <Tooltip title="B2B">
                                     <Sell color={"info"}/>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'placed_by_type',
+                header: 'ZP',
+                size: 10,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    // console.log(row.original, cell.getValue())
+                    return (
+                        <Box>
+                            {cell.getValue() === 'App\\Models\\User' && (
+                                <Tooltip title="Złożone przez użytkownika">
+                                    <Person color={"info"}/>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 'App\\Models\\Client\\ClientUser' && (
+                                <Tooltip title="Złożone przez klienta">
+                                    <People color={"success"}/>
                                 </Tooltip>
                             )}
                         </Box>
