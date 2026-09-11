@@ -148,6 +148,9 @@ class B2bOrderController extends Controller
             $order->payment()->associate($request->payment["id"]);
             $order->delivery()->associate($request->delivery["id"]);
             $order->location()->associate($request->location["id"]);
+            if (auth()->user()) {
+                $order->placedBy()->associate(auth()->user());
+            }
             $order->save();
 
             $order->orderProducts()->delete();
@@ -204,6 +207,9 @@ class B2bOrderController extends Controller
         $order->payment()->associate($request->payment["id"]);
         $order->delivery()->associate($request->delivery["id"]);
         $order->location()->associate($request->location["id"]);
+        if (auth()->user()) {
+            $order->placedBy()->associate(auth()->user());
+        }
         $order->save();
 
         foreach ($cartModel as $item) {
