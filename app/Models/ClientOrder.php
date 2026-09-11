@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ClientOrder extends Model
 {
@@ -137,5 +138,10 @@ class ClientOrder extends Model
     public function invoice(): HasOne
     {
         return $this->hasOne(ClientInvoice::class);
+    }
+
+    public function shipments(): MorphMany
+    {
+        return $this->morphMany(Shipment::class, 'orderable');
     }
 }

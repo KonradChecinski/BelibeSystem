@@ -8,6 +8,7 @@ use App\Models\Products\ProductModelColor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Order extends Model
 {
@@ -117,5 +118,10 @@ class Order extends Model
                 'product_model_color_id', // Local key on the "products" table.
                 'product_model_id'  // Local key on the "product_model_colors" table.
             ]);
+    }
+
+    public function shipments(): MorphMany
+    {
+        return $this->morphMany(Shipment::class, 'orderable');
     }
 }

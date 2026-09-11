@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class B2bDelivery extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'courier_id',
         'subiekt_id',
         'name',
         'description',
@@ -24,5 +26,10 @@ class B2bDelivery extends Model
     protected $casts = [
         'active' => 'boolean',
     ];
+
+    public function courier(): BelongsTo
+    {
+        return $this->belongsTo(Courier::class);
+    }
 
 }
