@@ -13,7 +13,41 @@ class CourierController extends Controller
      */
     public function index()
     {
-        //
+        if (!auth()->user()?->hasAnyPermission(['createShipments', 'editShipments', 'deleteShipments'], 'user')) {
+            abort(403);
+        }
+
+        return Courier::query()
+            ->orderBy('name')
+            ->get()
+            ->map(function (Courier $courier) {
+                return [
+                    'id' => (string)$courier->getKey(),
+                    'name' => $courier->name,
+                    'logo' => $courier->logo,
+                    'trackingUrl' => $courier->tracking_url,
+                    'supportsCOD' => (bool)$courier->supports_cod,
+                    'allowsMultiplePackages' => (bool)$courier->allows_multiple_packages,
+                    'packageFields' => [
+                        'weight' => [
+                            'enabled' => (bool)$courier->weight_enabled,
+                            'required' => (bool)$courier->weight_required,
+                        ],
+                        'width' => [
+                            'enabled' => (bool)$courier->width_enabled,
+                            'required' => (bool)$courier->width_required,
+                        ],
+                        'height' => [
+                            'enabled' => (bool)$courier->height_enabled,
+                            'required' => (bool)$courier->height_required,
+                        ],
+                        'depth' => [
+                            'enabled' => (bool)$courier->depth_enabled,
+                            'required' => (bool)$courier->depth_required,
+                        ],
+                    ],
+                ];
+            });
     }
 
     /**

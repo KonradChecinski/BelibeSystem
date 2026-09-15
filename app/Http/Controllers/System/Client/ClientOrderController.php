@@ -98,6 +98,11 @@ class ClientOrderController extends Controller
             ClientOrderCreateInSubiekt::dispatch($clientOrder);
         }
 
+        if ($request->status === 100) {
+            $clientOrder->status = 100;
+            $clientOrder->save();
+        }
+
         if ($request->status === 0) {
             $clientOrder->status = 0;
             $clientOrder->save();

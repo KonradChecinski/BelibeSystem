@@ -198,7 +198,7 @@ class OrderCreateInSubiekt implements ShouldQueue
                 'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,
                 'subiekt_added_at' => $date,
-                "status" => 90
+                "status" => 70
             ]);
         }
     }

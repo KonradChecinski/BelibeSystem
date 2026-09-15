@@ -105,9 +105,25 @@ export default function OrderListOtherTable({orders = [], readOnly, props}) {
                             text = "W trakcie kompletacji";
                             color = "info.main";
                             break;
-                        case 90:
+                        case 70:
                             text = "Przesłane do subiekta";
                             color = "warning.main";
+                            break;
+                        case 71:
+                            text = "Bez przesłania do subiekta";
+                            color = "warning.main";
+                            break;
+                        case 80:
+                            text = "Do nadania";
+                            color = "info.main";
+                            break;
+                        case 85:
+                            text = "Utworzona paczka";
+                            color = "info.main";
+                            break;
+                        case 90:
+                            text = "Pobrana etykieta";
+                            color = "info.main";
                             break;
                         case 100:
                             text = "Zrealizowane";

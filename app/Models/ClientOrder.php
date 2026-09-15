@@ -62,6 +62,7 @@ class ClientOrder extends Model
 //    55 - w trakcie kompletacji
 //    60 - skompletowane
 //    70 - przesłane do subiekta
+//    71 - bez przesyłania do subiekta
 //    80 - do nadania
 //    85 - utworzona paczka
 //    90 - pobrana etykieta

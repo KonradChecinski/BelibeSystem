@@ -15,6 +15,7 @@ class Shipment extends Model
     protected $fillable = [
         'user_id',
         'courier_id',
+        'external_number',
         'recipient_country',
         'recipient_name',
         'recipient_company',
@@ -26,10 +27,13 @@ class Shipment extends Model
         'recipient_point',
         'recipient_phone',
         'recipient_email',
+        'orderable_type',
+        'orderable_id',
         'tracking_number',
         'package_count',
-        'service',
-        'service_code',
+        'cod',
+        'cod_value',
+        'label_path',
     ];
 
     protected $casts = [

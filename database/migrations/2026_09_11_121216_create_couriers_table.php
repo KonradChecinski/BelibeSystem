@@ -16,6 +16,23 @@ return new class extends Migration {
             $table->string('name');
             $table->string('tracking_url')->nullable();
 
+            $table->string('logo')->nullable();
+
+            $table->boolean('supports_cod')->default(false);
+            $table->boolean('allows_multiple_packages')->default(false);
+
+            $table->boolean('weight_enabled')->default(false);
+            $table->boolean('weight_required')->default(false);
+
+            $table->boolean('width_enabled')->default(false);
+            $table->boolean('width_required')->default(false);
+
+            $table->boolean('height_enabled')->default(false);
+            $table->boolean('height_required')->default(false);
+
+            $table->boolean('depth_enabled')->default(false);
+            $table->boolean('depth_required')->default(false);
+
             $table->timestamps();
         });
     }

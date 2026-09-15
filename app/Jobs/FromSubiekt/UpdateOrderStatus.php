@@ -32,7 +32,7 @@ class UpdateOrderStatus implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $orders = Order::query()->where("status", 90)->get();
+        $orders = Order::query()->where("status", 70)->get();
         foreach ($orders as $order) {
             $subiektFV = DB::connection("subiekt")
                 ->table("dok__Dokument")

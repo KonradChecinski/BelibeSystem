@@ -15,6 +15,23 @@ class Courier extends Model
         'tracking_url',
     ];
 
+    protected $casts = [
+        'supports_cod' => 'boolean',
+        'allows_multiple_packages' => 'boolean',
+
+        'weight_enabled' => 'boolean',
+        'weight_required' => 'boolean',
+
+        'width_enabled' => 'boolean',
+        'width_required' => 'boolean',
+
+        'height_enabled' => 'boolean',
+        'height_required' => 'boolean',
+
+        'depth_enabled' => 'boolean',
+        'depth_required' => 'boolean',
+    ];
+
     public function shipments(): HasMany
     {
         return $this->hasMany(Shipment::class);

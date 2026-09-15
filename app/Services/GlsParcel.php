@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -45,7 +46,7 @@ class GlsParcel
     public function toArray(): array
     {
         $arr = ['weight' => $this->weight];
-        if (!empty($this->reference)) $arr['reference'] = $this->reference;
+        if (!empty($this->reference)) $arr['reference'] = Str::limit($this->reference, 25);
         return $arr;
     }
 }

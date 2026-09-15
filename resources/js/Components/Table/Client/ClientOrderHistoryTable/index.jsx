@@ -416,9 +416,25 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                             text = "Skompletowane";
                             color = "info.main";
                             break;
-                        case 90:
+                        case 70:
                             text = "W subiekcie";
                             color = "warning.main";
+                            break;
+                        case 71:
+                            text = "Bez przesłania do subiekta";
+                            color = "warning.main";
+                            break;
+                        case 80:
+                            text = "Do nadania";
+                            color = "info.main";
+                            break;
+                        case 85:
+                            text = "Utworzona paczka";
+                            color = "info.main";
+                            break;
+                        case 90:
+                            text = "Pobrana etykieta";
+                            color = "info.main";
                             break;
                         case 100:
                             text = "Zrealizowane";

@@ -17,7 +17,7 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->string('tracking_number')->nullable();
+            $table->string('external_number')->nullable();
 
             $table->decimal('weight', 10, 3)->nullable();
 

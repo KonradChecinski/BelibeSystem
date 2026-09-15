@@ -21,6 +21,8 @@ return new class extends Migration {
                 ->constrained()
                 ->restrictOnDelete();
 
+            $table->string('external_number')->nullable();
+
             $table->string('recipient_country', 2)->default('PL');
 
             $table->string('recipient_name');
@@ -44,8 +46,11 @@ return new class extends Migration {
 
             $table->unsignedInteger('package_count')->default(1);
 
-            $table->string('service')->nullable();
-            $table->string('service_code')->nullable();
+            $table->boolean('cod')->nullable();
+            $table->unsignedInteger('cod_value')->nullable();
+
+            $table->string('label_path')->nullable();
+
 
             $table->unique(['courier_id', 'tracking_number']);
 

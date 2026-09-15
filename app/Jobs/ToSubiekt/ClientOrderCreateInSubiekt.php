@@ -207,7 +207,7 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 'subiekt_id' => $zamowienie->Identyfikator,
                 'subiekt_number' => $zamowienie->NumerPelny,
                 'subiekt_added_at' => $date,
-                "status" => 90
+                "status" => 70
             ]);
 
             if ($warehouseDocument->create_invoice) {

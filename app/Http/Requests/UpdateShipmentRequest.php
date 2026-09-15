@@ -11,7 +11,7 @@ class UpdateShipmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check() && auth()->user()->hasPermissionTo('editShipments', 'user');
     }
 
     /**

@@ -275,6 +275,22 @@ class GlsService
         return $this->call('adePreparingBox_Insert', $params);
     }
 
+
+    public function getPreparingBoxConsign(int $preparingConsignId)
+    {
+        $this->clearLastError();
+        $this->ensureLoggedIn();
+
+        // Zgodnie z dokumentacją metoda oczekuje pola 'consign_prep_data' zawierającego ConsignExt
+        $params = ['id' => $preparingConsignId];
+        try {
+            return $this->call('adePreparingBox_GetConsign', $params);
+        } catch (Exception $e) {
+            $this->setLastError(['code' => 'validation', 'message' => 'Error during adePreparingBox_GetConsign: ' . $e->getMessage()]);
+            throw $e;
+        }
+    }
+
     /**
      * Wprowadź wiele paczek do przygotowalni (adePreparingBox_InsertExt lub wielokrotne wywołanie Insert).
      * Przyjmuje listę paczek (array of parcel arrays). Dla 3 paczek przesyłka powinna wygladać jak wyżej.

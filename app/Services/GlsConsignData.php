@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -131,20 +132,20 @@ class GlsConsignData
     public function toGLSArray(): array
     {
         $arr = [
-            'rname1' => $this->name1,
+            'rname1' => Str::limit($this->name1, 40),
         ];
-        if ($this->name2) $arr['rname2'] = $this->name2;
-        if ($this->name3) $arr['rname3'] = $this->name3;
+        if ($this->name2) $arr['rname2'] = Str::limit($this->name2, 40);
+        if ($this->name3) $arr['rname3'] = Str::limit($this->name3, 40);
 
-        $arr['rcountry'] = $this->country;
-        $arr['rzipcode'] = $this->zipcode;
-        $arr['rcity'] = $this->city;
-        $arr['rstreet'] = $this->street;
+        $arr['rcountry'] = Str::limit($this->country, 3);//ISO 3166-1
+        $arr['rzipcode'] = Str::limit($this->zipcode, 16);
+        $arr['rcity'] = Str::limit($this->city, 30);
+        $arr['rstreet'] = Str::limit($this->street, 46);
 
-        if ($this->phone) $arr['rphone'] = $this->phone;
-        if ($this->email) $arr['rcontact'] = $this->email;
+        if ($this->phone) $arr['rphone'] = Str::limit($this->phone, 20);
+        if ($this->email) $arr['rcontact'] = Str::limit($this->email, 80);
 
-        if ($this->comment) $arr['notes'] = $this->comment;
+        if ($this->comment) $arr['notes'] = Str::limit($this->comment, 80);
 
         if ($this->date) $arr['date'] = $this->date->format('Y-m-d');
 

@@ -15,6 +15,7 @@ use App\Models\B2bPayment;
 use App\Models\B2bSourceOfAcquisition;
 use App\Models\B2bStatus;
 use App\Models\Client\Client;
+use App\Models\Order;
 use App\Models\ProductBrand;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
@@ -259,6 +260,10 @@ class ClientController extends Controller
             },
         ])->findOrFail($id);
 
+        $client->orders->each(function ($order) {
+            $order->model_class = Order::class;
+        });
+
         if ($client->buyer_subiekt_id !== null) {
             // Wykonujemy zapytanie do innej bazy danych (np. 'subiekt')
             $client->buyer_subiekt_name = DB::connection('subiekt')
@@ -273,6 +278,7 @@ class ClientController extends Controller
         } else {
             $client->buyer_subiekt_name = null;
         }
+
 
         $b2bActivityType = B2bActivityType::all();
         $b2bCountry = B2bCountry::all();
@@ -331,7 +337,10 @@ class ClientController extends Controller
             },
         ])->findOrFail($id);
 
-
+        $client->orders->each(function ($order) {
+            $order->model_class = Order::class;
+        });
+        
         if ($client->buyer_subiekt_id !== null) {
             // Wykonujemy zapytanie do innej bazy danych (np. 'subiekt')
             $client->buyer_subiekt_name = DB::connection('subiekt')

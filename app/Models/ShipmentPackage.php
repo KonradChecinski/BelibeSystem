@@ -12,7 +12,7 @@ class ShipmentPackage extends Model
 
     protected $fillable = [
         'shipment_id',
-        'tracking_number',
+        'external_number',
         'weight',
         'width',
         'height',

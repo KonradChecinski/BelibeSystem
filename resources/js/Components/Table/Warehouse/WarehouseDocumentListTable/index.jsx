@@ -44,6 +44,18 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
     const data = documents
     // console.log(data)
 
+    const [selectedDocForAccept, setSelectedDocForAccept] = useState(null);
+    const [showAcceptDialog, setShowAcceptDialog] = useState(false);
+
+    const handleOpenAccept = (doc) => {
+        setSelectedDocForAccept(doc);
+        setShowAcceptDialog(true);
+    };
+
+    const handleCloseAccept = () => {
+        setShowAcceptDialog(false);
+    };
+
     const reloadData = () => {
         setTimeout(() => {
             router.reload({only: ['warehouseDocuments']})
@@ -295,11 +307,6 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                     align: 'center',
                 },
                 Cell: ({cell, row}) => {
-                    const [showAcceptDialog, setShowAcceptDialog] = useState(false);
-                    const handleAccept = (e) => {
-                        setShowAcceptDialog(!showAcceptDialog)
-                    }
-
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end", width: 1}}>
                             {row.original.client_comment && (
@@ -372,15 +379,11 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
                                 <IconButton
                                     aria-label="accept"
                                     disabled={row.original.status !== 50}
-                                    onClick={handleAccept}
+                                    onClick={() => handleOpenAccept(row.original)}
                                 >
                                     <Done/>
                                 </IconButton>
                             </Tooltip>
-
-                            <AcceptDialog open={showAcceptDialog} setOpen={handleAccept}
-                                          warehouseDocument={row.original} props={props}/>
-
                         </Box>
                     )
                 },
@@ -443,6 +446,14 @@ export default function WarehouseDocumentListTable({documents = [], readOnly, pr
     return (
         <>
             <MaterialReactTable table={table}/>
+            {selectedDocForAccept && (
+                <AcceptDialog
+                    open={showAcceptDialog}
+                    setOpen={handleCloseAccept}
+                    warehouseDocument={selectedDocForAccept}
+                    props={props}
+                />
+            )}
         </>
 
     );
