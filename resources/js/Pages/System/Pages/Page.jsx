@@ -1,14 +1,12 @@
 import {Head, router} from "@inertiajs/react";
 import {Box, Button, Tooltip} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Puck, Config} from "@measured/puck";
-import "@measured/puck/puck.css";
+import {Puck} from "@puckeditor/core";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {ArrowBack} from "@mui/icons-material";
 import {enqueueSnackbar} from "notistack";
 import {useState} from "react";
 import {
-    config as PuckMuiConfig,
     PAccordion,
     PButton,
     PButtonGroup,
@@ -16,7 +14,7 @@ import {
     PColumns,
     PContainer,
     PDivider, PHeading, PPaper, PParagraph, PTypography
-} from 'puck-mui';
+} from '@/Pages/System/Pages/blocks/MuiBlock';
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import ClearLayout from "@/Layouts/ClearLayout";

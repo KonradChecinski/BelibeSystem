@@ -17,7 +17,12 @@ class OrderOtherController extends Controller
     {
         $modelsOtherOrders = Order::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->get();
         return Inertia::render("System/Orders/OrderListOther", [
-            "orders" => $modelsOtherOrders,
+            "orders" => $modelsOtherOrders->map(function ($order) {
+                $order->model_class = Order::class;
+
+                return $order;
+            }),
+
         ]);
     }
 

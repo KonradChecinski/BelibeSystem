@@ -12,7 +12,7 @@ import {
     Edit,
     ContentCopy,
     Upgrade,
-    Sell, ShoppingCart, Info, ReceiptLong, PersonSearch
+    Sell, ShoppingCart, Info, ReceiptLong, PersonSearch, Person, People
 } from '@mui/icons-material';
 import moment from "moment";
 import {
@@ -52,6 +52,33 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             {cell.getValue() === 0 && (
                                 <Tooltip title="B2B">
                                     <Sell color={"info"}/>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
+                accessorKey: 'placed_by_type',
+                header: 'ZP',
+                size: 10,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    // console.log(row.original, cell.getValue())
+                    return (
+                        <Box>
+                            {cell.getValue() === 'App\\Models\\User' && (
+                                <Tooltip title="Złożone przez użytkownika">
+                                    <Person color={"info"}/>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 'App\\Models\\Client\\ClientUser' && (
+                                <Tooltip title="Złożone przez klienta">
+                                    <People color={"success"}/>
                                 </Tooltip>
                             )}
                         </Box>
@@ -142,9 +169,25 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                             text = "Skompletowane";
                             color = "info.main";
                             break;
-                        case 90:
+                        case 70:
                             text = "W subiekcie";
                             color = "warning.main";
+                            break;
+                        case 71:
+                            text = "Bez przesłania do subiekta";
+                            color = "warning.main";
+                            break;
+                        case 80:
+                            text = "Do nadania";
+                            color = "info.main";
+                            break;
+                        case 85:
+                            text = "Utworzona paczka";
+                            color = "info.main";
+                            break;
+                        case 90:
+                            text = "Pobrana etykieta";
+                            color = "info.main";
                             break;
                         case 100:
                             text = "Zrealizowane";

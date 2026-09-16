@@ -7,7 +7,7 @@ import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import OrderMenu from "@/Components/Pages/Orders/B2B/Menu/OrderMenu";
-import {Info, PersonSearch, ReceiptLong} from "@mui/icons-material";
+import {Info, People, Person, PersonSearch, ReceiptLong} from "@mui/icons-material";
 
 export default function ClientOrderHistoryTable({history, readOnly, props}) {
     const theme = useTheme();
@@ -73,6 +73,33 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                 enableSorting: false,
             },
             {
+                accessorKey: 'placed_by_type',
+                header: 'ZP',
+                size: 10,
+                columnDefType: 'display',
+                Cell: ({cell, row}) => {
+                    // console.log(row.original, cell.getValue())
+                    return (
+                        <Box>
+                            {cell.getValue() === 'App\\Models\\User' && (
+                                <Tooltip title="Złożone przez użytkownika">
+                                    <Person color={"info"}/>
+                                </Tooltip>
+                            )}
+                            {cell.getValue() === 'App\\Models\\Client\\ClientUser' && (
+                                <Tooltip title="Złożone przez klienta">
+                                    <People color={"success"}/>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    )
+
+                },
+                enableColumnActions: false,
+                enableColumnDragging: false,
+                enableSorting: false,
+            },
+            {
                 accessorKey: 'payment_id',
                 header: 'Płatność',
                 Cell: ({cell}) => cell.getValue() ? props.payment.find(p => p.id === cell.getValue()).name : "",
@@ -84,7 +111,31 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
             {
                 accessorKey: 'client_location_id',
                 header: 'Punkt',
-                Cell: ({cell}) => cell.getValue() ? props.client.locations.find(l => l.id === cell.getValue()).note : "",
+                Cell: ({cell}) => {
+                    const location = props.client.locations.find(l => l.id === cell.getValue());
+                    return (
+                        <>
+                            {cell.getValue() && (
+                                <Tooltip title={
+                                    <>
+                                        <Typography variant={'body1'}>{location.note}</Typography>
+                                        <Typography
+                                            variant={'body2'}>{location.street} {location.building_number} {location.apartment_number ? "/" + location.apartment_number : ""}</Typography>
+                                        <Typography
+                                            variant={'body2'}>{location.postal_code}, {location.city}</Typography>
+                                        <Typography variant={'body2'}>{location.country.name}</Typography>
+                                    </>
+                                }>
+
+                                    {location.note}
+                                </Tooltip>
+                            )
+                            }
+                        </>
+
+                    )
+
+                },
                 size: 10,
                 enableColumnActions: false,
                 enableColumnDragging: false,
@@ -365,9 +416,25 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                             text = "Skompletowane";
                             color = "info.main";
                             break;
-                        case 90:
+                        case 70:
                             text = "W subiekcie";
                             color = "warning.main";
+                            break;
+                        case 71:
+                            text = "Bez przesłania do subiekta";
+                            color = "warning.main";
+                            break;
+                        case 80:
+                            text = "Do nadania";
+                            color = "info.main";
+                            break;
+                        case 85:
+                            text = "Utworzona paczka";
+                            color = "info.main";
+                            break;
+                        case 90:
+                            text = "Pobrana etykieta";
+                            color = "info.main";
                             break;
                         case 100:
                             text = "Zrealizowane";

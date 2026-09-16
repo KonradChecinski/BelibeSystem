@@ -42,6 +42,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('printWarehouseDocument', "user", 'Magazyn - drukuj', 'Magazyn');
         Permission::findOrCreate('editWarehouseDocument', "user", 'Magazyn - edycja', 'Magazyn');
 
+        Permission::findOrCreate('createShipments', "user", 'Dostawy - tworzenie', 'Dostawy');
+        Permission::findOrCreate('editShipments', "user", 'Dostawy - edycja', 'Dostawy');
+        Permission::findOrCreate('deleteShipments', "user", 'Dostawy - usuwanie', 'Dostawy');
+
         Permission::findOrCreate('createPartners', "user", 'Partnerzy - dodawanie', 'Partnerzy');
         Permission::findOrCreate('editPartners', "user", 'Partnerzy - edycja', 'Partnerzy');
         Permission::findOrCreate('deletePartners', "user", 'Partnerzy - usuwanie', 'Partnerzy');
@@ -95,6 +99,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $admin->syncPermissions(Permission::all());
         $user = User::find(1);
+        $user->assignRole("Administrator");
+
+        $user = User::find(2);
         $user->assignRole("Administrator");
     }
 }

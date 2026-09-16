@@ -13,10 +13,10 @@ import {
     PHeading,
     PPaper,
     PParagraph, PTypography
-} from "puck-mui";
+} from "@/Pages/System/Pages/blocks/MuiBlock";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
-import {Render} from "@measured/puck";
+import {Render} from "@puckeditor/core";
 import B2BBestsellers from "@/Components/Pages/B2B/ExtraMainPage/Bestsellers";
 import {Bestsellers} from "@/Pages/System/Pages/blocks/Bestsellers";
 

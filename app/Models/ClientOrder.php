@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ClientOrder extends Model
 {
@@ -37,15 +39,20 @@ class ClientOrder extends Model
         "subiekt_id",
         "subiekt_number",
         "subiekt_added_at",
+        // polymorphic: who placed the order (user or client)
+        "placed_by_type",
+        "placed_by_id",
     ];
 
-//    status
-//    1 złożone
-//    2 zaakceptowane do realizacji
-//    3 w trakcie kompletacji
-//    4 przesłane do subiekta
-//    5 zrealizowane
-//    6 anulowane
+//Stare statusy:
+//    0 - anulowane
+//    1 - złożone
+//    20 - zaakceptowane do realizacji
+//    50 - przekazane do magazynu
+//    55 - w trakcie kompletacji
+//    60 - skompletowane
+//    90 - przesłane do subiekta
+//    100 - zrealizowane
 
 //Nowe statusy:
 //    0 - anulowane
@@ -54,7 +61,11 @@ class ClientOrder extends Model
 //    50 - przekazane do magazynu
 //    55 - w trakcie kompletacji
 //    60 - skompletowane
-//    90 - przesłane do subiekta
+//    70 - przesłane do subiekta
+//    71 - bez przesyłania do subiekta
+//    80 - do nadania
+//    85 - utworzona paczka
+//    90 - pobrana etykieta
 //    100 - zrealizowane
 
 
@@ -137,5 +148,18 @@ class ClientOrder extends Model
     public function invoice(): HasOne
     {
         return $this->hasOne(ClientInvoice::class);
+    }
+
+    public function shipments(): MorphMany
+    {
+        return $this->morphMany(Shipment::class, 'orderable');
+    }
+
+    /**
+     * Who placed the order (User or ClientUser) - polymorphic relation
+     */
+    public function placedBy(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

@@ -12,7 +12,7 @@ import {
     ContactPage,
     Dashboard,
     Group, Handshake,
-    Inventory,
+    Inventory, LocalShipping,
     QueryStats,
     Settings,
     ShoppingCart, Warehouse
@@ -117,6 +117,28 @@ export default function Menu({showContent, auth}) {
                         text={t("Archive")}
                     />
                 </MainMenuLink>
+                {auth.permissions.some(p => ["createShipments", "editShipments", "deleteShipments"].includes(p)) ?
+                    <>
+
+                        <Divider
+                            component="div"
+                            sx={{
+                                background: theme.palette.gradient.divider,
+                                height: "2px",
+                                width: "80%",
+                                mx: "auto",
+                                my: 1
+                            }}
+                        />
+
+                        <MainMenuLink
+                            href={route("system.shipments")}
+                            active={route().current("system.shipments")}
+                            showContent={smBreakpointUp || showContent}
+                            text={t("Shipments")}
+                            menuIcon={LocalShipping}
+                        />
+                    </> : ""}
 
                 <Divider
                     component="div"

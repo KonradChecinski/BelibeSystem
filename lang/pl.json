@@ -149,5 +149,20 @@
     "Room cannot have a parent": "Pokój nie może mieć rodzica",
     "Aisle's parent room does not exist": "Nadrzędny pokój alejki nie istnieje",
     "Shelf's parent aisle does not exist": "Nadrzędna alejka półki nie istnieje",
-    "Client's email history": "Historia emaili klienta"
+    "Client's email history": "Historia emaili klienta",
+    "Shipments": "Kurierzy",
+    "Shipment created successfully.": "Przesyłka została pomyślnie utworzona.",
+    "Shipment sent to courier successfully.": "Przesyłka została pomyślnie nadana u kuriera.",
+    "Courier shipment dispatch is not implemented yet.": "Nadanie przesyłki u kuriera nie jest jeszcze zaimplementowane.",
+    "Courier shipment dispatch failed.": "Nie udało się nadać przesyłki u kuriera.",
+    "Label generation is not implemented yet.": "Generowanie etykiety nie jest jeszcze zaimplementowane.",
+    "Shipment already dispatched.": "Przesyłka jest już utworzona u kuriera.",
+    "Parcel numbers retrieved successfully.": "Numery przesyłek zostały pomyślnie pobrane.",
+    "Shipment not dispatched yet.": "Przesyłka nie została jeszcze wysłana do kuriera.",
+    "Failed to retrieve parcel numbers.": "Nie udało się pobrać numerów przesyłek.",
+    "Courier label generation failed.": "Nie udało się wygenerować etykiety kurierskiej.",
+    "Courier label generation is not implemented yet.": "Generowanie etykiety kurierskiej nie jest jeszcze zaimplementowane.",
+    "Courier is not implemented yet.": "Kurier nie jest jeszcze zaimplementowany.",
+    "Label generated successfully.": "Etykieta została pomyślnie wygenerowana.",
+    "Shipment label not found.": "Etykieta przesyłki nie została znaleziona."
 }

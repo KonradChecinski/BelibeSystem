@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AllegroTokenController;
 use App\Http\Controllers\B2bDeliveryController;
+use App\Http\Controllers\CourierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DynamicFooterController;
 use App\Http\Controllers\DynamicHeaderController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\PartnerExportProductController;
 use App\Http\Controllers\PartnerSettlementController;
 use App\Http\Controllers\ProductColorIconController;
 use App\Http\Controllers\QueryShopSalesController;
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\System\Client\AdditionalClientController;
 use App\Http\Controllers\System\Client\BasicClientController;
 use App\Http\Controllers\System\Client\ClientActivityController;
@@ -226,6 +228,19 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::get("/document/{warehouseDocument}/products/search", [WarehouseDocumentController::class, 'search'])->name("system.warehouse.products.search");
 
+
+    });
+
+    Route::group(["prefix" => "/shipment"], function () {
+        Route::get("/", [ShipmentController::class, 'index'])->name("system.shipments");
+        Route::get("/orders", [ShipmentController::class, 'getOrders'])->name("system.shipments.orders");
+        Route::get("/couriers", [CourierController::class, 'index'])->name("system.shipments.couriers");
+        Route::post("/", [ShipmentController::class, 'store'])->name("system.shipments.store");
+        Route::post("/{shipment}/send", [ShipmentController::class, 'sendToCourier'])->name("system.shipments.send");
+        Route::post("/{shipment}/label", [ShipmentController::class, 'generateLabel'])->name("system.shipments.label");
+        Route::get("/{shipment}/label/download", [ShipmentController::class, 'downloadLabel'])->name("system.shipments.label.download");
+        Route::post("/{shipment}/packages", [ShipmentController::class, 'getParcelNumbers'])->name("system.shipments.packages");
+        Route::delete("/{shipment}/", [ShipmentController::class, 'destroy'])->name("system.shipments.delete");
 
     });
 

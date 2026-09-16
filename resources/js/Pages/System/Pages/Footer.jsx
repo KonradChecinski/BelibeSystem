@@ -1,8 +1,7 @@
 import {Head, Link, router, useForm} from "@inertiajs/react";
 import {Box, Button, Card, CssBaseline, ThemeProvider, Tooltip} from "@mui/material";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Puck} from "@measured/puck";
-import "@measured/puck/puck.css";
+import {Puck} from "@puckeditor/core";
 import {Text} from "./blocks/Text";
 import {VerticalSpace} from "./blocks/VerticalSpace";
 import {ArrowBack} from "@mui/icons-material";
@@ -10,8 +9,7 @@ import {enqueueSnackbar} from "notistack";
 import {useEffect, useState} from "react";
 import Theme from "@/Theme/Theme";
 import {useTheme} from "@mui/material/styles";
-
-import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from 'puck-mui';
+import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from "@/Pages/System/Pages/blocks/MuiBlock"
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 

@@ -149,5 +149,20 @@
     "Room cannot have a parent": "Room cannot have a parent",
     "Aisle's parent room does not exist": "Aisle's parent room does not exist",
     "Shelf's parent aisle does not exist": "Shelf's parent aisle does not exist",
-    "Client's email history": "Client's email history"
+    "Client's email history": "Client's email history",
+    "Shipments": "Shipments",
+    "Shipment created successfully.": "Shipment created successfully.",
+    "Shipment sent to courier successfully.": "Shipment sent to courier successfully.",
+    "Courier shipment dispatch is not implemented yet.": "Courier shipment dispatch is not implemented yet.",
+    "Courier shipment dispatch failed.": "Courier shipment dispatch failed.",
+    "Label generation is not implemented yet.": "Label generation is not implemented yet.",
+    "Shipment already dispatched.": "Shipment already dispatched.",
+    "Parcel numbers retrieved successfully.": "Parcel numbers retrieved successfully.",
+    "Shipment not dispatched yet.": "Shipment not dispatched yet.",
+    "Failed to retrieve parcel numbers.": "Failed to retrieve parcel numbers.",
+    "Courier label generation failed.": "Courier label generation failed.",
+    "Courier label generation is not implemented yet.": "Courier label generation is not implemented yet.",
+    "Courier is not implemented yet.": "Courier is not implemented yet.",
+    "Label generated successfully.": "Label generated successfully.",
+    "Shipment label not found.": "Shipment label not found."
 }

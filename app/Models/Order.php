@@ -8,6 +8,7 @@ use App\Models\Products\ProductModelColor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Order extends Model
 {
@@ -46,16 +47,8 @@ class Order extends Model
 //1-shoper
 //2-allegro
 
-//    status
-//    1 złożone
-//    2 zaakceptowane do realizacji
-//    3 w trakcie kompletacji
-//    4 przesłane do subiekta
-//    5 zrealizowane
-//    6 anulowane
 
-
-//Nowe statusy:
+//Stare statusy:
 //    0 - anulowane
 //    1 - złożone
 //    20 - zaakceptowane do realizacji
@@ -65,9 +58,24 @@ class Order extends Model
 //    90 - przesłane do subiekta
 //    100 - zrealizowane
 
+//Nowe statusy:
+//    0 - anulowane
+//    1 - złożone
+//    20 - zaakceptowane do realizacji
+//    50 - przekazane do magazynu
+//    55 - w trakcie kompletacji
+//    60 - skompletowane
+//    70 - przesłane do subiekta
+//    80 - do nadania
+//    85 - utworzona paczka
+//    90 - pobrana etykieta
+//    100 - zrealizowane
+
 //payment_method
 //0-płątnośc z góry/przedpłata/online
 //1-płatność przy odbiorze/pobranie/cod
+
+
     public function orderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
@@ -117,5 +125,10 @@ class Order extends Model
                 'product_model_color_id', // Local key on the "products" table.
                 'product_model_id'  // Local key on the "product_model_colors" table.
             ]);
+    }
+
+    public function shipments(): MorphMany
+    {
+        return $this->morphMany(Shipment::class, 'orderable');
     }
 }
