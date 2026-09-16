@@ -2,7 +2,7 @@ import {useMemo, useState} from "react";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import DeliveryAddDialog from "@/Components/Dialogs/DeliveriesDialog/DeliveryAddDialog";
-import {Box, Fab, IconButton, Tooltip, Typography} from "@mui/material";
+import {Box, Fab, IconButton, Tooltip, Typography, Link as MLink, Button} from "@mui/material";
 import {Add, Info, PersonSearch} from "@mui/icons-material";
 import ShipmentMenu from "@/Components/Pages/Shipments/Menu/ShipmentMenu";
 import moment from "moment/moment";
@@ -74,7 +74,7 @@ export default function ShipmentsTable(props) {
             {
                 accessorKey: 'address',
                 header: 'Adres',
-                size: 300,
+                size: 260,
                 // columnDefType: 'display',
                 Cell: ({cell, row}) => {
                     return (
@@ -127,15 +127,58 @@ export default function ShipmentsTable(props) {
             {
                 accessorKey: 'packages',
                 header: 'Paczki',
-                size: 200,
+                size: 300,
                 Cell: ({cell, row}) => {
                     return (
                         <Box sx={{display: "flex", justifyContent: "flex-end", flexDirection: 'column', width: 1}}>
 
                             {cell.getValue().map((p, index) => (
-                                <Box sx={{display: "flex", alignItems: "center", mr: 1}}>
-                                    {index + 1}: {parseFloat(p.weight).toFixed(2) || '-'} kg
-                                    <Box sx={{mr: 2}}></Box>{p.width || '-'} x {p.height || '-'} x {p.depth || '-'} cm
+                                <Box
+                                    key={p.external_number}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        mr: 1,
+                                        borderBottom: 1,
+                                        borderColor: "divider",
+                                        py: 1,
+                                        width: 1,
+                                        justifyContent: "flex-start",
+                                        gap: 1,
+                                    }}>
+                                    <Box>{index + 1}: {parseFloat(p.weight).toFixed(2) || '-'} kg</Box>
+                                    <Box>{p.width || '-'} x {p.height || '-'} x {p.depth || '-'} cm</Box>
+                                    <Box>
+                                        <Tooltip arrow title={
+                                            <>
+                                                <Typography variant={"body2"}>
+                                                    Sprawdź status paczki
+                                                </Typography>
+                                            </>
+                                        }>
+                                            <Button
+                                                sx={{
+                                                    textDecoration: "underline",
+                                                    textTransform: "none",
+                                                }}
+                                                onClick={(e) => {
+                                                    const url = row.original.courier.tracking_url.replace(
+                                                        "{number}",
+                                                        p.external_number || ""
+                                                    );
+
+                                                    window.open(
+                                                        url,
+                                                        "_blank",
+                                                        "width=1200,height=800,left=400,top=200,resizable=yes,scrollbars=yes"
+                                                    );
+                                                }}
+                                            >
+                                                Numer: {p.external_number || '-'}
+                                            </Button>
+                                        </Tooltip>
+
+                                    </Box>
                                 </Box>
                             ))}
                         </Box>
