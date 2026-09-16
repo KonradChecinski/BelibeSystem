@@ -5,7 +5,6 @@ namespace App\Models\Products;
 use App\Helpers\Prices\PriceForClient;
 use App\Models\B2bCart;
 use App\Models\B2cCategory;
-use App\Models\B2cColor;
 use App\Models\Client\Client;
 use App\Models\ClientDiscount;
 use App\Models\GS1Brand;
@@ -24,7 +23,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
@@ -126,7 +124,8 @@ class ProductModel extends Model
             })
             ->withWhereHas("products", function ($query) {
                 $query->where("show_in_b2b", true);
-                $query->with(['barcodes', 'size', 'unit']);
+//                $query->with(['barcodes', 'size', 'unit']);
+                $query->with(['size']);
             })
             ->with(["colorIcon"]);
     }

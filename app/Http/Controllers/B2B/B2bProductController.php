@@ -109,7 +109,30 @@ class B2bProductController extends Controller
                     'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["slug" => $image->slug]) : null,
                     'price' => $priceForClient,
 //                    'quantity' => $productModel->quantityToB2b(),
-                    'colors' => $productModel->productsToB2bWithRelation,
+                    'colors' => $productModel->productsToB2bWithRelation()
+                        ->get()
+                        ->map(function ($color) {
+                            return [
+                                'id' => $color->id,
+                                'name' => $color->name,
+                                'shortcut' => $color->shortcut,
+                                'images' => $color->images,
+                                'color_icon' => $color->colorIcon,
+
+                                'products' => $color->products->map(function ($product) {
+                                    return [
+                                        'id' => $product->id,
+                                        'symbol' => $product->symbol,
+                                        'available_without_order_to_edit' => $product->available_without_order_to_edit,
+                                        'size' => [
+                                            'id' => $product->size->id,
+                                            'name' => $product->size->name,
+                                        ],
+                                    ];
+                                })->values(),
+                            ];
+                        })->values()
+                    ,
                     'sizes' => $productModel->sizesToB2b->map(fn($size) => [
                         "id" => $size->id,
                         "name" => $size->name
