@@ -170,7 +170,7 @@ export default function ShipmentsTable(props) {
                                                     window.open(
                                                         url,
                                                         "_blank",
-                                                        "width=1200,height=800,left=400,top=200,resizable=yes,scrollbars=yes"
+                                                        "width=1400,height=800,left=400,top=200,resizable=yes,scrollbars=yes"
                                                     );
                                                 }}
                                             >
