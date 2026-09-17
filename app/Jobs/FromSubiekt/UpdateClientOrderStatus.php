@@ -2,11 +2,7 @@
 
 namespace App\Jobs\FromSubiekt;
 
-use App\Jobs\ToSubiekt\Towar\ChangeProductInSubiekt;
-use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\ClientOrder;
-use App\Models\Products\Product;
-use App\Models\Subiekt\Towar;
 use App\Notifications\b2b\OrderCompleatedUser;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -37,7 +33,7 @@ class UpdateClientOrderStatus implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $orders = ClientOrder::query()->where("status", 90)->get();
+        $orders = ClientOrder::query()->where("status", 70)->get();
 
         foreach ($orders as $order) {
             $subiektOrder = $this->getSubiektOrder($order->subiekt_id);
