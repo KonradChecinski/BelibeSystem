@@ -1,12 +1,6 @@
-import {
-    Button,
-    Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle, Paper,
-} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper,} from "@mui/material";
 import Draggable from "react-draggable";
-import {router, useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 
 export default function ModelDeleteLocationDialog({open, setOpen, productModel_id, shelf}) {
@@ -56,7 +50,7 @@ export default function ModelDeleteLocationDialog({open, setOpen, productModel_i
                 <DialogContentText>
                     Chcesz usunąć lokalizację magazynową id:{shelf?.id}
                     <br/>
-                    {shelf?.room?.name} > {shelf?.aisle?.name} > {shelf?.name}
+                    {shelf?.room?.name} {">"} {shelf?.aisle?.name} {">"} {shelf?.name}
                 </DialogContentText>
 
             </DialogContent>
