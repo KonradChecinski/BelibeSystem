@@ -8,12 +8,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
     FormControlLabel,
     InputAdornment,
     MenuItem,
     Paper,
-    Select,
     Step,
     StepLabel,
     Stepper,
@@ -1875,17 +1873,17 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                                     </Button>
                                 )}
 
-                                {labelDownloaded && (
-                                    <Button
-                                        variant="contained"
-                                        color="success"
-                                        onClick={resetDialog}
-                                        startIcon={<AddCircleOutline/>}
-                                        fullWidth
-                                    >
-                                        Nadaj kolejną paczkę
-                                    </Button>
-                                )}
+                                {/*{labelDownloaded && (*/}
+                                {/*    <Button*/}
+                                {/*        variant="contained"*/}
+                                {/*        color="success"*/}
+                                {/*        onClick={resetDialog}*/}
+                                {/*        startIcon={<AddCircleOutline/>}*/}
+                                {/*        fullWidth*/}
+                                {/*    >*/}
+                                {/*        Nadaj kolejną paczkę*/}
+                                {/*    </Button>*/}
+                                {/*)}*/}
                             </Box>
                         </Box>
                     </Box>
@@ -1963,6 +1961,20 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                             startIcon={<AddCircleOutline/>}
                         >
                             Nadaj kolejną paczkę
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => {
+                                if (labelDownloaded) {
+                                    resetDialog();
+                                }
+                                setOpen(false);
+                            }}
+                            disabled={isLocked}
+                            startIcon={<Done/>}
+                        >
+                            Zaknij
                         </Button>
                     </>
                 )}
