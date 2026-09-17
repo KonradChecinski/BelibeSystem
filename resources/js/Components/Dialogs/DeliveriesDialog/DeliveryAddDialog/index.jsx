@@ -1964,7 +1964,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                         </Button>
                         <Button
                             variant="contained"
-                            color="success"
+                            color="info"
                             onClick={() => {
                                 if (labelDownloaded) {
                                     resetDialog();
