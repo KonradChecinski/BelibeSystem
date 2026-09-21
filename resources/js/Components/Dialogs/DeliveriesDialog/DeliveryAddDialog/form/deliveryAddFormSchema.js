@@ -85,8 +85,10 @@ const schema = yup.object().shape({
         .required('Pole jest wymagane'),
     recipientPhone: yup
         .string()
-        .matches(/^\+?\d{9,15}$/, 'Niepoprawny numer telefonu')
-        .max(20, 'Maksymalna długość 20 znaków')
+        .matches(
+            /^(?:\d{3} \d{3} \d{3}|\+48 \d{3} \d{3} \d{3})$/,
+            'Niepoprawny numer telefonu'
+        )
         .required('Pole jest wymagane'),
     recipientEmail: yup
         .string()
