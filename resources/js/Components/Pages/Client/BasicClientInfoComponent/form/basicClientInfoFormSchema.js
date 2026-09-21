@@ -33,7 +33,18 @@ const schema = yup.object().shape({
     phone: yup
         .string()
         .required("Pole jest wymagane")
-        .matches(/^[0-9\s]*$|^[0-9\s\-]*$/, "Pole zawiera niedozwolone znaki"),
+        .matches(
+            /^[0-9+\s()\-]*$/,
+            "Pole zawiera niedozwolone znaki"
+        )
+        .test(
+            "phone-digits",
+            "Numer telefonu musi zawierać od 9 do 15 cyfr",
+            value => {
+                const digits = value?.replace(/\D/g, "") ?? "";
+                return digits.length >= 9 && digits.length <= 15;
+            }
+        ),
     email: yup
         .string()
         .required("Pole jest wymagane")
