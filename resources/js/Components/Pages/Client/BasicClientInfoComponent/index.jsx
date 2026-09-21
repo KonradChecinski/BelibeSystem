@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {router, useForm} from "@inertiajs/react";
-import {Autocomplete, Box, Divider, Fade, IconButton, Stack, TextField, Tooltip, Typography} from "@mui/material";
+import {Autocomplete, Box, Divider, Fade, IconButton, TextField, Tooltip, Typography} from "@mui/material";
 import {Cancel, CloudDownload, Handshake, Home, Phone, Save} from "@mui/icons-material";
 import {useBasicClientInfoForm} from "@/Components/Pages/Client/BasicClientInfoComponent/form/useBasicClientInfoForm";
 import ClientFindGusDialog from "@/Components/Dialogs/ClientDialog/ClientFindGusDialog";
@@ -354,8 +354,14 @@ export default function BasicClientInfoComponent(props) {
 
 
                             <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
-                                <Stack spacing={2} direction={{sm: 'column', md: 'row'}}
-                                       sx={{width: 1, flexWrap: "wrap"}}>
+                                <Box sx={{
+                                    width: 1,
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    flexDirection: {sm: 'column', md: 'row'},
+                                    maxWidth: "100%",
+                                    gap: 2,
+                                }}>
                                     <Box>
                                         <TextField id="postal_code" label="Kod pocztowy" variant="outlined"
                                                    value={data.postal_code}
@@ -387,7 +393,7 @@ export default function BasicClientInfoComponent(props) {
                                                        setEdited(true)
                                                    }}
                                                    inputProps={{readOnly: !props.editing}}
-                                                   sx={{width: "35ch"}}/>
+                                                   sx={{width: "30ch"}}/>
                                         {fieldErrors.city?.message && (
                                             <Typography variant="body2" color="error" sx={{ml: 1}}>
                                                 {fieldErrors.city?.message.toString()}
@@ -405,7 +411,7 @@ export default function BasicClientInfoComponent(props) {
                                                     label: e.name
                                                 }))}
                                                 // options={["test1", "test2", "test3"]}
-                                                sx={{width: "25ch"}}
+                                                sx={{width: "20ch"}}
                                                 value={data.country?.name}
                                                 isOptionEqualToValue={(option, value) => option.name === value}
                                                 onChange={(e, value) => {
@@ -439,7 +445,7 @@ export default function BasicClientInfoComponent(props) {
                                                    sx={{width: "30ch"}}/>
                                     )}
 
-                                </Stack>
+                                </Box>
                             </Box>
 
 
@@ -454,7 +460,14 @@ export default function BasicClientInfoComponent(props) {
                         </Typography>
 
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 5}}>
-                            <Stack spacing={2} direction={{sm: 'column', md: 'row'}} sx={{width: 1}}>
+                            <Box sx={{
+                                width: 1,
+                                display: "flex",
+                                flexWrap: "wrap",
+                                flexDirection: {sm: 'column', md: 'row'},
+                                maxWidth: "100%",
+                                gap: 2,
+                            }}>
                                 <Box>
                                     <TextField id="email" label="Adres Email" variant="outlined"
                                                value={data.email}
@@ -466,7 +479,7 @@ export default function BasicClientInfoComponent(props) {
                                                    setEdited(true)
                                                }}
                                                inputProps={{readOnly: !props.editing}}
-                                               sx={{width: "50ch", maxWidth: 1}}/>
+                                               sx={{width: "40ch", maxWidth: 1}}/>
                                     {fieldErrors.email?.message && (
                                         <Typography variant="body2" color="error" sx={{ml: 1}}>
                                             {fieldErrors.email?.message.toString()}
@@ -484,7 +497,7 @@ export default function BasicClientInfoComponent(props) {
                                                    setEdited(true)
                                                }}
                                                inputProps={{readOnly: !props.editing}}
-                                               sx={{width: "35ch"}}/>
+                                               sx={{width: "25ch"}}/>
                                     {fieldErrors.phone?.message && (
                                         <Typography variant="body2" color="error" sx={{ml: 1}}>
                                             {fieldErrors.phone?.message.toString()}
@@ -493,7 +506,7 @@ export default function BasicClientInfoComponent(props) {
                                 </Box>
 
 
-                            </Stack>
+                            </Box>
                         </Box>
                     </Box>
 
