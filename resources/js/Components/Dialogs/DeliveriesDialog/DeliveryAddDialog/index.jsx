@@ -1997,7 +1997,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                             disabled={isLocked}
                             startIcon={<Done/>}
                         >
-                            Zaknij
+                            Zamknij
                         </Button>
                     </>
                 )}

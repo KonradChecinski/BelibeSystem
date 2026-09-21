@@ -296,10 +296,10 @@
             <tbody>
             <tr>
                 <td class="w-full text-sm p-2 text-center">
-                    {{ $location->note }}<br>
+                    {{ $location->name }}<br>
                     {{ $location->street }} {{ $location->building_number }} {{ $location->apartment_number }}<br>
-                    {{ $location->postal_code }} {{ $location->city }}<br>
-                    {{ $location->country->name }}
+                    {{ $location->postal_code }} {{ $location->city }} {{ $location->country->name }}<br>
+                    {{ $location->phone }} {{ $location->email }}
                 </td>
             </tr>
             </tbody>

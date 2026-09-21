@@ -31,9 +31,10 @@
 <p>Metoda płatności: <b>{{ $clientOrder->payment->name }}</b> {{$clientOrder->discount? "(".$clientOrder->discount."%)": "" }}</p>
 <p>Metoda dostawy: <b>{{ $clientOrder->delivery->name }}</b> - {{ $clientOrder->delivery->description }}</p>
 <p>Adres dostawy:</p>
-<p><b>{{ $location->note }}</b></p>
+<p><b>{{ $location->name }}</b></p>
 <p>{{$location->street}} {{ $location->building_number }}{{ $location->apartment_number ? "/" . $location->apartment_number : ""}}</p>
 <p>{{ $location->postal_code }}, {{ $location->city }}</p>
+<p>{{ $location->phone }}, {{ $location->email }}</p>
 <h1>Produkty</h1>
 
 @php $i=1 @endphp

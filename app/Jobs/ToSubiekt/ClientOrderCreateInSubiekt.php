@@ -2,14 +2,9 @@
 
 namespace App\Jobs\ToSubiekt;
 
-use App\Helpers\Helper;
 use App\Helpers\Warehouse\Warehouse;
-use App\Models\B2bDelivery;
 use App\Models\ClientOrder;
-use App\Models\Products\Product;
-use App\Models\Subiekt\Towar;
 use App\Singleton\Subiekt;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -179,12 +174,13 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
             $date = date("Y-m-d H:i:s");
             $zamowienie->PoleWlasne["Czas"] = $date;
             $uwagi = "Dostawa do: ";
-            $uwagi .= Str::ascii($location->note) . "\r\n";
+            $uwagi .= Str::ascii($location->name) . "\r\n";
             $uwagi .= Str::ascii($location->street) . " " . Str::ascii($location->building_number);
             if ($location->apartment_number) $uwagi .= "/" . Str::ascii($location->apartment_number);
             $uwagi .= "\r\n";
             $uwagi .= Str::ascii($location->postal_code) . " " . Str::ascii($location->city);
             if ($location->country) $uwagi .= " " . Str::ascii($location->country->name);
+            $uwagi .= Str::ascii($location->phone) . " " . Str::ascii($location->email);
             $uwagi .= "\r\n \r\n";
 
 

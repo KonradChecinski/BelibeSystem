@@ -449,7 +449,7 @@ class ShipmentController extends Controller
                     'createdAt' => $order->created_at?->toISOString() ?? null,
                     'courierId' => $deliveryCourier->id ?? null,
                     'customer' => [
-                        'name' => $location?->note ?? '',
+                        'name' => $location?->name ?? '',
                         'company' => $client?->name ?? '',
                         'street' => $location?->street ?? $client?->street ?? '',
                         'buildingNumber' => $location?->building_number ?? $client?->building_number ?? '',
@@ -458,7 +458,7 @@ class ShipmentController extends Controller
                         'city' => $location?->city ?? $client?->city ?? '',
                         'country' => 'PL',
                         'phone' => $location?->phone ?? $client?->phone ?? '',
-                        'email' => $client?->email ?? '',
+                        'email' => $location?->email ?? $client?->email ?? '',
                     ],
                     'status' => $order->status,
                     'totalNet' => $order->total_net,

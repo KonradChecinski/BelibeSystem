@@ -1,17 +1,9 @@
-import {DataGrid, GridToolbar, plPL, enUS} from "@mui/x-data-grid";
-import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Checkbox, Fab, IconButton, Tooltip, Typography, Zoom} from "@mui/material";
-import {Add, ContentCopy, CopyAll, Delete, Edit, Preview, Save, Visibility} from "@mui/icons-material";
-import ColorsCell from "@/Components/Table/Model/ModelsTable/ColorsCell";
-import CodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
-import BarcodesCell from "@/Components/Table/Model/ModelsColorTable/BarcodesCell";
+import {DataGrid, plPL} from "@mui/x-data-grid";
+import {useEffect, useState} from "react";
+import {Box, Fab, IconButton, Tooltip, Typography} from "@mui/material";
+import {Add, Delete, Edit} from "@mui/icons-material";
 import {useTheme} from "@mui/material/styles";
-import {router, useForm} from "@inertiajs/react";
-import {enqueueSnackbar} from "notistack";
-import ProductsDeleteDialog from "@/Components/Dialogs/ProductsDialog/ProductsDeleteDialog";
-import {sortBySizesModelColorObject} from "@/Functions/sortBySizes";
-import ProductsAddDialog from "@/Components/Dialogs/ProductsDialog/ProductsAddDialog";
-import {sortByDateAndTimeObject} from "@/Functions/sortByDateAndTime";
+import {useForm} from "@inertiajs/react";
 import DeleteClientLocationsDialog
     from "@/Components/Dialogs/ClientDialog/ClientDeleteDialogs/DeleteClientLocationsDialog";
 import ClientAddEditLocationsDialog
@@ -29,6 +21,8 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
 
     const column = [
         {field: "id", headerName: "Id"},
+        {field: "name", headerName: "Nazwa", flex: 1, minWidth: 160},
+
         {
             field: "city",
             headerName: "Adres",
@@ -36,10 +30,17 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
             renderCell: (params) => {
                 return (
                     <Box>
-                        <Typography
-                            sx={{fontSize: "11px"}}>{params.row?.street} {params.row?.building_number}{params.row?.apartment_number ? "/" + params.row?.apartment_number : ""}</Typography>
-                        <Typography
-                            sx={{fontSize: "11px"}}>{params.row?.city}, {params.row?.postal_code} - {params.row?.country?.name}</Typography>
+                        <Typography sx={{fontSize: "11px"}}>
+                            {params.row?.street} {params.row?.building_number}{params.row?.apartment_number ? "/" + params.row?.apartment_number : ""}</Typography>
+                        <Typography sx={{fontSize: "11px"}}>
+                            {params.row?.city}, {params.row?.postal_code} - {params.row?.country?.name}
+                        </Typography>
+                        <Typography sx={{fontSize: "11px"}}>
+                            {params.row?.phone}
+                        </Typography>
+                        <Typography sx={{fontSize: "11px"}}>
+                            {params.row?.email}
+                        </Typography>
                     </Box>
                 );
             }
@@ -50,7 +51,6 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
         // {field: "building_number", headerName: "Numer budynku"},
         // {field: "apartment_number", headerName: "Numer lokalu"},
         // {field: "postal_code", headerName: "Kod pocztowy"},
-        {field: "note", headerName: "Notatka", flex: 1, minWidth: 160},
         {field: "active", headerName: "Aktywność", type: "boolean", width: 50},
     ];
 
@@ -123,7 +123,8 @@ export default function ClientLocationsTable({locations, readOnly, color, props}
                 rowCount={rowCountState}
                 pageSizeOptions={[5, 20, 50, 100]}
                 editMode="row"
-
+                // rowHeight={80}
+                getRowHeight={() => 'auto'}
                 // slots={{ toolbar: GridToolbar }}
                 // slotProps={{
                 //     toolbar: {

@@ -2,8 +2,8 @@ import {useMemo, useState} from "react";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import DeliveryAddDialog from "@/Components/Dialogs/DeliveriesDialog/DeliveryAddDialog";
-import {Box, Fab, IconButton, Tooltip, Typography, Link as MLink, Button} from "@mui/material";
-import {Add, Info, PersonSearch} from "@mui/icons-material";
+import {Box, Button, Fab, Tooltip, Typography} from "@mui/material";
+import {Add} from "@mui/icons-material";
 import ShipmentMenu from "@/Components/Pages/Shipments/Menu/ShipmentMenu";
 import moment from "moment/moment";
 import {Link, usePage} from "@inertiajs/react";
@@ -33,12 +33,12 @@ export default function ShipmentsTable(props) {
                         <Box>
                             {cell.getValue() && cell.getValue() === "App\\Models\\ClientOrder" && (
                                 <Tooltip arrow title={
-                                    <>
-                                        <Typography variant={"body2"}>
-                                            Przejdź do klienta
-                                        </Typography>
-                                    </>
-                                }>
+                                                   <>
+                                                       <Typography variant={"body2"}>
+                                                           Przejdź do klienta
+                                                       </Typography>
+                                                   </>
+                                               }>
                                     <Link
                                         href={route("system.clients.client.edit", {id: row.original.orderable.client_id})}
                                     >
@@ -48,12 +48,12 @@ export default function ShipmentsTable(props) {
                             )}
                             {cell.getValue() && cell.getValue() === "App\\Models\\Order" && (
                                 <Tooltip arrow title={
-                                    <>
-                                        <Typography variant={"body2"}>
-                                            Przejdź do Zamówień
-                                        </Typography>
-                                    </>
-                                }>
+                                                   <>
+                                                       <Typography variant={"body2"}>
+                                                           Przejdź do Zamówień
+                                                       </Typography>
+                                                   </>
+                                               }>
                                     <Link
                                         href={route("system.orders.other")}
                                     >
@@ -146,16 +146,23 @@ export default function ShipmentsTable(props) {
                                         justifyContent: "flex-start",
                                         gap: 1,
                                     }}>
-                                    <Box>{index + 1}: {parseFloat(p.weight).toFixed(2) || '-'} kg</Box>
+                                    <Box sx={{display: "flex"}}>
+                                        <Box sx={{mr: 0.2}}>{index + 1}:</Box>
+                                        <Box sx={{
+                                            minWidth: 30,
+                                            textAlign: "right"
+                                        }}>{parseFloat(p.weight).toFixed(2) || '-'}</Box>
+                                        <Box sx={{ml: 0.2}}>kg</Box>
+                                    </Box>
                                     <Box>{p.width || '-'} x {p.height || '-'} x {p.depth || '-'} cm</Box>
                                     <Box>
                                         <Tooltip arrow title={
-                                            <>
-                                                <Typography variant={"body2"}>
-                                                    Sprawdź status paczki
-                                                </Typography>
-                                            </>
-                                        }>
+                                                           <>
+                                                               <Typography variant={"body2"}>
+                                                                   Sprawdź status paczki
+                                                               </Typography>
+                                                           </>
+                                                       }>
                                             <Button
                                                 sx={{
                                                     textDecoration: "underline",
@@ -170,7 +177,7 @@ export default function ShipmentsTable(props) {
                                                     window.open(
                                                         url,
                                                         "_blank",
-                                                        "width=1400,height=800,left=400,top=200,resizable=yes,scrollbars=yes"
+                                                        "width=1400,height=800,left=200,top=200,resizable=yes,scrollbars=yes"
                                                     );
                                                 }}
                                             >
