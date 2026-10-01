@@ -454,8 +454,8 @@ class ShipmentController extends Controller
                         'email' => $client?->email ?? '',
                     ],
                     'status' => $order->status,
-                    'totalNet' => $order->total_net,
-                    'totalGross' => $order->total_gross,
+                    'totalNet' => $order->discounted_total_net,
+                    'totalGross' => $order->discounted_total_gross,
                 ];
             });
 

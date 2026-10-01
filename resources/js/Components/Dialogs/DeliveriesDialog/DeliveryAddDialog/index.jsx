@@ -584,7 +584,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                 );
 
                 const nextTrackingNumber = sendResponse.data?.tracking_number || sendResponse.data?.shipment?.tracking_number || sendResponse.data?.shipment?.external_number || trackingNumber;
-                setTrackingNumber(nextTrackingNumber || `PL${Math.floor(100000000 + Math.random() * 900000000)}`);
+                setTrackingNumber(nextTrackingNumber);
                 setShipmentLocked(true);
                 setShipmentProgress({save: 'done', send: 'done'});
                 setActiveStep(3);
