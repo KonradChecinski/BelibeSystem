@@ -8,12 +8,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
     FormControlLabel,
     InputAdornment,
     MenuItem,
     Paper,
-    Select,
     Step,
     StepLabel,
     Stepper,
@@ -67,6 +65,29 @@ const normalizeOrderType = (type) => {
         return 'ClientOrder';
     }
     return clean;
+};
+
+const normalizePhoneNumber = (phone) => {
+    if (!phone) return '';
+
+    let number = phone.replace(/[\s()-]/g, '');
+
+    // Usuń +, aby łatwiej sprawdzić prefiks
+    const hasPlus = number.startsWith('+');
+    const digits = number.replace(/\D/g, '');
+
+    // Polski numer z prefiksem +48
+    if (digits.length === 11 && digits.startsWith('48')) {
+        return `+48 ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`;
+    }
+
+    // Polski numer bez prefiksu
+    if (digits.length === 9) {
+        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    }
+
+    // Nieznany format – zwróć oczyszczony numer
+    return hasPlus ? `+${digits}` : digits;
 };
 
 const parseInitialOrderProps = (initialOrderId, initialOrderType) => {
@@ -329,7 +350,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                         setValue('recipientPostalCode', matchedOrder.customer?.postalCode || '', {shouldValidate: true});
                         setValue('recipientCity', matchedOrder.customer?.city || '', {shouldValidate: true});
                         setValue('recipientCountry', matchedOrder.customer?.country || 'PL', {shouldValidate: true});
-                        setValue('recipientPhone', matchedOrder.customer?.phone || '', {shouldValidate: true});
+                        setValue('recipientPhone', normalizePhoneNumber(matchedOrder.customer?.phone) || '', {shouldValidate: true});
                         setValue('recipientEmail', matchedOrder.customer?.email || '', {shouldValidate: true});
                         setValue('useCod', Boolean(matchedOrder.isCod), {shouldValidate: true});
                         setValue('codValue', matchedOrder.isCod ? centsToCurrencyValue(matchedOrder.codValue ?? matchedOrder.totalGross ?? 0) : '', {shouldValidate: true});
@@ -457,7 +478,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
             setValue('recipientPostalCode', order.customer.postalCode || '', {shouldValidate: true});
             setValue('recipientCity', order.customer.city || '', {shouldValidate: true});
             setValue('recipientCountry', order.customer.country || 'PL', {shouldValidate: true});
-            setValue('recipientPhone', order.customer.phone || '', {shouldValidate: true});
+            setValue('recipientPhone', normalizePhoneNumber(order.customer.phone) || '', {shouldValidate: true});
             setValue('recipientEmail', order.customer.email || '', {shouldValidate: true});
             setValue('useCod', Boolean(order.isCod), {shouldValidate: true});
             setValue('codValue', order.isCod ? centsToCurrencyValue(order.codValue ?? order.totalGross ?? 0) : '', {shouldValidate: true});
@@ -533,7 +554,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                     recipient_apartment_number: shipment.recipientApartmentNumber,
                     recipient_postal_code: shipment.recipientPostalCode,
                     recipient_city: shipment.recipientCity,
-                    recipient_phone: shipment.recipientPhone,
+                    recipient_phone: normalizePhoneNumber(shipment.recipientPhone),
                     recipient_email: shipment.recipientEmail,
                     recipient_point: null,
                     cod: Boolean(shipment.useCod),
@@ -1875,17 +1896,17 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                                     </Button>
                                 )}
 
-                                {labelDownloaded && (
-                                    <Button
-                                        variant="contained"
-                                        color="success"
-                                        onClick={resetDialog}
-                                        startIcon={<AddCircleOutline/>}
-                                        fullWidth
-                                    >
-                                        Nadaj kolejną paczkę
-                                    </Button>
-                                )}
+                                {/*{labelDownloaded && (*/}
+                                {/*    <Button*/}
+                                {/*        variant="contained"*/}
+                                {/*        color="success"*/}
+                                {/*        onClick={resetDialog}*/}
+                                {/*        startIcon={<AddCircleOutline/>}*/}
+                                {/*        fullWidth*/}
+                                {/*    >*/}
+                                {/*        Nadaj kolejną paczkę*/}
+                                {/*    </Button>*/}
+                                {/*)}*/}
                             </Box>
                         </Box>
                     </Box>
@@ -1963,6 +1984,20 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                             startIcon={<AddCircleOutline/>}
                         >
                             Nadaj kolejną paczkę
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="info"
+                            onClick={() => {
+                                if (labelDownloaded) {
+                                    resetDialog();
+                                }
+                                setOpen(false);
+                            }}
+                            disabled={isLocked}
+                            startIcon={<Done/>}
+                        >
+                            Zamknij
                         </Button>
                     </>
                 )}

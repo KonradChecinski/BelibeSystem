@@ -71,15 +71,15 @@ class WarehouseDocumentController extends Controller
         $warehouseDocument->save();
 //        dd($request->validated(), $warehouseDocument, $warehouseDocument->user);
 
-        if ($request->create_invoice) {
-            $warehouseDocument->clientOrder->update([
-                "status" => 60,
-            ]);
-        } else {
-            $warehouseDocument->clientOrder()->update([
-                "status" => 71,
-            ]);
-        }
+//        if ($request->create_invoice) {
+        $warehouseDocument->clientOrder->update([
+            "status" => 60,
+        ]);
+//        } else {
+//            $warehouseDocument->clientOrder()->update([
+//                "status" => 71,
+//            ]);
+//        }
 
 
         ClientOrderCreateInSubiekt::dispatch($warehouseDocument->clientOrder);

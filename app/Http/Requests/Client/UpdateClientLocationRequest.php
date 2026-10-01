@@ -30,8 +30,27 @@ class UpdateClientLocationRequest extends FormRequest
             'postal_code' => 'required|string',
             'building_number' => 'required|string',
             'apartment_number' => 'string|nullable',
-            'note' => 'required|string',
+            'name' => 'required|string',
             'active' => 'required|boolean',
+            'phone' => [
+                'required',
+                'string',
+                'max:30',
+                'regex:/^[0-9+\s()\-]*$/',
+                function ($attribute, $value, $fail) {
+                    $digits = preg_replace('/\D/', '', $value);
+
+                    if (strlen($digits) < 9 || strlen($digits) > 15) {
+                        $fail('Numer telefonu musi zawierać od 9 do 15 cyfr.');
+                    }
+                },
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+            ],
         ];
     }
 }

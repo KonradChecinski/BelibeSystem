@@ -14,13 +14,15 @@ class ClientLocation extends Model
     protected $fillable = [
         'client_id',
         'country_id',
+        'name',
         'city',
         'street',
         'building_number',
         'apartment_number',
         'postal_code',
-        'note',
-        'active'
+        'active',
+        'phone',
+        'email'
     ];
 
     public function client(): BelongsTo

@@ -21,9 +21,28 @@ const schema = yup.object().shape({
         .string()
         .required("Pole jest wymagane")
         .matches(/^\d{2}-\d{3}$/, "Kod pocztowy musi być w formacie 00-000"),
-    note: yup
+    name: yup
         .string()
         .required("Pole jest wymagane"),
+    phone: yup
+        .string()
+        .required("Pole jest wymagane")
+        .matches(
+            /^[0-9+\s()\-]*$/,
+            "Pole zawiera niedozwolone znaki"
+        )
+        .test(
+            "phone-digits",
+            "Numer telefonu musi zawierać od 9 do 15 cyfr",
+            value => {
+                const digits = value?.replace(/\D/g, "") ?? "";
+                return digits.length >= 9 && digits.length <= 15;
+            }
+        ),
+    email: yup
+        .string()
+        .required("Pole jest wymagane")
+        .matches(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/, "Podaj poprawny adres email"),
 })
 
 export default schema

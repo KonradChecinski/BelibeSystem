@@ -16,7 +16,6 @@ use App\Jobs\FromSubiekt\ModelTw\CreateModelFromSubiekt;
 use App\Jobs\FromSubiekt\Stan\UpdateQuantityFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\CreateTwFromSubiekt;
 use App\Jobs\FromSubiekt\Tw\UpdateTwFromSubiekt;
-use App\Jobs\FromSubiekt\UpdateClientOrderStatus;
 use App\Jobs\FromSubiekt\UpdateOrderStatus;
 use App\Jobs\FromSubiekt\UpdateSubiektIdWhereNull;
 use App\Jobs\Mail\SendB2bClientsSettlementsMail;
@@ -57,7 +56,7 @@ class Kernel extends ConsoleKernel
 
         //ClientOrder
         $schedule->job(new ClientOrderCreateInSubiekt)->everyMinute();
-        $schedule->job(new UpdateClientOrderStatus)->everyMinute();
+//        $schedule->job(new UpdateClientOrderStatus)->everyMinute();
 
         //Settlements
         $schedule->job(new DeleteSettlementsFromSubiekt)->everyMinute();

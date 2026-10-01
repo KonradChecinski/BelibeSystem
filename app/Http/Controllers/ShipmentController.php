@@ -13,8 +13,6 @@ use App\Services\GlsParcel;
 use App\Services\GlsShipmentService;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ShipmentController extends Controller
@@ -238,6 +236,15 @@ class ShipmentController extends Controller
                             }
                         });
                     });
+
+                } else if (is_object($parcels)) {
+                    DB::transaction(function () use ($shipment, $parcels) {
+                        if (isset($parcels->number)) {
+                            $shipment->packages->first()->update([
+                                'external_number' => $parcels->number,
+                            ]);
+                        }
+                    });
                 }
             } catch (Exception $e) {
                 return response()->json([
@@ -442,7 +449,7 @@ class ShipmentController extends Controller
                     'createdAt' => $order->created_at?->toISOString() ?? null,
                     'courierId' => $deliveryCourier->id ?? null,
                     'customer' => [
-                        'name' => $location?->note ?? '',
+                        'name' => $location?->name ?? '',
                         'company' => $client?->name ?? '',
                         'street' => $location?->street ?? $client?->street ?? '',
                         'buildingNumber' => $location?->building_number ?? $client?->building_number ?? '',
@@ -451,7 +458,7 @@ class ShipmentController extends Controller
                         'city' => $location?->city ?? $client?->city ?? '',
                         'country' => 'PL',
                         'phone' => $location?->phone ?? $client?->phone ?? '',
-                        'email' => $client?->email ?? '',
+                        'email' => $location?->email ?? $client?->email ?? '',
                     ],
                     'status' => $order->status,
                     'totalNet' => $order->discounted_total_net,
