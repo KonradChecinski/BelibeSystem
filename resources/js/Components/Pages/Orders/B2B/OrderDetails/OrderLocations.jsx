@@ -28,7 +28,7 @@ export default function OrderLocations({data}) {
                       }}>
                     <CardContent>
                         <Typography variant="h6">
-                            {data?.location.note}
+                            {data?.location.name}
                         </Typography>
                         <Box>
                             <Typography
