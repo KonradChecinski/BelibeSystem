@@ -118,7 +118,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                             {cell.getValue() && (
                                 <Tooltip title={
                                     <>
-                                        <Typography variant={'body1'}>{location.note}</Typography>
+                                        <Typography variant={'body1'}>{location.name}</Typography>
                                         <Typography
                                             variant={'body2'}>{location.street} {location.building_number} {location.apartment_number ? "/" + location.apartment_number : ""}</Typography>
                                         <Typography
@@ -127,7 +127,7 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                                     </>
                                 }>
 
-                                    {location.note}
+                                    {location.name}
                                 </Tooltip>
                             )
                             }

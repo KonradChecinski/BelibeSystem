@@ -45,7 +45,7 @@ export default function CartLocations({props, setData}) {
                                             onClick={() => handleLocationChange(location)}>
                                 <CardContent>
                                     <Typography variant="h6">
-                                        {location.note}
+                                        {location.name}
                                     </Typography>
                                     {/*<Typography variant="body2" gutterBottom>*/}
                                     {/*</Typography>*/}

@@ -115,7 +115,7 @@ export default function B2bOrdersTable({orders, props}) {
                     return (
                         <Box>
                             <Typography variant="body2" gutterBottom>
-                                {location.note}
+                                {location.name}
                             </Typography>
                             <Typography variant="body2" gutterBottom>
                                 {location.street} {location.building_number}{location.apartment_number ? "/" + location.apartment_number : ""}
