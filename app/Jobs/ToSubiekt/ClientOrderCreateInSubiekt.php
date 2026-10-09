@@ -206,9 +206,19 @@ class ClientOrderCreateInSubiekt implements ShouldQueue
                 "status" => 70
             ]);
 
-            if ($warehouseDocument->create_invoice) {
-                CreateFvFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $warehouseDocument, $order);
+            switch ($warehouseDocument->create_type) {
+                case 0:
+                    break;
+                case 1:
+                    CreateFvFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $warehouseDocument, $order);
+                    break;
+                case 2:
+                    CreateMmFromClientOrderInSubiekt::dispatch($zamowienie->Identyfikator, $warehouseDocument, $order);
+                    break;
+                default:
+                    break;
             }
+
 
             //dok_Status =
             // 8 - zrealizowane

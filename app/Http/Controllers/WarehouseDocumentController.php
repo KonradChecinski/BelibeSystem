@@ -21,7 +21,7 @@ class WarehouseDocumentController extends Controller
     public function currentDocuments()
     {
         return Inertia::render('System/Warehouse/DocumentList', [
-            'warehouseDocuments' => WarehouseDocument::with(["clientOrder.client"])->whereIn('status', [10, 50])->get(),
+            'warehouseDocuments' => WarehouseDocument::with(["clientOrder.client.partner"])->whereIn('status', [10, 50])->get(),
         ]);
     }
 
@@ -62,10 +62,11 @@ class WarehouseDocumentController extends Controller
      */
     public function store(StoreWarehouseDocumentRequest $request, WarehouseDocument $warehouseDocument)
     {
+//        dd($request->validated(), $warehouseDocument);
 //        dd($request->validated(), $warehouseDocument, $warehouseDocument->user);
         $warehouseDocument->update([
             "status" => 100,
-            "create_invoice" => $request->create_invoice,
+            "create_type" => $request->create_type,
         ]);
         $warehouseDocument->user()->associate(auth()->user());
         $warehouseDocument->save();
@@ -234,7 +235,7 @@ class WarehouseDocumentController extends Controller
             "discounted_total_gross" => $warehouseDocument->discounted_total_gross,
             "client_comment" => $warehouseDocument->client_comment,
             "user_comment" => $warehouseDocument->user_comment,
-            "create_invoice" => $warehouseDocument->create_invoice,
+            "create_type" => $warehouseDocument->create_type,
             "created_at" => $warehouseDocument->created_at,
             "updated_at" => $warehouseDocument->updated_at,
             "warehouse_document_products" => $warehouseItems,
