@@ -102,8 +102,17 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
             ]);
 
         foreach ($documents as $document) {
-            if (is_null($document->dok_FiskalizacjaData)) continue;
-            if (Carbon::parse($document->dok_FiskalizacjaData)->diffInYears($date) > 0) continue;
+
+            if (is_null($document->dok_FiskalizacjaData)) {
+                $time = Carbon::now();
+            } else {
+                $time = Carbon::parse($document->dok_FiskalizacjaData);
+            }
+
+            if ($time->diffInYears($date) > 0) {
+                $time = Carbon::now();
+            }
+
 
             try {
                 $subiektDocument = $subiekt->SuDokumentyManager->Wczytaj($document->dok_NrPelny);
@@ -113,7 +122,7 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
                     $subiektDocument->PlatnoscKartaId = $paymentId;
                 }
 
-                $subiektDocument->PoleWlasne["Czas"] = Carbon::parse($document->dok_FiskalizacjaData)->toDateTimeString();
+                $subiektDocument->PoleWlasne["Czas"] = $time->toDateTimeString();
 
                 $subiektDocument->Zapisz();
                 $subiektDocument->Zamknij();
