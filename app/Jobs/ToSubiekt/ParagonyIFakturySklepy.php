@@ -93,6 +93,7 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
                 $query->WhereNull("dok_KatId");
             })
             ->where("dok_DataWyst", ">=", $date)
+            ->whereIn("dok_StatusFiskal", [1, 2])
             ->orderBy("dok_Id")
             ->get([
                 "dok_Id",
@@ -107,10 +108,9 @@ class ParagonyIFakturySklepy implements ShouldQueue, ShouldBeUnique
                 $time = Carbon::now();
             } else {
                 $time = Carbon::parse($document->dok_FiskalizacjaData);
-            }
-
-            if ($time->diffInYears($date) > 0) {
-                $time = Carbon::now();
+                if ($time->diffInYears($date) > 0) {
+                    $time = Carbon::now();
+                }
             }
 
 
