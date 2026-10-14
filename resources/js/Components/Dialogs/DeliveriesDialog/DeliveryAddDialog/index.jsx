@@ -1059,6 +1059,10 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                                     error={Boolean(errors.recipientCompany)}
                                     helperText={errors.recipientCompany?.message}
                                     sx={{gridColumn: 'span 12'}}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment
+                                            position="end">{shipment.recipientCompany.length}/40</InputAdornment>
+                                    }}
                                 />
                                 <TextField
                                     label="Nazwa 2"
@@ -1068,6 +1072,10 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                                     error={Boolean(errors.recipientName)}
                                     helperText={errors.recipientName?.message}
                                     sx={{gridColumn: 'span 12'}}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment
+                                            position="end">{shipment.recipientName.length}/40</InputAdornment>
+                                    }}
                                 />
 
                                 <TextField

@@ -1,11 +1,5 @@
 import {useState} from "react";
-import {
-    Button,
-    Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle, Paper,
-} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper,} from "@mui/material";
 import Draggable from "react-draggable";
 import {router, usePage} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
@@ -16,19 +10,20 @@ export default function AcceptDialog({open, setOpen, warehouseDocument, processi
     const auth = propAuth || props?.auth || pageAuth;
     const [openShipmentModal, setOpenShipmentModal] = useState(false);
 
+    console.log(warehouseDocument);
     const handleClose = () => {
         if (typeof setOpen === "function") {
             setOpen(false);
         }
     };
 
-    const acceptDocument = (createInvoice) => {
+    const acceptDocument = (type) => {
         if (!warehouseDocument?.id) return;
 
         router.post(
             route("system.warehouse.document.accept", {warehouseDocument: warehouseDocument.id}),
             {
-                create_invoice: createInvoice
+                create_type: type
             },
             {
                 preserveScroll: true,
@@ -41,8 +36,11 @@ export default function AcceptDialog({open, setOpen, warehouseDocument, processi
                 },
                 onError: (error) => {
                     enqueueSnackbar("Błąd zatwierdzania dokumentu", {variant: "error"});
+                    for (const key in error) {
+                        enqueueSnackbar(error[key], {variant: "error"});
+                    }
                     console.log(error);
-                    handleClose();
+                    // handleClose();
                 }
             }
         );
@@ -76,17 +74,36 @@ export default function AcceptDialog({open, setOpen, warehouseDocument, processi
                     <DialogContentText id="alert-dialog-description">
                         Zamówienie zostanie przekazane do subiekta.
                     </DialogContentText>
-                    <DialogContentText id="alert-dialog-description">
-                        Możesz utworzyć automatycznie do zamówienia fakturę
+                    <DialogContentText id="alert-dialog-description" sx={{mt: 2, fontWeight: "bold"}}>
+                        {/*Możesz utworzyć automatycznie do zamówienia fakturę*/}
+                        Wybierz w jakiej postaci zostanie przekazane zamówienie do subiekta.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button variant={"outlined"} onClick={handleClose}>Nie</Button>
-                    <Button variant={"contained"} onClick={() => acceptDocument(false)}>Tak, bez
-                        faktury</Button>
-                    <Button variant={"contained"} color={"info"} autoFocus
-                            onClick={() => acceptDocument(true)}>Tak, z
-                        fakturą</Button>
+
+                    <Button
+                        variant={"contained"}
+                        onClick={() => acceptDocument(0)}>
+                        Jako zamówienie
+                    </Button>
+
+                    <Button
+                        variant={"contained"}
+                        color={"success"}
+                        onClick={() => acceptDocument(1)}
+                        autoFocus>
+                        Jako fakturę
+                    </Button>
+
+                    {warehouseDocument?.client_order?.client?.partner && (
+                        <Button
+                            variant={"contained"}
+                            color={"info"}
+                            onClick={() => acceptDocument(2)}>
+                            Jako MM
+                        </Button>
+                    )}
                 </DialogActions>
             </Dialog>
 

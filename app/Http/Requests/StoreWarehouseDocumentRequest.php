@@ -21,8 +21,11 @@ class StoreWarehouseDocumentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $warehouseDocument = $this->route("warehouseDocument");
+        $hasPartner = $warehouseDocument?->clientOrder?->client?->partner !== null;
+
         return [
-            //
+            "create_type" => ["required", "in:" . ($hasPartner ? "0,1,2" : "0,1")],
         ];
     }
 }
