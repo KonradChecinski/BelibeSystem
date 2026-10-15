@@ -82,12 +82,12 @@ export default function ClientOrderHistoryTable({history, readOnly, props}) {
                     return (
                         <Box>
                             {cell.getValue() === 'App\\Models\\User' && (
-                                <Tooltip title="Złożone przez użytkownika">
+                                <Tooltip title={`Złożone przez użytkownika: ${row.original.placed_by.name}`}>
                                     <Person color={"info"}/>
                                 </Tooltip>
                             )}
                             {cell.getValue() === 'App\\Models\\Client\\ClientUser' && (
-                                <Tooltip title="Złożone przez klienta">
+                                <Tooltip title={`Złożone przez klienta: ${row.original.placed_by.name}`}>
                                     <People color={"success"}/>
                                 </Tooltip>
                             )}

@@ -30,7 +30,7 @@ import {Link} from "@inertiajs/react";
 export default function OrderListB2bTable({orders = [], readOnly, props}) {
     const theme = useTheme();
     const data = orders
-    // console.log(data)
+    console.log(data)
 
     const columns = useMemo(
         //column definitions...
@@ -72,12 +72,12 @@ export default function OrderListB2bTable({orders = [], readOnly, props}) {
                     return (
                         <Box>
                             {cell.getValue() === 'App\\Models\\User' && (
-                                <Tooltip title="Złożone przez użytkownika">
+                                <Tooltip title={`Złożone przez użytkownika: ${row.original.placed_by.name}`}>
                                     <Person color={"info"}/>
                                 </Tooltip>
                             )}
                             {cell.getValue() === 'App\\Models\\Client\\ClientUser' && (
-                                <Tooltip title="Złożone przez klienta">
+                                <Tooltip title={`Złożone przez klienta: ${row.original.placed_by.name}`}>
                                     <People color={"success"}/>
                                 </Tooltip>
                             )}

@@ -16,7 +16,7 @@ class OrderB2bController extends Controller
     public function index()
     {
         $modelsB2bOrders = ClientOrder::query()->where("created_at", ">", Carbon::now()->addMonths(-12))->with("invoice")->get();
-        $modelsB2bOrders->load(["client"]);
+        $modelsB2bOrders->load(["client", "placedBy"]);
         return Inertia::render("System/Orders/OrderListB2b", [
             "orders" => $modelsB2bOrders->map(function ($order) {
                 $order->model_class = ClientOrder::class;
