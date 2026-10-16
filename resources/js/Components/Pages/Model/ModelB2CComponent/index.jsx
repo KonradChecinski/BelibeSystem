@@ -1,26 +1,15 @@
-import {
-    Autocomplete,
-    Box, Button,
-    Checkbox, Fade,
-    FormControl,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    OutlinedInput,
-    Select, TextField,
-    Typography
-} from "@mui/material";
-import TextEditorB2B from "@/Components/TextEditor/B2B";
+import {Autocomplete, Box, Button, Fade, TextField, Typography} from "@mui/material";
 import {Category, Description, Save} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import TextEditorWebsite from "@/Components/TextEditor/Website";
+import normalizeQuillHtml from "@/Components/TextEditor/normalizeQuillHtml";
 
 
 export default function ModelB2CComponent(props) {
     const [edited, setEdited] = useState(false);
-    const {data, setData, processing, post} = useForm({
+    const {data, setData, processing, transform, post} = useForm({
         'id': props.productModel.id,
         "description_b2c": props.productModel.description_b2c,
 
@@ -64,7 +53,12 @@ export default function ModelB2CComponent(props) {
             'empik_category': props.productModel.empik_category,
         })
     }, [props]);
+
     const saveB2C = () => {
+        transform(formData => ({
+            ...formData,
+            description_b2c: normalizeQuillHtml(formData.description_b2c),
+        }));
         post(route("system.products.model.update.b2c", {productModel: data.id}), {
             onSuccess: params => {
                 setEdited(false);
@@ -259,4 +253,3 @@ export default function ModelB2CComponent(props) {
         </>
     );
 }
-

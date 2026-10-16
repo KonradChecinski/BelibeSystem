@@ -20,9 +20,16 @@ import {
     LooksOne,
     LooksTwo
 } from "@mui/icons-material";
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
+import {attachQuillClipboardNormalization} from "@/Components/TextEditor/normalizeQuillHtml";
 
 export default function TextEditorWebsite({value, setValue, setEdited, readOnly, props}) {
+    const editorRef = useRef<ReactQuill>(null);
+
+    useEffect(() => {
+        const quill = editorRef.current?.getEditor();
+        return quill ? attachQuillClipboardNormalization(quill) : undefined;
+    }, []);
 
     return (
         <Paper elevation={5} sx={{
@@ -39,7 +46,7 @@ export default function TextEditorWebsite({value, setValue, setEdited, readOnly,
             <Box className="text-editor-website">
                 <CustomToolbar/>
                 <Divider sx={{borderBottomWidth: 2, my: 1, bgcolor: "text.primary"}}/>
-                <ReactQuill value={value} onChange={value => {
+                <ReactQuill ref={editorRef} value={value} onChange={value => {
                     setValue(value)
                     setEdited(true)
                 }} modules={modules}

@@ -15,11 +15,12 @@ import {useEffect, useState} from "react";
 import {useForm} from "@inertiajs/react";
 import {enqueueSnackbar} from "notistack";
 import CategoryComponent from "@/Components/Pages/Model/ModelB2BComponent/CategoryComponent";
+import normalizeQuillHtml from "@/Components/TextEditor/normalizeQuillHtml";
 
 
 export default function ModelB2BComponent(props) {
     const [edited, setEdited] = useState(false);
-    const {data, setData, processing, post} = useForm({
+    const {data, setData, processing, post, transform} = useForm({
         'id': props.productModel.id,
         "description_b2b": props.productModel.description_b2b,
         "categories": props.productModel.categories.map((value) => {
@@ -47,6 +48,10 @@ export default function ModelB2BComponent(props) {
         }
     };
     const saveB2B = () => {
+        transform(formData => ({
+            ...formData,
+            description_b2b: normalizeQuillHtml(formData.description_b2b),
+        }));
         post(route("system.products.model.update.b2b", {productModel: data.id}), {
             onSuccess: params => {
                 setEdited(false);
@@ -103,4 +108,3 @@ export default function ModelB2BComponent(props) {
         </>
     );
 }
-
