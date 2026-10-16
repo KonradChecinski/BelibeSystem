@@ -14,13 +14,7 @@ import {
     Menu,
     MenuItem
 } from "@mui/material";
-import {
-    Delete,
-    FileDownload,
-    LocalShipping,
-    MoreVert,
-    Print
-} from "@mui/icons-material";
+import {Delete, FileDownload, LocalShipping, MoreVert, Print} from "@mui/icons-material";
 import {useState} from "react";
 import axios from "axios";
 import {router, usePage} from "@inertiajs/react";
@@ -80,6 +74,12 @@ export default function ShipmentMenu({row, auth: propAuth}) {
             const response = await axios.post(route("system.shipments.label", {shipment: shipment.id}));
             const message = response.data?.message || "Etykieta została wygenerowana.";
             enqueueSnackbar(message, {variant: "success"});
+
+            const response2 = await axios.post(route("system.shipments.packages", {shipment: shipment.id}));
+            const message2 = response2.data?.message || "Numer paczki został wygenerowany.";
+            enqueueSnackbar(message2, {variant: "success"});
+
+
             router.reload({preserveScroll: true});
         } catch (error) {
             const message = error?.response?.data?.message || error?.message || "Wystąpił błąd podczas generowania etykiety.";
