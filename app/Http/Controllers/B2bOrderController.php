@@ -262,7 +262,7 @@ class B2bOrderController extends Controller
             "orderProducts:client_order_id,product_id,quantity,price_net,vat_rate,currency",
             "payment:id,name",
             "delivery:id,name,description,delivery_time_max,delivery_time_min",
-            "location:id,street,city,postal_code,apartment_number,building_number,country_id,note",
+            "location:id,street,city,postal_code,apartment_number,building_number,country_id,name",
             "location.country:id,name",
             "products:products.id,products.symbol,products.quantity,products.product_size_id,products.product_unit_id,products.product_model_color_id",
             "products.size:id,name",
