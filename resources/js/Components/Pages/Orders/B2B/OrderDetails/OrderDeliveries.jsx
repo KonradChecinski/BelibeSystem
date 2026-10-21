@@ -1,10 +1,4 @@
-import {useSnackbar} from "notistack";
-import {
-    Box,
-    Card, CardActionArea, CardContent,
-    Paper,
-    Typography
-} from "@mui/material";
+import {Box, Card, CardContent, Paper, Typography} from "@mui/material";
 import toLocaleString from "@/Functions/toLocaleString";
 import {LocalShipping} from "@mui/icons-material";
 
@@ -26,7 +20,7 @@ export default function OrderDeliveries({data}) {
                 <Card variant="outlined"
                       sx={{
                           width: 300,
-                          height: 100,
+                          height: 120,
                       }}>
                     <CardContent>
                         <Typography variant="h6">

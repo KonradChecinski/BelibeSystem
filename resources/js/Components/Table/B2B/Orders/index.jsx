@@ -129,14 +129,16 @@ export default function B2bOrdersTable({orders, props}) {
                     const location = cell.getValue()
                     return (
                         <Box>
-                            <Typography variant="body2" gutterBottom>
-                                {location.name}
+                            <Typography variant={'body1'}>{location.name}</Typography>
+                            <Typography
+                                variant={'body2'}>{location.street} {location.building_number} {location.apartment_number ? "/" + location.apartment_number : ""}</Typography>
+                            <Typography
+                                variant={'body2'}>{location.postal_code}, {location.city} - {location.country?.name}</Typography>
+                            <Typography variant={'body2'}>
+                                tel: {location.phone}
                             </Typography>
-                            <Typography variant="body2" gutterBottom>
-                                {location.street} {location.building_number}{location.apartment_number ? "/" + location.apartment_number : ""}
-                            </Typography>
-                            <Typography variant="body2" gutterBottom>
-                                {location.postal_code}, {location.city}
+                            <Typography variant={'body2'}>
+                                email: {location.email}
                             </Typography>
                         </Box>
                     )

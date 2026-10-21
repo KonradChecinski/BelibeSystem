@@ -1,10 +1,5 @@
 import {useSnackbar} from "notistack";
-import {
-    Box,
-    Card, CardActionArea, CardContent,
-    Paper,
-    Typography
-} from "@mui/material";
+import {Box, Card, CardActionArea, CardContent, Paper, Typography} from "@mui/material";
 import {Business} from "@mui/icons-material";
 import {useState} from "react";
 
@@ -38,7 +33,7 @@ export default function CartLocations({props, setData}) {
                               key={location.id}
                               sx={{
                                   width: 300,
-                                  height: 100,
+                                  height: 120,
                                   bgcolor: selectedLocation === location.id ? "successBg.main" : ""
                               }}>
                             <CardActionArea sx={{width: 1, height: 1}}
@@ -51,9 +46,15 @@ export default function CartLocations({props, setData}) {
                                     {/*</Typography>*/}
                                     <Box>
                                         <Typography
-                                            sx={{fontSize: "11px"}}>{location.street} {location.building_number}{location.apartment_number ? "/" + location.apartment_number : ""}</Typography>
+                                            variant={'body2'}>{location.street} {location.building_number} {location.apartment_number ? "/" + location.apartment_number : ""}</Typography>
                                         <Typography
-                                            sx={{fontSize: "11px"}}>{location.city}, {location.postal_code} - {location.country?.name}</Typography>
+                                            variant={'body2'}>{location.postal_code}, {location.city} - {location.country?.name}</Typography>
+                                        <Typography variant={'body2'}>
+                                            tel: {location.phone}
+                                        </Typography>
+                                        <Typography variant={'body2'}>
+                                            email: {location.email}
+                                        </Typography>
                                     </Box>
 
 

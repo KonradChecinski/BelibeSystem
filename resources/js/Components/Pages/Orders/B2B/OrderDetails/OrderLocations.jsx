@@ -1,12 +1,5 @@
-import {useSnackbar} from "notistack";
-import {
-    Box,
-    Card, CardActionArea, CardContent,
-    Paper,
-    Typography
-} from "@mui/material";
+import {Box, Card, CardContent, Paper, Typography} from "@mui/material";
 import {Business} from "@mui/icons-material";
-import {useState} from "react";
 
 export default function OrderLocations({data}) {
     return (
@@ -24,7 +17,7 @@ export default function OrderLocations({data}) {
                 <Card variant="outlined"
                       sx={{
                           width: 300,
-                          height: 100,
+                          height: 120,
                       }}>
                     <CardContent>
                         <Typography variant="h6">
@@ -32,9 +25,15 @@ export default function OrderLocations({data}) {
                         </Typography>
                         <Box>
                             <Typography
-                                sx={{fontSize: "11px"}}>{data?.location.street} {data?.location.building_number}{data?.location.apartment_number ? "/" + data?.location.apartment_number : ""}</Typography>
+                                variant={'body2'}>{data?.location.street} {data?.location.building_number} {data?.location.apartment_number ? "/" + data?.location.apartment_number : ""}</Typography>
                             <Typography
-                                sx={{fontSize: "11px"}}>{data?.location.city}, {data?.location.postal_code} - {data?.location.country?.name}</Typography>
+                                variant={'body2'}>{data?.location.postal_code}, {data?.location.city} - {data?.location.country?.name}</Typography>
+                            <Typography variant={'body2'}>
+                                tel: {data?.location.phone}
+                            </Typography>
+                            <Typography variant={'body2'}>
+                                email: {data?.location.email}
+                            </Typography>
                         </Box>
 
 

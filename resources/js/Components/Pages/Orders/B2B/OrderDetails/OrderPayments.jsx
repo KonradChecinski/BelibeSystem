@@ -1,10 +1,4 @@
-import {useSnackbar} from "notistack";
-import {
-    Box,
-    Card, CardActionArea, CardContent,
-    Paper,
-    Typography
-} from "@mui/material";
+import {Box, Card, CardContent, Paper, Typography} from "@mui/material";
 import {Payment} from "@mui/icons-material";
 
 export default function OrderPayments({data}) {
@@ -25,7 +19,7 @@ export default function OrderPayments({data}) {
                 <Card variant="outlined"
                       sx={{
                           width: 300,
-                          height: 100,
+                          height: 120,
                       }}>
                     <CardContent sx={{height: 1, display: "flex", flexDirection: "column", justifyContent: "center"}}>
                         <Typography variant="h6">

@@ -30,7 +30,8 @@ class B2bOrderController extends Controller
         $orders = $client->orders()->with([
             "payment:id,name",
             "delivery:id,name,description",
-            "location:id,street,city,postal_code,apartment_number,building_number,name",
+            "location:id,country_id,street,city,postal_code,apartment_number,building_number,name,email,phone",
+            "location.country:id,name",
         ])
             ->where("created_at", ">", Carbon::now()->subYear())->get();
 //        dd($orders);
