@@ -1,14 +1,13 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Box, Button, Divider, IconButton, Tooltip, Typography,} from "@mui/material";
+import {useMemo, useState} from "react";
+import {Box, IconButton, Tooltip, Typography,} from "@mui/material";
 
 import {useTheme} from "@mui/material/styles";
 import moment from "moment/moment";
 import toLocaleString from "@/Functions/toLocaleString";
 import {MRT_Localization_PL} from "material-react-table/locales/pl/index.js";
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
-import {Add, ReceiptLong, Replay, Visibility} from "@mui/icons-material";
+import {Replay, Visibility} from "@mui/icons-material";
 import B2bOrderDetails from "@/Components/Pages/B2B/Orders/B2bOrderDetails";
-import {enqueueSnackbar} from "notistack";
 import AgainOrderDialog from "@/Components/Dialogs/B2bAgainOrderDialog/AgainOrderDialog";
 
 export default function B2bOrdersTable({orders, props}) {
@@ -64,6 +63,22 @@ export default function B2bOrdersTable({orders, props}) {
                             statusColor = "info.main";
                             break;
                         case 60:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 70:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 71:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 80:
+                            statusText = "W realizacji";
+                            statusColor = "info.main";
+                            break;
+                        case 85:
                             statusText = "W realizacji";
                             statusColor = "info.main";
                             break;
