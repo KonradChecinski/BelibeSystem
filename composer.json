@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-pdo": "*",
+        "ext-soap": "*",
         "barryvdh/laravel-dompdf": "^3.0",
         "bmatovu/laravel-xml": "^4.0",
         "gusapi/gusapi": "^3.3",
@@ -16,6 +18,7 @@
         "inertiajs/inertia-laravel": "^0.6.3",
         "intervention/image": "^2.7",
         "lab404/laravel-impersonate": "^1.7",
+        "laraditz/tiktok": "^1.2",
         "laravel/framework": "^10.0",
         "laravel/reverb": "^1.4",
         "laravel/sanctum": "^3.2",
@@ -32,9 +35,7 @@
         "spatie/simple-excel": "^3.6",
         "staudenmeir/eloquent-has-many-deep": "1.18",
         "stevebauman/purify": "^6.2",
-        "tightenco/ziggy": "^1.0",
-        "ext-soap": "*",
-        "ext-pdo": "*"
+        "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
@@ -91,6 +92,12 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "malware": {
+                "ignore": ["[laravel-lang/lang]"],
+                "block": true
+            }
         }
     },
     "minimum-stability": "stable",
