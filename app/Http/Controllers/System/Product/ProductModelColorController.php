@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductModelColorRequest;
 use App\Http\Requests\Product\UpdateProductModelColorRequest;
 use App\Jobs\Shoper\ShoperChangeName;
+use App\Jobs\TikTok\TikTokChangePrice;
 use App\Models\Products\ProductModel;
 use App\Models\Products\ProductModelColor;
 
@@ -75,6 +76,9 @@ class ProductModelColorController extends Controller
         $productModelColor->save();
 
         ShoperChangeName::dispatch($productModelColor);
+        if ($productModelColor->model) {
+            TikTokChangePrice::dispatch($productModelColor->model);
+        }
     }
 
     /**

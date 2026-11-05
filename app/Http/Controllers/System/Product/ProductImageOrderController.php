@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductImageOrderRequest;
 use App\Http\Requests\Product\UpdateProductImageOrderRequest;
 use App\Jobs\Shoper\ShoperChangeImages;
+use App\Jobs\TikTok\TikTokChangePrice;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\ProductImageOrder;
 use App\Models\Products\ProductImage;
@@ -98,6 +99,10 @@ class ProductImageOrderController extends Controller
         foreach ($changedColorsUnique as $productModelColor) {
             AddImagesToSubiekt::dispatch($productModelColor);
             ShoperChangeImages::dispatch($productModelColor);
+        }
+
+        if ($changedColorsUnique->isNotEmpty()) {
+            TikTokChangePrice::dispatch($productModel);
         }
 
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateShowProductRequest;
 use App\Jobs\Empik\EmpikChangeShow;
 use App\Jobs\Shoper\ShoperChangeShow;
+use App\Jobs\TikTok\TikTokChangeShow;
 use App\Jobs\ToSubiekt\Towar\ChangeProductShowInSubiekt;
 use App\Models\Products\Product;
 use Illuminate\Http\Request;
@@ -62,6 +63,7 @@ class ShowProductController extends Controller
         if (!is_null($request->show_in_subiekt)) ChangeProductShowInSubiekt::dispatch($product->id);
         if (!is_null($request->show_in_b2c)) ShoperChangeShow::dispatch($product->id);
         if (!is_null($request->show_in_empik)) EmpikChangeShow::dispatch($product->id, $request->show_in_empik);
+        if (!is_null($request->show_in_tiktok)) TikTokChangeShow::dispatch($product->id, (bool) $request->show_in_tiktok);
 //        if (!is_null($request->show_in_empik)) ShoperChangeShow::dispatch($product->id);
 
 

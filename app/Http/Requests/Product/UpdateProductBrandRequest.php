@@ -22,7 +22,8 @@ class UpdateProductBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|required|min:3'
+            'name' => 'string|required|min:3',
+            'tiktok_brand_id' => 'nullable|string|max:100',
         ];
     }
 }

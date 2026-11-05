@@ -35,6 +35,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
         symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
         name: actualState?.name ? actualState?.name : '',
         name_b2c: actualState?.name_b2c ? actualState?.name_b2c : '',
+        weight: actualState?.weight ?? 200,
         size: method !== "copy" ? (actualState?.size ? {
             ...actualState?.size,
             label: actualState?.size?.name
@@ -60,6 +61,7 @@ export default function ProductsAddDialog({open, setOpen, method, color, actualS
             symbol: method !== "copy" ? (actualState?.symbol ? actualState?.symbol : createSymbol(props?.productModel.symbol, color?.shortcut)) : createSymbol(props?.productModel.symbol, color?.shortcut),
             name: actualState?.name ? actualState?.name : '',
             name_b2c: actualState?.name_b2c ? actualState?.name_b2c : '',
+            weight: actualState?.weight ?? 200,
             size: method !== "copy" ? (actualState?.size ? {
                 ...actualState?.size,
                 label: actualState?.size?.name
@@ -421,6 +423,18 @@ function Step1({data, setData, props, register, errors}) {
                 </Typography>
             )}
 
+            <TextField
+                id="weight"
+                label="Waga (g)"
+                type="number"
+                onChange={(value) => {
+                    setData('weight', value.target.value);
+                }}
+                value={data.weight ?? 200}
+                inputProps={{min: 1}}
+                sx={{width: "30ch", my: 1}}
+            />
+
 
             <Autocomplete
                 disablePortal
@@ -653,6 +667,11 @@ function Step2({data, errors}) {
                        sx={{width: "30ch", my: 1}}/>
             <TextField id="name_b2c" label="Nazwa B2C" variant="outlined"
                        value={data?.name_b2c}
+                       disabled={true}
+                       sx={{width: "30ch", my: 1}}/>
+
+            <TextField id="weight" label="Waga (g)" variant="outlined"
+                       value={data?.weight ?? 200}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 

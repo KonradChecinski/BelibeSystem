@@ -6,6 +6,7 @@ use App\Helpers\Shoper\Shoper;
 use App\Jobs\Allegro\AllegroChangeQuantity;
 use App\Jobs\Empik\EmpikChangeQuantity;
 use App\Jobs\Shoper\ShoperChangeQuantity;
+use App\Jobs\TikTok\TikTokChangeQuantity;
 use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Products\Product;
 use App\Models\Products\ProductModel;
@@ -43,5 +44,6 @@ class ChangeQuantity implements ShouldQueue
         ShoperChangeQuantity::dispatch($this->product);
         AllegroChangeQuantity::dispatch($this->product);
         EmpikChangeQuantity::dispatch($this->product);
+        TikTokChangeQuantity::dispatch($this->product);
     }
 }

@@ -44,6 +44,7 @@ class ProductController extends Controller
         $unit = ProductUnit::find($request->unit['id']);
 
         $product = new Product($request->all());
+        $product->weight = $request->weight ?? 200;
         $product->size()->associate($size);
         $product->unit()->associate($unit);
 
@@ -181,8 +182,19 @@ class ProductController extends Controller
         $product->symbol = $request->symbol;
         $product->name = $request->name;
         $product->name_b2c = $request->name_b2c ?? '';
+        if (!is_null($request->weight)) {
+            $product->weight = $request->weight;
+        }
 
         $product->save();
+
+        if ($product->show_in_tiktok) {
+            if ($product->b2cStat) {
+                $product->b2cStat->update(['create_in_tiktok' => 1]);
+            } else {
+                $product->b2cStat()->create(['create_in_tiktok' => 1]);
+            }
+        }
 
         ChangeProductInSubiekt::dispatch($product->id);
     }

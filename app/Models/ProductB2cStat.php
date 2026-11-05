@@ -14,7 +14,9 @@ class ProductB2cStat extends Model
     protected $fillable = [
         'product_id',
         'create_in_empik',
-        'update_in_empik'
+        'update_in_empik',
+        'create_in_tiktok',
+        'update_in_tiktok',
     ];
 
     public function product(): BelongsTo

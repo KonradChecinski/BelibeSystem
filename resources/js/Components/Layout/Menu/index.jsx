@@ -421,6 +421,16 @@ export default function Menu({showContent, auth}) {
                                         active={route().current("system.settings.b2c.color")}
                                         text={"Kolory"}
                                     />
+                                    <SubMenuLink
+                                        href={route("system.settings.b2c.tiktokCategory")}
+                                        active={route().current("system.settings.b2c.tiktokCategory")}
+                                        text={"Kategorie TikTok"}
+                                    />
+                                    <SubMenuLink
+                                        href={route("system.settings.b2c.sizeChart")}
+                                        active={route().current("system.settings.b2c.sizeChart")}
+                                        text={"Tabele rozmiarów"}
+                                    />
                                 </SubMenuLink>
 
                             </SubMenuLink>

@@ -37,9 +37,12 @@ export default function DictionariesAddDialog({
         clearErrors: clrErrors,
     } = useDictionaryAddForm(isGpc ? gpcSchema : schema)
 
+    const isBrand = dictionaryType === "brand";
+
     const {data, setData, post, patch, processing, errors, clearErrors, reset} = useForm(!isGpc ? {
         clickedRowId: clickedRow ? clickedRow.id : null,
-        clickedRowName: clickedRow ? clickedRow.name : null
+        clickedRowName: clickedRow ? clickedRow.name : null,
+        clickedRowTiktokBrandId: clickedRow ? (clickedRow.tiktok_brand_id ?? '') : ''
     } : {
         clickedRowId: clickedRow ? clickedRow.id : null,
         clickedRowName: clickedRow ? clickedRow.name : null,
@@ -49,8 +52,14 @@ export default function DictionariesAddDialog({
 
     useEffect(() => {
         // inicjacja wartości pól
-        setValue("name", data.name)
-    }, [setValue]);
+        setValue("name", clickedRow ? clickedRow.name : data.name)
+        if (isGpc) {
+            setValue("value", clickedRow ? clickedRow.value : data.value)
+        }
+        if (isBrand) {
+            setValue("tiktok_brand_id", clickedRow ? (clickedRow.tiktok_brand_id ?? '') : (data.tiktok_brand_id ?? ''))
+        }
+    }, [setValue, clickedRow]);
 
     const onSubmit = (data) => {
         setData(data)
@@ -81,6 +90,8 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "group") return "grupę"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "markę"
         else if (dictionaryType === "gs1.gpc") return "klasyfikację GPC"
+        else if (dictionaryType === "b2c.category") return "kategorię B2C"
+        else if (dictionaryType === "b2c.tiktokCategory") return "kategorię TikTok"
         else if (dictionaryType === "industry") return "branże"
         else if (dictionaryType === "acquisition") return "źródło pozyskania"
         else if (dictionaryType === "country") return "kraj"
@@ -93,6 +104,8 @@ export default function DictionariesAddDialog({
         else if (dictionaryType === "group") return "grupy"
         else if (dictionaryType === "brand" || dictionaryType === "gs1.brand") return "marki"
         else if (dictionaryType === "gs1.gpc") return "klasyfikacji GPC"
+        else if (dictionaryType === "b2c.category") return "kategorii B2C"
+        else if (dictionaryType === "b2c.tiktokCategory") return "kategorii TikTok"
         else if (dictionaryType === "b2c.color") return "kolor"
         else if (dictionaryType === "industry") return "branży"
         else if (dictionaryType === "acquisition") return "źródła pozyskania"
@@ -171,9 +184,11 @@ export default function DictionariesAddDialog({
                             setData={setData}
                             clickedRow={clickedRow}
                             isGpc={isGpc}
+                            isBrand={isBrand}
+                            dictionaryType={dictionaryType}
                         />
                         : null}
-                    {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors} isGpc={isGpc}/> : null}
+                    {activeStep === 1 ? <Step2 data={data} setData={setData} errors={errors} isGpc={isGpc} isBrand={isBrand} dictionaryType={dictionaryType}/> : null}
 
                 </DialogContent>
                 <DialogActions>
@@ -202,7 +217,8 @@ export default function DictionariesAddDialog({
     );
 }
 
-function Step1({register, errors, data, isGpc}) {
+function Step1({register, errors, data, isGpc, isBrand, dictionaryType}) {
+    const valueLabel = dictionaryType === "b2c.tiktokCategory" ? "ID kategorii TikTok" : "Wartość";
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -222,12 +238,31 @@ function Step1({register, errors, data, isGpc}) {
                 </Typography>
             )}
 
+            {isBrand ? (
+                <>
+                    <TextField
+                        type="text"
+                        id="tiktok_brand_id"
+                        label="ID marki TikTok"
+                        color={errors.tiktok_brand_id?.message && "error"}
+                        {...register("tiktok_brand_id")}
+                        defaultValue={data.clickedRowTiktokBrandId}
+                        sx={{width: "30ch", my: 1}}
+                    />
+                    {errors.tiktok_brand_id?.message && (
+                        <Typography variant="body2" color="error" sx={{ml: 1}}>
+                            {errors.tiktok_brand_id?.message.toString()}
+                        </Typography>
+                    )}
+                </>
+            ) : null}
+
             {isGpc ? (
                 <>
                     <TextField
                         type="text"
                         id="value"
-                        label="Wartość"
+                        label={valueLabel}
                         color={errors.value?.message && "error"}
                         {...register("value")}
                         defaultValue={data.clickedRowValue}
@@ -244,7 +279,8 @@ function Step1({register, errors, data, isGpc}) {
     );
 }
 
-function Step2({data, errors, isGpc}) {
+function Step2({data, errors, isGpc, isBrand, dictionaryType}) {
+    const valueLabel = dictionaryType === "b2c.tiktokCategory" ? "ID kategorii TikTok" : "Wartość";
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -253,8 +289,15 @@ function Step2({data, errors, isGpc}) {
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
 
+            {isBrand ? (
+                <TextField id="tiktok_brand_id" label="ID marki TikTok" variant="outlined"
+                           value={data.tiktok_brand_id ?? ''}
+                           disabled={true}
+                           sx={{width: "30ch", my: 1}}/>
+            ) : null}
+
             {isGpc ? (
-                <TextField id="value" label="Wartość" variant="outlined"
+                <TextField id="value" label={valueLabel} variant="outlined"
                            value={data.value}
                            disabled={true}
                            sx={{width: "30ch", my: 1}}/>

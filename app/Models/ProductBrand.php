@@ -13,6 +13,7 @@ class ProductBrand extends Model
 
     protected $fillable = [
         'name',
+        'tiktok_brand_id',
     ];
 
 

@@ -18,6 +18,8 @@ use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
 use App\Models\ProductEmpikCategory;
 use App\Models\ProductEmpikModel;
+use App\Models\ProductSizeChart;
+use App\Models\ProductTiktokCategory;
 use App\Models\Products\ProductCategory;
 use App\Models\Products\ProductGroup;
 use App\Models\Products\ProductModel;
@@ -209,7 +211,7 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -222,6 +224,8 @@ class ProductModelController extends Controller
         $productColorIcons = ProductColorIcon::all();
         $productClasps = ProductClasp::all();
         $productEmpikCategories = ProductEmpikCategory::all();
+        $productTiktokCategories = ProductTiktokCategory::all();
+        $productSizeCharts = ProductSizeChart::all();
         $locations = [
             "rooms" => WarehouseLocationRoom::all(),
             "aisles" => WarehouseLocationAisle::all(),
@@ -245,6 +249,8 @@ class ProductModelController extends Controller
             ],
             "clasps" => $productClasps,
             "empikCategories" => $productEmpikCategories,
+            "tiktokCategories" => $productTiktokCategories,
+            "sizeCharts" => $productSizeCharts,
             "productColorIcons" => $productColorIcons,
             "locations" => $locations
         ]);
@@ -255,7 +261,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -268,6 +274,8 @@ class ProductModelController extends Controller
         $productColorIcons = ProductColorIcon::all();
         $productClasps = ProductClasp::all();
         $productEmpikCategories = ProductEmpikCategory::all();
+        $productTiktokCategories = ProductTiktokCategory::all();
+        $productSizeCharts = ProductSizeChart::all();
         $locations = [
             "rooms" => WarehouseLocationRoom::all(),
             "aisles" => WarehouseLocationAisle::all(),
@@ -292,6 +300,8 @@ class ProductModelController extends Controller
             ],
             "clasps" => $productClasps,
             "empikCategories" => $productEmpikCategories,
+            "tiktokCategories" => $productTiktokCategories,
+            "sizeCharts" => $productSizeCharts,
             "productColorIcons" => $productColorIcons,
             "locations" => $locations,
         ]);

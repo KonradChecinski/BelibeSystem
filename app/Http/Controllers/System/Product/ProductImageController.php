@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProductImageRequest;
 use App\Http\Requests\Product\UpdateProductImageRequest;
 use App\Jobs\Shoper\ShoperChangeImages;
+use App\Jobs\TikTok\TikTokChangePrice;
 use App\Jobs\ToSubiekt\Images\AddImagesToSubiekt;
 use App\Models\Products\ProductImage;
 use App\Models\Products\ProductModelColor;
@@ -58,6 +59,9 @@ class ProductImageController extends Controller
         if ($type === 1) {
             AddImagesToSubiekt::dispatch($modelColor);
             ShoperChangeImages::dispatch($modelColor);
+            if ($model) {
+                TikTokChangePrice::dispatch($model);
+            }
         }
 
 

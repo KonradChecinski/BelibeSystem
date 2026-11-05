@@ -10,6 +10,7 @@ use App\Models\OrderProduct;
 use App\Models\ProductB2cStat;
 use App\Models\Products\Price\ProductModelPrice;
 use App\Models\Subiekt\Towar;
+use App\Models\TikTok\TiktokProductSku;
 use App\Models\WarehouseDocumentProduct;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -40,6 +41,7 @@ class Product extends Model
         'symbol',
         'name',
         'name_b2c',
+        'weight',
         'quantity',
         'quantity_total',
         'product_unit_id',
@@ -48,6 +50,7 @@ class Product extends Model
         'show_in_b2c',
         'show_in_allegro',
         'show_in_empik',
+        'show_in_tiktok',
         'show_in_subiekt',
     ];
 
@@ -153,6 +156,16 @@ class Product extends Model
     public function b2cStat(): HasOne
     {
         return $this->hasOne(ProductB2cStat::class);
+    }
+
+    public function tiktokSkus(): HasMany
+    {
+        return $this->hasMany(TiktokProductSku::class, 'local_product_id', 'id');
+    }
+
+    public function tiktokSku(): HasOne
+    {
+        return $this->hasOne(TiktokProductSku::class, 'local_product_id', 'id')->latestOfMany('updated_at');
     }
 
 

@@ -53,10 +53,12 @@ use App\Http\Controllers\System\Product\ProductImagePublishController;
 use App\Http\Controllers\System\Product\ProductModelColorController;
 use App\Http\Controllers\System\Product\ProductModelController;
 use App\Http\Controllers\System\Product\ProductModelPriceController;
+use App\Http\Controllers\System\Product\ProductSizeChartController;
 use App\Http\Controllers\System\Product\ProductSizeController;
 use App\Http\Controllers\System\Product\ProductUnitController;
 use App\Http\Controllers\System\Product\ShowProductController;
 use App\Http\Controllers\System\Product\SubiektProductModelController;
+use App\Http\Controllers\System\Product\TiktokCategoryController;
 use App\Http\Controllers\System\ProfileController;
 use App\Http\Controllers\System\Queries\QueryImagesController;
 use App\Http\Controllers\System\Settings\SettingsMainController;
@@ -413,6 +415,18 @@ Route::middleware(["auth:user", "verified"])->group(function () {
                     Route::post("/color", [B2cColorController::class, 'store'])->name("system.settings.b2c.color.create");
                     Route::patch("/color/{b2cColor}", [B2cColorController::class, 'update'])->name("system.settings.b2c.color.update");
                     Route::delete("/color/{b2cColor}", [B2cColorController::class, 'destroy'])->name("system.settings.b2c.color.delete");
+
+                    Route::get("/tiktok-category/", [TiktokCategoryController::class, 'index'])->name("system.settings.b2c.tiktokCategory");
+                    Route::get("/tiktok-category/data", [TiktokCategoryController::class, 'data']);
+                    Route::post("/tiktok-category", [TiktokCategoryController::class, 'store'])->name("system.settings.b2c.tiktokCategory.create");
+                    Route::patch("/tiktok-category/{tiktokCategory}", [TiktokCategoryController::class, 'update'])->name("system.settings.b2c.tiktokCategory.update");
+                    Route::delete("/tiktok-category/{tiktokCategory}", [TiktokCategoryController::class, 'destroy'])->name("system.settings.b2c.tiktokCategory.delete");
+
+                    Route::get("/size-chart/", [ProductSizeChartController::class, 'index'])->name("system.settings.b2c.sizeChart");
+                    Route::get("/size-chart/data", [ProductSizeChartController::class, 'data']);
+                    Route::post("/size-chart", [ProductSizeChartController::class, 'store'])->name("system.settings.b2c.sizeChart.create");
+                    Route::patch("/size-chart/{sizeChart}", [ProductSizeChartController::class, 'update'])->name("system.settings.b2c.sizeChart.update");
+                    Route::delete("/size-chart/{sizeChart}", [ProductSizeChartController::class, 'destroy'])->name("system.settings.b2c.sizeChart.delete");
                 });
 
             });

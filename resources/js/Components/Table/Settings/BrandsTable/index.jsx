@@ -22,6 +22,12 @@ export default function BrandsTable(props) {
         },
 
         {
+            field: "tiktok_brand_id",
+            headerName: "ID marki TikTok",
+            flex: 1
+        },
+
+        {
             field: "action",
             headerName: "Akcje",
             width: 120,

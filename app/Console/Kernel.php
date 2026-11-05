@@ -9,6 +9,8 @@ use App\Jobs\Empik\EmpikGetNewOrder;
 use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\Empik\EmpikUpdateOffers;
 use App\Jobs\Empik\EmpikUpdateProducts;
+use App\Jobs\TikTok\TikTokUpdateOffers;
+use App\Jobs\TikTok\TikTokUpdateProducts;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
@@ -80,6 +82,12 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new EmpikUpdateProducts())->everyFifteenMinutes();
         $schedule->job(new EmpikUpdateOffers())->everyFiveMinutes();
+
+        //TikTok
+        $schedule->job(new TikTokUpdateProducts())->everyFifteenMinutes();
+        $schedule->job(new TikTokUpdateOffers())->everyFiveMinutes();
+        $schedule->command('tiktok:refresh-token')->daily();
+        $schedule->command('tiktok:flush-expired-token')->weekly();
 
 
         //Subiekt

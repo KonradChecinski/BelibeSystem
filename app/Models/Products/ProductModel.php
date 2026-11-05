@@ -13,6 +13,8 @@ use App\Models\ProductBrand;
 use App\Models\ProductClasp;
 use App\Models\ProductColorIcon;
 use App\Models\ProductEmpikCategory;
+use App\Models\ProductSizeChart;
+use App\Models\ProductTiktokCategory;
 use App\Models\Products\Price\ProductModelPrice;
 use App\Models\WarehouseLocation;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,12 +44,15 @@ class ProductModel extends Model
         "symbol",
         "name",
         "product_group_id",
+        "product_brand_id",
         'description_b2b',
         'description_b2c',
         'description_allegro',
         'name_11_char',
         'name_6_char',
         'b2c_variant',
+        'product_tiktok_category_id',
+        'product_size_chart_id',
 
     ];
 
@@ -204,6 +209,16 @@ class ProductModel extends Model
     public function empikCategory(): BelongsTo
     {
         return $this->belongsTo(ProductEmpikCategory::class, "product_empik_category_id");
+    }
+
+    public function tiktokCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductTiktokCategory::class, "product_tiktok_category_id");
+    }
+
+    public function sizeChart(): BelongsTo
+    {
+        return $this->belongsTo(ProductSizeChart::class, "product_size_chart_id");
     }
 
 //    GS1

@@ -44,6 +44,15 @@ export default function BasicInfoComponent(props) {
         });
         return quantity;
     }
+
+    const countAverageWeightInModel = () => {
+        const products = props.productModel?.products || [];
+        if (!products.length) {
+            return 200;
+        }
+        const sum = products.reduce((acc, product) => acc + (Number(product.weight) || 200), 0);
+        return Math.round(sum / products.length);
+    }
     const saveBasic = () => {
         post(route("system.products.model.update.basic", {productModel: data.id}), {
             onSuccess: params => {
@@ -135,6 +144,19 @@ export default function BasicInfoComponent(props) {
                         )}
 
                     </FormControl>
+                </Box>
+
+                <Box>
+                    <TextField
+                        id="weight"
+                        label="Śr. waga (g)"
+                        variant="outlined"
+                        type="number"
+                        value={countAverageWeightInModel()}
+                        inputProps={{readOnly: true}}
+                        disabled={true}
+                        sx={{width: "15ch"}}
+                    />
                 </Box>
 
                 <Fade in={edited}>

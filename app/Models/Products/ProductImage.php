@@ -28,6 +28,7 @@ class ProductImage extends Model
         'path_webp',
         'path_thumb',
         'path_2x3',
+        'tiktok_uri',
         'width',
         'height',
         'type',

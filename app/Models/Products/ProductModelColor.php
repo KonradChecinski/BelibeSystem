@@ -4,10 +4,12 @@ namespace App\Models\Products;
 
 use App\Models\B2cColor;
 use App\Models\ProductColorIcon;
+use App\Models\TikTok\TiktokProduct;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductModelColor extends Model
 {
@@ -19,6 +21,7 @@ class ProductModelColor extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'product_model_id',
         'product_model_color_id',
         'shortcut',
         'b2c_shortcut',
@@ -50,5 +53,15 @@ class ProductModelColor extends Model
     public function b2cColor(): BelongsTo
     {
         return $this->belongsTo(B2cColor::class, "b2c_color_id");
+    }
+
+    public function tiktokProducts(): HasMany
+    {
+        return $this->hasMany(TiktokProduct::class, "product_model_color_id", "id");
+    }
+
+    public function tiktokProduct(): HasOne
+    {
+        return $this->hasOne(TiktokProduct::class, "product_model_color_id", "id")->latestOfMany('updated_at');
     }
 }

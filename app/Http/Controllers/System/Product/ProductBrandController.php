@@ -25,6 +25,7 @@ class ProductBrandController extends Controller
         $mainColumn = [
             'id',
             'name',
+            'tiktok_brand_id',
         ];
 
         $models = ProductBrand::query();
@@ -34,6 +35,7 @@ class ProductBrandController extends Controller
             foreach (json_decode($request->search) as $word) {
                 $models = $models->orWhere('id', 'LIKE', '%' . $word . '%');
                 $models = $models->orWhere('name', 'LIKE', '%' . $word . '%');
+                $models = $models->orWhere('tiktok_brand_id', 'LIKE', '%' . $word . '%');
             }
         }
 
@@ -116,7 +118,7 @@ class ProductBrandController extends Controller
         $models = $models->orderBy($request->orderBy ? $request->orderBy : "id", $request->order ? $request->order : "asc");
 
 //        dd($models->get()->toArray());
-        $models = $models->paginate($request->limit, ['id', 'name']);
+        $models = $models->paginate($request->limit, ['id', 'name', 'tiktok_brand_id']);
         return response()->json([$models]);
     }
 
@@ -133,7 +135,10 @@ class ProductBrandController extends Controller
      */
     public function store(StoreProductBrandRequest $request)
     {
-        ProductBrand::create(["name" => $request->name]);
+        ProductBrand::create([
+            "name" => $request->name,
+            "tiktok_brand_id" => $request->tiktok_brand_id,
+        ]);
     }
 
     /**
@@ -157,7 +162,10 @@ class ProductBrandController extends Controller
      */
     public function update(UpdateProductBrandRequest $request, ProductBrand $productBrand)
     {
-        $productBrand->update(["name" => $request->name]);
+        $productBrand->update([
+            "name" => $request->name,
+            "tiktok_brand_id" => $request->tiktok_brand_id,
+        ]);
     }
 
     /**

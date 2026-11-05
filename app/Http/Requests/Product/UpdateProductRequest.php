@@ -27,6 +27,7 @@ class UpdateProductRequest extends FormRequest
             'symbol' => 'required|string|min:5',
             'name' => 'required|string|min:5',
             'name_b2c' => 'nullable|string|min:5',
+            'weight' => 'nullable|numeric|min:1',
             'size' => 'required',
             'size.id' => 'required|numeric',
             'unit' => 'required',

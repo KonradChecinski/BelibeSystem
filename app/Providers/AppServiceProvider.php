@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Extensions\CustomDatabaseSessionHandler;
 use App\Singleton\Subiekt;
 use App\Singleton\SubiektDodatki;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -42,6 +43,28 @@ class AppServiceProvider extends ServiceProvider
             return $this->app->isProduction()
                 ? $rule->mixedCase()->uncompromised()->letters()->numbers()
                 : $rule;
+        });
+
+        // Kompatybilność modeli laraditz/tiktok (definiujących metodę casts() z Laravel 11) z Laravel 10
+        Event::listen(['eloquent.saving: Laraditz\TikTok\Models\*', 'eloquent.retrieved: Laraditz\TikTok\Models\*'], function (string $event, array $models) {
+            foreach ($models as $model) {
+                if (method_exists($model, 'casts')) {
+                    $ref = new \ReflectionMethod($model, 'casts');
+                    $ref->setAccessible(true);
+                    $casts = $ref->invoke($model);
+                    if (is_array($casts)) {
+                        $model->mergeCasts($casts);
+                        if (str_starts_with($event, 'eloquent.saving:')) {
+                            $raw = $model->getAttributes();
+                            foreach ($casts as $key => $castType) {
+                                if (array_key_exists($key, $raw) && is_array($raw[$key])) {
+                                    $model->setAttribute($key, $raw[$key]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 }

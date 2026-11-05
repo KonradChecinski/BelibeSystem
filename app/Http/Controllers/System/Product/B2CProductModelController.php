@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateB2CProductModelRequest;
 use App\Jobs\Shoper\ShoperChangeDescription;
+use App\Jobs\TikTok\TikTokChangePrice;
 use App\Jobs\ToSubiekt\Towar\ChangeB2CInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
@@ -67,9 +68,12 @@ class B2CProductModelController extends Controller
         $productModel->b2cCategory()->associate($request->product_b2c_category_id);
         $productModel->clasp()->associate($request->product_clasp_id);
         $productModel->empikCategory()->associate($request->product_empik_category_id);
+        $productModel->tiktokCategory()->associate($request->product_tiktok_category_id);
+        $productModel->sizeChart()->associate($request->product_size_chart_id);
         $productModel->save();
         ChangeB2CInModelInSubiekt::dispatch($productModel);
         ShoperChangeDescription::dispatch($productModel);
+        TikTokChangePrice::dispatch($productModel);
     }
 
     /**
