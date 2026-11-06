@@ -39,6 +39,7 @@ class PartnerExportController extends Controller
             'type' => $request->type,
             'path' => Str::uuid(),
             'cron' => $request->cron,
+            'datetime' => $request->datetime,
             'availability' => $request->availability,
             'ean' => $request->ean,
             'wholesale_net_price' => $request->wholesale_net_price,
@@ -124,7 +125,7 @@ class PartnerExportController extends Controller
     {
         $exists = $partner->partnerExports()->where('id', $export->id)->exists();
         if ($exists) {
-            MakePartnerExportFile::dispatch($partner, $export);
+            MakePartnerExportFile::dispatchSync($partner, $export);
             return redirect()->back();
         }
 

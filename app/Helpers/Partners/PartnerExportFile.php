@@ -102,12 +102,17 @@ class PartnerExportFile
     public static function makeXmlFile(Client $client, PartnerExport $partnerExport, $products): bool
     {
         try {
-            $xmlConverter = new ArrayToXml([
-                "updated_at" => now()->toDateTimeString(),
-                "products" => [
-                    "product" => $products->toArray()
-                ]
-            ]);
+            $array = [];
+
+            if ($partnerExport->datetime) {
+                $array['updated_at'] = now()->toDateTimeString();
+            }
+
+            $array['products'] = [
+                'product' => $products->toArray()
+            ];
+
+            $xmlConverter = new ArrayToXml($array);
             $xml = $xmlConverter->prettify()->toXml();
 
             $partnerExport->update([
@@ -128,13 +133,19 @@ class PartnerExportFile
     {
         try {
             $path = storage_path("app/partners/{$partnerExport->path}.xlsx");
-            SimpleExcelWriter::create(file: $path, configureWriter: function ($writer) {
+            $writer = SimpleExcelWriter::create(file: $path, configureWriter: function ($writer) {
                 $options = $writer->getOptions();
                 $options->setColumnWidth(30, 1);
-            })
-                ->addHeader(['updated_at', now()->toDateTimeString()])
+            });
+
+            if ($partnerExport->datetime) {
+                $writer->addHeader(['updated_at', now()->toDateTimeString()]);
+            }
+
+            $writer
                 ->addHeader(collect($products->first())->keys()->all())
                 ->addRows($products->toArray());
+
             $partnerExport->update([
                 'completed_at' => now(),
             ]);
@@ -151,8 +162,11 @@ class PartnerExportFile
 
 
             $path = storage_path("app/partners/{$partnerExport->path}.csv");
-            SimpleExcelWriter::create(file: $path)
-                ->addHeader(['updated_at', now()->toDateTimeString()])
+            $writer = SimpleExcelWriter::create(file: $path);
+            if ($partnerExport->datetime) {
+                $writer->addHeader(['updated_at', now()->toDateTimeString()]);
+            }
+            $writer
                 ->addHeader(collect($products->first())->keys()->all())
                 ->addRows($products->toArray());
             $partnerExport->update([

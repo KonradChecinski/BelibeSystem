@@ -12,6 +12,7 @@ class PartnerExport extends Model
     protected $fillable = [
         'partner_id',
         'type',
+        'datetime',
         'availability',
         'ean',
         'wholesale_net_price',

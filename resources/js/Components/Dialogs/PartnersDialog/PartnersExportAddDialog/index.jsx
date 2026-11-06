@@ -21,6 +21,7 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
     const {data, setData, post, patch, processing, reset} = useForm({
         type: exportElement ? exportElement.type : 1,
         cron: exportElement ? exportElement.cron : '0 2 * * 3',
+        datetime: exportElement ? !!exportElement.datetime : true,
         availability: exportElement ? exportElement.availability : false,
         ean: exportElement ? exportElement.ean : false,
         wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
@@ -36,6 +37,7 @@ export default function PartnersExportAddDialog({open, setOpen, partner, exportE
         setData({
             type: exportElement ? exportElement.type : 1,
             cron: exportElement ? exportElement.cron : '0 2 * * 3',
+            datetime: exportElement ? !!exportElement.datetime : true,
             availability: exportElement ? exportElement.availability : false,
             ean: exportElement ? exportElement.ean : false,
             wholesale_net_price: exportElement ? !!exportElement.wholesale_net_price : false,
@@ -210,7 +212,26 @@ function Step1({data, setData, getLabel}) {
                         value={data.type}
                     />}
             />
+            <Box sx={{mt: 2}}>
+                <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Znacznik daty
+                    </Typography>
 
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.datetime}
+                                    onChange={(e) => setData("datetime", e.target.checked)}
+                                />
+                            }
+                            label={<Box>Dodaj znacznik daty do pliku eksportu <br/> (1. wiersz pliku będzie
+                                zawierał datę i godzinę aktualizacji pliku)</Box>}
+                        />
+                    </Box>
+                </Paper>
+            </Box>
 
             <Box sx={{mt: 2}}>
                 <Paper sx={{p: 2}}>
@@ -348,6 +369,29 @@ function Step2({data, getLabel}) {
                        value={getLabel(data.type)}
                        disabled={true}
                        sx={{width: "30ch", my: 1}}/>
+
+            <Box sx={{mt: 2}}>
+                <Paper sx={{p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Znacznik daty
+                    </Typography>
+
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!data.datetime}
+                                    disabled={true}
+                                />
+                            }
+                            label={<Box>Dodaj znacznik daty do pliku eksportu <br/> (1. wiersz pliku będzie
+                                zawierał datę i godzinę aktualizacji pliku)</Box>}
+                        />
+
+                    </Box>
+                </Paper>
+            </Box>
+
             <Box sx={{mt: 2}}>
                 <Paper sx={{p: 2}}>
                     <Typography variant="h6" gutterBottom>

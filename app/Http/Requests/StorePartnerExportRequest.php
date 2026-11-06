@@ -23,6 +23,7 @@ class StorePartnerExportRequest extends FormRequest
     {
         return [
             'type' => 'required|integer|min:1|max:3',
+            'datetime' => 'required|boolean',
             'availability' => 'required|boolean',
             'ean' => 'required|boolean',
             'wholesale_net_price' => 'required|boolean',
