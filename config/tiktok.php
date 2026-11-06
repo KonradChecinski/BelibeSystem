@@ -89,5 +89,5 @@ return [
         'redact_secrets' => env('TIKTOK_LOG_REDACT_SECRETS', false),
         'prune_after_days' => env('TIKTOK_LOG_PRUNE_AFTER_DAYS'),
     ],
-    'middleware' => ["auth:user", "verified"],
+    'middleware' => [\Illuminate\Routing\Middleware\SubstituteBindings::class],
 ];
