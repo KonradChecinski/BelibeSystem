@@ -418,6 +418,7 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
                     Route::get("/tiktok-category/", [TiktokCategoryController::class, 'index'])->name("system.settings.b2c.tiktokCategory");
                     Route::get("/tiktok-category/data", [TiktokCategoryController::class, 'data']);
+                    Route::get("/tiktok-category/api-list", [TiktokCategoryController::class, 'apiList'])->name("system.settings.b2c.tiktokCategory.apiList");
                     Route::post("/tiktok-category", [TiktokCategoryController::class, 'store'])->name("system.settings.b2c.tiktokCategory.create");
                     Route::patch("/tiktok-category/{tiktokCategory}", [TiktokCategoryController::class, 'update'])->name("system.settings.b2c.tiktokCategory.update");
                     Route::delete("/tiktok-category/{tiktokCategory}", [TiktokCategoryController::class, 'destroy'])->name("system.settings.b2c.tiktokCategory.delete");
