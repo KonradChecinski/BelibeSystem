@@ -57,8 +57,22 @@ class AppServiceProvider extends ServiceProvider
                         if (str_starts_with($event, 'eloquent.saving:')) {
                             $raw = $model->getAttributes();
                             foreach ($casts as $key => $castType) {
-                                if (array_key_exists($key, $raw) && is_array($raw[$key])) {
+                                if (
+                                    array_key_exists($key, $raw)
+                                    && (
+                                        is_array($raw[$key])
+                                        || $raw[$key] instanceof \DateTimeInterface
+                                        || $raw[$key] instanceof \BackedEnum
+                                    )
+                                ) {
                                     $model->setAttribute($key, $raw[$key]);
+                                }
+                            }
+
+                            if ($model instanceof \Laraditz\TikTok\Models\TiktokAccessToken) {
+                                $codeAttr = $model->getAttributes()['code'] ?? null;
+                                if (is_string($codeAttr) && strlen($codeAttr) > 255) {
+                                    $model->setAttribute('code', substr($codeAttr, 0, 255));
                                 }
                             }
                         }
