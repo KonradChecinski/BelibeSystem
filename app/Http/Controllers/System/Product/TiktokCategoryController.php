@@ -33,33 +33,99 @@ class TiktokCategoryController extends Controller
             ->first() ?? TiktokShop::query()->first();
 
         if (!$shop) {
-            dd([
-                'status' => 'Brak autoryzowanego sklepu w tabeli tiktok_shops.',
-                'krok_1' => 'Upewnij się, że w .env masz wpisane TIKTOK_APP_KEY, TIKTOK_APP_SECRET oraz TIKTOK_SERVICE_ID.',
-                'krok_2_auth_url' => config('tiktok.service_id')
-                    ? $tiktok->authorizationUrl()
-                    : 'Brak TIKTOK_SERVICE_ID w .env – wygeneruj link autoryzacyjny w TikTok Partner Center lub uzupełnij TIKTOK_SERVICE_ID.',
-                'callback_url_do_tiktok_partner_center' => url('/tiktok/seller/authorized'),
+            return Inertia::render("System/Settings/Dictionaries/Models/B2C/TiktokCategoryApiList", [
+                'shop' => null,
+                'authUrl' => config('tiktok.service_id') ? $tiktok->authorizationUrl() : null,
+                'callbackUrl' => url('/tiktok/seller/authorized'),
+                'categories' => [],
+                'existingValues' => [],
+                'locale' => $request->query('locale', 'pl-PL'),
+                'error' => 'Brak autoryzowanego sklepu w tabeli tiktok_shops.',
             ]);
         }
 
+        $locale = $request->query('locale', 'pl-PL');
         $query = array_filter([
-            'locale' => $request->query('locale', 'pl-PL'),
+            'locale' => $locale,
             'keyword' => $request->query('keyword'),
             'category_version' => $request->query('category_version'),
         ]);
 
-        $response = $tiktok
-            ->shopId($shop->id)
-            ->product()
-            ->categories(query: $query);
+        try {
+            $response = $tiktok
+                ->shopId($shop->id)
+                ->product()
+                ->categories(query: $query);
 
-        dd([
-            'shop_id' => $shop->id,
-            'shop_name' => $shop->name,
-            'shop_cipher' => $shop->cipher,
-            'categories_count' => count(data_get($response, 'data.categories', [])),
-            'response' => $response,
+            $rawCategories = data_get($response, 'data.categories', []);
+        } catch (\Throwable $e) {
+            return Inertia::render("System/Settings/Dictionaries/Models/B2C/TiktokCategoryApiList", [
+                'shop' => [
+                    'id' => $shop->id,
+                    'name' => $shop->name,
+                ],
+                'categories' => [],
+                'existingValues' => [],
+                'locale' => $locale,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        $byId = [];
+        foreach ($rawCategories as $cat) {
+            $id = (string) ($cat['id'] ?? '');
+            if ($id !== '') {
+                $byId[$id] = $cat;
+            }
+        }
+
+        $buildFullPath = function (string $id) use (&$byId): string {
+            $parts = [];
+            $currentId = $id;
+            $visited = [];
+
+            while ($currentId !== '' && $currentId !== '0' && isset($byId[$currentId]) && !isset($visited[$currentId])) {
+                $visited[$currentId] = true;
+                $node = $byId[$currentId];
+                array_unshift($parts, $node['local_name'] ?? $currentId);
+                $currentId = (string) ($node['parent_id'] ?? '0');
+            }
+
+            return implode(' - ', $parts);
+        };
+
+        $existingValues = ProductTiktokCategory::query()
+            ->pluck('id', 'value')
+            ->toArray();
+
+        $categories = [];
+        foreach ($rawCategories as $cat) {
+            $id = (string) ($cat['id'] ?? '');
+            if ($id === '') {
+                continue;
+            }
+
+            $fullPath = $buildFullPath($id);
+            $categories[] = [
+                'id' => $id,
+                'local_name' => $cat['local_name'] ?? '',
+                'full_path' => $fullPath,
+                'parent_id' => (string) ($cat['parent_id'] ?? '0'),
+                'is_leaf' => (bool) ($cat['is_leaf'] ?? false),
+                'permission_statuses' => $cat['permission_statuses'] ?? [],
+                'already_added' => isset($existingValues[$id]),
+            ];
+        }
+
+        return Inertia::render("System/Settings/Dictionaries/Models/B2C/TiktokCategoryApiList", [
+            'shop' => [
+                'id' => $shop->id,
+                'name' => $shop->name,
+            ],
+            'categories' => $categories,
+            'existingValues' => array_keys($existingValues),
+            'locale' => $locale,
+            'error' => null,
         ]);
     }
 
@@ -124,10 +190,17 @@ class TiktokCategoryController extends Controller
      */
     public function store(StoreTiktokCategoryRequest $request)
     {
-        ProductTiktokCategory::create([
-            "name" => $request->name,
-            "value" => $request->value,
-        ]);
+        $category = ProductTiktokCategory::firstOrCreate(
+            ["value" => $request->value],
+            ["name" => $request->name]
+        );
+
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+            return response()->json([
+                'status' => 'ok',
+                'category' => $category,
+            ]);
+        }
     }
 
     /**
