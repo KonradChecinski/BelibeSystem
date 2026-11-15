@@ -45,7 +45,17 @@ class AppServiceProvider extends ServiceProvider
                 : $rule;
         });
 
-        // Kompatybilność modeli laraditz/tiktok (definiujących metodę casts() z Laravel 11) z Laravel 10
+        // Kompatybilność modeli laraditz/tiktok (definiujących metodę casts() z Laravel 11) z Laravel 10:
+        // Gdy laraditz/tiktok przypisuje atrybut (np. 'request' => $array) przed załadowaniem casts(),
+        // w $attributes ląduje surowa tablica. Bezpieczny dekoder zwraca ją bez wywoływania json_decode(array).
+        \Illuminate\Database\Eloquent\Casts\Json::decodeUsing(function (mixed $value, ?bool $associative = true) {
+            if (is_array($value)) {
+                return $value;
+            }
+
+            return is_string($value) ? json_decode($value, $associative) : $value;
+        });
+
         Event::listen(['eloquent.booted: Laraditz\TikTok\Models\*', 'eloquent.saving: Laraditz\TikTok\Models\*', 'eloquent.retrieved: Laraditz\TikTok\Models\*'], function (string $event, array $models) {
             foreach ($models as $model) {
                 if (method_exists($model, 'casts')) {
