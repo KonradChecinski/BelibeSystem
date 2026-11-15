@@ -149,7 +149,7 @@ class TikTokProductMapper
             'skus' => $skus,
         ];
 
-        $brandId = trim((string) ($model->brand?->tiktok_brand_id ?? ''));
+        $brandId = $this->resolveBrandId($model->brand, $categoryId, $shopId);
         if ($brandId !== '') {
             $payload['brand_id'] = $brandId;
         }
@@ -280,26 +280,29 @@ class TikTokProductMapper
                     continue;
                 }
                 $inputLower = mb_strtolower($inputTrimmed);
-                $candidates = $synonyms[$inputLower] ?? [$inputLower];
 
+                // 1. Najpierw szukamy dokładnego (1:1) dopasowania nazwy w wartościach słownikowych TikToka
                 $foundPredefined = null;
                 foreach ($predefinedValues as $pv) {
                     $pvName = trim((string) ($pv['name'] ?? ''));
                     $pvLower = mb_strtolower($pvName);
-                    if (in_array($pvLower, $candidates, true)) {
+                    if ($pvLower === $inputLower) {
                         $foundPredefined = $pv;
                         break;
                     }
                 }
 
-                if (!$foundPredefined) {
-                    foreach ($predefinedValues as $pv) {
-                        $pvName = trim((string) ($pv['name'] ?? ''));
-                        $pvLower = mb_strtolower($pvName);
-                        foreach ($candidates as $cand) {
-                            if ($cand !== '' && (str_contains($pvLower, $cand) || str_contains($cand, $pvLower))) {
+                // 2. Jeśli atrybut NIE pozwala na wartości niestandardowe (is_customizable = false),
+                // sprawdźmy dokładne synonimy (np. Tak/Yes, Polska/Poland, instrukcje prania)
+                if (!$foundPredefined && !$isCustomizable) {
+                    $candidates = $synonyms[$inputLower] ?? [];
+                    if (!empty($candidates)) {
+                        foreach ($predefinedValues as $pv) {
+                            $pvName = trim((string) ($pv['name'] ?? ''));
+                            $pvLower = mb_strtolower($pvName);
+                            if (in_array($pvLower, $candidates, true)) {
                                 $foundPredefined = $pv;
-                                break 2;
+                                break;
                             }
                         }
                     }
@@ -444,6 +447,163 @@ class TikTokProductMapper
         }
 
         return $result;
+    }
+
+    /**
+     * Resolve TikTok Brand ID for a local ProductBrand (`Spin` -> `Spinsport`, `Belibe` -> `belibe` / `BelibeSport`).
+     * Automatically queries `/product/202309/brands` (and falls back to `POST /product/202309/brands` if needed)
+     * and caches the resolved `tiktok_brand_id` on the `ProductBrand` record.
+     */
+    public function resolveBrandId(
+        ?\App\Models\ProductBrand $brand,
+        ?string $categoryId = null,
+        ?string $shopId = null
+    ): string {
+        if (!$brand) {
+            return '';
+        }
+
+        $existingId = trim((string) ($brand->tiktok_brand_id ?? ''));
+        if ($existingId !== '') {
+            return $existingId;
+        }
+
+        $rawName = trim((string) ($brand->name ?? ''));
+        if ($rawName === '') {
+            return '';
+        }
+
+        $normalize = static fn (string $str): string => (string) preg_replace(
+            '/[^a-z0-9ąćęłńóśźż]+/u',
+            '',
+            mb_strtolower(trim($str))
+        );
+
+        $localNorm = $normalize($rawName);
+        if ($localNorm === '' || $localNorm === 'brak' || $localNorm === 'bezmarki') {
+            return '';
+        }
+
+        if (str_contains($localNorm, 'spin')) {
+            $searchQueries = ['Spinsport', 'SpinSport', 'spinsport', 'SPINSPORT', 'Spin', 'spin'];
+            $targetNorms = ['spinsport', 'spin'];
+            $preferredCustomName = 'Spinsport';
+        } elseif (str_contains($localNorm, 'belibe')) {
+            $searchQueries = ['belibe', 'BelibeSport', 'Belibe', 'Belibe Sport', 'belibesport', 'BELIBE'];
+            $targetNorms = ['belibe', 'belibesport'];
+            $preferredCustomName = 'BelibeSport';
+        } else {
+            $searchQueries = array_values(array_unique([
+                $rawName,
+                ucfirst(mb_strtolower($rawName)),
+                mb_strtolower($rawName),
+                mb_strtoupper($rawName),
+            ]));
+            $targetNorms = [$localNorm];
+            $preferredCustomName = $rawName;
+        }
+
+        try {
+            /** @var LaraditzTikTok $tiktok */
+            $tiktok = app('tiktok');
+            if ($shopId) {
+                $tiktok->setShopId($shopId);
+            } else {
+                $defaultShopId = config('tiktok.shop_id') ?: TiktokShop::query()->value('id');
+                if ($defaultShopId) {
+                    $tiktok->setShopId((string) $defaultShopId);
+                }
+            }
+
+            $matchFromBrandsList = static function (array $brands) use ($normalize, $targetNorms): string {
+                foreach ($targetNorms as $targetNorm) {
+                    foreach ($brands as $b) {
+                        $bId = trim((string) ($b['id'] ?? ''));
+                        $bName = trim((string) ($b['name'] ?? ''));
+                        if ($bId === '' || $bName === '') {
+                            continue;
+                        }
+                        if ($normalize($bName) === $targetNorm) {
+                            return $bId;
+                        }
+                    }
+                }
+
+                return '';
+            };
+
+            // 1. Sprawdź autoryzowane marki sklepu
+            try {
+                $authResponse = $tiktok->product()->brands(query: [
+                    'is_authorized' => 'true',
+                    'page_size' => 100,
+                ]);
+                $authBrands = data_get($authResponse, 'data.brands', []);
+                if (is_array($authBrands) && !empty($authBrands)) {
+                    $matchedId = $matchFromBrandsList($authBrands);
+                    if ($matchedId !== '') {
+                        $brand->tiktok_brand_id = $matchedId;
+                        $brand->save();
+
+                        return $matchedId;
+                    }
+                }
+            } catch (\Throwable) {
+                // Kontynuuj wyszukiwanie po nazwie
+            }
+
+            // 2. Wyszukaj markę po `brand_name` w katalogu TikTok Shop
+            foreach ($searchQueries as $queryName) {
+                $queryVariants = [
+                    ['brand_name' => $queryName, 'page_size' => 100],
+                ];
+                if ($categoryId) {
+                    $queryVariants[] = [
+                        'brand_name' => $queryName,
+                        'category_id' => $categoryId,
+                        'page_size' => 100,
+                    ];
+                }
+
+                foreach ($queryVariants as $queryParams) {
+                    try {
+                        $response = $tiktok->product()->brands(query: $queryParams);
+                        $foundBrands = data_get($response, 'data.brands', []);
+                        if (is_array($foundBrands) && !empty($foundBrands)) {
+                            $matchedId = $matchFromBrandsList($foundBrands);
+                            if ($matchedId !== '') {
+                                $brand->tiktok_brand_id = $matchedId;
+                                $brand->save();
+
+                                return $matchedId;
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Próbuj kolejny wariant
+                    }
+                }
+            }
+
+            // 3. Fallback: utwórz/pobierz niestandardową markę przez POST /product/202309/brands
+            try {
+                $createResp = $tiktok->product()->createBrand(body: [
+                    'name' => $preferredCustomName,
+                ]);
+                $createdId = trim((string) data_get($createResp, 'data.id', ''));
+                if ($createdId !== '') {
+                    $brand->tiktok_brand_id = $createdId;
+                    $brand->save();
+
+                    return $createdId;
+                }
+            } catch (\Throwable) {
+                // Jeśli się nie powiedzie, zwracamy pusty string (produkt utworzy się bez marki zamiast rzucać błąd)
+            }
+        } catch (\Throwable) {
+            // Ignorujemy błąd komunikacji z API marek
+        }
+
+        return '';
     }
 
     /**

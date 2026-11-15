@@ -75,10 +75,32 @@ class TikTokInventorySyncService
                 continue;
             }
 
-            $tiktok->product()->updateInventory(
-                params: ['product_id' => (string)$tiktokProductId],
-                body: ['skus' => $skusPayload]
-            );
+            try {
+                $tiktok->product()->updateInventory(
+                    params: ['product_id' => (string)$tiktokProductId],
+                    body: ['skus' => $skusPayload]
+                );
+            } catch (Throwable $e) {
+                if ($this->publisher->isRemoteProductDeletedOrMissingError($e)) {
+                    $staleProduct = TiktokProduct::withTrashed()->find((string)$tiktokProductId);
+                    if ($staleProduct) {
+                        $this->publisher->purgeDeletedRemoteProduct($staleProduct);
+                    }
+
+                    $colorIdsToRepublish = $productGroup
+                        ->filter(fn (Product $p) => (bool)$p->show_in_tiktok && !empty($p->product_model_color_id))
+                        ->pluck('product_model_color_id')
+                        ->unique();
+
+                    foreach ($colorIdsToRepublish as $colorId) {
+                        \App\Jobs\TikTok\TikTokPublishProductColor::dispatch((int)$colorId, $shopId);
+                    }
+
+                    continue;
+                }
+
+                throw $e;
+            }
 
             foreach ($skusToUpdate as $item) {
                 /** @var TiktokProductSku $skuRecord */

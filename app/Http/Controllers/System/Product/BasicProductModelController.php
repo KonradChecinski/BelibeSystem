@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateBasicProductModelRequest;
+use App\Jobs\TikTok\TikTokChangePrice;
 use App\Jobs\ToSubiekt\Towar\ChangeBasicInModelInSubiekt;
 use App\Models\Products\ProductModel;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ class BasicProductModelController extends Controller
         $productModel->brand()->associate($request->product_brand_id);
         $productModel->save();
         ChangeBasicInModelInSubiekt::dispatch($productModel);
+        TikTokChangePrice::dispatch($productModel);
     }
 
     /**

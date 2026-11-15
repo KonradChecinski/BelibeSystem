@@ -31,6 +31,7 @@ class TikTokProductPublisher
             'model.brand',
             'model.tiktokCategory',
             'model.prices',
+            'model.sizeChart',
             'images',
             'products.size',
             'products.barcodes',
@@ -39,6 +40,10 @@ class TikTokProductPublisher
         ]);
 
         $existingProduct = $this->findExistingTiktokProduct($color, $resolvedShopId);
+        if ($existingProduct && strtoupper((string) $existingProduct->status) === 'DELETED') {
+            $this->purgeDeletedRemoteProduct($existingProduct);
+            $existingProduct = null;
+        }
         $hasRemoteProduct = $existingProduct && !$this->isPlaceholderId($existingProduct->id);
 
         $activeProducts = $color->products
@@ -62,18 +67,45 @@ class TikTokProductPublisher
             );
 
             if ($hasRemoteProduct) {
-                $result = $tiktok->product()->update(
-                    params: ['product_id' => $existingProduct->id],
-                    body: $payload
-                );
-
-                if ($existingProduct->status === 'SELLER_DEACTIVATED') {
-                    $tiktok->product()->activate(
-                        body: ['product_ids' => [(string) $existingProduct->id]]
+                try {
+                    $result = $tiktok->product()->update(
+                        params: ['product_id' => $existingProduct->id],
+                        body: $payload
                     );
-                }
 
-                $remoteProductId = (string) (data_get($result, 'data.product_id') ?: $existingProduct->id);
+                    if ($existingProduct->status === 'SELLER_DEACTIVATED') {
+                        $tiktok->product()->activate(
+                            body: ['product_ids' => [(string) $existingProduct->id]]
+                        );
+                    }
+
+                    $remoteProductId = (string) (data_get($result, 'data.product_id') ?: $existingProduct->id);
+                } catch (Throwable $updateException) {
+                    // Jeśli produkt został usunięty w panelu TikTok Seller Center, a w BelibeSystem jest nadal zaznaczony,
+                    // wyczyść stary wpis i utwórz produkt od nowa
+                    if (!$this->isRemoteProductDeletedOrMissingError($updateException)) {
+                        throw $updateException;
+                    }
+
+                    $this->purgeDeletedRemoteProduct($existingProduct);
+                    $existingProduct = null;
+                    $hasRemoteProduct = false;
+
+                    $payload = $this->mapper->buildProductPayload(
+                        color: $color,
+                        existingTiktokProduct: null,
+                        shopId: $resolvedShopId
+                    );
+
+                    $result = $tiktok->product()->create(
+                        body: $payload
+                    );
+
+                    $remoteProductId = (string) data_get($result, 'data.product_id', '');
+                    if ($remoteProductId === '') {
+                        throw new \RuntimeException('TikTok Shop API nie zwróciło identyfikatora product_id po odtworzeniu usuniętego produktu.');
+                    }
+                }
             } else {
                 $result = $tiktok->product()->create(
                     body: $payload
@@ -117,7 +149,7 @@ class TikTokProductPublisher
         LaraditzTikTok $tiktok,
         TiktokProduct $existingProduct,
         ProductModelColor $color
-    ): TiktokProduct {
+    ): ?TiktokProduct {
         try {
             $tiktok->product()->deactivate(
                 body: ['product_ids' => [(string) $existingProduct->id]]
@@ -132,9 +164,59 @@ class TikTokProductPublisher
 
             return $existingProduct;
         } catch (Throwable $e) {
+            if ($this->isRemoteProductDeletedOrMissingError($e)) {
+                $this->purgeDeletedRemoteProduct($existingProduct);
+
+                return null;
+            }
+
             $this->recordSyncFailure($color, $existingProduct, $existingProduct->shop_id, $e);
             throw $e;
         }
+    }
+
+    /**
+     * Check if a TikTok API exception means the remote product was deleted or no longer exists in TikTok Shop.
+     */
+    public function isRemoteProductDeletedOrMissingError(Throwable $e): bool
+    {
+        $code = (string) $e->getCode();
+        $missingCodes = [
+            '12052260', // product id not exist
+            '12052048', // product id not exist
+            '12052003', // product status is deleted / invalid
+            '12052004', // product does not exist
+            '12052013', // product status invalid (deleted)
+            '12052093', // product is deleted
+        ];
+
+        if (in_array($code, $missingCodes, true)) {
+            return true;
+        }
+
+        $msg = mb_strtolower($e->getMessage());
+
+        return str_contains($msg, 'product id not exist')
+            || str_contains($msg, 'product does not exist')
+            || str_contains($msg, 'product not exist')
+            || str_contains($msg, 'product is deleted')
+            || str_contains($msg, 'status is deleted')
+            || str_contains($msg, 'already deleted')
+            || str_contains($msg, 'has been deleted');
+    }
+
+    /**
+     * Force-delete local TiktokProduct and its TiktokProductSku records when remote product was deleted on TikTok.
+     */
+    public function purgeDeletedRemoteProduct(TiktokProduct $product): void
+    {
+        DB::transaction(function () use ($product) {
+            TiktokProductSku::withTrashed()
+                ->where('product_id', $product->id)
+                ->forceDelete();
+
+            $product->forceDelete();
+        });
     }
 
     /**
@@ -143,7 +225,7 @@ class TikTokProductPublisher
      */
     public function findExistingTiktokProduct(ProductModelColor $color, ?string $shopId = null): ?TiktokProduct
     {
-        $query = TiktokProduct::withTrashed()
+        $query = TiktokProduct::query()
             ->where('product_model_color_id', $color->id);
 
         if ($shopId) {
@@ -158,9 +240,6 @@ class TikTokProductPublisher
             ->first();
 
         if ($existing) {
-            if ($existing->trashed()) {
-                $existing->restore();
-            }
             return $existing;
         }
 
@@ -168,7 +247,7 @@ class TikTokProductPublisher
         $productIds = $color->products->pluck('id')->filter()->values()->all();
         $symbols = $color->products->pluck('symbol')->filter()->values()->all();
 
-        $matchedSku = TiktokProductSku::withTrashed()
+        $matchedSku = TiktokProductSku::query()
             ->where(function ($q) use ($productIds, $symbols) {
                 if (!empty($productIds)) {
                     $q->whereIn('local_product_id', $productIds);
@@ -181,11 +260,8 @@ class TikTokProductPublisher
             ->first();
 
         if ($matchedSku && $matchedSku->product_id) {
-            $parentProduct = TiktokProduct::withTrashed()->find($matchedSku->product_id);
+            $parentProduct = TiktokProduct::query()->find($matchedSku->product_id);
             if ($parentProduct) {
-                if ($parentProduct->trashed()) {
-                    $parentProduct->restore();
-                }
                 $parentProduct->product_model_color_id = $color->id;
                 $parentProduct->save();
 

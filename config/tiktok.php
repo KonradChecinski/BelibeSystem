@@ -70,6 +70,7 @@ return [
             'category_rules' => '/product/202309/categories/{category_id}/rules',
             'category_attributes' => '/product/202309/categories/{category_id}/attributes',
             'brands' => '/product/202309/brands',
+            'create_brand' => 'POST /product/202309/brands',
             'warehouses' => '/logistics/202309/warehouses',
             'create_size_chart' => 'POST /product/202610/size_charts',
             'edit_size_chart' => 'POST /product/202610/size_charts/edit',

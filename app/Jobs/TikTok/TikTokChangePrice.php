@@ -44,6 +44,8 @@ class TikTokChangePrice implements ShouldQueue, ShouldBeUnique
         $products = $this->productModel->productsWithoutRelation
             ->filter(fn ($product) => (bool) $product->show_in_tiktok);
 
+        $colorIds = [];
+
         foreach ($products as $product) {
             if ($product->b2cStat) {
                 $product->b2cStat->update([
@@ -54,6 +56,14 @@ class TikTokChangePrice implements ShouldQueue, ShouldBeUnique
                     'create_in_tiktok' => 1,
                 ]);
             }
+
+            if (!empty($product->product_model_color_id)) {
+                $colorIds[(int) $product->product_model_color_id] = (int) $product->product_model_color_id;
+            }
+        }
+
+        foreach ($colorIds as $colorId) {
+            TikTokPublishProductColor::dispatch($colorId);
         }
     }
 }

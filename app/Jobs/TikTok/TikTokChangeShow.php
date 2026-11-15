@@ -59,6 +59,10 @@ class TikTokChangeShow implements ShouldQueue, ShouldBeUnique
                 'create_in_tiktok' => 1,
             ]);
         }
+
+        if (!empty($product->product_model_color_id)) {
+            TikTokPublishProductColor::dispatch((int) $product->product_model_color_id);
+        }
     }
 }
 
