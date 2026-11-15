@@ -91,11 +91,12 @@ class TikTokProductPublisher
                     $existingProduct = null;
                     $hasRemoteProduct = false;
 
-                    $payload = $this->mapper->buildProductPayload(
-                        color: $color,
-                        existingTiktokProduct: null,
-                        shopId: $resolvedShopId
-                    );
+                    if (!empty($payload['skus']) && is_array($payload['skus'])) {
+                        $payload['skus'] = array_map(static function (array $sku): array {
+                            unset($sku['id']);
+                            return $sku;
+                        }, $payload['skus']);
+                    }
 
                     $result = $tiktok->product()->create(
                         body: $payload
@@ -188,6 +189,7 @@ class TikTokProductPublisher
             '12052004', // product does not exist
             '12052013', // product status invalid (deleted)
             '12052093', // product is deleted
+            '12052901', // Precondition Required. This operation requires a valid product status (returned when editing a deleted product)
         ];
 
         if (in_array($code, $missingCodes, true)) {
@@ -202,7 +204,10 @@ class TikTokProductPublisher
             || str_contains($msg, 'product is deleted')
             || str_contains($msg, 'status is deleted')
             || str_contains($msg, 'already deleted')
-            || str_contains($msg, 'has been deleted');
+            || str_contains($msg, 'has been deleted')
+            || str_contains($msg, 'valid product status')
+            || str_contains($msg, 'invalid product status')
+            || str_contains($msg, 'precondition required');
     }
 
     /**
