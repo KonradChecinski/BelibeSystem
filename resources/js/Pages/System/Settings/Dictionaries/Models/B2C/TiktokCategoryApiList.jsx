@@ -7,11 +7,13 @@ import {
     Card,
     Chip,
     FormControlLabel,
+    Grid,
+    Paper,
     Switch,
     Typography
 } from "@mui/material";
 import {DataGrid, GridToolbar, plPL} from "@mui/x-data-grid";
-import {Add, Check, ArrowBack} from "@mui/icons-material";
+import {Add, Check, ArrowBack, ContentCopy} from "@mui/icons-material";
 import {useMemo, useState} from "react";
 import {enqueueSnackbar} from "notistack";
 import axios from "axios";
@@ -19,6 +21,13 @@ import axios from "axios";
 export default function TiktokCategoryApiList(props) {
     const {
         shop,
+        currentConfig = {},
+        warehouses = [],
+        warehousesError = null,
+        manufacturers = [],
+        manufacturersError = null,
+        responsiblePersons = [],
+        responsiblePersonsError = null,
         categories = [],
         existingValues = [],
         error = null,
@@ -37,6 +46,26 @@ export default function TiktokCategoryApiList(props) {
     const backUrl = route().has("system.settings.b2c.tiktokCategory")
         ? route("system.settings.b2c.tiktokCategory")
         : "/settings/dictionaries/models/b2c/tiktok-category";
+
+    const defaultWarehouse = warehouses.find((w) => w.is_default) || warehouses[0] || null;
+    const defaultManufacturer = manufacturers[0] || null;
+    const defaultResponsiblePerson = responsiblePersons[0] || null;
+
+    const envSnippet = [
+        `TIKTOK_SHOP_ID=${shop?.id || currentConfig?.shop_id || ""}`,
+        `TIKTOK_WAREHOUSE_ID=${defaultWarehouse?.id || currentConfig?.warehouse_id || ""}`,
+        `TIKTOK_MANUFACTURER_ID=${defaultManufacturer?.id || currentConfig?.manufacturer_id || ""}`,
+        `TIKTOK_RESPONSIBLE_PERSON_ID=${defaultResponsiblePerson?.id || currentConfig?.responsible_person_id || ""}`,
+    ].join("\n");
+
+    const handleCopyText = async (text, label) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            enqueueSnackbar(`Skopiowano ${label} do schowka`, {variant: "success"});
+        } catch {
+            enqueueSnackbar("Nie udało się skopiować do schowka", {variant: "error"});
+        }
+    };
 
     const handleAddCategory = async (row) => {
         const categoryId = String(row.id);
@@ -209,6 +238,112 @@ export default function TiktokCategoryApiList(props) {
                         label="Pokaż tylko kategorie końcowe (is_leaf = true)"
                     />
                 </Box>
+
+                {shop && (
+                    <Paper variant="outlined" sx={{p: 1.5}}>
+                        <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1, flexWrap: "wrap", gap: 1}}>
+                            <Typography variant="subtitle2" fontWeight="bold">
+                                Kody konfiguracyjne z API TikTok Shop (do wpisania w pliku .env)
+                            </Typography>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<ContentCopy/>}
+                                onClick={() => handleCopyText(envSnippet, "blok .env")}
+                            >
+                                Kopiuj cały blok .env
+                            </Button>
+                        </Box>
+
+                        <Grid container spacing={1.5}>
+                            <Grid item xs={12} md={3}>
+                                <Box sx={{p: 1, border: "1px solid", borderColor: "divider", borderRadius: 1, height: "100%"}}>
+                                    <Typography variant="caption" color="text.secondary" display="block">
+                                        TIKTOK_SHOP_ID
+                                    </Typography>
+                                    <Typography variant="body2" sx={{fontFamily: "monospace", fontWeight: "bold", wordBreak: "break-all"}}>
+                                        {shop.id}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary" display="block">
+                                        Nazwa: {shop.name}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={3}>
+                                <Box sx={{p: 1, border: "1px solid", borderColor: "divider", borderRadius: 1, height: "100%"}}>
+                                    <Typography variant="caption" color="text.secondary" display="block">
+                                        TIKTOK_WAREHOUSE_ID (Magazyny)
+                                    </Typography>
+                                    {warehouses.length > 0 ? (
+                                        warehouses.map((w) => (
+                                            <Box key={w.id} sx={{mb: 0.5}}>
+                                                <Typography variant="body2" sx={{fontFamily: "monospace", fontWeight: "bold", wordBreak: "break-all"}}>
+                                                    {w.id}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" display="block">
+                                                    {w.name} ({w.type}){w.is_default ? " — domyślny" : ""}
+                                                </Typography>
+                                            </Box>
+                                        ))
+                                    ) : (
+                                        <Typography variant="caption" color="warning.main">
+                                            Brak magazynów z API {warehousesError ? `(${warehousesError})` : ""}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={3}>
+                                <Box sx={{p: 1, border: "1px solid", borderColor: "divider", borderRadius: 1, height: "100%"}}>
+                                    <Typography variant="caption" color="text.secondary" display="block">
+                                        TIKTOK_MANUFACTURER_ID (Producenci)
+                                    </Typography>
+                                    {manufacturers.length > 0 ? (
+                                        manufacturers.map((m) => (
+                                            <Box key={m.id} sx={{mb: 0.5}}>
+                                                <Typography variant="body2" sx={{fontFamily: "monospace", fontWeight: "bold", wordBreak: "break-all"}}>
+                                                    {m.id}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" display="block">
+                                                    {m.name || "Bez nazwy"}{m.email ? ` (${m.email})` : ""}
+                                                </Typography>
+                                            </Box>
+                                        ))
+                                    ) : (
+                                        <Typography variant="caption" color="warning.main">
+                                            Brak producentów z API {manufacturersError ? `(${manufacturersError})` : ""}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={3}>
+                                <Box sx={{p: 1, border: "1px solid", borderColor: "divider", borderRadius: 1, height: "100%"}}>
+                                    <Typography variant="caption" color="text.secondary" display="block">
+                                        TIKTOK_RESPONSIBLE_PERSON_ID (Osoba odp.)
+                                    </Typography>
+                                    {responsiblePersons.length > 0 ? (
+                                        responsiblePersons.map((rp) => (
+                                            <Box key={rp.id} sx={{mb: 0.5}}>
+                                                <Typography variant="body2" sx={{fontFamily: "monospace", fontWeight: "bold", wordBreak: "break-all"}}>
+                                                    {rp.id}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" display="block">
+                                                    {rp.name || "Bez nazwy"}{rp.email ? ` (${rp.email})` : ""}
+                                                </Typography>
+                                            </Box>
+                                        ))
+                                    ) : (
+                                        <Typography variant="caption" color="warning.main">
+                                            Brak osób odpowiedzialnych z API {responsiblePersonsError ? `(${responsiblePersonsError})` : ""}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                )}
 
                 {error && (
                     <Alert severity="error">

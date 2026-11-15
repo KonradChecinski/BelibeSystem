@@ -75,7 +75,7 @@ class TikTokProductMapper
             throw new InvalidArgumentException("Brak poprawnej ceny brutto B2C (b2c_gross_price) dla modelu ID {$model->id}.");
         }
 
-        $warehouseId = trim((string) config('tiktok.warehouse_id'));
+        $warehouseId = $this->resolveWarehouseId($shopId);
         if ($warehouseId === '') {
             throw new InvalidArgumentException('Brak skonfigurowanego identyfikatora magazynu TikTok (TIKTOK_WAREHOUSE_ID).');
         }
@@ -154,12 +154,12 @@ class TikTokProductMapper
             $payload['brand_id'] = $brandId;
         }
 
-        $manufacturerIds = array_values(array_filter([(string) config('tiktok.manufacturer_id')]));
+        $manufacturerIds = array_values(array_filter([$this->resolveManufacturerId($shopId)]));
         if (!empty($manufacturerIds)) {
             $payload['manufacturer_ids'] = $manufacturerIds;
         }
 
-        $responsiblePersonIds = array_values(array_filter([(string) config('tiktok.responsible_person_id')]));
+        $responsiblePersonIds = array_values(array_filter([$this->resolveResponsiblePersonId($shopId)]));
         if (!empty($responsiblePersonIds)) {
             $payload['responsible_person_ids'] = $responsiblePersonIds;
         }
@@ -176,6 +176,161 @@ class TikTokProductMapper
         }
 
         return $payload;
+    }
+
+    /**
+     * Resolve a valid numeric (Int64 string) TikTok Warehouse ID.
+     * If `TIKTOK_WAREHOUSE_ID` in `.env` is missing or not numeric (e.g. Seller Center internal UUID),
+     * automatically fetches the default active SALES_WAREHOUSE from TikTok Shop API (`/logistics/202309/warehouses`).
+     */
+    public function resolveWarehouseId(?string $shopId = null): string
+    {
+        $configured = trim((string) config('tiktok.warehouse_id'));
+        if ($configured !== '' && ctype_digit($configured)) {
+            return $configured;
+        }
+
+        try {
+            /** @var LaraditzTikTok $tiktok */
+            $tiktok = app('tiktok');
+            if ($shopId) {
+                $tiktok->setShopId($shopId);
+            } else {
+                $defaultShopId = config('tiktok.shop_id') ?: TiktokShop::query()->value('id');
+                if ($defaultShopId) {
+                    $tiktok->setShopId((string) $defaultShopId);
+                }
+            }
+
+            $response = $tiktok->product()->warehouses();
+            $warehouses = data_get($response, 'data.warehouses', []);
+            if (is_array($warehouses) && !empty($warehouses)) {
+                // Prefer default sales warehouse
+                foreach ($warehouses as $wh) {
+                    $id = trim((string) ($wh['id'] ?? ''));
+                    $type = (string) ($wh['type'] ?? '');
+                    $isDefault = (bool) ($wh['is_default'] ?? false);
+                    if ($id !== '' && $isDefault && ($type === '' || $type === 'SALES_WAREHOUSE')) {
+                        return $id;
+                    }
+                }
+
+                // Fallback to any sales warehouse
+                foreach ($warehouses as $wh) {
+                    $id = trim((string) ($wh['id'] ?? ''));
+                    $type = (string) ($wh['type'] ?? '');
+                    if ($id !== '' && ($type === '' || $type === 'SALES_WAREHOUSE')) {
+                        return $id;
+                    }
+                }
+
+                // Fallback to first warehouse
+                $firstId = trim((string) ($warehouses[0]['id'] ?? ''));
+                if ($firstId !== '') {
+                    return $firstId;
+                }
+            }
+        } catch (\Throwable) {
+            // Fall back to configured value if API call fails
+        }
+
+        return $configured;
+    }
+
+    /**
+     * Resolve Manufacturer ID from config or TikTok Compliance API if placeholder/empty.
+     */
+    public function resolveManufacturerId(?string $shopId = null): string
+    {
+        $configured = trim((string) config('tiktok.manufacturer_id'));
+        if ($configured !== '' && $configured !== '6ad769a6f66de4b7d99c98d6') {
+            return $configured;
+        }
+
+        try {
+            /** @var LaraditzTikTok $tiktok */
+            $tiktok = app('tiktok');
+            if ($shopId) {
+                $tiktok->setShopId($shopId);
+            } else {
+                $defaultShopId = config('tiktok.shop_id') ?: TiktokShop::query()->value('id');
+                if ($defaultShopId) {
+                    $tiktok->setShopId((string) $defaultShopId);
+                }
+            }
+
+            foreach (['searchManufacturers', 'searchManufacturersV202409'] as $method) {
+                foreach (['product', 'seller'] as $service) {
+                    try {
+                        $response = $tiktok->{$service}()->{$method}(
+                            query: ['page_size' => 20],
+                            body: ['keyword' => '']
+                        );
+                        $items = data_get($response, 'data.manufacturers', []);
+                        if (is_array($items) && !empty($items)) {
+                            $id = trim((string) ($items[0]['id'] ?? $items[0]['manufacturer_id'] ?? ''));
+                            if ($id !== '') {
+                                return $id;
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Try next combination
+                    }
+                }
+            }
+        } catch (\Throwable) {
+            // Fall back to configured
+        }
+
+        return $configured;
+    }
+
+    /**
+     * Resolve Responsible Person ID from config or TikTok Compliance API if placeholder/empty.
+     */
+    public function resolveResponsiblePersonId(?string $shopId = null): string
+    {
+        $configured = trim((string) config('tiktok.responsible_person_id'));
+        if ($configured !== '' && $configured !== '6ae204e13fc799d09cbb9ada') {
+            return $configured;
+        }
+
+        try {
+            /** @var LaraditzTikTok $tiktok */
+            $tiktok = app('tiktok');
+            if ($shopId) {
+                $tiktok->setShopId($shopId);
+            } else {
+                $defaultShopId = config('tiktok.shop_id') ?: TiktokShop::query()->value('id');
+                if ($defaultShopId) {
+                    $tiktok->setShopId((string) $defaultShopId);
+                }
+            }
+
+            foreach (['searchResponsiblePersons', 'searchResponsiblePersonsV202409'] as $method) {
+                foreach (['product', 'seller'] as $service) {
+                    try {
+                        $response = $tiktok->{$service}()->{$method}(
+                            query: ['page_size' => 20],
+                            body: ['keyword' => '']
+                        );
+                        $items = data_get($response, 'data.responsible_persons', []);
+                        if (is_array($items) && !empty($items)) {
+                            $id = trim((string) ($items[0]['id'] ?? $items[0]['responsible_person_id'] ?? ''));
+                            if ($id !== '') {
+                                return $id;
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Try next combination
+                    }
+                }
+            }
+        } catch (\Throwable) {
+            // Fall back to configured
+        }
+
+        return $configured;
     }
 
     /**

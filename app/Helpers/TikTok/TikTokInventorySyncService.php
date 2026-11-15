@@ -16,7 +16,8 @@ use Throwable;
 class TikTokInventorySyncService
 {
     public function __construct(
-        protected TikTokProductPublisher $publisher
+        protected TikTokProductPublisher $publisher,
+        protected TikTokProductMapper $mapper
     )
     {
     }
@@ -27,7 +28,7 @@ class TikTokInventorySyncService
      */
     public function syncInventoryForProducts(Collection $products, ?string $shopId = null): void
     {
-        $warehouseId = trim((string)config('tiktok.warehouse_id'));
+        $warehouseId = $this->mapper->resolveWarehouseId($shopId);
         if ($warehouseId === '') {
             throw new \InvalidArgumentException('Brak skonfigurowanego identyfikatora magazynu TikTok (TIKTOK_WAREHOUSE_ID).');
         }

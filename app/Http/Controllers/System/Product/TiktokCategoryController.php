@@ -22,11 +22,28 @@ class TiktokCategoryController extends Controller
     }
 
     /**
-     * Fetch and display categories directly from TikTok Shop API.
+     * Fetch and display categories and shop configuration IDs directly from TikTok Shop API.
      */
     public function apiList(Request $request)
     {
+        $user = auth()->user();
+        abort_unless(
+            $user && (
+                $user->hasRole('Administrator', 'user')
+                || $user->hasPermissionTo('editDictionary', 'user')
+                || $user->hasPermissionTo('editSetting', 'user')
+            ),
+            403
+        );
+
         $tiktok = app('tiktok');
+
+        $currentConfig = [
+            'shop_id' => (string) config('tiktok.shop_id'),
+            'warehouse_id' => (string) config('tiktok.warehouse_id'),
+            'manufacturer_id' => (string) config('tiktok.manufacturer_id'),
+            'responsible_person_id' => (string) config('tiktok.responsible_person_id'),
+        ];
 
         $shop = TiktokShop::query()
             ->when(config('tiktok.shop_id'), fn ($q, $id) => $q->where('id', $id))
@@ -35,6 +52,10 @@ class TiktokCategoryController extends Controller
         if (!$shop) {
             return Inertia::render("System/Settings/Dictionaries/Models/B2C/TiktokCategoryApiList", [
                 'shop' => null,
+                'currentConfig' => $currentConfig,
+                'warehouses' => [],
+                'manufacturers' => [],
+                'responsiblePersons' => [],
                 'authUrl' => config('tiktok.service_id') ? $tiktok->authorizationUrl() : null,
                 'callbackUrl' => url('/tiktok/seller/authorized'),
                 'categories' => [],
@@ -51,6 +72,114 @@ class TiktokCategoryController extends Controller
             'category_version' => $request->query('category_version'),
         ]);
 
+        $warehouses = [];
+        $warehousesError = null;
+        try {
+            $whResponse = $tiktok->shopId($shop->id)->product()->warehouses();
+            foreach (data_get($whResponse, 'data.warehouses', []) as $wh) {
+                $warehouses[] = [
+                    'id' => (string) ($wh['id'] ?? ''),
+                    'name' => (string) ($wh['name'] ?? ''),
+                    'type' => (string) ($wh['type'] ?? ''),
+                    'is_default' => (bool) ($wh['is_default'] ?? false),
+                ];
+            }
+        } catch (\Throwable $e) {
+            $warehousesError = $e->getMessage();
+        }
+
+        $manufacturers = [];
+        $manufacturersError = null;
+        $rawManufacturers = null;
+        foreach (['searchManufacturers', 'searchManufacturersV202409'] as $method) {
+            foreach (['product', 'seller'] as $service) {
+                foreach ([['keyword' => ''], ['locales' => [$locale, 'en-IE', 'en-GB']]] as $bodyPayload) {
+                    try {
+                        $mResponse = $tiktok->shopId($shop->id)->{$service}()->{$method}(
+                            query: ['page_size' => 50],
+                            body: $bodyPayload
+                        );
+                        $rawManufacturers = data_get($mResponse, 'data.manufacturers', []);
+                        $manufacturersError = null;
+                        break 3;
+                    } catch (\Throwable $e) {
+                        $manufacturersError = $e->getMessage();
+                    }
+                }
+            }
+        }
+
+        if (is_array($rawManufacturers)) {
+            foreach ($rawManufacturers as $m) {
+                $id = (string) ($m['id'] ?? $m['manufacturer_id'] ?? '');
+                if ($id === '') {
+                    continue;
+                }
+                $name = (string) (
+                    $m['name']
+                    ?? data_get($m, 'regional_profiles.0.name')
+                    ?? $m['registered_trade_name']
+                    ?? data_get($m, 'regional_profiles.0.registered_trade_name')
+                    ?? ''
+                );
+                $email = (string) (
+                    $m['email']
+                    ?? data_get($m, 'regional_profiles.0.email')
+                    ?? ''
+                );
+                $manufacturers[] = [
+                    'id' => $id,
+                    'name' => $name,
+                    'email' => $email,
+                ];
+            }
+        }
+
+        $responsiblePersons = [];
+        $responsiblePersonsError = null;
+        $rawResponsiblePersons = null;
+        foreach (['searchResponsiblePersons', 'searchResponsiblePersonsV202409'] as $method) {
+            foreach (['product', 'seller'] as $service) {
+                foreach ([['keyword' => ''], ['locales' => [$locale, 'en-IE', 'en-GB']]] as $bodyPayload) {
+                    try {
+                        $rpResponse = $tiktok->shopId($shop->id)->{$service}()->{$method}(
+                            query: ['page_size' => 50],
+                            body: $bodyPayload
+                        );
+                        $rawResponsiblePersons = data_get($rpResponse, 'data.responsible_persons', []);
+                        $responsiblePersonsError = null;
+                        break 3;
+                    } catch (\Throwable $e) {
+                        $responsiblePersonsError = $e->getMessage();
+                    }
+                }
+            }
+        }
+
+        if (is_array($rawResponsiblePersons)) {
+            foreach ($rawResponsiblePersons as $rp) {
+                $id = (string) ($rp['id'] ?? $rp['responsible_person_id'] ?? '');
+                if ($id === '') {
+                    continue;
+                }
+                $name = (string) (
+                    $rp['name']
+                    ?? data_get($rp, 'regional_profiles.0.name')
+                    ?? ''
+                );
+                $email = (string) (
+                    $rp['email']
+                    ?? data_get($rp, 'regional_profiles.0.email')
+                    ?? ''
+                );
+                $responsiblePersons[] = [
+                    'id' => $id,
+                    'name' => $name,
+                    'email' => $email,
+                ];
+            }
+        }
+
         try {
             $response = $tiktok
                 ->shopId($shop->id)
@@ -64,6 +193,13 @@ class TiktokCategoryController extends Controller
                     'id' => $shop->id,
                     'name' => $shop->name,
                 ],
+                'currentConfig' => $currentConfig,
+                'warehouses' => $warehouses,
+                'warehousesError' => $warehousesError,
+                'manufacturers' => $manufacturers,
+                'manufacturersError' => $manufacturersError,
+                'responsiblePersons' => $responsiblePersons,
+                'responsiblePersonsError' => $responsiblePersonsError,
                 'categories' => [],
                 'existingValues' => [],
                 'locale' => $locale,
@@ -122,6 +258,13 @@ class TiktokCategoryController extends Controller
                 'id' => $shop->id,
                 'name' => $shop->name,
             ],
+            'currentConfig' => $currentConfig,
+            'warehouses' => $warehouses,
+            'warehousesError' => $warehousesError,
+            'manufacturers' => $manufacturers,
+            'manufacturersError' => $manufacturersError,
+            'responsiblePersons' => $responsiblePersons,
+            'responsiblePersonsError' => $responsiblePersonsError,
             'categories' => $categories,
             'existingValues' => array_keys($existingValues),
             'locale' => $locale,

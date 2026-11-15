@@ -42,7 +42,11 @@ return [
             'delete_webhook' => 'DELETE /event/202309/webhooks',
         ],
         'seller' => [
-            'shops' => '/seller/202309/shops'
+            'shops' => '/seller/202309/shops',
+            'search_manufacturers' => 'POST /product/202501/compliance/manufacturers/search',
+            'search_manufacturers_v202409' => 'POST /product/202409/compliance/manufacturers/search',
+            'search_responsible_persons' => 'POST /product/202501/compliance/responsible_persons/search',
+            'search_responsible_persons_v202409' => 'POST /product/202409/compliance/responsible_persons/search',
         ],
         'order' => [
             'list' => 'POST /order/202309/orders/search',
@@ -70,6 +74,10 @@ return [
             'create_size_chart' => 'POST /product/202610/size_charts',
             'edit_size_chart' => 'POST /product/202610/size_charts/edit',
             'search_size_charts' => 'POST /product/202407/size_charts/search',
+            'search_manufacturers' => 'POST /product/202501/compliance/manufacturers/search',
+            'search_manufacturers_v202409' => 'POST /product/202409/compliance/manufacturers/search',
+            'search_responsible_persons' => 'POST /product/202501/compliance/responsible_persons/search',
+            'search_responsible_persons_v202409' => 'POST /product/202409/compliance/responsible_persons/search',
         ],
         'return' => [
             'get' => '/return_refund/202309/returns/{return_id}/records',

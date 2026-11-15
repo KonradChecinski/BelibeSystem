@@ -166,6 +166,10 @@ export default function B2CTiktokCategoryTable(props) {
 
     const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
+    const canAccessApiList =
+        props.auth?.roles?.includes("Administrator") ||
+        props.auth?.permissions?.some((p) => ["editDictionary", "editSetting"].includes(p));
+
     return (
         <>
             <DataGrid
@@ -216,20 +220,22 @@ export default function B2CTiktokCategoryTable(props) {
             />
 
             <Box sx={{position: "absolute", bottom: 10, right: 10, zIndex: 20, display: "flex", alignItems: "center", gap: 1.5}}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    component="a"
-                    href={route().has("system.settings.b2c.tiktokCategory.apiList")
-                        ? route("system.settings.b2c.tiktokCategory.apiList", {locale: "pl-PL"})
-                        : route(route().current()) + "/api-list?locale=pl-PL"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    endIcon={<OpenInNew/>}
-                    sx={{boxShadow: 3}}
-                >
-                    Kategorie z API TikTok
-                </Button>
+                {canAccessApiList && (
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        component="a"
+                        href={route().has("system.settings.b2c.tiktokCategory.apiList")
+                            ? route("system.settings.b2c.tiktokCategory.apiList", {locale: "pl-PL"})
+                            : route(route().current()) + "/api-list?locale=pl-PL"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        endIcon={<OpenInNew/>}
+                        sx={{boxShadow: 3}}
+                    >
+                        Kategorie i kody z API TikTok
+                    </Button>
+                )}
                 <Fab color="primary" aria-label="add" onClick={() => {
                     setOpenDialogAdd(true)
                 }}>
