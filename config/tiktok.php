@@ -69,6 +69,7 @@ return [
             'warehouses' => '/logistics/202309/warehouses',
             'create_size_chart' => 'POST /product/202610/size_charts',
             'edit_size_chart' => 'POST /product/202610/size_charts/edit',
+            'search_size_charts' => 'POST /product/202407/size_charts/search',
         ],
         'return' => [
             'get' => '/return_refund/202309/returns/{return_id}/records',

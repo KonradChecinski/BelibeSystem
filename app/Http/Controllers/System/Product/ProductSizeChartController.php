@@ -97,7 +97,9 @@ class ProductSizeChartController extends Controller
         $sizeChart->update([
             'name' => $request->name,
             'table_data' => $request->table_data,
-            'tiktok_template_id' => $request->tiktok_template_id ?: null,
+            'tiktok_template_id' => $request->filled('tiktok_template_id')
+                ? $request->tiktok_template_id
+                : $sizeChart->tiktok_template_id,
             'tiktok_image_uri' => null,
         ]);
 

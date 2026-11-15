@@ -8,6 +8,7 @@ use App\Models\ProductSizeChart;
 use App\Models\TikTok\TiktokProduct;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Laraditz\TikTok\Exceptions\TikTokAPIError;
 use Laraditz\TikTok\Models\TiktokShop;
 use Laraditz\TikTok\TikTok as LaraditzTikTok;
 
@@ -203,7 +204,36 @@ class TikTokProductMapper
             }
         }
 
-        $response = $tiktok->product()->createSizeChart(body: $body);
+        try {
+            $response = $tiktok->product()->createSizeChart(body: $body);
+        } catch (TikTokAPIError $e) {
+            // Jeśli szablon o tej nazwie już istnieje w TikTok Shop (12052127),
+            // spróbujmy go odnaleźć lub utwórzmy z unikalną nazwą zawierającą ID.
+            if ((string) $e->getCode() === '12052127' || str_contains($e->getMessage(), 'duplicate name')) {
+                $existingId = $this->findExistingSizeChartTemplateId($tiktok, $sizeChart->name);
+                if ($existingId !== '') {
+                    $sizeChart->tiktok_template_id = $existingId;
+                    $sizeChart->save();
+
+                    return $existingId;
+                }
+
+                $body['template_name'] = trim($sizeChart->name) . ' #' . ($sizeChart->id ?: time());
+                try {
+                    $response = $tiktok->product()->createSizeChart(body: $body);
+                } catch (TikTokAPIError $retryException) {
+                    if ((string) $retryException->getCode() === '12052127' || str_contains($retryException->getMessage(), 'duplicate name')) {
+                        $body['template_name'] = trim($sizeChart->name) . ' #' . ($sizeChart->id ?: '1') . '-' . time();
+                        $response = $tiktok->product()->createSizeChart(body: $body);
+                    } else {
+                        throw $retryException;
+                    }
+                }
+            } else {
+                throw $e;
+            }
+        }
+
         $templateId = trim((string) (
             data_get($response, 'data.size_chart_id')
             ?? data_get($response, 'data.id')
@@ -216,6 +246,36 @@ class TikTokProductMapper
         }
 
         return $templateId;
+    }
+
+    /**
+     * Try to find an existing size chart template ID in TikTok Shop by name.
+     */
+    protected function findExistingSizeChartTemplateId(LaraditzTikTok $tiktok, string $templateName): string
+    {
+        try {
+            $searchResponse = $tiktok->product()->searchSizeCharts(
+                query: ['page_size' => 50],
+                body: ['keyword' => trim($templateName)]
+            );
+
+            $charts = data_get($searchResponse, 'data.size_chart', [])
+                ?: data_get($searchResponse, 'data.size_charts', []);
+
+            if (is_array($charts)) {
+                foreach ($charts as $chart) {
+                    $name = trim((string) ($chart['template_name'] ?? $chart['name'] ?? ''));
+                    $id = trim((string) ($chart['size_chart_id'] ?? $chart['template_id'] ?? $chart['id'] ?? ''));
+                    if ($id !== '' && ($name === '' || mb_strtolower($name) === mb_strtolower(trim($templateName)))) {
+                        return $id;
+                    }
+                }
+            }
+        } catch (\Throwable) {
+            // Ignorujemy błąd wyszukiwania i przechodzimy do fallbacku z unikalną nazwą
+        }
+
+        return '';
     }
 
     /**
