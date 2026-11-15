@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Kompatybilność modeli laraditz/tiktok (definiujących metodę casts() z Laravel 11) z Laravel 10
-        Event::listen(['eloquent.saving: Laraditz\TikTok\Models\*', 'eloquent.retrieved: Laraditz\TikTok\Models\*'], function (string $event, array $models) {
+        Event::listen(['eloquent.booted: Laraditz\TikTok\Models\*', 'eloquent.saving: Laraditz\TikTok\Models\*', 'eloquent.retrieved: Laraditz\TikTok\Models\*'], function (string $event, array $models) {
             foreach ($models as $model) {
                 if (method_exists($model, 'casts')) {
                     $ref = new \ReflectionMethod($model, 'casts');
