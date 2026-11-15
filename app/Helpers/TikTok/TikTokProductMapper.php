@@ -164,6 +164,11 @@ class TikTokProductMapper
             $payload['responsible_person_ids'] = $responsiblePersonIds;
         }
 
+        $productAttributes = $this->buildProductAttributes($model, $categoryId, $shopId);
+        if (!empty($productAttributes)) {
+            $payload['product_attributes'] = $productAttributes;
+        }
+
         if ($model->sizeChart) {
             $templateId = $this->resolveOrSyncSizeChartTemplateId($model->sizeChart, $categoryId, $shopId);
             if ($templateId !== '') {
@@ -176,6 +181,269 @@ class TikTokProductMapper
         }
 
         return $payload;
+    }
+
+    /**
+     * Build TikTok `product_attributes` array by matching model's `tiktok_attributes`
+     * against the category's attributes returned by `/product/202309/categories/{category_id}/attributes`.
+     */
+    public function buildProductAttributes(
+        \App\Models\Products\ProductModel $model,
+        string $categoryId,
+        ?string $shopId = null
+    ): array {
+        $rawAttrs = is_array($model->tiktok_attributes) ? $model->tiktok_attributes : [];
+
+        $complianceConfirmed = array_key_exists('compliance_labels_confirmed', $rawAttrs)
+            ? (bool) $rawAttrs['compliance_labels_confirmed']
+            : true;
+
+        $countryOfOrigin = trim((string) ($rawAttrs['country_of_origin'] ?? 'Polska'));
+        if ($countryOfOrigin === '') {
+            $countryOfOrigin = 'Polska';
+        }
+
+        $quantityPerPack = trim((string) ($rawAttrs['quantity_per_pack'] ?? '1'));
+
+        $normalizeList = function ($val): array {
+            if (is_string($val)) {
+                $val = [$val];
+            }
+            if (!is_array($val)) {
+                return [];
+            }
+
+            return array_values(array_filter(array_map(fn ($item) => trim((string) $item), $val), fn ($item) => $item !== ''));
+        };
+
+        $careInstructions = $normalizeList($rawAttrs['care_instructions'] ?? []);
+        $sportsFeatures = $normalizeList($rawAttrs['sports_feature'] ?? []);
+        $materials = $normalizeList($rawAttrs['material'] ?? []);
+        $compositions = $normalizeList($rawAttrs['composition'] ?? []);
+
+        $apiAttributes = [];
+        try {
+            /** @var LaraditzTikTok $tiktok */
+            $tiktok = app('tiktok');
+            if ($shopId) {
+                $tiktok->setShopId($shopId);
+            } else {
+                $defaultShopId = config('tiktok.shop_id') ?: TiktokShop::query()->value('id');
+                if ($defaultShopId) {
+                    $tiktok->setShopId((string) $defaultShopId);
+                }
+            }
+
+            $response = $tiktok->product()->categoryAttributes(
+                params: ['category_id' => $categoryId],
+                query: ['locale' => 'pl-PL']
+            );
+            $apiAttributes = data_get($response, 'data.attributes', []);
+            if (!is_array($apiAttributes)) {
+                $apiAttributes = [];
+            }
+        } catch (\Throwable) {
+            $apiAttributes = [];
+        }
+
+        $synonyms = [
+            'tak' => ['tak', 'yes', 'true', 'potwierdzam'],
+            'nie' => ['nie', 'no', 'false'],
+            'polska' => ['polska', 'poland', 'pl', 'rzeczpospolita polska'],
+            'tylko pranie ręczne' => ['tylko pranie ręczne', 'pranie ręczne', 'hand wash only', 'hand wash'],
+            'można prać w pralce' => ['można prać w pralce', 'pranie w pralce', 'machine washable', 'machine wash'],
+            'pranie w zimnej wodzie' => ['pranie w zimnej wodzie', 'prać w zimnej wodzie', 'cold wash'],
+            'poliamid' => ['poliamid', 'nylon', 'polyamide'],
+            'nylon' => ['nylon', 'poliamid', 'polyamide'],
+            'elastan' => ['elastan', 'spandex', 'lycra', 'elasthan'],
+            'spandex' => ['spandex', 'elastan', 'lycra'],
+            'lycra' => ['lycra', 'elastan', 'spandex'],
+            'poliester' => ['poliester', 'polyester'],
+            'bawełna' => ['bawełna', 'cotton'],
+            'mikrofibra' => ['mikrofibra', 'mikrowłókno', 'microfiber', 'microfibre'],
+            'pbt' => ['pbt', 'poliester pbt'],
+            'frotte' => ['frotte', 'terry', 'bawełna frotte'],
+            'włókno bambusowe' => ['włókno bambusowe', 'bambus', 'bamboo'],
+        ];
+
+        $matchValuesForAttribute = function (array $attr, array $desiredInputs, bool $allowFallbackFirst = false) use ($synonyms): array {
+            $predefinedValues = is_array($attr['values'] ?? null) ? $attr['values'] : [];
+            $isCustomizable = (bool) ($attr['is_customizable'] ?? empty($predefinedValues));
+            $isMultiple = (bool) ($attr['is_multiple_selection'] ?? false);
+
+            $matched = [];
+            $usedIds = [];
+
+            foreach ($desiredInputs as $input) {
+                $inputTrimmed = trim((string) $input);
+                if ($inputTrimmed === '') {
+                    continue;
+                }
+                $inputLower = mb_strtolower($inputTrimmed);
+                $candidates = $synonyms[$inputLower] ?? [$inputLower];
+
+                $foundPredefined = null;
+                foreach ($predefinedValues as $pv) {
+                    $pvName = trim((string) ($pv['name'] ?? ''));
+                    $pvLower = mb_strtolower($pvName);
+                    if (in_array($pvLower, $candidates, true)) {
+                        $foundPredefined = $pv;
+                        break;
+                    }
+                }
+
+                if (!$foundPredefined) {
+                    foreach ($predefinedValues as $pv) {
+                        $pvName = trim((string) ($pv['name'] ?? ''));
+                        $pvLower = mb_strtolower($pvName);
+                        foreach ($candidates as $cand) {
+                            if ($cand !== '' && (str_contains($pvLower, $cand) || str_contains($cand, $pvLower))) {
+                                $foundPredefined = $pv;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+
+                if ($foundPredefined && !empty($foundPredefined['id'])) {
+                    $pvId = (string) $foundPredefined['id'];
+                    if (!isset($usedIds[$pvId])) {
+                        $usedIds[$pvId] = true;
+                        $matched[] = [
+                            'id' => $pvId,
+                            'name' => (string) ($foundPredefined['name'] ?? $inputTrimmed),
+                        ];
+                    }
+                } elseif ($isCustomizable) {
+                    $matched[] = [
+                        'name' => $inputTrimmed,
+                    ];
+                }
+            }
+
+            if (empty($matched) && $allowFallbackFirst && !empty($predefinedValues[0]['id'])) {
+                $matched[] = [
+                    'id' => (string) $predefinedValues[0]['id'],
+                    'name' => (string) ($predefinedValues[0]['name'] ?? ($desiredInputs[0] ?? 'Tak')),
+                ];
+            }
+
+            if (!$isMultiple && count($matched) > 1) {
+                // Jeśli wszystkie wartości są niestandardowe (bez 'id'), połączmy je przecinkiem
+                $allCustom = collect($matched)->every(fn ($m) => empty($m['id']));
+                if ($allCustom && $isCustomizable) {
+                    return [
+                        ['name' => implode(', ', array_column($matched, 'name'))],
+                    ];
+                }
+
+                return [$matched[0]];
+            }
+
+            return $matched;
+        };
+
+        $result = [];
+        $handledCompliance = false;
+
+        foreach ($apiAttributes as $attr) {
+            if (($attr['type'] ?? 'PRODUCT_PROPERTY') === 'SALES_PROPERTY') {
+                continue;
+            }
+
+            $attrId = trim((string) ($attr['id'] ?? ''));
+            if ($attrId === '') {
+                continue;
+            }
+
+            $attrName = mb_strtolower(trim((string) ($attr['name'] ?? '')));
+            $valuesToSend = [];
+
+            if (
+                $attrId === '102277'
+                || str_contains($attrName, 'oznacz')
+                || str_contains($attrName, 'etykiet')
+                || str_contains($attrName, 'przepisa')
+                || str_contains($attrName, 'compliance')
+            ) {
+                $handledCompliance = true;
+                $valuesToSend = $matchValuesForAttribute(
+                    $attr,
+                    [$complianceConfirmed ? 'Tak' : 'Nie'],
+                    $complianceConfirmed
+                );
+            } elseif (
+                str_contains($attrName, 'kraj pochodzenia')
+                || str_contains($attrName, 'country of origin')
+                || str_contains($attrName, 'kraj produkcji')
+            ) {
+                if ($countryOfOrigin !== '') {
+                    $valuesToSend = $matchValuesForAttribute($attr, [$countryOfOrigin]);
+                }
+            } elseif (
+                str_contains($attrName, 'liczba w opakowaniu')
+                || str_contains($attrName, 'ilość w opakowaniu')
+                || str_contains($attrName, 'liczba sztuk')
+                || str_contains($attrName, 'quantity per pack')
+            ) {
+                if ($quantityPerPack !== '') {
+                    $valuesToSend = $matchValuesForAttribute($attr, [$quantityPerPack]);
+                }
+            } elseif (
+                str_contains($attrName, 'instrukcj')
+                || str_contains($attrName, 'prania')
+                || str_contains($attrName, 'pielęgnac')
+                || str_contains($attrName, 'care instruction')
+            ) {
+                if (!empty($careInstructions)) {
+                    $valuesToSend = $matchValuesForAttribute($attr, $careInstructions);
+                }
+            } elseif (
+                str_contains($attrName, 'funkcja sportowa')
+                || str_contains($attrName, 'funkcje sportowe')
+                || str_contains($attrName, 'cecha sportowa')
+                || str_contains($attrName, 'właściwości sportowe')
+                || str_contains($attrName, 'sports feature')
+            ) {
+                if (!empty($sportsFeatures)) {
+                    $valuesToSend = $matchValuesForAttribute($attr, $sportsFeatures);
+                }
+            } elseif (
+                str_contains($attrName, 'skład')
+                || str_contains($attrName, 'composition')
+            ) {
+                if (!empty($compositions)) {
+                    $valuesToSend = $matchValuesForAttribute($attr, $compositions);
+                }
+            } elseif (
+                $attrName === 'materiał'
+                || $attrName === 'material'
+                || str_contains($attrName, 'główny materiał')
+                || str_contains($attrName, 'materiał wykonania')
+            ) {
+                if (!empty($materials)) {
+                    $valuesToSend = $matchValuesForAttribute($attr, $materials);
+                }
+            }
+
+            if (!empty($valuesToSend)) {
+                $result[] = [
+                    'id' => $attrId,
+                    'values' => $valuesToSend,
+                ];
+            }
+        }
+
+        if (!$handledCompliance && $complianceConfirmed) {
+            $result[] = [
+                'id' => '102277',
+                'values' => [
+                    ['name' => 'Tak'],
+                ],
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -238,12 +506,12 @@ class TikTokProductMapper
     }
 
     /**
-     * Resolve Manufacturer ID from config or TikTok Compliance API if placeholder/empty.
+     * Resolve Manufacturer ID from config or TikTok Compliance API if empty.
      */
     public function resolveManufacturerId(?string $shopId = null): string
     {
         $configured = trim((string) config('tiktok.manufacturer_id'));
-        if ($configured !== '' && $configured !== '6ad769a6f66de4b7d99c98d6') {
+        if ($configured !== '') {
             return $configured;
         }
 
@@ -260,7 +528,7 @@ class TikTokProductMapper
             }
 
             foreach (['searchManufacturers', 'searchManufacturersV202409'] as $method) {
-                foreach (['product', 'seller'] as $service) {
+                foreach (['seller', 'product'] as $service) {
                     try {
                         $response = $tiktok->{$service}()->{$method}(
                             query: ['page_size' => 20],
@@ -286,12 +554,12 @@ class TikTokProductMapper
     }
 
     /**
-     * Resolve Responsible Person ID from config or TikTok Compliance API if placeholder/empty.
+     * Resolve Responsible Person ID from config or TikTok Compliance API if empty.
      */
     public function resolveResponsiblePersonId(?string $shopId = null): string
     {
         $configured = trim((string) config('tiktok.responsible_person_id'));
-        if ($configured !== '' && $configured !== '6ae204e13fc799d09cbb9ada') {
+        if ($configured !== '') {
             return $configured;
         }
 
@@ -308,7 +576,7 @@ class TikTokProductMapper
             }
 
             foreach (['searchResponsiblePersons', 'searchResponsiblePersonsV202409'] as $method) {
-                foreach (['product', 'seller'] as $service) {
+                foreach (['seller', 'product'] as $service) {
                     try {
                         $response = $tiktok->{$service}()->{$method}(
                             query: ['page_size' => 20],

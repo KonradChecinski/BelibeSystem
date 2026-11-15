@@ -53,7 +53,11 @@ class ProductModel extends Model
         'b2c_variant',
         'product_tiktok_category_id',
         'product_size_chart_id',
+        'tiktok_attributes',
+    ];
 
+    protected $casts = [
+        'tiktok_attributes' => 'array',
     ];
 
     protected $hidden = [

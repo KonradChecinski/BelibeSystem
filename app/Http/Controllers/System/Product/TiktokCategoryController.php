@@ -92,7 +92,7 @@ class TiktokCategoryController extends Controller
         $manufacturersError = null;
         $rawManufacturers = null;
         foreach (['searchManufacturers', 'searchManufacturersV202409'] as $method) {
-            foreach (['product', 'seller'] as $service) {
+            foreach (['seller', 'product'] as $service) {
                 foreach ([['keyword' => ''], ['locales' => [$locale, 'en-IE', 'en-GB']]] as $bodyPayload) {
                     try {
                         $mResponse = $tiktok->shopId($shop->id)->{$service}()->{$method}(
@@ -139,7 +139,7 @@ class TiktokCategoryController extends Controller
         $responsiblePersonsError = null;
         $rawResponsiblePersons = null;
         foreach (['searchResponsiblePersons', 'searchResponsiblePersonsV202409'] as $method) {
-            foreach (['product', 'seller'] as $service) {
+            foreach (['seller', 'product'] as $service) {
                 foreach ([['keyword' => ''], ['locales' => [$locale, 'en-IE', 'en-GB']]] as $bodyPayload) {
                     try {
                         $rpResponse = $tiktok->shopId($shop->id)->{$service}()->{$method}(

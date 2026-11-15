@@ -61,10 +61,15 @@ class B2CProductModelController extends Controller
 //        dd($request->description_b2c, Purify::config("descriptions")->clean($request->description_b2c));
 //        dd($request->all(), $request->validated());
 
-        $productModel->update([
+        $updateData = [
             "description_b2c" => Purify::config("descriptions")->clean($request->description_b2c),
-//            "b2c_variant" => $request->b2c_variant
-        ]);
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('product_models', 'tiktok_attributes')) {
+            $updateData["tiktok_attributes"] = $request->input("tiktok_attributes");
+        }
+
+        $productModel->update($updateData);
         $productModel->b2cCategory()->associate($request->product_b2c_category_id);
         $productModel->clasp()->associate($request->product_clasp_id);
         $productModel->empikCategory()->associate($request->product_empik_category_id);

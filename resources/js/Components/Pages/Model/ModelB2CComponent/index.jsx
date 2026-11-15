@@ -2,9 +2,12 @@ import {
     Autocomplete,
     Box,
     Button,
+    Chip,
     Divider,
     Fade,
+    FormControlLabel,
     Paper,
+    Switch,
     Table,
     TableBody,
     TableCell,
@@ -13,6 +16,7 @@ import {
     TextField,
     Tooltip,
     Typography,
+    createFilterOptions,
 } from "@mui/material";
 import { Category, Description, Save, Straighten, Storefront } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -20,6 +24,82 @@ import { useForm } from "@inertiajs/react";
 import { enqueueSnackbar } from "notistack";
 import TextEditorWebsite from "@/Components/TextEditor/Website";
 import normalizeQuillHtml from "@/Components/TextEditor/normalizeQuillHtml";
+
+const filterFreeSolo = createFilterOptions();
+
+const TIKTOK_COUNTRY_OPTIONS = ["Polska"];
+
+const TIKTOK_CARE_INSTRUCTIONS_OPTIONS = [
+    "Tylko pranie ręczne",
+    "Można prać w pralce",
+    "Pranie w zimnej wodzie",
+];
+
+const TIKTOK_SPORTS_FEATURE_OPTIONS = [
+    "Szybkoschnący",
+    "Oddychający",
+    "Odporny na chlor",
+    "Ochrona przed promieniowaniem UV",
+    "Elastyczny",
+    "Rozciągliwy",
+    "Odprowadzający wilgoć",
+    "Lekki",
+    "Wodoodporny",
+    "Antybakteryjny",
+];
+
+const TIKTOK_SWIMWEAR_TOWEL_MATERIAL_OPTIONS = [
+    "Poliamid",
+    "Poliester",
+    "Elastan",
+    "Nylon",
+    "Spandex",
+    "Lycra",
+    "PBT",
+    "Bawełna",
+    "Mikrofibra",
+    "Frotte",
+    "Włókno bambusowe",
+];
+
+const TIKTOK_COMPOSITION_OPTIONS = [
+    "80% Poliamid, 20% Elastan",
+    "82% Poliamid, 18% Elastan",
+    "78% Poliamid, 22% Elastan",
+    "85% Poliester, 15% Elastan",
+    "100% Poliester",
+    "55% PBT, 45% Poliester",
+    "53% Poliester, 47% PBT",
+    "100% Bawełna",
+    "100% Mikrofibra",
+    "88% Poliester, 12% Poliamid",
+    "70% Bawełna, 30% Poliester",
+];
+
+const normalizeTiktokAttributes = (raw) => {
+    const attrs = raw && typeof raw === "object" ? raw : {};
+    const toArray = (v) => {
+        if (Array.isArray(v)) return v.filter(Boolean).map(String);
+        if (typeof v === "string" && v.trim() !== "") return [v.trim()];
+        return [];
+    };
+
+    return {
+        compliance_labels_confirmed:
+            attrs.compliance_labels_confirmed !== undefined
+                ? Boolean(attrs.compliance_labels_confirmed)
+                : true,
+        country_of_origin: attrs.country_of_origin || "Polska",
+        quantity_per_pack:
+            attrs.quantity_per_pack !== undefined && attrs.quantity_per_pack !== null && attrs.quantity_per_pack !== ""
+                ? String(attrs.quantity_per_pack)
+                : "1",
+        care_instructions: toArray(attrs.care_instructions),
+        sports_feature: toArray(attrs.sports_feature),
+        material: toArray(attrs.material),
+        composition: toArray(attrs.composition),
+    };
+};
 
 export default function ModelB2CComponent(props) {
     const [edited, setEdited] = useState(false);
@@ -41,6 +121,8 @@ export default function ModelB2CComponent(props) {
 
         product_size_chart_id: props.productModel.product_size_chart_id,
         size_chart: props.productModel.size_chart,
+
+        tiktok_attributes: normalizeTiktokAttributes(props.productModel.tiktok_attributes),
     });
 
     useEffect(() => {
@@ -62,8 +144,18 @@ export default function ModelB2CComponent(props) {
 
             product_size_chart_id: props.productModel.product_size_chart_id,
             size_chart: props.productModel.size_chart,
+
+            tiktok_attributes: normalizeTiktokAttributes(props.productModel.tiktok_attributes),
         });
     }, [props]);
+
+    const updateTiktokAttr = (key, value) => {
+        setData("tiktok_attributes", {
+            ...(data.tiktok_attributes || normalizeTiktokAttributes({})),
+            [key]: value,
+        });
+        setEdited(true);
+    };
 
     const saveB2C = () => {
         transform((formData) => ({
@@ -318,6 +410,200 @@ export default function ModelB2CComponent(props) {
                                 setEdited(true);
                             }}
                             renderInput={(params) => <TextField {...params} label="Kategoria TikTok" />}
+                        />
+
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={Boolean(data.tiktok_attributes?.compliance_labels_confirmed ?? true)}
+                                    disabled={!props.editing}
+                                    onChange={(e) => updateTiktokAttr("compliance_labels_confirmed", e.target.checked)}
+                                    color="primary"
+                                />
+                            }
+                            label={
+                                <Typography variant="body2">
+                                    Potwierdź obecność oznaczeń lub etykiet wymaganych przepisami (ID: 102277)
+                                </Typography>
+                            }
+                        />
+
+                        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 1.5 }}>
+                            <Autocomplete
+                                disablePortal
+                                id="tiktok_country_of_origin"
+                                disabled={!props.editing}
+                                options={TIKTOK_COUNTRY_OPTIONS}
+                                fullWidth
+                                value={data.tiktok_attributes?.country_of_origin || "Polska"}
+                                onChange={(e, value) => updateTiktokAttr("country_of_origin", value || "Polska")}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Kraj pochodzenia" size="small" />
+                                )}
+                            />
+
+                            <TextField
+                                label="Liczba w opakowaniu"
+                                size="small"
+                                type="number"
+                                disabled={!props.editing}
+                                fullWidth
+                                inputProps={{ min: 1 }}
+                                value={data.tiktok_attributes?.quantity_per_pack ?? "1"}
+                                onChange={(e) => updateTiktokAttr("quantity_per_pack", e.target.value)}
+                            />
+                        </Box>
+
+                        <Autocomplete
+                            multiple
+                            disablePortal
+                            id="tiktok_care_instructions"
+                            disabled={!props.editing}
+                            options={TIKTOK_CARE_INSTRUCTIONS_OPTIONS}
+                            value={data.tiktok_attributes?.care_instructions || []}
+                            onChange={(e, value) => updateTiktokAttr("care_instructions", value)}
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+                                ))
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Instrukcja prania"
+                                    size="small"
+                                    placeholder="Wybierz instrukcję prania..."
+                                />
+                            )}
+                        />
+
+                        <Autocomplete
+                            multiple
+                            freeSolo
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="tiktok_sports_feature"
+                            disabled={!props.editing}
+                            options={TIKTOK_SPORTS_FEATURE_OPTIONS}
+                            value={data.tiktok_attributes?.sports_feature || []}
+                            filterOptions={(options, params) => {
+                                const filtered = filterFreeSolo(options, params);
+                                const { inputValue } = params;
+                                const trimmed = inputValue.trim();
+                                const isExisting = options.some(
+                                    (opt) => opt.toLowerCase() === trimmed.toLowerCase()
+                                );
+                                if (trimmed !== "" && !isExisting) {
+                                    filtered.push(trimmed);
+                                }
+                                return filtered;
+                            }}
+                            onChange={(e, value) =>
+                                updateTiktokAttr(
+                                    "sports_feature",
+                                    value.map((v) => String(v).trim()).filter(Boolean)
+                                )
+                            }
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+                                ))
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Funkcja sportowa (lista + własna wartość)"
+                                    size="small"
+                                    placeholder="Wybierz lub wpisz własną i naciśnij Enter..."
+                                />
+                            )}
+                        />
+
+                        <Autocomplete
+                            multiple
+                            freeSolo
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="tiktok_material"
+                            disabled={!props.editing}
+                            options={TIKTOK_SWIMWEAR_TOWEL_MATERIAL_OPTIONS}
+                            value={data.tiktok_attributes?.material || []}
+                            filterOptions={(options, params) => {
+                                const filtered = filterFreeSolo(options, params);
+                                const { inputValue } = params;
+                                const trimmed = inputValue.trim();
+                                const isExisting = options.some(
+                                    (opt) => opt.toLowerCase() === trimmed.toLowerCase()
+                                );
+                                if (trimmed !== "" && !isExisting) {
+                                    filtered.push(trimmed);
+                                }
+                                return filtered;
+                            }}
+                            onChange={(e, value) =>
+                                updateTiktokAttr(
+                                    "material",
+                                    value.map((v) => String(v).trim()).filter(Boolean)
+                                )
+                            }
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+                                ))
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Materiał (stroje kąpielowe / ręczniki + własny)"
+                                    size="small"
+                                    placeholder="Wybierz lub wpisz własny materiał..."
+                                />
+                            )}
+                        />
+
+                        <Autocomplete
+                            multiple
+                            freeSolo
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="tiktok_composition"
+                            disabled={!props.editing}
+                            options={TIKTOK_COMPOSITION_OPTIONS}
+                            value={data.tiktok_attributes?.composition || []}
+                            filterOptions={(options, params) => {
+                                const filtered = filterFreeSolo(options, params);
+                                const { inputValue } = params;
+                                const trimmed = inputValue.trim();
+                                const isExisting = options.some(
+                                    (opt) => opt.toLowerCase() === trimmed.toLowerCase()
+                                );
+                                if (trimmed !== "" && !isExisting) {
+                                    filtered.push(trimmed);
+                                }
+                                return filtered;
+                            }}
+                            onChange={(e, value) =>
+                                updateTiktokAttr(
+                                    "composition",
+                                    value.map((v) => String(v).trim()).filter(Boolean)
+                                )
+                            }
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+                                ))
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Skład (lista + własny skład)"
+                                    size="small"
+                                    placeholder="Wybierz lub wpisz np. 80% Poliamid, 20% Elastan..."
+                                />
+                            )}
                         />
 
                         <Typography variant="caption" color="text.secondary">

@@ -27,6 +27,7 @@ class UpdateB2CProductModelRequest extends FormRequest
             'product_clasp_id' => 'required|numeric',
             'product_tiktok_category_id' => 'nullable|numeric',
             'product_size_chart_id' => 'nullable|numeric',
+            'tiktok_attributes' => 'nullable|array',
         ];
     }
 }
