@@ -3,6 +3,7 @@ import {
     Autocomplete,
     Box,
     Button,
+    Chip,
     CircularProgress,
     Dialog,
     DialogActions,
@@ -53,6 +54,7 @@ const mapOrderToOption = (order = {}) => ({
     },
     'totalNet': order.totalNet || 0,
     'totalGross': order.totalGross || 0,
+    'weight': order.weight || 0,
 });
 
 const normalizeOrderType = (type) => {
@@ -1213,9 +1215,30 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
 
 
                             <Box sx={{p: 2, border: '1px solid #e0e0e0', borderRadius: 1}}>
-                                <Typography variant="subtitle2" sx={{mb: 1.5}}>
-                                    Paczki
-                                </Typography>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    width: 1,
+                                    mb: 1
+                                }}>
+                                    <Typography variant="subtitle" sx={{mb: 0}}>
+                                        Paczki
+                                    </Typography>
+                                    <Box sx={{display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <Typography variant="subtitle2" sx={{mb: 0}}>
+                                            waga wyliczona z zamówienia:
+                                        </Typography>
+                                        <Chip sx={{fontSize: 12, fontWeight: 'bold'}}
+                                              color="primary"
+                                              label={(selectedOrder?.weight / 1000 || 0).toLocaleString('pl', {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2
+                                              }) + ' kg'}
+                                        />
+                                    </Box>
+                                </Box>
+
 
                                 <Box sx={{display: 'flex', flexDirection: 'column', gap: 1.5}}>
                                     {(shipment.shipmentPackages || []).map((pkg, index) => {
@@ -1366,6 +1389,7 @@ export default function DeliveryAddDialog({open, setOpen, initialOrderId = null,
                                         alignItems: 'flex-start',
                                     }}>
                                         <Box>
+                                            {console.log(selectedOrder)}
                                             <Box
                                                 sx={{
                                                     display: 'flex',

@@ -463,6 +463,7 @@ class ShipmentController extends Controller
                     'status' => $order->status,
                     'totalNet' => $order->discounted_total_net,
                     'totalGross' => $order->discounted_total_gross,
+                    'weight' => $order->products->sum('weight') ?? 0,
                 ];
             });
 
@@ -497,6 +498,7 @@ class ShipmentController extends Controller
                     ],
                     'status' => $order->status,
                     'totalGross' => $order->total_gross,
+                    'weight' => $order->products->sum('weight') ?? 0,
                 ];
             });
 
