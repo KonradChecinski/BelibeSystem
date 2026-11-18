@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreShipmentRequest;
 use App\Http\Requests\UpdateShipmentRequest;
 use App\Models\ClientOrder;
+use App\Models\ClientOrderProduct;
 use App\Models\Courier;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Shipment;
 use App\Services\GlsConsignData;
 use App\Services\GlsParcel;
@@ -430,7 +432,7 @@ class ShipmentController extends Controller
 
         $clientOrders = ClientOrder::query()
             ->whereIn('status', [70, 71])
-            ->with(['client', 'location', 'delivery.courier'])
+            ->with(['client', 'location', 'delivery.courier', 'orderProducts.product'])
             ->get()
             ->map(function (ClientOrder $order) {
                 $client = $order->client;
@@ -463,12 +465,16 @@ class ShipmentController extends Controller
                     'status' => $order->status,
                     'totalNet' => $order->discounted_total_net,
                     'totalGross' => $order->discounted_total_gross,
-                    'weight' => $order->products->sum('weight') ?? 0,
+                    'weight' => $order->orderProducts->sum(function (ClientOrderProduct $orderProduct) {
+                        return (float)($orderProduct->product->weight ?? 0)
+                            * (float)($orderProduct->quantity ?? 0);
+                    }),
                 ];
             });
 
         $orders = Order::query()
             ->whereIn('status', [70, 71])
+            ->with('orderProducts.product')
             ->get()
             ->map(function (Order $order) {
                 $customerName = trim(($order->firstname ?? '') . ' ' . ($order->lastname ?? ''));
@@ -498,7 +504,10 @@ class ShipmentController extends Controller
                     ],
                     'status' => $order->status,
                     'totalGross' => $order->total_gross,
-                    'weight' => $order->products->sum('weight') ?? 0,
+                    'weight' => $order->orderProducts->sum(function (OrderProduct $orderProduct) {
+                        return (float)($orderProduct->product->weight ?? 0)
+                            * (float)($orderProduct->quantity ?? 0);
+                    }),
                 ];
             });
 
