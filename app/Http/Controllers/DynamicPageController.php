@@ -8,6 +8,9 @@ use App\Models\DynamicPage;
 use App\Http\Requests\StoreDynamicPageRequest;
 use App\Http\Requests\UpdateDynamicPageRequest;
 use App\Models\Products\ProductCategory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class DynamicPageController extends Controller
@@ -98,5 +101,57 @@ class DynamicPageController extends Controller
         return response()->json($links);
     }
 
+    public function imagesList()
+    {
+        if (!Storage::exists('pages')) {
+            Storage::makeDirectory('pages');
+        }
 
+        $files = Storage::files('pages');
+        $images = [];
+
+        foreach ($files as $file) {
+            $filename = basename($file);
+            $images[] = [
+                'filename' => $filename,
+                'url' => route('pageImages', ['path' => $filename]),
+                'lastModified' => Storage::lastModified($file),
+                'size' => Storage::size($file),
+            ];
+        }
+
+        usort($images, fn($a, $b) => $b['lastModified'] <=> $a['lastModified']);
+
+        return response()->json($images);
+    }
+
+    public function imageUpload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:20480',
+        ]);
+
+        $file = $request->file('image');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName = Str::slug($originalName) ?: 'image';
+        $extension = $file->getClientOriginalExtension();
+        $filename = $slugName . '-' . uniqid() . '.' . $extension;
+
+        Storage::putFileAs('pages', $file, $filename);
+
+        return response()->json([
+            'filename' => $filename,
+            'url' => route('pageImages', ['path' => $filename]),
+        ]);
+    }
+
+    public function imageDelete(string $filename)
+    {
+        $cleanPath = 'pages/' . basename($filename);
+        if (Storage::exists($cleanPath)) {
+            Storage::delete($cleanPath);
+        }
+
+        return response()->json(['deleted' => true]);
+    }
 }

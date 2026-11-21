@@ -15,6 +15,8 @@ import {
 } from '@/Pages/System/Pages/blocks/MuiBlock';
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 
 export default function DynamicPage(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -45,6 +47,8 @@ export default function DynamicPage(props) {
             typography: PTypography,
             columnResponsive: ColumnResponsive,
             link: PuckLink,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
 
         },
     };

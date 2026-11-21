@@ -220,4 +220,15 @@ class StorageController extends Controller
         $mimeType = Storage::mimeType('colors/' . str_replace('\\', '/', $path));
         return response($img)->header('Content-Type', $mimeType);
     }
+
+    public function pageImages(string $path)
+    {
+        $cleanPath = 'pages/' . basename(str_replace('\\', '/', $path));
+        if (!Storage::exists($cleanPath)) {
+            abort(404);
+        }
+        $img = Storage::get($cleanPath);
+        $mimeType = Storage::mimeType($cleanPath);
+        return response($img)->header('Content-Type', $mimeType);
+    }
 }

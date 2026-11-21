@@ -4,6 +4,8 @@ import {Box} from "@mui/material";
 import {VerticalSpace} from "@/Pages/System/Pages/blocks/VerticalSpace";
 import {Columns, Container, Divider, Heading, Paragraph, Typography} from "@/Pages/System/Pages/blocks/MuiBlock";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 import {Render} from "@puckeditor/core";
 
 export default function B2BFooter({props, footer}) {
@@ -22,7 +24,9 @@ export default function B2BFooter({props, footer}) {
             column: Columns,
             columnResponsive: ColumnResponsive,
             container: Container,
-            link: PuckLink
+            link: PuckLink,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
         },
     });
 

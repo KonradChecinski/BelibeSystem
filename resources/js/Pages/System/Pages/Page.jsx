@@ -17,6 +17,8 @@ import {
 } from '@/Pages/System/Pages/blocks/MuiBlock';
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 import ClearLayout from "@/Layouts/ClearLayout";
 
 
@@ -76,12 +78,18 @@ export default function Page(props) {
                 ...ColumnResponsive,
                 "label": "Kolumny - responsywne",
             },
-            link: PuckLink
+            link: PuckLink,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
         },
         categories: {
             'data-display': {
                 title: 'Ułożenie',
                 components: ['divider', 'heading', 'paragraph', 'typography']
+            },
+            "media": {
+                title: 'Multimedia',
+                components: ["image", "imageSlider"]
             },
             "link": {
                 title: 'Link',

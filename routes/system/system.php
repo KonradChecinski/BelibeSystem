@@ -298,6 +298,10 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
         Route::get("/links", [DynamicPageController::class, 'link'])->name("system.pages.links");
 
+        Route::get("/images", [DynamicPageController::class, 'imagesList'])->name("system.pages.images.list");
+        Route::post("/images", [DynamicPageController::class, 'imageUpload'])->name("system.pages.images.upload");
+        Route::delete("/images/{filename}", [DynamicPageController::class, 'imageDelete'])->name("system.pages.images.delete");
+
 
         Route::get("/", [DynamicPageController::class, 'index'])->name("system.pages");
         Route::get("/page", [DynamicPageController::class, 'create'])->name("system.pages.page");

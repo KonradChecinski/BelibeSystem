@@ -14,6 +14,8 @@ import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from 
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {Bestsellers} from "@/Pages/System/Pages/blocks/Bestsellers";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 
 export default function MainPage(props) {
     const [pageData, setPageData] = useState(props?.dynamicMainPage);
@@ -60,11 +62,17 @@ export default function MainPage(props) {
             },
             link: PuckLink,
             bestsellers: Bestsellers,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
         },
         categories: {
             "text": {
                 title: 'Tekst',
                 components: ["heading", "paragraph", "typography"]
+            },
+            "media": {
+                title: 'Multimedia',
+                components: ["image", "imageSlider"]
             },
             "link": {
                 title: 'Link',

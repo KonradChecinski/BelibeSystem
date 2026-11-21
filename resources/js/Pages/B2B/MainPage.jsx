@@ -16,6 +16,8 @@ import {
 } from "@/Pages/System/Pages/blocks/MuiBlock";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 import {Render} from "@puckeditor/core";
 import B2BBestsellers from "@/Components/Pages/B2B/ExtraMainPage/Bestsellers";
 import {Bestsellers} from "@/Pages/System/Pages/blocks/Bestsellers";
@@ -51,6 +53,8 @@ export default function B2bMainPage(props) {
             columnResponsive: ColumnResponsive,
             link: PuckLink,
             bestsellers: Bestsellers,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
         },
     };
 

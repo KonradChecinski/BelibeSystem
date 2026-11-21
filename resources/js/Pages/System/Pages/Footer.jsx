@@ -12,6 +12,8 @@ import {useTheme} from "@mui/material/styles";
 import {PDivider, PHeading, PParagraph, PTypography, PColumns, PContainer} from "@/Pages/System/Pages/blocks/MuiBlock"
 import {PuckLink} from "@/Pages/System/Pages/blocks/Link";
 import {ColumnResponsive} from "@/Pages/System/Pages/blocks/ColumnResponsive";
+import {PuckImage} from "@/Pages/System/Pages/blocks/Image";
+import {PuckImageSlider} from "@/Pages/System/Pages/blocks/ImageSlider";
 
 export default function Footer(props) {
     const [pageData, setPageData] = useState(props?.dynamicFooter);
@@ -56,12 +58,18 @@ export default function Footer(props) {
                 ...PContainer,
                 "label": "Kontener",
             },
-            link: PuckLink
+            link: PuckLink,
+            image: PuckImage,
+            imageSlider: PuckImageSlider,
         },
         categories: {
             "text": {
                 title: 'Tekst',
                 components: ["heading", "paragraph", "typography"]
+            },
+            "media": {
+                title: 'Multimedia',
+                components: ["image", "imageSlider"]
             },
             "link": {
                 title: 'Link',
