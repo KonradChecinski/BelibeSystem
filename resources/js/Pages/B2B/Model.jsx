@@ -2,7 +2,7 @@ import {Head, Link} from "@inertiajs/react";
 import ClientLayout from "@/Layouts/ClientLayout";
 import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
-import {Box, Button, Checkbox, Divider, Paper, Typography} from "@mui/material";
+import {Box, Button, Checkbox, Chip, Divider, Paper, Typography} from "@mui/material";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import ProductOrderTable from "@/Components/Pages/B2B/Model/ProductOrderTable";
 import {Fragment, useEffect, useRef, useState} from "react";
@@ -18,7 +18,7 @@ import 'swiper/css/free-mode';
 import ProductPriceTable from "@/Components/Pages/B2B/Model/ProductPriceTable";
 import ProductSizeTable from "@/Components/Pages/B2B/Model/ProductSizeTable";
 import ProductColorTable from "@/Components/Pages/B2B/Model/ProductColorTable";
-import {ArrowDownward, Favorite, FavoriteBorder} from "@mui/icons-material";
+import {ArrowDownward, Favorite, FavoriteBorder, LocalOffer} from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material/styles";
 
@@ -423,9 +423,20 @@ export default function B2bModel(props) {
                                     flexDirection: "column",
                                     gap: 1
                                 }}>
-                                    <Typography variant="h6">
-                                        Cena produktu
-                                    </Typography>
+                                    <Box sx={{display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap"}}>
+                                        <Typography variant="h6">
+                                            Cena produktu
+                                        </Typography>
+                                        {props.model.price?.is_promotion && (
+                                            <Chip
+                                                icon={<LocalOffer/>}
+                                                label={props.model.price?.has_variable_prices ? "PROMOCJA NA WYBRANE WARIANTY" : "PROMOCJA"}
+                                                color="error"
+                                                size="small"
+                                                sx={{fontWeight: 700}}
+                                            />
+                                        )}
+                                    </Box>
                                     <Divider/>
                                     <ProductPriceTable model={props.model}/>
 

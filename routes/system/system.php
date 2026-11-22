@@ -60,6 +60,7 @@ use App\Http\Controllers\System\Product\ShowProductController;
 use App\Http\Controllers\System\Product\SubiektProductModelController;
 use App\Http\Controllers\System\Product\TiktokCategoryController;
 use App\Http\Controllers\System\ProfileController;
+use App\Http\Controllers\System\PromotionController;
 use App\Http\Controllers\System\Queries\QueryImagesController;
 use App\Http\Controllers\System\Settings\SettingsMainController;
 use App\Http\Controllers\System\Settings\SettingsPermissionsController;
@@ -128,6 +129,20 @@ Route::middleware(["auth:user", "verified"])->group(function () {
 
 
         Route::post("price/{productModelPrice}", [ProductModelPriceController::class, 'update'])->name("system.products.model.price");
+    });
+
+    Route::group(["prefix" => "/promotions"], function () {
+        Route::get("/", [PromotionController::class, 'index'])->name("system.promotions");
+        Route::post("/", [PromotionController::class, 'store'])->name("system.promotions.create");
+        Route::get("/{promotion}/edit", [PromotionController::class, 'edit'])->name("system.promotions.edit");
+        Route::patch("/{promotion}", [PromotionController::class, 'update'])->name("system.promotions.update");
+        Route::patch("/{promotion}/toggle-active", [PromotionController::class, 'toggleActive'])->name("system.promotions.toggleActive");
+        Route::delete("/{promotion}", [PromotionController::class, 'destroy'])->name("system.promotions.delete");
+
+        Route::get("/model/{productModel}/details", [PromotionController::class, 'modelDetails'])->name("system.promotions.model.details");
+        Route::post("/{promotion}/items", [PromotionController::class, 'addItems'])->name("system.promotions.items.add");
+        Route::delete("/{promotion}/items/bulk", [PromotionController::class, 'removeItemsBulk'])->name("system.promotions.items.deleteBulk");
+        Route::delete("/{promotion}/items/{promotionItem}", [PromotionController::class, 'removeItem'])->name("system.promotions.items.delete");
     });
     Route::group([], function () {
 

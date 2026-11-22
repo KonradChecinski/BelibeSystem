@@ -45,7 +45,11 @@ class ExtraMainPageComponentsController extends Controller
                     $query->where("show_in_b2b", true);
                 })->with([
                     'prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency',
-                    'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id,products.id',
+                    'categories:id',
+                    'group:id',
+                    'brand:id',
+                    'colorsToB2b:id,product_model_id,product_color_icon_id',
+                    'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id,products.id,products.product_model_color_id',
                     'productsToB2bWithoutRelation.size',
 
 //                    'colorIcons',

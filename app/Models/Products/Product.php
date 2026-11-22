@@ -3,6 +3,7 @@
 namespace App\Models\Products;
 
 use App\Helpers\Helper;
+use App\Helpers\Prices\PriceForClient;
 use App\Models\B2bCart;
 use App\Models\Client\Client;
 use App\Models\ClientOrderProduct;
@@ -187,6 +188,11 @@ class Product extends Model
     public function clientOrdersProducts(): HasMany
     {
         return $this->hasMany(ClientOrderProduct::class);
+    }
+
+    public function priceForClientB2b(Client $client): array
+    {
+        return PriceForClient::getPriceFromProduct($this, $client);
     }
 
     /**

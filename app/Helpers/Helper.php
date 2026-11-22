@@ -348,6 +348,11 @@ class Helper
                     "parameters" => null
                 ],
                 [
+                    "name" => __("Promotions"),
+                    "route" => "b2b.promotions",
+                    "parameters" => null
+                ],
+                [
                     "name" => __("Favorites"),
                     "route" => "b2b.favorites",
                     "parameters" => null

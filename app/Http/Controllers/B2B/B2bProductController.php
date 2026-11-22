@@ -4,6 +4,7 @@ namespace App\Http\Controllers\B2B;
 
 use App\Helpers\Helper;
 use App\Helpers\Prices\Price;
+use App\Helpers\Prices\PriceForClient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\SearchProductModelRequest;
 use App\Models\Client\Client;
@@ -69,34 +70,19 @@ class B2bProductController extends Controller
         }
         $productModel = $productModel->load([
             'prices:product_model_id,wholesale_net_price,wholesale_gross_price,vat_rate,currency',
+            'categories:id',
+            'group:id',
+            'brand:id',
+            'colorsToB2b:id,product_model_id,product_color_icon_id',
+            'productsToB2bWithoutRelation:quantity,product_model_id,product_size_id,products.id,products.product_model_color_id',
             "productsToB2bWithRelation",
             "sizesToB2b",
         ]);
         $client = Client::find(Helper::getClientIdToB2b());
 
-//        dd($productModel, $productModel->productsToB2bWithRelation);
-//        dd($productModel->toArray());
-
         $priceForClient = Price::showClientPrices($productModel, $client);
-//        $price = [
-//            ...$productModel->prices->toArray(),
-//            ...$productModel->priceForClientB2b($client),
-//        ];
-//
-//        $priceForClient = [
-//            'price_net' => $price['discounted_wholesale_net_price'],
-//            'price_gross' => $price['discounted_wholesale_gross_price'],
-//            'vat_rate' => $price['vat_rate'],
-//            'currency' => $price['currency'],
-//        ];
-//        if ($price["discount"] !== 0 && $price["show_discount_on_invoice"]) {
-//            $priceForClient["discount"] = $price["discount"];
-//            $priceForClient["show_discount_on_invoice"] = $price["show_discount_on_invoice"];
-//            $priceForClient["original_price_net"] = $price["wholesale_net_price"];
-//            $priceForClient["original_price_gross"] = $price["wholesale_gross_price"];
-//
-//        }
-//        dd($price, $priceForClient);
+        $currency = $productModel->prices->currency;
+        $discounts = $client->discounts;
 
         return Inertia::render('B2B/Model',
             [
@@ -108,18 +94,47 @@ class B2bProductController extends Controller
                     'description_b2b' => $productModel->description_b2b,
                     'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["slug" => $image->slug]) : null,
                     'price' => $priceForClient,
-//                    'quantity' => $productModel->quantityToB2b(),
                     'colors' => $productModel->productsToB2bWithRelation()
                         ->get()
-                        ->map(function ($color) {
+                        ->map(function ($color) use ($productModel, $client, $discounts, $currency) {
+                            $colorPrice = PriceForClient::getPriceFromProductModelColor($color, $productModel, $client);
+
                             return [
                                 'id' => $color->id,
                                 'name' => $color->name,
                                 'shortcut' => $color->shortcut,
                                 'images' => $color->images,
                                 'color_icon' => $color->colorIcon,
+                                'price' => [
+                                    'price_net' => $colorPrice['discounted_wholesale_net_price'],
+                                    'price_gross' => $colorPrice['discounted_wholesale_gross_price'],
+                                    'min_price_net' => $colorPrice['min_discounted_wholesale_net_price'],
+                                    'min_price_gross' => $colorPrice['min_discounted_wholesale_gross_price'],
+                                    'original_price_net' => $colorPrice['original_wholesale_net_price'],
+                                    'original_price_gross' => $colorPrice['original_wholesale_gross_price'],
+                                    'vat_rate' => $colorPrice['vat_rate'],
+                                    'currency' => $currency,
+                                    'is_promotion' => $colorPrice['is_promotion'],
+                                    'applied_promotion' => $colorPrice['applied_promotion'],
+                                    'has_product_promotion' => $colorPrice['has_product_promotion'],
+                                    'has_variable_prices' => $colorPrice['has_variable_prices'],
+                                    'promotion_level' => $colorPrice['promotion_level'],
+                                    'promotion_name' => $colorPrice['promotion_name'],
+                                    'show_discount_on_invoice' => $colorPrice['show_discount_on_invoice'],
+                                ],
 
-                                'products' => $color->products->map(function ($product) {
+                                'products' => $color->products->map(function ($product) use ($productModel, $color, $discounts, $currency) {
+                                    $productPrice = PriceForClient::evaluatePriceForTarget(
+                                        productModel: $productModel,
+                                        categories: $productModel->categories,
+                                        group: $productModel->group,
+                                        brand: $productModel->brand,
+                                        price: $productModel->prices,
+                                        discounts: $discounts,
+                                        colorId: $color->id,
+                                        productId: $product->id
+                                    );
+
                                     return [
                                         'id' => $product->id,
                                         'symbol' => $product->symbol,
@@ -127,6 +142,19 @@ class B2bProductController extends Controller
                                         'size' => [
                                             'id' => $product->size->id,
                                             'name' => $product->size->name,
+                                        ],
+                                        'price' => [
+                                            'price_net' => $productPrice['discounted_wholesale_net_price'],
+                                            'price_gross' => $productPrice['discounted_wholesale_gross_price'],
+                                            'original_price_net' => $productPrice['original_wholesale_net_price'],
+                                            'original_price_gross' => $productPrice['original_wholesale_gross_price'],
+                                            'vat_rate' => $productPrice['vat_rate'],
+                                            'currency' => $currency,
+                                            'is_promotion' => $productPrice['is_promotion'],
+                                            'applied_promotion' => $productPrice['applied_promotion'],
+                                            'promotion_level' => $productPrice['promotion_level'],
+                                            'promotion_name' => $productPrice['promotion_name'],
+                                            'show_discount_on_invoice' => $productPrice['show_discount_on_invoice'],
                                         ],
                                     ];
                                 })->values(),

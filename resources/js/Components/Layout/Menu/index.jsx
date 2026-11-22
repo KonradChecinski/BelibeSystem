@@ -11,6 +11,7 @@ import {
     Category,
     ContactPage,
     Dashboard,
+    Discount,
     Group, Handshake,
     Inventory, LocalShipping,
     QueryStats,
@@ -151,13 +152,22 @@ export default function Menu({showContent, auth}) {
                     }}
                 />
                 {auth.permissions.includes("showModel") ?
-                    <MainMenuLink
-                        href={route("system.products.models")}
-                        active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
-                        showContent={smBreakpointUp || showContent}
-                        text={t("Models")}
-                        menuIcon={Inventory}
-                    /> : ""}
+                    <>
+                        <MainMenuLink
+                            href={route("system.products.models")}
+                            active={route().current("system.products.models") || route().current("system.products.model.edit") || route().current("system.products.model")}
+                            showContent={smBreakpointUp || showContent}
+                            text={t("Models")}
+                            menuIcon={Inventory}
+                        />
+                        <MainMenuLink
+                            href={route("system.promotions")}
+                            active={route().current("system.promotions") || route().current("system.promotions.edit")}
+                            showContent={smBreakpointUp || showContent}
+                            text={t("Promotions")}
+                            menuIcon={Discount}
+                        />
+                    </> : ""}
                 {auth.permissions.includes("showClient") ?
                     <MainMenuLink
                         href={route("system.clients")}

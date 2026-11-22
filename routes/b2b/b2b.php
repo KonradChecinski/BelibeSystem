@@ -5,6 +5,7 @@ use App\Http\Controllers\B2B\B2bFavoritesController;
 use App\Http\Controllers\B2B\B2bMainPageController;
 use App\Http\Controllers\B2B\B2bProductCategoryController;
 use App\Http\Controllers\B2B\B2bProductController;
+use App\Http\Controllers\B2B\B2bPromotionsController;
 use App\Http\Controllers\B2bClientController;
 use App\Http\Controllers\B2bInvoicesController;
 use App\Http\Controllers\B2bOrderController;
@@ -26,6 +27,8 @@ Route::group([], function () {
 
     Route::get("/favorites", [B2bFavoritesController::class, 'index'])->name("b2b.favorites");
     Route::patch("/favorite/update/{productModel}", [B2bFavoritesController::class, 'update'])->name("b2b.favorite.update");
+
+    Route::get("/promotions", [B2bPromotionsController::class, 'index'])->name("b2b.promotions");
 
 
     Route::get("/cart", [B2bCartController::class, 'index'])->name("b2b.cart");

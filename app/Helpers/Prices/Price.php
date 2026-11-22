@@ -18,15 +18,27 @@ class Price
         $priceForClient = [
             'price_net' => $price['discounted_wholesale_net_price'],
             'price_gross' => $price['discounted_wholesale_gross_price'],
+            'min_price_net' => $price['min_discounted_wholesale_net_price'] ?? $price['discounted_wholesale_net_price'],
+            'min_price_gross' => $price['min_discounted_wholesale_gross_price'] ?? $price['discounted_wholesale_gross_price'],
+            'max_price_net' => $price['max_discounted_wholesale_net_price'] ?? $price['discounted_wholesale_net_price'],
+            'max_price_gross' => $price['max_discounted_wholesale_gross_price'] ?? $price['discounted_wholesale_gross_price'],
             'vat_rate' => $price['vat_rate'],
             'currency' => $price['currency'],
+            'is_promotion' => $price['is_promotion'] ?? false,
+            'applied_promotion' => $price['applied_promotion'] ?? false,
+            'has_partial_promotion' => $price['has_partial_promotion'] ?? false,
+            'has_variable_prices' => $price['has_variable_prices'] ?? false,
+            'promotion_name' => $price['promotion_name'] ?? null,
+            'promotion_discount_type' => $price['promotion_discount_type'] ?? null,
+            'promotion_discount_value' => $price['promotion_discount_value'] ?? null,
+            'promotion_discount_percent' => $price['promotion_discount_percent'] ?? null,
+            'original_price_net' => $price['wholesale_net_price'],
+            'original_price_gross' => $price['wholesale_gross_price'],
+            'show_discount_on_invoice' => $price['show_discount_on_invoice'] ?? false,
         ];
-        if ($price["discount"] !== 0 && $price["show_discount_on_invoice"]) {
-            $priceForClient["discount"] = $price["discount"];
-            $priceForClient["show_discount_on_invoice"] = $price["show_discount_on_invoice"];
-            $priceForClient["original_price_net"] = $price["wholesale_net_price"];
-            $priceForClient["original_price_gross"] = $price["wholesale_gross_price"];
 
+        if ($price['discount'] !== 0 && $price['show_discount_on_invoice']) {
+            $priceForClient['discount'] = $price['discount'];
         }
 
         return $priceForClient;
@@ -39,7 +51,6 @@ class Price
                 "quantity" => $item->quantity,
                 "original_total_net" => $item->original_price_net,
                 "total_net" => $item->price_net,
-//                "total_gross" => $item->price_net * (1 + $item->vat_rate / 100) * $item->quantity,
                 "vat_rate" => $item->vat_rate,
             ]);
         })->groupBy("vat_rate");
@@ -50,7 +61,7 @@ class Price
                 $carry += $item["total_net"] * $item["quantity"];
                 return $carry;
             }, 0);
-            $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+            $total_gross = round($total_net * (1 + $vat_rate / 100));
 
             $priceSummaryGroupByVat[$vat_rate] = [
                 "total_net" => $total_net,
@@ -73,7 +84,7 @@ class Price
                     $carry += (round($item["total_net"] * (100 - $discountValue) / 100) * $item["quantity"]);
                     return $carry;
                 }, 0);
-                $total_gross = round($total_net * (1 + $vat_rate / 100)); //mozliwe ze bez round
+                $total_gross = round($total_net * (1 + $vat_rate / 100));
 
                 $discountedPriceSummaryGroupByVat[$vat_rate] = [
                     "total_net" => $total_net,
@@ -90,8 +101,6 @@ class Price
 
         } else {
             $discountedPriceSummary = $priceSummary;
-//            $discountedTotalNet = $priceSummary["total_net"];
-//            $discountedTotalGross = $priceSummary["total_gross"];
         }
 
 

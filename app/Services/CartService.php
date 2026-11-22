@@ -21,7 +21,7 @@ class CartService
             $clientOrderId = Helper::getClientOrderIdToEditToB2b();
 
             if (Helper::getClientOrderProductToEdit($clientOrderId)->where("product_id", $product->id)->count() === 0) {
-                $discountedPrices = $product->model->priceForClientB2b($client);
+                $discountedPrices = $product->priceForClientB2b($client);
                 $prices = $product->model->prices;
                 $currency = $prices->currency;
 
@@ -56,7 +56,7 @@ class CartService
                 if ($quantity == 0) {
                     return;
                 }
-                $discountedPrices = $product->model->priceForClientB2b($client);
+                $discountedPrices = $product->priceForClientB2b($client);
                 $prices = $product->model->prices;
                 $currency = $prices->currency;
 

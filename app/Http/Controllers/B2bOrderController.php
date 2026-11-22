@@ -379,10 +379,14 @@ class B2bOrderController extends Controller
         $client->cart()->delete();
 
         foreach ($clientOrder->orderProducts as $orderProduct) {
-            $discountedPrices = $orderProduct->productModel->priceForClientB2b($client);
+            $product = $orderProduct->product;
+            $discountedPrices = $product
+                ? $product->priceForClientB2b($client)
+                : $orderProduct->productModel->priceForClientB2b($client);
+            $prices = $orderProduct->productModel->prices;
             $cartProduct = new B2bCart([
                 "quantity" => $orderProduct->quantity,
-                'original_price_net' => $orderProduct->productModel->prices->wholesale_net_price,
+                'original_price_net' => $discountedPrices['show_discount_on_invoice'] ? $prices->wholesale_net_price : $discountedPrices['discounted_wholesale_net_price'],
                 'price_net' => $discountedPrices['discounted_wholesale_net_price'],
                 'vat_rate' => $discountedPrices['vat_rate'],
                 'currency' => $orderProduct->currency,

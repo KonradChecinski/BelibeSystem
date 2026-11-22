@@ -7,15 +7,17 @@ import {
     CardActionArea,
     CardActions,
     CardContent,
-    CardMedia, Checkbox,
+    CardMedia,
+    Checkbox,
+    Chip,
     Divider,
-    Grid,
+    Tooltip,
     Typography
 } from "@mui/material";
 import {router} from "@inertiajs/react";
 import {sortBySizes} from "@/Functions/sortBySizes";
 import toLocaleString from "@/Functions/toLocaleString";
-import {Favorite, FavoriteBorder} from "@mui/icons-material";
+import {Favorite, FavoriteBorder, LocalOffer} from "@mui/icons-material";
 
 export default function ModelComponent({model}) {
 
@@ -35,6 +37,18 @@ export default function ModelComponent({model}) {
             });
     }
 
+    const isPromotion = Boolean(model.price?.is_promotion);
+    const hasVariablePrices = Boolean(model.price?.has_variable_prices);
+    const promotedColorIconIds = model.price?.promoted_color_icon_ids || [];
+    const displayNetPrice = hasVariablePrices
+        ? (model.price?.min_discounted_wholesale_net_price ?? model.price?.discounted_wholesale_net_price)
+        : model.price?.discounted_wholesale_net_price;
+    const originalNetPrice = model.price?.original_wholesale_net_price;
+    const showStrikethrough = !hasVariablePrices &&
+        originalNetPrice &&
+        displayNetPrice < originalNetPrice &&
+        (isPromotion || model.price?.show_discount_on_invoice);
+
     return (
 
         <Card variant="outlined" sx={{
@@ -43,10 +57,28 @@ export default function ModelComponent({model}) {
             justifyContent: 'center',
             flexDirection: 'column',
             width: 1,
-            // height: 700,
             height: 1,
             boxSizing: "border-box",
+            borderColor: isPromotion ? "error.main" : undefined,
         }}>
+            {isPromotion && (
+                <Chip
+                    icon={<LocalOffer sx={{fontSize: "14px !important"}}/>}
+                    label="PROMOCJA"
+                    color="error"
+                    size="small"
+                    sx={{
+                        position: "absolute",
+                        top: 10,
+                        left: 10,
+                        zIndex: 60,
+                        fontWeight: 700,
+                        fontSize: "0.7rem",
+                        boxShadow: 2,
+                    }}
+                />
+            )}
+
             <CardActionArea
                 onClick={() => {
                     router.visit(route('b2b.model', {slug: model.slug}))
@@ -88,11 +120,11 @@ export default function ModelComponent({model}) {
                                 opacity: 1,
                             },
                             "&:hover img:first-of-type": {
-                                opacity: model.mainImages.length === 2 ? 0 : 1,
+                                opacity: model.mainImages?.length === 2 ? 0 : 1,
                             },
 
                         }}>
-                            {model.mainImages.length === 2 ?
+                            {model.mainImages?.length === 2 ?
                                 <>
                                     {model.mainImages?.map((image, id) => {
                                         return (
@@ -106,7 +138,7 @@ export default function ModelComponent({model}) {
                                     })}
                                 </>
                                 :
-                                model.mainImages.length === 1 ?
+                                model.mainImages?.length === 1 ?
                                     model.mainImages?.map((image, id) => {
                                         return (
                                             <CardMedia
@@ -133,7 +165,6 @@ export default function ModelComponent({model}) {
                     <CardContent sx={{
                         display: "flex",
                         flexDirection: "column",
-                        // height: 1,
                         flex: 1,
                         width: 1,
                         pt: 1,
@@ -148,7 +179,7 @@ export default function ModelComponent({model}) {
 
                         <Box>
                             <Typography variant="body1" sx={{fontWeight: 600}}>
-                                {/*Model:*/} {model.symbol}
+                                {model.symbol}
                             </Typography>
                             <Typography variant="body2">
                                 {model.name}
@@ -159,7 +190,6 @@ export default function ModelComponent({model}) {
                         <Box
                             sx={{
                                 width: 1,
-                                // height: 1,
                                 display: "flex",
                                 flex: 1,
                                 flexDirection: "column",
@@ -193,29 +223,43 @@ export default function ModelComponent({model}) {
                                     width: 1,
                                 }}>
                                     {model.icons.map((icon, id) => {
+                                        const isColorPromoted = promotedColorIconIds.includes(icon.id);
+                                        const iconBox = icon.type === 1 ? (
+                                            <Box
+                                                component={"img"}
+                                                src={route("colorIcons", {path: icon.path})}
+                                                sx={{
+                                                    width: "1.4rem",
+                                                    height: "1.4rem",
+                                                    borderRadius: "100%",
+                                                    border: isColorPromoted ? "2px solid" : 1,
+                                                    borderColor: isColorPromoted ? "error.main" : "inherit",
+                                                    boxShadow: isColorPromoted ? "0 0 0 2px rgba(211, 47, 47, 0.35)" : "none",
+                                                }}
+                                            />
+                                        ) : (
+                                            <Box
+                                                sx={{
+                                                    width: "1.4rem",
+                                                    height: "1.4rem",
+                                                    borderRadius: "100%",
+                                                    bgcolor: icon.hex,
+                                                    border: isColorPromoted ? "2px solid" : 1,
+                                                    borderColor: isColorPromoted ? "error.main" : "inherit",
+                                                    boxShadow: isColorPromoted ? "0 0 0 2px rgba(211, 47, 47, 0.35)" : "none",
+                                                }}
+                                            />
+                                        );
 
                                         return (
                                             <Box key={id}>
-                                                {icon.type === 1 ?
-                                                    <Box
-                                                        component={"img"}
-                                                        src={route("colorIcons", {path: icon.path})}
-                                                        sx={{
-                                                            width: "1.4rem",
-                                                            height: "1.4rem",
-                                                            borderRadius: "100%",
-                                                            border: 1
-                                                        }}/>
-                                                    :
-                                                    <Box
-                                                        sx={{
-                                                            width: "1.4rem",
-                                                            height: "1.4rem",
-                                                            borderRadius: "100%",
-                                                            bgcolor: icon.hex,
-                                                            border: 1
-                                                        }}/>
-                                                }
+                                                {isColorPromoted ? (
+                                                    <Tooltip title="Kolor / rozmiar w promocji">
+                                                        {iconBox}
+                                                    </Tooltip>
+                                                ) : (
+                                                    iconBox
+                                                )}
                                             </Box>
                                         )
                                     })}
@@ -270,14 +314,29 @@ export default function ModelComponent({model}) {
                                     })}
                                 </Box>
                             </Box>
-                            <Box sx={{mt: 1}}>
-                                {/*<Typography variant="body1" component={"h2"}>*/}
-                                {/*    Cena*/}
-                                {/*    katalogowa: {toLocaleString(model.price.wholesale_net_price / 100)}*/}
-                                {/*</Typography>*/}
-                                <Typography variant="h6" sx={{textAlign: "center"}}>
-                                    {toLocaleString(model.price.discounted_wholesale_net_price / 100)}
+                            <Box sx={{mt: 1, textAlign: "center"}}>
+                                {showStrikethrough && (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        sx={{textDecoration: "line-through", display: "block"}}
+                                    >
+                                        {toLocaleString(originalNetPrice / 100)}
+                                    </Typography>
+                                )}
+                                <Typography
+                                    variant="h6"
+                                    color={isPromotion ? "error.main" : "text.primary"}
+                                    sx={{textAlign: "center", fontWeight: isPromotion ? 700 : 500}}
+                                >
+                                    {hasVariablePrices ? "od " : ""}
+                                    {toLocaleString(displayNetPrice / 100)}
                                 </Typography>
+                                {hasVariablePrices && (
+                                    <Typography variant="caption" color="error.main" sx={{display: "block", fontSize: "0.7rem"}}>
+                                        Wybrane warianty w promocji
+                                    </Typography>
+                                )}
                             </Box>
                         </Box>
                     </CardContent>

@@ -1,5 +1,6 @@
 import {
     Box,
+    Chip,
     debounce,
     Paper,
     Stack,
@@ -10,10 +11,13 @@ import {
     TableHead,
     TableRow,
     TextField,
+    Tooltip,
     Typography
 } from "@mui/material";
+import {LocalOffer} from "@mui/icons-material";
 import {sortBySizesName} from "@/Functions/sortBySizes";
 import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
+import toLocaleString from "@/Functions/toLocaleString";
 import {enqueueSnackbar} from "notistack";
 import {useTheme} from "@mui/material/styles";
 import {useCallback, useMemo, useRef, useState} from "react";
@@ -43,6 +47,37 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
 
 
 }
+
+const ColorPromotionBadge = ({color, modelPrice}) => {
+    if (!color.price?.is_promotion) return null;
+
+    const hasVariableInColor = Boolean(color.price?.has_variable_prices);
+    const showColorPrice = !hasVariableInColor && (
+        modelPrice?.has_variable_prices || color.price.price_net !== modelPrice?.price_net
+    );
+
+    return (
+        <Box sx={{mt: 0.5, display: "flex", flexDirection: "column", alignItems: "center", gap: 0.25}}>
+            <Chip
+                icon={<LocalOffer sx={{fontSize: "12px !important"}}/>}
+                label={hasVariableInColor ? "Wybrane rozmiary w promocji" : "PROMOCJA"}
+                color="error"
+                size="small"
+                sx={{height: 20, fontSize: "0.68rem", fontWeight: 700}}
+            />
+            {showColorPrice && (
+                <Typography variant="caption" color="error.main" sx={{fontWeight: 700}}>
+                    {toLocaleString(color.price.price_net / 100)} netto
+                </Typography>
+            )}
+            {hasVariableInColor && (
+                <Typography variant="caption" color="error.main" sx={{fontWeight: 700}}>
+                    od {toLocaleString(color.price.min_price_net / 100)} netto
+                </Typography>
+            )}
+        </Box>
+    );
+};
 
 const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
 
@@ -83,7 +118,6 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
 
                 <TableBody>
                     {model.colors.sort(sortByColorShortcut).map(color => {
-                        console.log(color)
                         const image = color.images?.find(i => i.order === 0);
                         const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
 
@@ -98,13 +132,13 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                     <Typography variant="body2" textAlign={"center"}>
                                         {color.name}
                                     </Typography>
+                                    <ColorPromotionBadge color={color} modelPrice={model.price}/>
                                 </HoveringCell>
                                 <HoveringCell column={2}>
 
                                     <Stack
                                         my={1}
                                         direction="row"
-                                        // divider={<Divider orientation="vertical" flexItem/>}
                                         justifyContent="center"
                                         alignItems="center"
                                         spacing={2}
@@ -146,7 +180,8 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                                                 height: "1.9rem",
                                                                 borderRadius: "100%",
                                                                 maxWidth: "none",
-                                                                border: 1
+                                                                border: color.price?.is_promotion ? "2px solid" : 1,
+                                                                borderColor: color.price?.is_promotion ? "error.main" : "inherit",
                                                             }}/>
                                                         :
                                                         <Box
@@ -156,7 +191,8 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                                                 borderRadius: "100%",
                                                                 maxWidth: "none",
                                                                 bgcolor: colorIcon.hex,
-                                                                border: 1
+                                                                border: color.price?.is_promotion ? "2px solid" : 1,
+                                                                borderColor: color.price?.is_promotion ? "error.main" : "inherit",
                                                             }}/>
                                                     }
                                                 </Box>
@@ -173,12 +209,12 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                                 {sortBySizesName(model.sizes).map((size, id) => {
                                     const product = color.products.find(p => p.size.id === size.id);
                                     let quantity = product?.available_without_order_to_edit;
-                                    // if (quantity > 30) quantity = 30;
 
                                     return (
                                         <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
                                             {product ?
-                                                <ProductInput product={product} cart={cart} maxQuantity={quantity}
+                                                <ProductInput product={product} color={color} model={model} cart={cart}
+                                                              maxQuantity={quantity}
                                                               enqueueSnackbar={enqueueSnackbar}
                                                               accountManager={accountManager}
                                                               props={props}
@@ -208,7 +244,6 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
         <TableContainer sx={{overflowX: "initial", borderRadius: 1}} component={Paper}>
             <Table
                 aria-label="simple table"
-                // stickyHeader={true}
                 sx={{
                     "& th": {
                         top: 141,
@@ -232,9 +267,6 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                     }}>
                         <HoveringCell column={1} header={true}>Produkt</HoveringCell>
                         <HoveringCell column={2} header={true}>Ilość</HoveringCell>
-                        {/*{sortBySizesName(model.sizes).map(size => (*/}
-                        {/*    <HoveringCell column={2 + size.id} header={true} key={size.id}>{size.name}</HoveringCell>*/}
-                        {/*))}*/}
                     </TableRow>
                 </TableHead>
 
@@ -254,8 +286,6 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                             },
                                             "& th:first-of-type": {
                                                 borderRadius: 1,
-                                                // borderBottomRightRadius: 0,
-                                                // borderTopRightRadius: 0
                                             },
                                         }}
                                     >
@@ -297,6 +327,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                                             <Typography variant="body2" textAlign={"center"}>
                                                                 {color.name}
                                                             </Typography>
+                                                            <ColorPromotionBadge color={color} modelPrice={model.price}/>
                                                         </Box>
                                                     </Box>
 
@@ -309,7 +340,6 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                             {sortBySizesName(model.sizes).map((size, id) => {
                                                 const product = color.products.find(p => p.size.id === size.id);
                                                 let quantity = product?.available_without_order_to_edit;
-                                                // if (quantity > 30) quantity = 30;
 
                                                 return (
                                                     <TableRow hover key={color.id + "-" + size.id} sx={{height: 105}}>
@@ -319,7 +349,8 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                                                         <HoveringCell column={2 + size.id} key={id}
                                                                       disabled={quantity === 0}>
                                                             {product ?
-                                                                <ProductInput product={product} cart={cart}
+                                                                <ProductInput product={product} color={color}
+                                                                              model={model} cart={cart}
                                                                               maxQuantity={quantity}
                                                                               enqueueSnackbar={enqueueSnackbar}
                                                                               accountManager={accountManager}
@@ -347,7 +378,7 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
     );
 }
 
-const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManager, props}) => {
+const ProductInput = ({product, color, model, cart, maxQuantity, enqueueSnackbar, accountManager, props}) => {
 
     const [value, setValue] = useState(cart.find(c => c.product_id === product?.id)?.quantity || 0);
     const [runAnimation, setRunAnimation] = useState(false);
@@ -455,10 +486,41 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
         debouncedSend(newValue, oldValue);
     }
 
+    const isProductPromo = Boolean(product.price?.is_promotion);
+    const isSpecificProductLevelPromo = product.price?.promotion_level === 1;
+    const showProductPriceBadge = isProductPromo && (
+        isSpecificProductLevelPromo ||
+        model?.price?.has_variable_prices ||
+        color?.price?.has_variable_prices
+    );
+
     return (
         <Box sx={{
             animation: runAnimation ? `${animation} 0.8s linear 1s 2 both` : "none",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
         }}>
+            {showProductPriceBadge && (
+                <Box sx={{mb: 0.5, display: "flex", flexDirection: "column", alignItems: "center"}}>
+                    <Chip
+                        icon={<LocalOffer sx={{fontSize: "11px !important"}}/>}
+                        label={`${toLocaleString(product.price.price_net / 100)} netto`}
+                        color="error"
+                        size="small"
+                        sx={{height: 20, fontSize: "0.7rem", fontWeight: 700}}
+                    />
+                    {product.price.original_price_net > product.price.price_net && (
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{textDecoration: "line-through", fontSize: "0.68rem", lineHeight: 1.1}}
+                        >
+                            {toLocaleString(product.price.original_price_net / 100)}
+                        </Typography>
+                    )}
+                </Box>
+            )}
             <TextField
                 id="outlined-basic"
                 label="Ilość"
@@ -481,6 +543,12 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                     width: 1,
                     minWidth: "14ch",
                     maxWidth: "20ch",
+                    "& .MuiOutlinedInput-root": isSpecificProductLevelPromo ? {
+                        "& fieldset": {
+                            borderColor: "error.main",
+                            borderWidth: 2,
+                        }
+                    } : {},
                 }}
                 ref={inputRef}
             />
@@ -491,12 +559,8 @@ const ProductInput = ({product, cart, maxQuantity, enqueueSnackbar, accountManag
                 mt: 0.5,
 
             }}>
-                {/*<Typography variant="caption">*/}
-                {/*    Dostępność:*/}
-                {/*</Typography>*/}
                 <Typography variant="body2" sx={{color: quantityColor}}>
                     {quantityText}
-                    {/*({quantity})*/}
                     {accountManager && (" (" + product.available_without_order_to_edit + ")")}
                 </Typography>
             </Box>
@@ -515,12 +579,6 @@ const HoveringCell = ({children, colSpan = 1, disabled = false, header = false, 
                 fontWeight: header ? "bold" : "normal",
                 ...sx
             }}
-            // sx={{
-            //     bgcolor: disabled ? "disabled.background" : hoveredColumn === column ? header ? "cyan" : "hoveredCell.background" : "",
-            //     ...sx
-            // }}
-            // onMouseEnter={() => setHoveredColumn(column)}
-            // onMouseLeave={() => setHoveredColumn(null)}
         >
             {children}
         </TableCell>
