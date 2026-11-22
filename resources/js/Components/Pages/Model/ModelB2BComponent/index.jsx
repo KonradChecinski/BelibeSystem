@@ -107,7 +107,9 @@ export default function ModelB2BComponent(props) {
                     Powiązane modele w ofercie B2B (wspólna strona produktu)
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{mb: 2}}>
-                    Połączone modele (np. wersja standardowa S-... oraz wersja drukowana D-...) będą wyświetlane razem na jednej karcie produktu w panelu B2B, zachowując swoje własne ceny, stany magazynowe i symbole w zamówieniach. Powiązanie działa automatycznie w obie strony.
+                    Połączone modele (np. wersja standardowa S-... oraz wersja drukowana D-...) będą wyświetlane razem
+                    na jednej karcie produktu w panelu B2B, zachowując swoje własne ceny, stany magazynowe i symbole w
+                    zamówieniach. Powiązanie działa automatycznie w obie strony.
                 </Typography>
 
                 <Autocomplete
@@ -141,15 +143,21 @@ export default function ModelB2BComponent(props) {
                         ))
                     }
                     renderOption={(optionProps, option) => (
-                        <Box component="li" {...optionProps} key={option.id} sx={{display: "flex", alignItems: "center", gap: 1.5}}>
-                            {option.mainImage?.slug ? (
-                                <Box
-                                    component="img"
-                                    src={route("images.thumbnail", {slug: option.mainImage.slug})}
-                                    alt={option.symbol}
-                                    sx={{width: 36, height: 36, objectFit: "cover", borderRadius: 1}}
-                                />
-                            ) : null}
+                        <Box component="li" {...optionProps} key={option.id}
+                             sx={{display: "flex", alignItems: "center", gap: 1.5}}>
+
+                            <Box
+                                component="img"
+                                sx={{
+                                    width: 50,
+                                    mr: 1
+                                }}
+                                src={option.mainImage ? route("images.thumbnail", {slug: option.mainImage?.slug}) : route("images", {slug: "brak.jpg"})}
+                                alt={option.symbol}
+                                loading="lazy"
+                            />
+
+
                             <Box>
                                 <Typography variant="body2" sx={{fontWeight: 700}}>
                                     {option.symbol}
