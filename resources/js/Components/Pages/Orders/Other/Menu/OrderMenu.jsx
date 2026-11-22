@@ -56,22 +56,22 @@ export default function OrderMenu({row}) {
                     <ListItemIcon><TaskAlt/></ListItemIcon>
                     <ListItemText>Zaakceptuj zamówienie</ListItemText>
                 </MenuItem>
-                <MenuItem disabled={![1, 20, 55, 90].includes(row.original.status)}>
+                <MenuItem disabled={![1, 20, 50, 55, 60, 70, 80, 85, 90].includes(row.original.status)}>
                     <ListItemIcon><Cancel/></ListItemIcon>
                     <ListItemText>Anuluj zamówienie</ListItemText>
                 </MenuItem>
 
                 <Divider/>
 
-                <MenuItem disabled={![55, 90].includes(row.original.status)}>
+                <MenuItem disabled={![55, 60, 70, 80, 85, 90].includes(row.original.status)}>
                     <ListItemIcon><SettingsBackupRestore/></ListItemIcon>
                     <ListItemText>Ponów dodawanie do subiekta</ListItemText>
                 </MenuItem>
 
                 <Divider/>
 
-                <MenuItem disabled={![1, 20, 55, 90, 100, 0].includes(row.original.status)}
-                          onClick={handleOpenDetails}>
+                <MenuItem
+                    onClick={handleOpenDetails}>
                     <ListItemIcon><ListAlt/></ListItemIcon>
                     <ListItemText>Szczegóły zamówienia</ListItemText>
                 </MenuItem>
