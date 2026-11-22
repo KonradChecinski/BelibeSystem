@@ -29,108 +29,6 @@ export default function ProductPriceTable({model}) {
         )
     }
 
-    if (hasMultipleModels) {
-        return (
-            <TableContainer component={Paper}>
-                <Table aria-label="price table">
-                    <TableHead>
-                        <TableRow>
-                            <HoveringCell column={0} sx={{fontWeight: 700}}>Model</HoveringCell>
-                            <HoveringCell column={1} sx={{fontWeight: 700}}>Netto</HoveringCell>
-                            <HoveringCell column={2} sx={{fontWeight: 700}}>Brutto</HoveringCell>
-                            <HoveringCell column={3} sx={{fontWeight: 700}}>VAT</HoveringCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {modelVariants.map((variant) => {
-                            const vPrice = variant.price;
-                            const hasDiscount = vPrice.original_price_net &&
-                                vPrice.price_net < vPrice.original_price_net &&
-                                (vPrice.show_discount_on_invoice || vPrice.is_promotion);
-
-                            return (
-                                <Fragment key={variant.id}>
-                                    <TableRow hover>
-                                        <HoveringCell column={0}>
-                                            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5}}>
-                                                <Typography variant="subtitle2" sx={{fontWeight: 700}}>
-                                                    {variant.symbol}
-                                                </Typography>
-                                                {vPrice.is_promotion && (
-                                                    <Chip
-                                                        icon={<LocalOffer sx={{fontSize: "12px !important"}}/>}
-                                                        label={vPrice.has_variable_prices ? "Warianty w promocji" : "PROMOCJA"}
-                                                        color="error"
-                                                        size="small"
-                                                        sx={{height: 20, fontSize: "0.65rem", fontWeight: 700}}
-                                                    />
-                                                )}
-                                            </Box>
-                                        </HoveringCell>
-                                        <HoveringCell column={1}>
-                                            {hasDiscount && (
-                                                <Typography
-                                                    variant="caption"
-                                                    color="text.secondary"
-                                                    sx={{textDecoration: "line-through", display: "block"}}
-                                                >
-                                                    {currencyNumberPrice(vPrice.original_price_net, vPrice.currency)}
-                                                </Typography>
-                                            )}
-                                            <Typography
-                                                variant="body2"
-                                                sx={vPrice.is_promotion && !vPrice.has_variable_prices ? {color: "error.main", fontWeight: 700} : {fontWeight: 600}}
-                                            >
-                                                {currencyNumberPrice(vPrice.price_net, vPrice.currency)}
-                                            </Typography>
-                                        </HoveringCell>
-                                        <HoveringCell column={2}>
-                                            {hasDiscount && (
-                                                <Typography
-                                                    variant="caption"
-                                                    color="text.secondary"
-                                                    sx={{textDecoration: "line-through", display: "block"}}
-                                                >
-                                                    {currencyNumberPrice(vPrice.original_price_gross, vPrice.currency)}
-                                                </Typography>
-                                            )}
-                                            <Typography
-                                                variant="body2"
-                                                sx={vPrice.is_promotion && !vPrice.has_variable_prices ? {color: "error.main", fontWeight: 700} : {fontWeight: 600}}
-                                            >
-                                                {currencyNumberPrice(vPrice.price_gross, vPrice.currency)}
-                                            </Typography>
-                                        </HoveringCell>
-                                        <HoveringCell column={3}>
-                                            {vPrice.vat_rate} %
-                                        </HoveringCell>
-                                    </TableRow>
-                                    {vPrice.has_variable_prices && (
-                                        <TableRow sx={{bgcolor: "rgba(211, 47, 47, 0.06)"}}>
-                                            <TableCell colSpan={4} align="center" sx={{py: 0.75}}>
-                                                <Chip
-                                                    icon={<LocalOffer/>}
-                                                    label={`${variant.symbol} — promocja na wybrane kolory / rozmiary: od ${currencyNumberPrice(vPrice.min_price_net, vPrice.currency)} netto (${currencyNumberPrice(vPrice.min_price_gross, vPrice.currency)} brutto)`}
-                                                    color="error"
-                                                    size="small"
-                                                    sx={{fontWeight: 700}}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </Fragment>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        );
-    }
-
-    const hasDiscountedModelPrice = model.price.original_price_net &&
-        model.price.price_net < model.price.original_price_net &&
-        (model.price.show_discount_on_invoice || model.price.is_promotion);
-
     return (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -142,47 +40,93 @@ export default function ProductPriceTable({model}) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {hasDiscountedModelPrice &&
-                        (
-                            <TableRow>
-                                <HoveringCell column={1} priceDiscount={true}>
-                                    {currencyNumberPrice(model.price.original_price_net)}
-                                </HoveringCell>
-                                <HoveringCell column={2} priceDiscount={true}>
-                                    {currencyNumberPrice(model.price.original_price_gross)}
-                                </HoveringCell>
-                                <HoveringCell column={3} priceDiscount={true}>
-                                    {model.price.vat_rate} %
-                                </HoveringCell>
-                            </TableRow>
-                        )}
-                    <TableRow>
-                        <HoveringCell column={1} sx={model.price.is_promotion && !model.price.has_variable_prices ? {color: "error.main", fontWeight: 700} : {}}>
-                            {currencyNumberPrice(model.price.price_net)}
-                        </HoveringCell>
-                        <HoveringCell column={2} sx={model.price.is_promotion && !model.price.has_variable_prices ? {color: "error.main", fontWeight: 700} : {}}>
-                            {currencyNumberPrice(model.price.price_gross)}
-                        </HoveringCell>
-                        <HoveringCell column={3}>
-                            {model.price.vat_rate} %
-                        </HoveringCell>
-                    </TableRow>
-                    {model.price.has_variable_prices && (
-                        <TableRow sx={{bgcolor: "rgba(211, 47, 47, 0.06)"}}>
-                            <TableCell colSpan={3} align="center">
-                                <Chip
-                                    icon={<LocalOffer/>}
-                                    label={`Promocja na wybrane kolory / rozmiary: od ${currencyNumberPrice(model.price.min_price_net)} netto (${currencyNumberPrice(model.price.min_price_gross)} brutto)`}
-                                    color="error"
-                                    size="small"
-                                    sx={{fontWeight: 700}}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    )}
+                    {modelVariants.map((variant) => {
+                        const vPrice = variant.price;
+                        const hasDiscountedModelPrice = vPrice.original_price_net &&
+                            vPrice.price_net < vPrice.original_price_net &&
+                            (vPrice.show_discount_on_invoice || vPrice.is_promotion);
+
+                        return (
+                            <Fragment key={variant.id}>
+                                {hasMultipleModels && (
+                                    <TableRow>
+                                        <TableCell colSpan={3} sx={{p: 1, bgcolor: "background.paper"}}>
+                                            <Box sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                flexWrap: "wrap",
+                                                gap: 1,
+                                                px: 1.5,
+                                                py: 0.75,
+                                                bgcolor: "action.hover",
+                                                borderLeft: "4px solid",
+                                                borderColor: vPrice?.is_promotion ? "error.main" : "primary.main",
+                                                borderRadius: 1,
+                                            }}>
+                                                <Box sx={{display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap"}}>
+                                                    <Typography variant="subtitle1" sx={{fontWeight: 700}}>
+                                                        Model {variant.symbol}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {variant.name}
+                                                    </Typography>
+                                                </Box>
+                                                {vPrice?.is_promotion && (
+                                                    <Chip
+                                                        icon={<LocalOffer sx={{fontSize: "12px !important"}}/>}
+                                                        label={vPrice.has_variable_prices ? "Warianty w promocji" : "PROMOCJA"}
+                                                        color="error"
+                                                        size="small"
+                                                        sx={{height: 22, fontSize: "0.7rem", fontWeight: 700}}
+                                                    />
+                                                )}
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {hasDiscountedModelPrice && (
+                                    <TableRow>
+                                        <HoveringCell column={1} priceDiscount={true}>
+                                            {currencyNumberPrice(vPrice.original_price_net, vPrice.currency)}
+                                        </HoveringCell>
+                                        <HoveringCell column={2} priceDiscount={true}>
+                                            {currencyNumberPrice(vPrice.original_price_gross, vPrice.currency)}
+                                        </HoveringCell>
+                                        <HoveringCell column={3} priceDiscount={true}>
+                                            {vPrice.vat_rate} %
+                                        </HoveringCell>
+                                    </TableRow>
+                                )}
+                                <TableRow>
+                                    <HoveringCell column={1} sx={vPrice.is_promotion && !vPrice.has_variable_prices ? {color: "error.main", fontWeight: 700} : {}}>
+                                        {currencyNumberPrice(vPrice.price_net, vPrice.currency)}
+                                    </HoveringCell>
+                                    <HoveringCell column={2} sx={vPrice.is_promotion && !vPrice.has_variable_prices ? {color: "error.main", fontWeight: 700} : {}}>
+                                        {currencyNumberPrice(vPrice.price_gross, vPrice.currency)}
+                                    </HoveringCell>
+                                    <HoveringCell column={3}>
+                                        {vPrice.vat_rate} %
+                                    </HoveringCell>
+                                </TableRow>
+                                {vPrice.has_variable_prices && (
+                                    <TableRow sx={{bgcolor: "rgba(211, 47, 47, 0.06)"}}>
+                                        <TableCell colSpan={3} align="center">
+                                            <Chip
+                                                icon={<LocalOffer/>}
+                                                label={`Promocja na wybrane kolory / rozmiary: od ${currencyNumberPrice(vPrice.min_price_net, vPrice.currency)} netto (${currencyNumberPrice(vPrice.min_price_gross, vPrice.currency)} brutto)`}
+                                                color="error"
+                                                size="small"
+                                                sx={{fontWeight: 700}}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </Fragment>
+                        );
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>
-
     );
 }
