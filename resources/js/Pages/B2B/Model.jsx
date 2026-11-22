@@ -51,9 +51,17 @@ export default function B2bModel(props) {
             });
     }
 
-    const imageArray = props.model.colors.sort(sortByColorShortcut).map((color) => {
-        return color.images?.sort((imageA, imageB) => imageA.order - imageB.order)
-    }).flat();
+    const modelVariants = props.model.models?.length > 0 ? props.model.models : [props.model];
+    const hasMultipleModels = modelVariants.length > 1;
+    const combinedSymbols = modelVariants.map((m) => m.symbol).join(" / ");
+    const anyVariantInPromotion = modelVariants.some((m) => Boolean(m.price?.is_promotion));
+    const anyVariantHasVariablePrices = modelVariants.some((m) => Boolean(m.price?.has_variable_prices));
+
+    const imageArray = modelVariants.flatMap((variant) =>
+        [...(variant.colors || [])].sort(sortByColorShortcut).flatMap((color) =>
+            color.images ? [...color.images].sort((imageA, imageB) => imageA.order - imageB.order) : []
+        )
+    );
 
 
     let lightbox = new PhotoSwipeLightbox({
@@ -119,10 +127,10 @@ export default function B2bModel(props) {
         <ClientLayout
             props={props}
             header={
-                t("Model") + " " + props.model.symbol + ": " + props.model.name
+                t("Model") + " " + combinedSymbols + ": " + props.model.name
             }
         >
-            <Head title={t("Model") + " " + props.model.symbol}/>
+            <Head title={t("Model") + " " + combinedSymbols}/>
 
             <Box sx={{width: 1, minHeight: 400, position: "relative"}}>
                 <Paper elevation={4}
@@ -425,12 +433,12 @@ export default function B2bModel(props) {
                                 }}>
                                     <Box sx={{display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap"}}>
                                         <Typography variant="h6">
-                                            Cena produktu
+                                            {hasMultipleModels ? "Ceny produktów" : "Cena produktu"}
                                         </Typography>
-                                        {props.model.price?.is_promotion && (
+                                        {anyVariantInPromotion && (
                                             <Chip
                                                 icon={<LocalOffer/>}
-                                                label={props.model.price?.has_variable_prices ? "PROMOCJA NA WYBRANE WARIANTY" : "PROMOCJA"}
+                                                label={anyVariantHasVariablePrices || hasMultipleModels ? "PROMOCJA NA WYBRANE WARIANTY" : "PROMOCJA"}
                                                 color="error"
                                                 size="small"
                                                 sx={{fontWeight: 700}}

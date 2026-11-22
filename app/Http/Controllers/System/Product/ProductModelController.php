@@ -211,7 +211,7 @@ class ProductModelController extends Controller
      */
     public function show(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "b2bLinkedModels:product_models.id,product_models.symbol,product_models.name", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();
@@ -261,7 +261,7 @@ class ProductModelController extends Controller
      */
     public function edit(int $id)
     {
-        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
+        $productModel = ProductModel::with(["colorsWithImages", "colorsWithImages.b2cColor", "products", "prices", "group", "categories:id", "b2bLinkedModels:product_models.id,product_models.symbol,product_models.name", "images", "brand", "gs1Brand", "gs1Gpc", "b2cCategory", "clasp", "empikCategory", "tiktokCategory", "sizeChart", "warehouseLocationsWithRoomAndAisle"])->findOrFail($id);
         $groups = ProductGroup::all();
         $categories = ProductCategory::all();
         $units = ProductUnit::all();

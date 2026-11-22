@@ -21,7 +21,11 @@ export default function ProductColorTable({ model, lightbox, imageArray }) {
         )
     }
 
-    const sortedColors = [...model.colors].sort(sortByColorShortcut);
+    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const hasMultipleModels = modelVariants.length > 1;
+    const sortedColors = modelVariants.flatMap((variant) =>
+        [...(variant.colors || [])].sort(sortByColorShortcut)
+    );
 
     return (
         <TableContainer component={Paper}>
@@ -31,6 +35,11 @@ export default function ProductColorTable({ model, lightbox, imageArray }) {
                         {sortedColors.map(color => (
                             <HoveringCell column={color.id} key={color.id}>
                                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5 }}>
+                                    {hasMultipleModels && color.product_model_symbol && (
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.65rem", fontWeight: 600 }}>
+                                            {color.product_model_symbol}
+                                        </Typography>
+                                    )}
                                     <span>{color.shortcut}</span>
                                     {color.price?.is_promotion && (
                                         <Chip

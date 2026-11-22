@@ -313,4 +313,15 @@ class ProductModel extends Model
     {
         return $this->warehouseLocations()->wherePivot('is_main', false);
     }
+
+    // Powiązane modele w ofercie B2B (łączone w jedną kartę produktu B2B)
+    public function b2bLinkedModels(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ProductModel::class,
+            'b2b_linked_product_models',
+            'product_model_id',
+            'linked_product_model_id'
+        )->withTimestamps();
+    }
 }

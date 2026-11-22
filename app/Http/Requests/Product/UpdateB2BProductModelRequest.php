@@ -22,8 +22,10 @@ class UpdateB2BProductModelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description_b2b' => 'required|string',
-            'categories' => 'required|array'
+            'description_b2b' => 'nullable|string',
+            'categories' => 'present|array',
+            'linked_models' => 'nullable|array',
+            'linked_models.*' => 'integer|exists:product_models,id',
         ];
     }
 }

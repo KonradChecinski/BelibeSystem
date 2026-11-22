@@ -20,7 +20,7 @@ import {sortByColorShortcut} from "@/Functions/sortByColorShortcut";
 import toLocaleString from "@/Functions/toLocaleString";
 import {enqueueSnackbar} from "notistack";
 import {useTheme} from "@mui/material/styles";
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useMemo, useRef, useState, Fragment} from "react";
 import {keyframes} from "@emotion/css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -47,6 +47,77 @@ export default function ProductOrderTable({model, cart, lightbox, imageArray, ac
 
 
 }
+
+const VariantSectionHeaderContent = ({variant}) => {
+    const vPrice = variant.price;
+    const hasDiscount = vPrice?.original_price_net &&
+        vPrice.price_net < vPrice.original_price_net &&
+        (vPrice.show_discount_on_invoice || vPrice.is_promotion);
+
+    return (
+        <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 1.5,
+            px: 2,
+            py: 1,
+            bgcolor: "action.hover",
+            borderLeft: "4px solid",
+            borderColor: vPrice?.is_promotion ? "error.main" : "primary.main",
+            borderRadius: 1,
+        }}>
+            <Box sx={{display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap"}}>
+                <Typography variant="h6" sx={{fontWeight: 700}}>
+                    Model {variant.symbol}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {variant.name}
+                </Typography>
+                {vPrice?.is_promotion && (
+                    <Chip
+                        icon={<LocalOffer sx={{fontSize: "14px !important"}}/>}
+                        label={vPrice.has_variable_prices ? "PROMOCJA NA WYBRANE WARIANTY" : "PROMOCJA"}
+                        color="error"
+                        size="small"
+                        sx={{fontWeight: 700}}
+                    />
+                )}
+            </Box>
+            {vPrice && (
+                <Box sx={{display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap"}}>
+                    <Typography variant="body2" color="text.secondary">
+                        Cena:
+                    </Typography>
+                    {hasDiscount && !vPrice.has_variable_prices && (
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{textDecoration: "line-through"}}
+                        >
+                            {toLocaleString(vPrice.original_price_net / 100)} netto
+                        </Typography>
+                    )}
+                    <Typography
+                        variant="subtitle1"
+                        color={vPrice.is_promotion ? "error.main" : "text.primary"}
+                        sx={{fontWeight: 700}}
+                    >
+                        {vPrice.has_variable_prices
+                            ? `od ${toLocaleString(vPrice.min_price_net / 100)} netto`
+                            : `${toLocaleString(vPrice.price_net / 100)} netto`}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        ({vPrice.has_variable_prices
+                            ? `od ${toLocaleString(vPrice.min_price_gross / 100)} brutto`
+                            : `${toLocaleString(vPrice.price_gross / 100)} brutto`})
+                    </Typography>
+                </Box>
+            )}
+        </Box>
+    );
+};
 
 const ColorPromotionBadge = ({color, modelPrice}) => {
     if (!color.price?.is_promotion) return null;
@@ -80,7 +151,9 @@ const ColorPromotionBadge = ({color, modelPrice}) => {
 };
 
 const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
-
+    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const hasMultipleModels = modelVariants.length > 1;
+    const allSizes = sortBySizesName(model.sizes);
 
     return (
         <TableContainer sx={{overflowX: "initial", borderRadius: 1}} component={Paper}>
@@ -110,126 +183,137 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
                     }}>
                         <HoveringCell column={1} header={true}>Kolor</HoveringCell>
                         <HoveringCell column={2} header={true} sx={{width: 120}}>Zdjęcie</HoveringCell>
-                        {sortBySizesName(model.sizes).map(size => (
+                        {allSizes.map(size => (
                             <HoveringCell column={2 + size.id} header={true} key={size.id}>{size.name}</HoveringCell>
                         ))}
                     </TableRow>
                 </TableHead>
 
                 <TableBody>
-                    {model.colors.sort(sortByColorShortcut).map(color => {
-                        const image = color.images?.find(i => i.order === 0);
-                        const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
+                    {modelVariants.map((variant) => (
+                        <Fragment key={"variant-desktop-" + variant.id}>
+                            {hasMultipleModels && (
+                                <TableRow>
+                                    <TableCell colSpan={2 + allSizes.length} sx={{p: 1.5, bgcolor: "background.paper"}}>
+                                        <VariantSectionHeaderContent variant={variant}/>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {[...(variant.colors || [])].sort(sortByColorShortcut).map(color => {
+                                const image = color.images?.find(i => i.order === 0);
+                                const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
 
-                        const colorIcon = color?.color_icon;
+                                const colorIcon = color?.color_icon;
 
-                        return (
-                            <TableRow hover key={color.id} sx={{height: 105}}>
-                                <HoveringCell column={1}>
-                                    <Typography variant="h5" textAlign={"center"} gutterBottom>
-                                        {color.shortcut}
-                                    </Typography>
-                                    <Typography variant="body2" textAlign={"center"}>
-                                        {color.name}
-                                    </Typography>
-                                    <ColorPromotionBadge color={color} modelPrice={model.price}/>
-                                </HoveringCell>
-                                <HoveringCell column={2}>
-
-                                    <Stack
-                                        my={1}
-                                        direction="row"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                        spacing={2}
-                                    >
-                                        {image ?
-                                            (
-                                                <Box component={"img"}
-                                                     src={route("images.webp", {slug: image.slug})}
-                                                     width={50}
-                                                     onClick={() => lightbox.loadAndOpen(imageIndex)}
-                                                     sx={{
-                                                         m: "auto",
-                                                         cursor: "pointer",
-                                                     }}
-                                                />
-                                            )
-                                            :
-
-                                            (
-                                                <Box component={"img"}
-                                                     src={route("images.webp", {slug: "brak.jpg"})}
-                                                     width={50}
-                                                     sx={{
-                                                         m: "auto",
-                                                     }}
-                                                />
-                                            )
-                                        }
-
-                                        {colorIcon ?
-                                            (
-                                                <Box>
-                                                    {colorIcon.type === 1 ?
-                                                        <Box
-                                                            component={"img"}
-                                                            src={route("colorIcons", {path: colorIcon.path})}
-                                                            sx={{
-                                                                width: "1.9rem",
-                                                                height: "1.9rem",
-                                                                borderRadius: "100%",
-                                                                maxWidth: "none",
-                                                                border: color.price?.is_promotion ? "2px solid" : 1,
-                                                                borderColor: color.price?.is_promotion ? "error.main" : "inherit",
-                                                            }}/>
-                                                        :
-                                                        <Box
-                                                            sx={{
-                                                                width: "1.9rem",
-                                                                height: "1.9rem",
-                                                                borderRadius: "100%",
-                                                                maxWidth: "none",
-                                                                bgcolor: colorIcon.hex,
-                                                                border: color.price?.is_promotion ? "2px solid" : 1,
-                                                                borderColor: color.price?.is_promotion ? "error.main" : "inherit",
-                                                            }}/>
-                                                    }
-                                                </Box>
-                                            )
-                                            :
-                                            (
-                                                <></>
-                                            )
-                                        }
-                                    </Stack>
-
-
-                                </HoveringCell>
-                                {sortBySizesName(model.sizes).map((size, id) => {
-                                    const product = color.products.find(p => p.size.id === size.id);
-                                    let quantity = product?.available_without_order_to_edit;
-
-                                    return (
-                                        <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
-                                            {product ?
-                                                <ProductInput product={product} color={color} model={model} cart={cart}
-                                                              maxQuantity={quantity}
-                                                              enqueueSnackbar={enqueueSnackbar}
-                                                              accountManager={accountManager}
-                                                              props={props}
-                                                />
-                                                :
-                                                ""
-                                            }
+                                return (
+                                    <TableRow hover key={color.id} sx={{height: 105}}>
+                                        <HoveringCell column={1}>
+                                            <Typography variant="h5" textAlign={"center"} gutterBottom>
+                                                {color.shortcut}
+                                            </Typography>
+                                            <Typography variant="body2" textAlign={"center"}>
+                                                {color.name}
+                                            </Typography>
+                                            <ColorPromotionBadge color={color} modelPrice={variant.price}/>
                                         </HoveringCell>
+                                        <HoveringCell column={2}>
+
+                                            <Stack
+                                                my={1}
+                                                direction="row"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                spacing={2}
+                                            >
+                                                {image ?
+                                                    (
+                                                        <Box component={"img"}
+                                                             src={route("images.webp", {slug: image.slug})}
+                                                             width={50}
+                                                             onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                             sx={{
+                                                                 m: "auto",
+                                                                 cursor: "pointer",
+                                                             }}
+                                                        />
+                                                    )
+                                                    :
+
+                                                    (
+                                                        <Box component={"img"}
+                                                             src={route("images.webp", {slug: "brak.jpg"})}
+                                                             width={50}
+                                                             sx={{
+                                                                 m: "auto",
+                                                             }}
+                                                        />
+                                                    )
+                                                }
+
+                                                {colorIcon ?
+                                                    (
+                                                        <Box>
+                                                            {colorIcon.type === 1 ?
+                                                                <Box
+                                                                    component={"img"}
+                                                                    src={route("colorIcons", {path: colorIcon.path})}
+                                                                    sx={{
+                                                                        width: "1.9rem",
+                                                                        height: "1.9rem",
+                                                                        borderRadius: "100%",
+                                                                        maxWidth: "none",
+                                                                        border: color.price?.is_promotion ? "2px solid" : 1,
+                                                                        borderColor: color.price?.is_promotion ? "error.main" : "inherit",
+                                                                    }}/>
+                                                                :
+                                                                <Box
+                                                                    sx={{
+                                                                        width: "1.9rem",
+                                                                        height: "1.9rem",
+                                                                        borderRadius: "100%",
+                                                                        maxWidth: "none",
+                                                                        bgcolor: colorIcon.hex,
+                                                                        border: color.price?.is_promotion ? "2px solid" : 1,
+                                                                        borderColor: color.price?.is_promotion ? "error.main" : "inherit",
+                                                                    }}/>
+                                                            }
+                                                        </Box>
+                                                    )
+                                                    :
+                                                    (
+                                                        <></>
+                                                    )
+                                                }
+                                            </Stack>
 
 
-                                    )
-                                })}
-                            </TableRow>
-                        )
-                    })}
+                                        </HoveringCell>
+                                        {allSizes.map((size, id) => {
+                                            const product = color.products.find(p => p.size.id === size.id);
+                                            let quantity = product?.available_without_order_to_edit;
+
+                                            return (
+                                                <HoveringCell column={2 + size.id} key={id} disabled={quantity === 0}>
+                                                    {product ?
+                                                        <ProductInput product={product} color={color} model={variant} cart={cart}
+                                                                      maxQuantity={quantity}
+                                                                      enqueueSnackbar={enqueueSnackbar}
+                                                                      accountManager={accountManager}
+                                                                      props={props}
+                                                        />
+                                                        :
+                                                        ""
+                                                    }
+                                                </HoveringCell>
+
+
+                                            )
+                                        })}
+                                    </TableRow>
+                                )
+                            })}
+                        </Fragment>
+                    ))}
 
                 </TableBody>
             </Table>
@@ -238,7 +322,9 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
 }
 
 const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
-
+    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const hasMultipleModels = modelVariants.length > 1;
+    const allSizes = sortBySizesName(model.sizes);
 
     return (
         <TableContainer sx={{overflowX: "initial", borderRadius: 1}} component={Paper}>
@@ -271,106 +357,117 @@ const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false,
                 </TableHead>
 
                 <TableBody>
-                    {model.colors.sort(sortByColorShortcut).map(color => {
-                        const image = color.images?.find(i => i.order === 0);
-                        const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
-                        return (
-                            <TableRow key={color.id}>
-                                <TableCell colSpan={2}>
-                                    <Table
-                                        aria-label="simple table"
-                                        stickyHeader={true}
-                                        sx={{
-                                            "& th": {
-                                                top: 75,
-                                            },
-                                            "& th:first-of-type": {
-                                                borderRadius: 1,
-                                            },
-                                        }}
-                                    >
-                                        <TableHead>
-                                            <TableRow hover key={color.id} sx={{height: 105}}>
-                                                <HoveringCell colSpan={2}>
-                                                    <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                                                        <Box>
-                                                            {image ?
-                                                                (
-                                                                    <Box component={"img"}
-                                                                         src={route("images.webp", {slug: image.slug})}
-                                                                         width={50}
-                                                                         onClick={() => lightbox.loadAndOpen(imageIndex)}
-                                                                         sx={{
-                                                                             m: "auto",
-                                                                             cursor: "pointer",
-                                                                         }}
-                                                                    />
-                                                                )
-                                                                :
-                                                                (
-                                                                    <Box component={"img"}
-                                                                         src={route("images.webp", {slug: "brak.jpg"})}
-                                                                         width={50}
-                                                                         onClick={() => lightbox.loadAndOpen(1)}
-                                                                         sx={{
-                                                                             m: "auto",
-                                                                             cursor: "pointer",
-                                                                         }}
-                                                                    />
-                                                                )
-                                                            }
-                                                        </Box>
-                                                        <Box>
-                                                            <Typography variant="h5" textAlign={"center"} gutterBottom>
-                                                                {color.shortcut}
-                                                            </Typography>
-                                                            <Typography variant="body2" textAlign={"center"}>
-                                                                {color.name}
-                                                            </Typography>
-                                                            <ColorPromotionBadge color={color} modelPrice={model.price}/>
-                                                        </Box>
-                                                    </Box>
+                    {modelVariants.map((variant) => (
+                        <Fragment key={"variant-mobile-" + variant.id}>
+                            {hasMultipleModels && (
+                                <TableRow>
+                                    <TableCell colSpan={2} sx={{p: 1.5, bgcolor: "background.paper"}}>
+                                        <VariantSectionHeaderContent variant={variant}/>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {[...(variant.colors || [])].sort(sortByColorShortcut).map(color => {
+                                const image = color.images?.find(i => i.order === 0);
+                                const imageIndex = image ? imageArray.findIndex(i => i.id === image.id) : null;
+                                return (
+                                    <TableRow key={color.id}>
+                                        <TableCell colSpan={2}>
+                                            <Table
+                                                aria-label="simple table"
+                                                stickyHeader={true}
+                                                sx={{
+                                                    "& th": {
+                                                        top: 75,
+                                                    },
+                                                    "& th:first-of-type": {
+                                                        borderRadius: 1,
+                                                    },
+                                                }}
+                                            >
+                                                <TableHead>
+                                                    <TableRow hover key={color.id} sx={{height: 105}}>
+                                                        <HoveringCell colSpan={2}>
+                                                            <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                                                                <Box>
+                                                                    {image ?
+                                                                        (
+                                                                            <Box component={"img"}
+                                                                                 src={route("images.webp", {slug: image.slug})}
+                                                                                 width={50}
+                                                                                 onClick={() => lightbox.loadAndOpen(imageIndex)}
+                                                                                 sx={{
+                                                                                     m: "auto",
+                                                                                     cursor: "pointer",
+                                                                                 }}
+                                                                            />
+                                                                        )
+                                                                        :
+                                                                        (
+                                                                            <Box component={"img"}
+                                                                                 src={route("images.webp", {slug: "brak.jpg"})}
+                                                                                 width={50}
+                                                                                 onClick={() => lightbox.loadAndOpen(1)}
+                                                                                 sx={{
+                                                                                     m: "auto",
+                                                                                     cursor: "pointer",
+                                                                                 }}
+                                                                            />
+                                                                        )
+                                                                    }
+                                                                </Box>
+                                                                <Box>
+                                                                    <Typography variant="h5" textAlign={"center"} gutterBottom>
+                                                                        {color.shortcut}
+                                                                    </Typography>
+                                                                    <Typography variant="body2" textAlign={"center"}>
+                                                                        {color.name}
+                                                                    </Typography>
+                                                                    <ColorPromotionBadge color={color} modelPrice={variant.price}/>
+                                                                </Box>
+                                                            </Box>
 
 
-                                                </HoveringCell>
-
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {sortBySizesName(model.sizes).map((size, id) => {
-                                                const product = color.products.find(p => p.size.id === size.id);
-                                                let quantity = product?.available_without_order_to_edit;
-
-                                                return (
-                                                    <TableRow hover key={color.id + "-" + size.id} sx={{height: 105}}>
-                                                        <HoveringCell>
-                                                            {size.name}
-                                                        </HoveringCell>
-                                                        <HoveringCell column={2 + size.id} key={id}
-                                                                      disabled={quantity === 0}>
-                                                            {product ?
-                                                                <ProductInput product={product} color={color}
-                                                                              model={model} cart={cart}
-                                                                              maxQuantity={quantity}
-                                                                              enqueueSnackbar={enqueueSnackbar}
-                                                                              accountManager={accountManager}
-                                                                              props={props}
-                                                                />
-                                                                :
-                                                                ""
-                                                            }
                                                         </HoveringCell>
 
                                                     </TableRow>
-                                                )
-                                            })}
-                                        </TableBody>
-                                    </Table>
-                                </TableCell>
-                            </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {allSizes.map((size, id) => {
+                                                        const product = color.products.find(p => p.size.id === size.id);
+                                                        let quantity = product?.available_without_order_to_edit;
 
-                        )
-                    })}
+                                                        return (
+                                                            <TableRow hover key={color.id + "-" + size.id} sx={{height: 105}}>
+                                                                <HoveringCell>
+                                                                    {size.name}
+                                                                </HoveringCell>
+                                                                <HoveringCell column={2 + size.id} key={id}
+                                                                              disabled={quantity === 0}>
+                                                                    {product ?
+                                                                        <ProductInput product={product} color={color}
+                                                                                      model={variant} cart={cart}
+                                                                                      maxQuantity={quantity}
+                                                                                      enqueueSnackbar={enqueueSnackbar}
+                                                                                      accountManager={accountManager}
+                                                                                      props={props}
+                                                                        />
+                                                                        :
+                                                                        ""
+                                                                    }
+                                                                </HoveringCell>
+
+                                                            </TableRow>
+                                                        )
+                                                    })}
+                                                </TableBody>
+                                            </Table>
+                                        </TableCell>
+                                    </TableRow>
+
+                                )
+                            })}
+                        </Fragment>
+                    ))}
 
                 </TableBody>
             </Table>
