@@ -192,13 +192,13 @@ export default function ModelB2BComponent(props) {
                             <Button
                                 key={linked.id}
                                 component={Link}
-                                href={route("system.products.model", {id: linked.id})}
+                                href={route("system.products.model.edit", {id: linked.id})}
                                 size="small"
                                 variant="text"
                                 endIcon={<OpenInNew fontSize="inherit"/>}
                                 sx={{textTransform: "none"}}
                             >
-                                Przejdź do modelu {linked.symbol}
+                                Przejdź do edycji modelu {linked.symbol}
                             </Button>
                         ))}
                     </Stack>
