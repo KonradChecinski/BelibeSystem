@@ -114,6 +114,15 @@ class B2bProductController extends Controller
         $combinedColors = $formattedModels->pluck('colors')->flatten(1)->values();
         $combinedSizes = $formattedModels->pluck('sizes')->flatten(1)->unique('id')->values();
 
+        $lightweightModels = $formattedModels->map(fn(array $m) => [
+            'id' => $m['id'],
+            'name' => $m['name'],
+            'symbol' => $m['symbol'],
+            'slug' => $m['slug'],
+            'price' => $m['price'],
+            'isFavorited' => $m['isFavorited'],
+        ])->values();
+
         $cart = $allModels
             ->flatMap(fn(ProductModel $m) => $m->clientsCart($client)->get())
             ->unique('id')
@@ -124,7 +133,7 @@ class B2bProductController extends Controller
                 'description_b2b' => $combinedDescription,
                 'colors' => $combinedColors,
                 'sizes' => $combinedSizes,
-                'models' => $formattedModels,
+                'models' => $lightweightModels,
             ]),
             'cart' => $cart,
         ]);
@@ -137,6 +146,10 @@ class B2bProductController extends Controller
     {
         $priceForClient = Price::showClientPrices($productModel, $client);
         $currency = $productModel->prices->currency;
+        $mainImages = $productModel->mainImages();
+        $colorsRelation = $productModel->relationLoaded('productsToB2bWithRelation')
+            ? $productModel->productsToB2bWithRelation
+            : $productModel->productsToB2bWithRelation()->get();
 
         return [
             'id' => $productModel->id,
@@ -144,10 +157,9 @@ class B2bProductController extends Controller
             'symbol' => $productModel->symbol,
             'slug' => $productModel->slug,
             'description_b2b' => $productModel->description_b2b,
-            'mainImages' => $productModel->mainImages() ? $productModel->mainImages()->map(fn($image) => ["slug" => $image->slug]) : null,
+            'mainImages' => $mainImages ? $mainImages->map(fn($image) => ["slug" => $image->slug]) : null,
             'price' => $priceForClient,
-            'colors' => $productModel->productsToB2bWithRelation()
-                ->get()
+            'colors' => $colorsRelation
                 ->map(function ($color) use ($productModel, $client, $discounts, $currency) {
                     $colorPrice = PriceForClient::getPriceFromProductModelColor($color, $productModel, $client);
 

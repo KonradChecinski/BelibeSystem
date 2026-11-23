@@ -151,7 +151,10 @@ const ColorPromotionBadge = ({color, modelPrice}) => {
 };
 
 const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
-    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const modelVariants = (model.models?.length > 0 ? model.models : [model]).map((variant) => ({
+        ...variant,
+        colors: variant.colors || (model.colors || []).filter((c) => !c.product_model_id || c.product_model_id === variant.id),
+    }));
     const hasMultipleModels = modelVariants.length > 1;
     const allSizes = sortBySizesName(model.sizes);
 
@@ -322,7 +325,10 @@ const DesktopTable = ({model, cart, lightbox, imageArray, accountManager = false
 }
 
 const MobileTable = ({model, cart, lightbox, imageArray, accountManager = false, props}) => {
-    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const modelVariants = (model.models?.length > 0 ? model.models : [model]).map((variant) => ({
+        ...variant,
+        colors: variant.colors || (model.colors || []).filter((c) => !c.product_model_id || c.product_model_id === variant.id),
+    }));
     const hasMultipleModels = modelVariants.length > 1;
     const allSizes = sortBySizesName(model.sizes);
 

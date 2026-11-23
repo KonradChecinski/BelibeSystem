@@ -25,7 +25,10 @@ export default function ProductColorTable({ model, lightbox, imageArray }) {
         )
     }
 
-    const modelVariants = model.models?.length > 0 ? model.models : [model];
+    const modelVariants = (model.models?.length > 0 ? model.models : [model]).map((variant) => ({
+        ...variant,
+        colors: variant.colors || (model.colors || []).filter((c) => !c.product_model_id || c.product_model_id === variant.id),
+    }));
     const hasMultipleModels = modelVariants.length > 1;
 
     const renderVariantTable = (variant) => {

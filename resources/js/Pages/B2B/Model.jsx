@@ -51,7 +51,10 @@ export default function B2bModel(props) {
             });
     }
 
-    const modelVariants = props.model.models?.length > 0 ? props.model.models : [props.model];
+    const modelVariants = (props.model.models?.length > 0 ? props.model.models : [props.model]).map((variant) => ({
+        ...variant,
+        colors: variant.colors || (props.model.colors || []).filter((c) => !c.product_model_id || c.product_model_id === variant.id),
+    }));
     const hasMultipleModels = modelVariants.length > 1;
     const combinedSymbols = modelVariants.map((m) => m.symbol).join(" / ");
     const anyVariantInPromotion = modelVariants.some((m) => Boolean(m.price?.is_promotion));

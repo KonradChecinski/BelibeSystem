@@ -17,21 +17,37 @@ export default function B2bSearchModelComponent({auth, searchRoute, label}) {
     const [search, setSearch] = useState("")
     const [loading, setLoading] = useState(false);
 
-    const fetchData = async () => {
+    useEffect(() => {
         if (!open) {
             return;
         }
-        setLoading(true);
-        const option = {headers: {Accept: "application/json"}};
-        const response = await fetch(searchRoute + `?search=${search}`, option);
-        const json = await response.json();
-        setOptions(json);
-        setLoading(false)
-    }
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
+            setLoading(true);
+            try {
+                const option = {
+                    headers: {Accept: "application/json"},
+                    signal: controller.signal,
+                };
+                const response = await fetch(searchRoute + `?search=${encodeURIComponent(search)}`, option);
+                const json = await response.json();
+                setOptions(Array.isArray(json) ? json : []);
+            } catch (e) {
+                if (e.name !== "AbortError") {
+                    console.error(e);
+                }
+            } finally {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        }, 250);
 
-    useEffect(() => {
-        fetchData();
-    }, [open, search])
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+    }, [open, search, searchRoute])
 
 
     const filterOptions = createFilterOptions({
@@ -61,10 +77,11 @@ export default function B2bSearchModelComponent({auth, searchRoute, label}) {
             loading={loading}
             // value={value}
             onChange={(event, newValue) => {
+                if (!newValue?.slug) return;
                 setLoading(true);
                 router.visit(route('b2b.model', {slug: newValue.slug}))
             }}
-            onInputChange={(event, newInputValue) => debounce(setSearch(newInputValue), 500)}
+            onInputChange={(event, newInputValue) => setSearch(newInputValue)}
             renderOption={(props, option) => {
                 return (
                     <Box
