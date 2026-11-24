@@ -22,7 +22,7 @@ class ProductImage extends Model
     }
 
     /**
-     * Normalize stored relative path (converting backslashes to forward slashes).
+     * Normalize stored relative path (converting backslashes to forward slashes and collapsing duplicate slashes).
      */
     public static function normalizeRelativePath(?string $path): ?string
     {
@@ -30,7 +30,10 @@ class ProductImage extends Model
             return null;
         }
 
-        return ltrim(str_replace('\\', '/', trim($path)), '/');
+        $normalized = str_replace('\\', '/', trim($path));
+        $normalized = preg_replace('#/+#', '/', $normalized);
+
+        return ltrim($normalized, '/');
     }
 
     /**

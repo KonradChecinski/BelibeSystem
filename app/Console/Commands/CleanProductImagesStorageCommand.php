@@ -58,6 +58,7 @@ class CleanProductImagesStorageCommand extends Command
         $images = ProductImage::with(['color.model'])->get();
 
         $relocatedCount = 0;
+        $fixedDbPathsCount = 0;
         $missingOnDiskCount = 0;
         $deletedDbRecordsCount = 0;
         $clearedMissingVariantCount = 0;
@@ -114,7 +115,7 @@ class CleanProductImagesStorageCommand extends Command
                 continue;
             }
 
-            // Check if file needs relocation to match current model / color / type
+            // Check if file actually needs physical relocation to match current model / color / type
             if ($currentBasicNorm !== $expectedRelativeForward || (!$existsAtCurrent && $existsAtLegacy)) {
                 $sourcePath = $existsAtCurrent ? $currentStoragePath : ($existsAtLegacy ? $legacyStoragePath : $expectedStoragePath);
                 $this->line(" - [Przenoszenie] ID {$image->id}: {$sourcePath} -> {$expectedStoragePath}");
@@ -127,6 +128,14 @@ class CleanProductImagesStorageCommand extends Command
                 $relocatedCount++;
                 $validStoragePaths[strtolower($expectedStoragePath)] = true;
             } else {
+                // File is already in the right directory, but DB path_basic might have double backslashes (e.g. \\6a69...)
+                if ($image->path_basic !== $expectedRelativeDb) {
+                    if (!$dryRun) {
+                        $image->path_basic = $expectedRelativeDb;
+                        $image->saveQuietly();
+                    }
+                    $fixedDbPathsCount++;
+                }
                 $validStoragePaths[strtolower($currentStoragePath)] = true;
             }
 
@@ -207,6 +216,7 @@ class CleanProductImagesStorageCommand extends Command
             [
                 ['Sprawdzone rekordy ProductImage w bazie', $images->count()],
                 ['Przeniesione zdjęcia do właściwego folderu koloru/typu', $relocatedCount],
+                ['Poprawione podwójne ukośniki (\\\\) w path_basic w bazie', $fixedDbPathsCount],
                 ['Usunięte nieaktualne / osierocone pliki z dysku', $deletedOrphanFilesCount],
                 ['Zwolnione miejsce na dysku', $this->formatBytes($freedBytes)],
                 ['Usunięte puste foldery', $deletedDirsCount],
