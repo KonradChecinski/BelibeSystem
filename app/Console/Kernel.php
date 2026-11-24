@@ -26,6 +26,7 @@ use App\Jobs\partners\MakePartnerExportFile;
 use App\Jobs\Quantity\UpdateAllQuantities;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
+use App\Jobs\System\CleanOldLogsJob;
 use App\Jobs\ToSubiekt\BlokadaMiesieczna;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
@@ -114,6 +115,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('websockets:clean')->daily();
         //Jobs
         $schedule->command('queue:prune-failed --hours=48')->dailyAt("03:00");
+        //Logs
+        $schedule->job(new CleanOldLogsJob(7))->weeklyOn(1, '03:30');
 
         $partnerExports = PartnerExport::all();
         foreach ($partnerExports as $partnerExport) {
