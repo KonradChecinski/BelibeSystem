@@ -98,7 +98,8 @@ class ProductImageController extends Controller
     {
         if (auth()->user()->hasPermissionTo("deleteImages", "user")) {
             $modelColor = $image->color;
-            $imageType = $image->type;
+            $model = $modelColor?->model;
+            $imageType = (int) $image->type;
             $imageOrder = $image->order;
             $imagesToChangeOrder = $modelColor->images()->where('type', $imageType)->where('order', '>', $imageOrder)->orderBy('order')->get();
             $image->delete();
@@ -106,9 +107,15 @@ class ProductImageController extends Controller
                 $imageToOrder->order = $imageOrder + $id;
                 $imageToOrder->save();
             }
-            AddImagesToSubiekt::dispatch($image->color);
-
-
+            if ($modelColor) {
+                AddImagesToSubiekt::dispatch($modelColor);
+                if ($imageType === 1) {
+                    ShoperChangeImages::dispatch($modelColor);
+                    if ($model) {
+                        TikTokChangePrice::dispatch($model);
+                    }
+                }
+            }
         } else {
             abort(403);
         }
