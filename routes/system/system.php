@@ -517,6 +517,9 @@ Route::middleware(["auth:user", "verified"])->group(function () {
             Route::patch("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'update'])->name("system.settings.warehouseLocation.shelf.update");
             Route::delete("/shelf/{warehouseLocation}", [WarehouseLocationController::class, 'destroy'])->name("system.settings.warehouseLocation.shelf.delete");
 
+            Route::post("/shelf/{warehouseLocation}/model", [WarehouseLocationController::class, 'attachModel'])->name("system.settings.warehouseLocation.shelf.model.attach");
+            Route::delete("/shelf/{warehouseLocation}/model/{productModel}", [WarehouseLocationController::class, 'detachModel'])->name("system.settings.warehouseLocation.shelf.model.detach");
+
 
         });
     });

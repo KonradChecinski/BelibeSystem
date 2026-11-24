@@ -3,7 +3,7 @@ import UserLayout from "@/Layouts/UserLayout";
 import {enqueueSnackbar, useSnackbar} from "notistack";
 import {useLaravelReactI18n} from "laravel-react-i18n";
 import {
-    Box, Divider,
+    Box, Chip, Divider,
     Fab, Fade,
     Grid,
     IconButton,
@@ -27,11 +27,24 @@ import {
     useSortable,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {Add, Delete, DragIndicator, Edit, ExpandMore, ChevronRight, Cancel, Save} from "@mui/icons-material";
+import {
+    Add,
+    Delete,
+    DragIndicator,
+    Edit,
+    ExpandMore,
+    ChevronRight,
+    Cancel,
+    Save,
+    PlaylistAdd,
+    Star
+} from "@mui/icons-material";
 import EditLocationDialog from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationEditDialog";
 import DeleteLocationDialog
     from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationDeleteDialog";
 import AddLocationDialog from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationAddDialog";
+import WarehouseLocationModelsDialog
+    from "@/Components/Dialogs/WarehouseLocationDialog/WarehouseLocationModelsDialog";
 
 
 export default function LocationsComponent(props) {
@@ -43,6 +56,12 @@ export default function LocationsComponent(props) {
     const [edited, setEdited] = useState(false);
 
     const {data, setData, processing, put, transform} = useForm(props.locations)
+
+    useEffect(() => {
+        if (!edited) {
+            setData(props.locations);
+        }
+    }, [props.locations]);
 
 
     const resetForm = () => {
@@ -68,7 +87,7 @@ export default function LocationsComponent(props) {
 
         const flatten = (items) => {
             return items.reduce((acc, item) => {
-                const {children, ...rest} = item;
+                const {children, models, ...rest} = item;
                 acc.push(rest);
                 if (children && children.length > 0) {
                     acc = acc.concat(flatten(children));
@@ -379,6 +398,7 @@ export default function LocationsComponent(props) {
                                 }));
                             }}
                             locations={data}
+                            setLocations={setData}
                         />
                     ))}
                 </SortableContext>
@@ -404,7 +424,7 @@ export default function LocationsComponent(props) {
 }
 
 
-function RoomItem({room, isExpanded, onToggle, locations}) {
+function RoomItem({room, isExpanded, onToggle, locations, setLocations}) {
     const {
         attributes,
         listeners,
@@ -513,7 +533,9 @@ function RoomItem({room, isExpanded, onToggle, locations}) {
                                     key={aisle.id}
                                     aisle={aisle}
                                     parentRoom={room.id}
+                                    roomName={room.name}
                                     locations={locations}
+                                    setLocations={setLocations}
                                 />
                             ))}
                         </SortableContext>
@@ -526,7 +548,7 @@ function RoomItem({room, isExpanded, onToggle, locations}) {
     );
 }
 
-function AisleItem({aisle, parentRoom, locations}) {
+function AisleItem({aisle, parentRoom, roomName, locations, setLocations}) {
     const {
         attributes,
         listeners,
@@ -622,7 +644,9 @@ function AisleItem({aisle, parentRoom, locations}) {
                                     key={shelf.id}
                                     shelf={shelf}
                                     parentAisle={aisle.id}
+                                    locationPath={`${roomName} / ${aisle.name} / ${shelf.name}`}
                                     locations={locations}
+                                    setLocations={setLocations}
                                 />
                             ))}
                         </SortableContext>
@@ -635,7 +659,7 @@ function AisleItem({aisle, parentRoom, locations}) {
     );
 }
 
-function ShelfItem({shelf, parentAisle, locations}) {
+function ShelfItem({shelf, parentAisle, locationPath, locations, setLocations}) {
     const {
         attributes,
         listeners,
@@ -658,6 +682,42 @@ function ShelfItem({shelf, parentAisle, locations}) {
 
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openModelsDialog, setOpenModelsDialog] = useState(false);
+    const [detachingModelId, setDetachingModelId] = useState(null);
+
+    const assignedModels = shelf.models || [];
+    const shelfId = shelf.id.split('-')[1];
+
+    const handleDetachModel = (model) => {
+        setDetachingModelId(model.id);
+        router.delete(
+            route("system.settings.warehouseLocation.shelf.model.detach", {
+                warehouseLocation: shelfId,
+                productModel: model.id,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    enqueueSnackbar(`Odpięto model ${model.symbol} z lokalizacji ${shelf.name}`, {variant: 'success'});
+                    if (setLocations && page?.props?.locations) {
+                        setLocations(page.props.locations);
+                    }
+                },
+                onError: (errors) => {
+                    console.error(errors);
+                    enqueueSnackbar('Błąd podczas odpinania modelu', {variant: 'error'});
+                    if (errors) {
+                        Object.keys(errors).forEach((key) => {
+                            enqueueSnackbar(errors[key], {variant: 'error'});
+                        });
+                    }
+                },
+                onFinish: () => {
+                    setDetachingModelId(null);
+                },
+            }
+        );
+    };
 
     return (
         <Box sx={{mb: 1, display: 'flex', alignItems: 'center', width: 1}}>
@@ -673,17 +733,43 @@ function ShelfItem({shelf, parentAisle, locations}) {
                     bgcolor: 'background.paper'
                 }}
             >
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <Box {...attributes} {...listeners} sx={{cursor: 'grab', mr: 2}}>
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                    <Box {...attributes} {...listeners} sx={{cursor: 'grab', mr: 1, display: 'flex'}}>
                         <DragIndicator/>
                     </Box>
-
 
                     <Typography sx={{flexGrow: 1}}>
                         {shelf.name}
                     </Typography>
 
+                    <Tooltip title="Zarządzaj przypisanymi modelami">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            color={assignedModels.length > 0 ? "primary" : "default"}
+                            label={`Modele: ${assignedModels.length}`}
+                            onClick={() => setOpenModelsDialog(true)}
+                            sx={{cursor: 'pointer'}}
+                        />
+                    </Tooltip>
+
                     <Box>
+                        <Tooltip title="Dopnij / zarządzaj modelami">
+                            <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={() => setOpenModelsDialog(true)}
+                            >
+                                <PlaylistAdd/>
+                            </IconButton>
+                        </Tooltip>
+                        <WarehouseLocationModelsDialog
+                            open={openModelsDialog}
+                            setOpen={setOpenModelsDialog}
+                            shelf={shelf}
+                            locationPath={locationPath}
+                            setLocations={setLocations}
+                        />
                         <Tooltip title="Edytuj">
                             <IconButton
                                 size="small"
@@ -715,6 +801,29 @@ function ShelfItem({shelf, parentAisle, locations}) {
                         />
                     </Box>
                 </Box>
+
+                {assignedModels.length > 0 && (
+                    <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.75, mt: 1, ml: 4}}>
+                        {assignedModels.map((model) => (
+                            <Tooltip
+                                key={model.id}
+                                title={`${model.symbol} — ${model.name}${model.is_main ? ' (Lokalizacja główna)' : ''} • Kliknij aby edytować model`}
+                            >
+                                <Chip
+                                    size="small"
+                                    variant={model.is_main ? "filled" : "outlined"}
+                                    color={model.is_main ? "primary" : "default"}
+                                    icon={model.is_main ? <Star fontSize="small"/> : undefined}
+                                    label={`${model.symbol}${model.name ? ` — ${model.name}` : ''}`}
+                                    disabled={detachingModelId === model.id}
+                                    onClick={() => window.open(route("system.products.model.edit", {id: model.id}), "_blank", "noopener,noreferrer")}
+                                    // onDelete={() => handleDetachModel(model)}
+                                    sx={{maxWidth: 280}}
+                                />
+                            </Tooltip>
+                        ))}
+                    </Box>
+                )}
             </Paper>
         </Box>
     );

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttachWarehouseLocationModelRequest;
 use App\Http\Requests\UpdateWarehouseLocationMainRequest;
 use App\Http\Requests\UpdateWarehouseLocationOrderRequest;
 use App\Models\Products\ProductModel;
@@ -19,7 +20,12 @@ class WarehouseLocationController extends Controller
      */
     public function index()
     {
-        $locations = WarehouseLocationRoom::with(['aisles.locations'])
+        $locations = WarehouseLocationRoom::with([
+            'aisles.locations.productModels' => function ($query) {
+                $query->select('product_models.id', 'product_models.symbol', 'product_models.name')
+                    ->orderBy('product_models.symbol');
+            }
+        ])
             ->orderBy('order')
             ->get()
             ->map(function ($room) {
@@ -39,6 +45,14 @@ class WarehouseLocationController extends Controller
                                     'name' => $shelf->name,
                                     'type' => 'shelf',
                                     'parent' => 'aisle-' . $shelf->warehouse_location_aisle_id,
+                                    'models' => $shelf->productModels->map(function ($model) {
+                                        return [
+                                            'id' => $model->id,
+                                            'symbol' => $model->symbol,
+                                            'name' => $model->name,
+                                            'is_main' => (bool)$model->pivot->is_main,
+                                        ];
+                                    })->values()->toArray(),
                                 ];
                             })->values()->toArray()
                         ];
@@ -114,6 +128,38 @@ class WarehouseLocationController extends Controller
             return redirect()->back()->withErrors(['error' => 'Nie można usunąć lokalizacji magazynowej, ponieważ przypisane są do niej produkty.']);
         }
         $warehouseLocation->delete();
+    }
+
+    /**
+     * Attach a product model to the given warehouse location.
+     */
+    public function attachModel(AttachWarehouseLocationModelRequest $request, WarehouseLocation $warehouseLocation)
+    {
+        $productModel = ProductModel::findOrFail($request->validated()['product_model_id']);
+        $warehouseLocationsExist = $productModel->warehouseLocations()->exists();
+
+        $productModel->warehouseLocations()->attach($warehouseLocation, [
+            'is_main' => !$warehouseLocationsExist,
+        ]);
+    }
+
+    /**
+     * Detach a product model from the given warehouse location.
+     */
+    public function detachModel(WarehouseLocation $warehouseLocation, ProductModel $productModel)
+    {
+        $user = auth()->user();
+        if (!$user->hasPermissionTo("editDictionary", "user") && !$user->hasPermissionTo("editModel", "user")) {
+            abort(403);
+        }
+
+        if (!$warehouseLocation->productModels()->where('product_models.id', $productModel->id)->exists()) {
+            return redirect()->back()->withErrors([
+                'error' => 'Wybrany model produktu nie jest przypisany do tej lokalizacji magazynowej.',
+            ]);
+        }
+
+        $warehouseLocation->productModels()->detach($productModel);
     }
 
 
