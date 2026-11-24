@@ -97,7 +97,7 @@ return [
     'logging' => [
         'requests' => env('TIKTOK_LOG_REQUESTS', true),
         'redact_secrets' => env('TIKTOK_LOG_REDACT_SECRETS', false),
-        'prune_after_days' => env('TIKTOK_LOG_PRUNE_AFTER_DAYS'),
+        'prune_after_days' => env('TIKTOK_LOG_PRUNE_AFTER_DAYS', 1),
     ],
     'middleware' => [\Illuminate\Routing\Middleware\SubstituteBindings::class],
 ];

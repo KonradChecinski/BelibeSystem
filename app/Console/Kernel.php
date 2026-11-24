@@ -88,6 +88,12 @@ class Kernel extends ConsoleKernel
         $schedule->job(new TikTokUpdateOffers())->everyFiveMinutes();
         $schedule->command('tiktok:refresh-token')->daily();
         $schedule->command('tiktok:flush-expired-token')->weekly();
+        $schedule->command('model:prune', [
+            '--model' => [
+                \Laraditz\TikTok\Models\TiktokRequest::class,
+                \Laraditz\TikTok\Models\TiktokWebhook::class,
+            ],
+        ])->daily();
 
 
         //Subiekt
