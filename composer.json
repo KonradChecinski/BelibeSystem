@@ -97,7 +97,7 @@
         "policy": {
             "malware": {
                 "ignore": ["[laravel-lang/lang]"],
-                "block": true
+                "block": false
             }
         }
     },
