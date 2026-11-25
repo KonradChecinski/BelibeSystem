@@ -25,6 +25,10 @@ return [
                  */
                 'exclude' => [
                     storage_path('app/backup-temp'),
+                    storage_path('app/images/thumb'),
+                    storage_path('app/images/webp'),
+                    storage_path('app/images/square'),
+                    storage_path('app/images/2x3'),
                 ],
 
                 /*
