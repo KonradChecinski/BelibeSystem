@@ -118,6 +118,10 @@ class Kernel extends ConsoleKernel
         //Logs
         $schedule->job(new CleanOldLogsJob(7))->weeklyOn(1, '03:30');
 
+        //Backup plików storage/app na NAS (poniedziałek i czwartek)
+        $schedule->command('backup:clean')->days([Schedule::MONDAY, Schedule::THURSDAY])->at('02:30');
+        $schedule->command('backup:run --only-files')->days([Schedule::MONDAY, Schedule::THURSDAY])->at('03:00');
+
         $partnerExports = PartnerExport::all();
         foreach ($partnerExports as $partnerExport) {
             $schedule->job(new MakePartnerExportFile($partnerExport->partner, $partnerExport))->cron($partnerExport->cron);

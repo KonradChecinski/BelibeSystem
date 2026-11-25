@@ -96,6 +96,17 @@ return [
             // 'useAgent' => true,
         ],
 
+        'nas_backup' => [
+            'driver' => 'sftp',
+            'host' => env('BACKUP_NAS_HOST'),
+            'port' => (int) env('BACKUP_NAS_PORT'),
+            'root' => env('BACKUP_NAS_ROOT'),
+            'username' => env('BACKUP_NAS_USERNAME'),
+            'password' => env('BACKUP_NAS_PASSWORD'),
+            'timeout' => 60,
+            'throw' => true,
+        ],
+
     ],
 
     /*
