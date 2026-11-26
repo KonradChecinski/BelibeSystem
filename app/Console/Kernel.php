@@ -9,8 +9,6 @@ use App\Jobs\Empik\EmpikGetNewOrder;
 use App\Jobs\Empik\EmpikGetReadyOrder;
 use App\Jobs\Empik\EmpikUpdateOffers;
 use App\Jobs\Empik\EmpikUpdateProducts;
-use App\Jobs\TikTok\TikTokUpdateOffers;
-use App\Jobs\TikTok\TikTokUpdateProducts;
 use App\Jobs\FromSubiekt\Finanse\CreateSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\DeleteSettlementsFromSubiekt;
 use App\Jobs\FromSubiekt\Finanse\UpdateSettlementsFromSubiekt;
@@ -27,6 +25,8 @@ use App\Jobs\Quantity\UpdateAllQuantities;
 use App\Jobs\Shoper\ShoperGetOrder;
 use App\Jobs\Shoper\ShoperLogin;
 use App\Jobs\System\CleanOldLogsJob;
+use App\Jobs\TikTok\TikTokUpdateOffers;
+use App\Jobs\TikTok\TikTokUpdateProducts;
 use App\Jobs\ToSubiekt\BlokadaMiesieczna;
 use App\Jobs\ToSubiekt\ClientOrderCreateInSubiekt;
 use App\Jobs\ToSubiekt\ModelTw\CheckIfExistModelInSubiekt;
@@ -110,7 +110,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ParagonyIFakturyBiuro)->everyFiveMinutes()->between('21:00', '9:00');
 
         //Telescope
-        $schedule->command('telescope:prune')->daily();
+        $schedule->command('telescope:prune --hours=12')->daily();
         //Websocket
         $schedule->command('websockets:clean')->daily();
         //Jobs
