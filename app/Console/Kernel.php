@@ -110,7 +110,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ParagonyIFakturyBiuro)->everyFiveMinutes()->between('21:00', '9:00');
 
         //Telescope
-        $schedule->command('telescope:prune --hours=6')->daily();
+        $schedule->command('telescope:prune --hours=6')->hourly();
         //Websocket
         $schedule->command('websockets:clean')->daily();
         //Jobs
